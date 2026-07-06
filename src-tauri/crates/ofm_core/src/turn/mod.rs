@@ -1,0 +1,513 @@
+mod dormant;
+mod news;
+mod post_match;
+mod round_summary;
+
+use crate::board_objectives;
+use crate::game::Game;
+use crate::live_match_manager::{domain_to_engine_role, domain_to_engine_tactics};
+use crate::player_events;
+use crate::random_events;
+use crate::scouting;
+use crate::training;
+use crate::transfers;
+use chrono::Datelike;
+use domain::league::FixtureStatus;
+use domain::player::Position as DomainPosition;
+use domain::stats::StatsState;
+use log::{debug, info};
+
+// Re-export public items
+pub use news::generate_matchday_news;
+pub use post_match::{apply_match_report, apply_match_report_with_capture};
+pub use round_summary::{
+    NotableUpset, RoundResultSummary, RoundSummary, StandingDelta, TopScorerDelta,
+    build_round_summary,
+};
+
+/// Progress injury recovery by one day for all currently injured players.
+/// Players with 1 day remaining are cleared (fully recovered).
+fn progress_injury_recovery(game: &mut Game) {
+    for player in game.players.iter_mut() {
+        if let Some(mut injury) = player.injury.take()
+            && injury.days_remaining > 1
+        {
+            injury.days_remaining -= 1;
+            player.injury = Some(injury);
+        }
+    }
+}
+
+fn competition_is_active(game: &Game, competition: &domain::league::League) -> bool {
+    game.competition_in_active_scope(competition)
+}
+
+fn competition_indices_due_today(game: &Game, today: &str) -> Vec<usize> {
+    if !game.competitions.is_empty() {
+        return game
+            .competitions
+            .iter()
+            .enumerate()
+            // National-team tournaments are simulated by the national-team
+            // engine, never the club match engine.
+            .filter(|(_, competition)| {
+                competition.kind != domain::league::CompetitionType::InternationalNation
+            })
+            .filter(|(_, competition)| competition_is_active(game, competition))
+            .filter(|(_, competition)| {
+                competition.fixtures.iter().any(|fixture| {
+                    fixture.date == today && fixture.status == FixtureStatus::Scheduled
+                })
+            })
+            .map(|(index, _)| index)
+            .collect();
+    }
+
+    if game.league.as_ref().is_some_and(|league| {
+        league
+            .fixtures
+            .iter()
+            .any(|fixture| fixture.date == today && fixture.status == FixtureStatus::Scheduled)
+    }) {
+        vec![0]
+    } else {
+        Vec::new()
+    }
+}
+
+/// Competitions OUTSIDE the active scope that have fixtures due today. These are
+/// resolved cheaply (scoreline only) so the dormant world keeps moving. Returns
+/// empty when no scope is configured (everything is active → nothing dormant).
+fn dormant_competition_indices_due_today(game: &Game, today: &str) -> Vec<usize> {
+    if game.competitions.is_empty() {
+        return Vec::new();
+    }
+    game.competitions
+        .iter()
+        .enumerate()
+        .filter(|(_, competition)| {
+            competition.kind != domain::league::CompetitionType::InternationalNation
+        })
+        .filter(|(_, competition)| !competition_is_active(game, competition))
+        .filter(|(_, competition)| {
+            competition
+                .fixtures
+                .iter()
+                .any(|fixture| fixture.date == today && fixture.status == FixtureStatus::Scheduled)
+        })
+        .map(|(index, _)| index)
+        .collect()
+}
+
+fn simulate_competition_day_with_capture<F>(
+    game: &mut Game,
+    competition_index: usize,
+    today: &str,
+    on_capture: &mut F,
+) where
+    F: FnMut(StatsState),
+{
+    if competition_index >= game.competitions.len() {
+        simulate_matchday_with_capture(game, today, on_capture);
+        return;
+    }
+
+    let competition = game.competitions[competition_index].clone();
+    game.league = Some(competition);
+    simulate_matchday_with_capture(game, today, on_capture);
+    if let Some(updated_competition) = game.league.take() {
+        game.competitions[competition_index] = updated_competition;
+    }
+    game.sync_legacy_league();
+}
+
+/// Process a single day advance.
+pub fn process_day(game: &mut Game) {
+    process_day_with_capture(game, &mut |_| {});
+}
+
+pub fn process_day_with_capture<F>(game: &mut Game, on_capture: &mut F)
+where
+    F: FnMut(StatsState),
+{
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+    transfers::process_loan_development_reports(game);
+    transfers::process_loan_returns(game);
+
+    let due_competitions = competition_indices_due_today(game, &today);
+    let has_match_today = !due_competitions.is_empty();
+
+    if has_match_today {
+        info!("[turn] process_day {}: matchday", today);
+        for competition_index in due_competitions {
+            simulate_competition_day_with_capture(game, competition_index, &today, on_capture);
+        }
+    } else {
+        let weekday_num = game.clock.current_date.weekday().num_days_from_monday();
+        crate::ai_training::apply_ai_training_policies(game, weekday_num);
+        training::process_training(game, weekday_num);
+        training::check_squad_fitness_warnings(game);
+    }
+
+    // Tiered simulation: competitions outside the active scope are resolved by
+    // scoreline only, keeping the dormant world moving without the full engine.
+    let dormant_competitions = dormant_competition_indices_due_today(game, &today);
+    if !dormant_competitions.is_empty() {
+        let mut rng = rand::rng();
+        for competition_index in dormant_competitions {
+            dormant::simulate_dormant_competition_day(game, competition_index, &today, &mut rng);
+        }
+    }
+
+    // National-team football: window friendlies and any running World Cup.
+    // Both self-filter by date, so they are no-ops on other days.
+    crate::national_team::process_national_team_fixtures_due(game, &today, &mut rand::rng());
+    crate::world_cup::process_world_cup_fixtures_due(game, &today, &mut rand::rng());
+
+    crate::contracts::process_contract_expiries(game);
+
+    // Weekly financial processing (wages, matchday income, warnings)
+    crate::finances::process_weekly_finances(game);
+
+    // Board objectives (generate if missing, update progress)
+    board_objectives::generate_objectives(game);
+    board_objectives::update_objective_progress(game);
+
+    // Player conversations, random events, and scouting
+    player_events::check_player_events(game);
+    progress_injury_recovery(game);
+    random_events::check_random_events(game);
+    scouting::process_scouting(game);
+    transfers::process_pending_transfer_registrations(game);
+    transfers::process_pending_loan_registrations(game);
+    transfers::generate_incoming_transfer_offers(game);
+    crate::generator::process_available_staff_market(game);
+    crate::ai_hiring::update_ai_manager_satisfaction(game);
+
+    news::generate_weekly_digest_news(game, &today);
+    news::generate_pre_match_messages(game, &today);
+
+    crate::firing::check_manager_firing(game);
+    crate::ai_hiring::process_vacant_ai_clubs(game);
+    crate::job_offers::check_job_offers(game);
+
+    debug!("[turn] process_day {}: complete, advancing clock", today);
+    game.clock.advance_days(1);
+    crate::season_context::refresh_game_context(game);
+}
+
+/// Called after a live match finishes to complete the day:
+/// generates matchday news, pre-match messages, and advances the clock by one day.
+pub fn finish_live_match_day(game: &mut Game) {
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+    info!("[turn] finish_live_match_day: {}", today);
+    transfers::process_loan_development_reports(game);
+    transfers::process_loan_returns(game);
+    generate_matchday_news(game, &today);
+
+    crate::contracts::process_contract_expiries(game);
+    crate::finances::process_weekly_finances(game);
+
+    board_objectives::generate_objectives(game);
+    board_objectives::update_objective_progress(game);
+
+    player_events::check_player_events(game);
+    progress_injury_recovery(game);
+    random_events::check_random_events(game);
+    scouting::process_scouting(game);
+    transfers::process_pending_transfer_registrations(game);
+    transfers::process_pending_loan_registrations(game);
+    transfers::generate_incoming_transfer_offers(game);
+    crate::generator::process_available_staff_market(game);
+    crate::ai_hiring::update_ai_manager_satisfaction(game);
+    news::generate_weekly_digest_news(game, &today);
+    news::generate_pre_match_messages(game, &today);
+
+    crate::firing::check_manager_firing(game);
+    crate::ai_hiring::process_vacant_ai_clubs(game);
+    crate::job_offers::check_job_offers(game);
+
+    game.clock.advance_days(1);
+    game.sync_legacy_league();
+    crate::season_context::refresh_game_context(game);
+}
+
+#[cfg(test)]
+#[allow(clippy::items_after_test_module)]
+mod tests {
+    use super::finish_live_match_day;
+    use crate::clock::GameClock;
+    use crate::game::Game;
+    use chrono::{TimeZone, Utc};
+    use domain::manager::Manager;
+    use domain::player::{Player, PlayerAttributes, Position};
+    use domain::staff::{Staff, StaffAttributes, StaffRole};
+    use domain::team::Team;
+
+    fn make_team() -> Team {
+        let mut team = Team::new(
+            "team1".to_string(),
+            "Test FC".to_string(),
+            "TST".to_string(),
+            "England".to_string(),
+            "London".to_string(),
+            "Stadium".to_string(),
+            40_000,
+        );
+        team.finance = 5_000_000;
+        team.wage_budget = 2_000_000;
+        team
+    }
+
+    fn make_player() -> Player {
+        let attrs = PlayerAttributes {
+            pace: 65,
+            engine: 65,
+            power: 65,
+            agility: 65,
+            passing: 65,
+            finishing: 65,
+            defending: 65,
+            touch: 65,
+            anticipation: 65,
+            vision: 65,
+            decisions: 65,
+            composure: 65,
+            leadership: 50,
+            shot_stopping: 20,
+            aerial: 60,
+            burst: 50,
+            distribution: 50,
+            commanding: 50,
+            playing_out: 50,
+        };
+        let mut player = Player::new(
+            "player1".to_string(),
+            "Player".to_string(),
+            "Test Player".to_string(),
+            "1995-01-01".to_string(),
+            "GB".to_string(),
+            Position::Midfielder,
+            attrs,
+        );
+        player.team_id = Some("team1".to_string());
+        player.wage = 52_000;
+        player
+    }
+
+    fn make_staff() -> Staff {
+        let mut staff = Staff::new(
+            "staff1".to_string(),
+            "Staff".to_string(),
+            "Coach".to_string(),
+            "1980-01-01".to_string(),
+            StaffRole::Coach,
+            StaffAttributes {
+                coaching: 70,
+                judging_ability: 50,
+                judging_potential: 50,
+                physiotherapy: 30,
+            },
+        );
+        staff.team_id = Some("team1".to_string());
+        staff.nationality = "GB".to_string();
+        staff.wage = 10_400;
+        staff
+    }
+
+    #[test]
+    fn finish_live_match_day_runs_weekly_finances_on_monday() {
+        let clock = GameClock::new(Utc.with_ymd_and_hms(2025, 6, 16, 12, 0, 0).unwrap());
+        let mut manager = Manager::new(
+            "mgr1".to_string(),
+            "Test".to_string(),
+            "Manager".to_string(),
+            "1980-01-01".to_string(),
+            "England".to_string(),
+        );
+        manager.hire("team1".to_string());
+
+        let mut game = Game::new(
+            clock,
+            manager,
+            vec![make_team()],
+            vec![make_player()],
+            vec![make_staff()],
+            vec![],
+        );
+        let initial_finance = game.teams[0].finance;
+
+        finish_live_match_day(&mut game);
+
+        assert_eq!(
+            game.teams[0].finance,
+            initial_finance - ((52_000 + 10_400) / 52)
+        );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Domain → Engine type conversion
+// ---------------------------------------------------------------------------
+
+fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
+    let team = game.teams.iter().find(|t| t.id == team_id);
+    let player_roles = team.map(|t| &t.player_roles);
+    let (name, formation, play_style, tactics) = match team {
+        Some(t) => (
+            t.name.clone(),
+            t.formation.clone(),
+            match t.play_style {
+                domain::team::PlayStyle::Attacking => engine::PlayStyle::Attacking,
+                domain::team::PlayStyle::Defensive => engine::PlayStyle::Defensive,
+                domain::team::PlayStyle::Possession => engine::PlayStyle::Possession,
+                domain::team::PlayStyle::Counter => engine::PlayStyle::Counter,
+                domain::team::PlayStyle::HighPress => engine::PlayStyle::HighPress,
+                _ => engine::PlayStyle::Balanced,
+            },
+            domain_to_engine_tactics(&t.tactics_phase),
+        ),
+        None => (
+            "Unknown".into(),
+            "4-4-2".into(),
+            engine::PlayStyle::Balanced,
+            engine::TacticsConfig::default(),
+        ),
+    };
+
+    let players: Vec<engine::PlayerData> = game
+        .players
+        .iter()
+        .filter(|p| p.team_id.as_deref() == Some(team_id))
+        .map(|p| {
+            let pos = match p.position.to_group_position() {
+                DomainPosition::Goalkeeper => engine::Position::Goalkeeper,
+                DomainPosition::Defender => engine::Position::Defender,
+                DomainPosition::Midfielder => engine::Position::Midfielder,
+                DomainPosition::Forward => engine::Position::Forward,
+                _ => engine::Position::Midfielder,
+            };
+            engine::PlayerData {
+                id: p.id.clone(),
+                name: p.match_name.clone(),
+                position: pos,
+                ovr: p.ovr,
+                condition: p.condition,
+                fitness: p.fitness,
+                pace: p.attributes.pace,
+                stamina: p.attributes.engine,
+                strength: p.attributes.power,
+                agility: p.attributes.agility,
+                passing: p.attributes.passing,
+                shooting: p.attributes.finishing,
+                tackling: p.attributes.defending,
+                dribbling: p.attributes.touch,
+                defending: p.attributes.defending,
+                positioning: p.attributes.anticipation,
+                vision: p.attributes.vision,
+                decisions: p.attributes.decisions,
+                composure: p.attributes.composure,
+                aggression: p.personality.neuroticism,
+                teamwork: p.personality.agreeableness,
+                leadership: p.attributes.leadership,
+                handling: p.attributes.shot_stopping,
+                reflexes: p.attributes.shot_stopping,
+                aerial: p.attributes.aerial,
+                traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
+                role: player_roles
+                    .and_then(|roles| roles.get(&p.id))
+                    .map(domain_to_engine_role)
+                    .unwrap_or(engine::PlayerRole::Standard),
+            }
+        })
+        .collect();
+
+    engine::TeamData {
+        id: team_id.to_string(),
+        name,
+        formation,
+        play_style,
+        players,
+        tactics,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Matchday simulation using the engine crate
+// ---------------------------------------------------------------------------
+
+fn simulate_matchday_with_capture<F>(game: &mut Game, today: &str, on_capture: &mut F)
+where
+    F: FnMut(StatsState),
+{
+    info!("[turn] simulate_matchday: {}", today);
+    simulate_other_matches_with_capture(game, today, None, on_capture);
+    generate_matchday_news(game, today);
+}
+
+/// Simulate all scheduled matches for `today`, optionally skipping one fixture
+/// (the user's live match). Called by both process_day and advance_time_with_mode.
+pub fn simulate_other_matches(game: &mut Game, today: &str, skip_fixture: Option<usize>) {
+    simulate_other_matches_with_capture(game, today, skip_fixture, &mut |_| {});
+}
+
+pub fn simulate_other_matches_with_capture<F>(
+    game: &mut Game,
+    today: &str,
+    skip_fixture: Option<usize>,
+    on_capture: &mut F,
+) where
+    F: FnMut(StatsState),
+{
+    let fixture_indices: Vec<usize> = game.league.as_ref().map_or(vec![], |league| {
+        league
+            .fixtures
+            .iter()
+            .enumerate()
+            .filter(|(i, f)| {
+                f.date == today
+                    && f.status == FixtureStatus::Scheduled
+                    && (skip_fixture != Some(*i))
+            })
+            .map(|(i, _)| i)
+            .collect()
+    });
+
+    for idx in fixture_indices {
+        simulate_single_match_with_capture(game, idx, on_capture);
+    }
+}
+
+fn simulate_single_match_with_capture<F>(game: &mut Game, idx: usize, on_capture: &mut F)
+where
+    F: FnMut(StatsState),
+{
+    let (home_team_id, away_team_id, is_knockout) = {
+        let league = game.league.as_ref().unwrap();
+        let f = &league.fixtures[idx];
+        (
+            f.home_team_id.clone(),
+            f.away_team_id.clone(),
+            league.is_knockout_fixture(&f.id),
+        )
+    };
+
+    let home_data = build_engine_team(game, &home_team_id);
+    let away_data = build_engine_team(game, &away_team_id);
+    let config = engine::MatchConfig::default();
+    let mut report = engine::simulate(&home_data, &away_data, &config);
+    // A level knockout tie must produce a winner: resolve it with a simulated
+    // shootout so the home side no longer advances by default on a draw.
+    if is_knockout && report.home_goals == report.away_goals {
+        let home_strength = crate::catchup::club_strength(&game.players, &home_team_id);
+        let away_strength = crate::catchup::club_strength(&game.players, &away_team_id);
+        let (home_pens, away_pens) = crate::national_team::simulate_shootout(
+            home_strength,
+            away_strength,
+            &mut rand::rng(),
+        );
+        report.home_penalties = Some(home_pens);
+        report.away_penalties = Some(away_pens);
+    }
+    apply_match_report_with_capture(game, idx, &home_team_id, &away_team_id, &report, on_capture);
+}

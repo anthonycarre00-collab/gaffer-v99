@@ -1,0 +1,85 @@
+[package]
+name = "openfootmanager"
+version = "0.3.0"
+description = "Openfoot Manager"
+authors = ["Sturdy Robot (admin@esportsmanager.net)"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "openfootmanager_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[workspace]
+members = ["crates/ofm_core", "crates/db", "crates/domain", "crates/engine", "crates/sim-bench", "crates/ofm-cli"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-opener = "2"
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+log = "0.4"
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+domain = { path = "crates/domain" }
+ofm_core = { path = "crates/ofm_core" }
+engine = { path = "crates/engine" }
+db = { path = "crates/db" }
+chrono = "0.4.44"
+rand = "0.10"
+semver = "1"
+base64 = "0.22"
+image = { version = "0.25.6", default-features = false, features = ["png", "webp"] }
+webp = "0.3.1"
+# Pin `time` below 0.3.52: that release made a breaking change to
+# `Parsable::parse` within a 0.3.x patch, which fails to compile against the
+# transitive `cookie` 0.18.1 (pulled in by Tauri). Remove once Tauri/cookie
+# ship a fix. See PR #265 CI failure.
+time = "=0.3.51"
+
+# Dev builds (`tauri dev`) otherwise run the whole simulation unoptimized, which
+# is the dominant cause of the in-app sluggishness. Lightly optimizing our own
+# crates and fully optimizing dependencies keeps incremental compiles fast while
+# making the played dev build an order of magnitude quicker at runtime.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[features]
+mcp = ["dep:rmcp", "dep:axum", "dep:tower", "dep:tokio", "dep:tokio-util"]
+# Forwards to `db/save-snapshots`. Enable with `tauri dev -f save-snapshots`
+# (or via the `ofm-dev-snap` alias from shell.nix) to write a date-stamped
+# copy of each save's `.db` before every overwrite. Dev-only.
+save-snapshots = ["db/save-snapshots"]
+
+[dependencies.rmcp]
+version = "1.7"
+features = ["server", "transport-streamable-http-server", "macros"]
+optional = true
+
+[dependencies.axum]
+version = "0.8"
+optional = true
+
+[dependencies.tower]
+version = "0.5"
+optional = true
+
+[dependencies.tokio]
+version = "1"
+features = ["net", "rt-multi-thread", "macros", "signal"]
+optional = true
+
+[dependencies.tokio-util]
+version = "0.7"
+features = ["codec"]
+optional = true
