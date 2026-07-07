@@ -276,6 +276,8 @@ export interface PlayerData {
   jersey_number?: number | null;
   personality?: PersonalityProfile;
   stability_modifier?: number;
+  /** Gaffer Phase 2 — narrative traits (Technical Identity + Psychological + Social) */
+  narrative_traits?: string[];
 }
 
 export interface PersonalityProfile { openness:number;conscientiousness:number;extraversion:number;agreeableness:number;neuroticism:number;confidence:number; }

@@ -122,6 +122,10 @@ pub struct Game {
     pub package_lockfile: Vec<crate::generator::PackageLock>,
     #[serde(default = "default_game_seed")]
     pub deterministic_seed: u64,
+
+    /// Gaffer Phase 2 — Player relationship graph.
+    #[serde(default)]
+    pub relationship_graph: crate::relationships::RelationshipGraph,
 }
 
 fn default_game_seed() -> u64 {
@@ -166,6 +170,7 @@ impl Game {
             extra_translations: std::collections::HashMap::new(),
             package_lockfile: vec![],
             deterministic_seed: default_game_seed(),
+            relationship_graph: crate::relationships::RelationshipGraph::new(),
         };
         game.promote_legacy_league();
         crate::football_identity::upgrade_game_football_identities(&mut game);

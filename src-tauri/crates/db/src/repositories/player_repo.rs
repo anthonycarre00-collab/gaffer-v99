@@ -317,6 +317,7 @@ fn row_to_player(row: &rusqlite::Row) -> rusqlite::Result<Player> {
         traits: serde_json::from_str(&traits_json).unwrap_or_default(),
         personality: domain::player::PersonalityProfile::default(),
         stability_modifier: 50,
+        narrative_traits: Vec::new(),
         ovr,
         potential,
         contract_end: row.get(15)?,

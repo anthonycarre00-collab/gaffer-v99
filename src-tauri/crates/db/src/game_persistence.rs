@@ -341,6 +341,7 @@ impl GamePersistenceReader {
                     .map_err(|_| "be.error.gamePersistence.loadFailed".to_string())?
             },
             deterministic_seed: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(42),
+            relationship_graph: ofm_core::relationships::RelationshipGraph::new(),
         };
         game.promote_legacy_league();
         ofm_core::season_context::refresh_game_context(&mut game);

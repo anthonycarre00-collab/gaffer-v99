@@ -80,7 +80,12 @@ impl<'a> InterpretationSurfaceService<'a> {
         let pl = if am<35.0 {"Crushing"} else if am<55.0 {"High"} else if am<75.0 {"Moderate"} else {"Low"};
         let mut he = ExplanationChain::new();
         he.push(format!("SquadPulse (Phase 1 placeholder) = avg morale = {:.0}", am), Some("squad_pulse_phase1".into()));
-        SquadMeaningSnapshot { squad_harmony_score:am.round() as u8,tactical_coherence_score:50,pressure_level:pl.into(),media_heat:0,dressing_room_tension_flag:false,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:fb.into(),identity_alignment_label:"Unknown".into(),harmony_explanation:he }
+        let tension = self.game.relationship_graph.has_tension(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
+        let density = self.game.relationship_graph.positive_density(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
+        let conflict = self.game.relationship_graph.conflict_severity(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
+        he.push(format!("Positive relationship density: {}%, Conflict severity: {}%", density, conflict), Some("squad_relationships".into()));
+
+        SquadMeaningSnapshot { squad_harmony_score:am.round() as u8,tactical_coherence_score:50,pressure_level:pl.into(),media_heat:0,dressing_room_tension_flag:tension,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:fb.into(),identity_alignment_label:"Unknown".into(),harmony_explanation:he }
     }
 
     pub fn match_meaning(&self) -> MatchMeaningSnapshot {
@@ -127,11 +132,57 @@ impl<'a> InterpretationSurfaceService<'a> {
             current_form_label:cfl.to_string(),confidence_label:cl.into(),fatigue_label:fl.into(),
             trajectory_label:"Unknown".into(),stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
             pressure_response_type:pr,media_sensitivity:msi,rivalry_trigger_flag:false,morale_state:ms.into(),
-            strongest_positive_link:None,strongest_negative_link:None,chemistry_score:0,clique_membership:vec![],
+            strongest_positive_link: self.get_strongest_positive_link(player),
+            strongest_negative_link: self.get_strongest_negative_link(player),
+            chemistry_score: self.get_chemistry_score(player),
+            clique_membership: self.get_clique_membership(player),
             growth_vector:"Unknown".into(),training_alignment_label:"Unknown".into(),mentor_bonus_flag:false,
             spreadsheet_attributes:sa,role_identity_explanation:role_explanation,stability_explanation:se,
             morale_state_explanation:me,pressure_response_explanation:pe,
         }
+    }
+
+    /// Get the player's strongest ally name from the relationship graph.
+    fn get_strongest_positive_link(&self, player: &Player) -> Option<String> {
+        self.game.relationship_graph
+            .strongest_positive(&player.id)
+            .map(|(other_id, _)| {
+                self.game.players.iter()
+                    .find(|p| p.id == other_id)
+                    .map(|p| p.match_name.clone())
+                    .unwrap_or_else(|| other_id.to_string())
+            })
+    }
+
+    /// Get the player's strongest tension name from the relationship graph.
+    fn get_strongest_negative_link(&self, player: &Player) -> Option<String> {
+        self.game.relationship_graph
+            .strongest_negative(&player.id)
+            .map(|(other_id, _)| {
+                self.game.players.iter()
+                    .find(|p| p.id == other_id)
+                    .map(|p| p.match_name.clone())
+                    .unwrap_or_else(|| other_id.to_string())
+            })
+    }
+
+    /// Get chemistry score from average relationship strength.
+    fn get_chemistry_score(&self, player: &Player) -> i8 {
+        let rels = self.game.relationship_graph.relationships_for(&player.id);
+        if rels.is_empty() {
+            return 0;
+        }
+        let avg: f32 = rels.iter().map(|(_, e)| e.strength as f32).sum::<f32>() / rels.len() as f32;
+        avg as i8
+    }
+
+    /// Get clique membership labels for the player.
+    fn get_clique_membership(&self, player: &Player) -> Vec<String> {
+        let cliques = self.game.relationship_graph.cliques_for(&player.id);
+        cliques.iter()
+            .filter(|c| c.member_ids.contains(&player.id))
+            .map(|c| format!("{:?} ({} members)", c.clique_type, c.member_ids.len()))
+            .collect()
     }
 
     fn derive_role_identity(&self, player: &Player) -> String {

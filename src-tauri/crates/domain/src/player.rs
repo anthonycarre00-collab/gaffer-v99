@@ -55,6 +55,11 @@ pub struct Player {
     #[serde(default = "default_stability")]
     pub stability_modifier: u8,
 
+    /// Gaffer Phase 2 — Narrative traits (Technical Identity + Psychological + Social).
+    /// Assigned at world-gen, not auto-derived from attributes.
+    #[serde(default)]
+    pub narrative_traits: Vec<String>,
+
     // Derived ratings (set by ofm_core, backend is source of truth)
     /// Position-weighted overall rating (1–99). Computed from natural position.
     #[serde(default)]
@@ -663,6 +668,7 @@ impl Player {
             traits,
             personality: PersonalityProfile::default(),
             stability_modifier: 50,
+            narrative_traits: Vec::new(),
             ovr: 0,
             potential: 0,
             contract_end: None,
