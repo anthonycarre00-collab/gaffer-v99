@@ -64,6 +64,27 @@ fn apply_attribute_curve(player: &mut Player, age: i32, season: u32) {
         increase_attribute(&mut player.attributes.decisions, growth);
         increase_attribute(&mut player.attributes.composure, growth);
     }
+
+    // ----- Gaffer Phase 8 — Veteran decline -----
+    // Condition recovery decline: veterans recover more slowly from matches.
+    // Implemented as a fitness penalty (fitness drives recovery rate in training.rs).
+    // Age 33-35: -1 fitness per season; 36+: -2 per season.
+    if age >= 33 {
+        let fitness_loss = if age >= 36 { 2 } else { 1 };
+        player.fitness = player.fitness.saturating_sub(fitness_loss).max(20);
+    }
+
+    // Stability shift for veterans:
+    //   - High-stability veterans (>= 70) get +5 (they've held it together, become more reliable)
+    //   - Low-stability veterans (< 40) get -10 (the cracks show harder with age)
+    //   - Clamped to 1-100
+    if age >= 33 {
+        if player.stability_modifier >= 70 {
+            player.stability_modifier = (player.stability_modifier.saturating_add(5)).min(100);
+        } else if player.stability_modifier < 40 {
+            player.stability_modifier = player.stability_modifier.saturating_sub(10).max(1);
+        }
+    }
 }
 
 fn has_expired_contract(player: &Player, current_date: NaiveDate) -> bool {
@@ -120,9 +141,12 @@ fn should_retire(player: &Player, age: i32, current_date: NaiveDate, season: u32
     roll < chance
 }
 
-fn retire_player(player: &mut Player) {
+fn retire_player(player: &mut Player, season: u32) {
+    // Gaffer Phase 8 — record the team and season so the regen system
+    // can generate a replacement regen for the right team.
+    player.former_team_id = player.team_id.take();
+    player.retired_season = Some(season);
     player.retired = true;
-    player.team_id = None;
     player.contract_end = None;
     player.transfer_listed = false;
     player.loan_listed = false;
@@ -144,7 +168,7 @@ pub fn apply_seasonal_aging(game: &mut Game, current_date: NaiveDate, season: u3
             {
                 team.remove_player_references(&player.id);
             }
-            retire_player(player);
+            retire_player(player, season);
         }
     }
 }

@@ -229,6 +229,16 @@ impl RelationshipGraph {
             .modify_strength(delta);
     }
 
+    /// Set a relationship edge with an absolute strength and volatility.
+    /// Creates the edge if it doesn't exist. Used by the regen system to
+    /// initialize teammate relationships for new youth prospects.
+    pub fn set_edge(&mut self, a: &str, b: &str, strength: i8, volatility: f32) {
+        let key = Self::edge_key(a, b);
+        let edge = self.edges.entry(key).or_insert_with(RelationshipEdge::neutral);
+        edge.strength = strength.clamp(-100, 100);
+        edge.volatility = volatility;
+    }
+
     /// Escalate a relationship (records date, adjusts volatility).
     pub fn escalate(&mut self, a: &str, b: &str, date: &str, intensity: i8) {
         let key = Self::edge_key(a, b);

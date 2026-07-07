@@ -313,6 +313,8 @@ fn row_to_player(row: &rusqlite::Row) -> rusqlite::Result<Player> {
         injury: injury_json.and_then(|j| serde_json::from_str(&j).ok()),
         team_id: row.get(12)?,
         retired: retired != 0,
+        former_team_id: None,
+        retired_season: None,
         squad_role: parse_squad_role(&squad_role_str),
         traits: serde_json::from_str(&traits_json).unwrap_or_default(),
         personality: domain::player::PersonalityProfile::default(),

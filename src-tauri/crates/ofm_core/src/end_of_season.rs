@@ -1064,6 +1064,13 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
 
     crate::aging::apply_seasonal_aging(game, game.clock.current_date.date_naive(), season);
 
+    // Gaffer Phase 8 — Generate replacement regens for players who retired this season,
+    // plus annual academy intake (3-5 youth prospects per team).
+    crate::regen::generate_season_regens(game, season);
+    crate::regen::generate_academy_intake(game, season);
+    // Clear scouting knowledge for retired players (they're gone — no point keeping stale data).
+    crate::regen::cleanup_retired_player_scouting(game);
+
     for player in game.players.iter_mut() {
         // Reset stats for next season
         player.stats = PlayerSeasonStats::default();

@@ -45,6 +45,16 @@ pub struct Player {
     pub team_id: Option<String>,
     #[serde(default)]
     pub retired: bool,
+    /// Gaffer Phase 8 — Team the player was on when they retired.
+    /// Used by the regen system to generate a replacement regen for the right team.
+    /// None for players who retired as free agents, or who haven't retired yet.
+    #[serde(default)]
+    pub former_team_id: Option<String>,
+    /// Gaffer Phase 8 — Season number when the player retired.
+    /// Used to identify "newly retired this season" players for regen generation.
+    /// None for active players or pre-Phase-8 saves (loaded as None via serde default).
+    #[serde(default)]
+    pub retired_season: Option<u32>,
     #[serde(default)]
     pub squad_role: SquadRole,
 
@@ -664,6 +674,8 @@ impl Player {
             injury: None,
             team_id: None,
             retired: false,
+            former_team_id: None,
+            retired_season: None,
             squad_role: SquadRole::Senior,
             traits,
             personality: PersonalityProfile::default(),
