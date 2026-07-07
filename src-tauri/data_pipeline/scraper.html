@@ -3,372 +3,824 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gaffer — Player Data Scraper v2</title>
+<title>Gaffer — Player Data Scraper v3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#cbd5e1;padding:20px;max-width:1400px;margin:0 auto}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#cbd5e1;padding:20px;max-width:1500px;margin:0 auto}
 h1{color:#22d3ee;font-size:1.4em;margin-bottom:4px}
 .subtitle{color:#64748b;font-size:.85em;margin-bottom:20px}
 .card{background:#111827;border:1px solid #1e293b;border-radius:10px;padding:16px;margin-bottom:14px}
 .card h2{color:#818cf8;font-size:1em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .step-num{background:#312e81;color:#c7d2fe;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
-select,input{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:7px 10px;font-size:.85em}
+select,input[type=text],input[type=number]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:7px 10px;font-size:.85em}
 select{min-width:180px}
+input[type=file]{display:none}
 button{background:#2563eb;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s}
 button:hover:not(:disabled){background:#3b82f6;transform:translateY(-1px)}
 button:disabled{background:#334155;color:#64748b;cursor:not-allowed}
 button.success{background:#059669}button.success:hover:not(:disabled){background:#10b981}
 button.danger{background:#dc2626}button.danger:hover:not(:disabled){background:#ef4444}
+button.ghost{background:#334155;color:#e2e8f0}button.ghost:hover:not(:disabled){background:#475569}
 .stats{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
 .stat{background:#1e293b;padding:8px 14px;border-radius:8px;text-align:center;border:1px solid #334155}
 .stat .num{font-size:1.4em;font-weight:700;color:#22d3ee}
-.stat .label{font-size:.7em;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.progress-wrap{margin:8px 0}
-.progress{width:100%;height:22px;background:#1e293b;border-radius:11px;overflow:hidden;border:1px solid #334155}
-.progress-bar{height:100%;background:linear-gradient(90deg,#2563eb,#22d3ee);transition:width .3s;display:flex;align-items:center;justify-content:center;font-size:.72em;font-weight:600;color:#fff;white-space:nowrap}
-.progress-bar.err{background:linear-gradient(90deg,#dc2626,#f87171)}
-.progress-bar.ok{background:linear-gradient(90deg,#059669,#34d399)}
-.log{background:#0a0e1a;border:1px solid #1e293b;border-radius:6px;padding:8px;max-height:180px;overflow-y:auto;font-family:'Cascadia Code',monospace;font-size:.78em;line-height:1.5}
-.log .ok{color:#34d399}.log .err{color:#f87171}.log .warn{color:#fbbf24}.log .info{color:#22d3ee}.log .dim{color:#475569}
-.table-wrap{max-height:350px;overflow:auto;border:1px solid #1e293b;border-radius:6px;margin-top:8px}
-table{width:100%;border-collapse:collapse;font-size:.75em}
-th{background:#1e293b;padding:5px 7px;text-align:left;position:sticky;top:0;z-index:1;cursor:pointer;white-space:nowrap}
-th:hover{background:#334155}
-td{padding:3px 7px;border-bottom:1px solid #1e293b;white-space:nowrap}
-tr:hover td{background:#111827}
-.paste-area{width:100%;min-height:80px;background:#0a0e1a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:8px;font-family:monospace;font-size:.78em;resize:vertical}
-.paste-area:focus{outline:none;border-color:#22d3ee}
-.paste-area::placeholder{color:#475569}
-.hidden{display:none!important}
-.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.68em;font-weight:600}
-.badge-ok{background:#059669;color:#fff}.badge-warn{background:#d97706;color:#fff}.badge-err{background:#dc2626;color:#fff}.badge-info{background:#2563eb;color:#fff}
-.divider{height:1px;background:#1e293b;margin:12px 0}
-.source-status{display:flex;gap:8px;align-items:center;font-size:.8em;margin-bottom:6px}
-.source-dot{width:8px;height:8px;border-radius:50%}
-.dot-ok{background:#34d399}.dot-err{background:#f87171}.dot-wait{background:#fbbf24}.dot-idle{background:#475569}
-.muted{color:#64748b;font-size:.8em}
-a{color:#22d3ee;text-decoration:none}a:hover{text-decoration:underline}
-details{margin-top:8px}summary{cursor:pointer;color:#818cf8;font-size:.85em;padding:4px 0}
-.coll{color:#64748b}
+.stat .lab{color:#64748b;font-size:.7em;text-transform:uppercase;letter-spacing:.5px}
+textarea{width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:10px;font-family:'SF Mono',Consolas,monospace;font-size:.8em;min-height:140px;resize:vertical}
+.log{background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:8px;font-family:'SF Mono',Consolas,monospace;font-size:.78em;min-height:80px;max-height:220px;overflow-y:auto;margin-top:8px}
+.log .info{color:#94a3b8}.log .ok{color:#10b981}.log .warn{color:#f59e0b}.log .err{color:#ef4444}
+.log .dim{color:#475569}
+.hidden{display:none}
+.progress-wrap{background:#1e293b;border-radius:6px;height:22px;overflow:hidden;margin-top:8px;border:1px solid #334155}
+.progress-bar{height:100%;background:linear-gradient(90deg,#3b82f6,#22d3ee);transition:width .3s;color:#fff;font-size:.7em;line-height:22px;padding:0 8px;white-space:nowrap;width:0}
+.progress-bar.ok{background:linear-gradient(90deg,#059669,#10b981)}
+.progress-bar.err{background:linear-gradient(90deg,#dc2626,#ef4444)}
+.source-row{display:flex;gap:10px;align-items:center;margin-bottom:6px;font-size:.85em}
+.source-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot-idle{background:#475569}.dot-wait{background:#f59e0b;animation:pulse 1s infinite}.dot-ok{background:#10b981}.dot-warn{background:#f59e0b}.dot-err{background:#ef4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.source-row .label{flex:1;color:#94a3b8}
+.source-row .status{color:#64748b;font-size:.8em}
+.tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.tab{background:#1e293b;color:#64748b;border:1px solid #334155;border-radius:6px;padding:6px 12px;font-size:.8em;cursor:pointer}
+.tab.active{background:#312e81;color:#c7d2fe;border-color:#4f46e5}
+.hint{color:#64748b;font-size:.78em;margin-top:4px;line-height:1.5}
+.hint b{color:#94a3b8}
+.hint code{background:#1e293b;padding:1px 5px;border-radius:3px;font-size:.9em;color:#22d3ee}
+.badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.7em;font-weight:600}
+.badge-ok{background:#064e3b;color:#34d399}.badge-warn{background:#78350f;color:#fbbf24}.badge-err{background:#7f1d1d;color:#f87171}
+.preview-wrap{overflow-x:auto;max-height:500px;overflow-y:auto;border:1px solid #1e293b;border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:.75em}
+th,td{padding:4px 7px;text-align:center;border-bottom:1px solid #1e293b;white-space:nowrap}
+th{background:#1e293b;color:#818cf8;position:sticky;top:0;font-weight:600}
+td:first-child,th:first-child{text-align:left;color:#e2e8f0}
+td b{color:#22d3ee}
+.col-group th{background:#0f172a;color:#64748b;font-size:.7em;text-transform:uppercase;letter-spacing:.5px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.75em;color:#64748b;margin-top:6px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.kbd{background:#1e293b;border:1px solid #334155;border-radius:4px;padding:1px 6px;font-size:.85em;color:#22d3ee;font-family:monospace}
+.instructions{background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;margin-top:8px;font-size:.8em;color:#94a3b8;line-height:1.6}
+.instructions ol{margin-left:20px}
+.instructions b{color:#e2e8f0}
+.instructions code{background:#1e293b;padding:1px 5px;border-radius:3px;color:#22d3ee}
+.paste-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.8em;color:#64748b}
+.paste-info span{color:#94a3b8}
+.pos-tag{display:inline-block;padding:1px 5px;border-radius:3px;font-size:.7em;font-weight:600}
+.pos-GK{background:#312e81;color:#c7d2fe}.pos-DEF{background:#064e3b;color:#34d399}.pos-MID{background:#78350f;color:#fbbf24}.pos-FWD{background:#7f1d1d;color:#f87171}
 </style>
 </head>
 <body>
+<h1>Gaffer — Player Data Scraper v3</h1>
+<div class="subtitle">Pulls real player data from FBref (with optional Transfermarkt + Understat enrichment), computes 19 Gaffer attributes, Big Five personality, and narrative traits. Designed to be ROBUST against CORS blocks and paste-format variations.</div>
 
-<h1>⚽ Gaffer Player Data Scraper v2</h1>
-<p class="subtitle">Pulls real player data from multiple sources → computes 19 Gaffer attributes + Big Five personality + narrative traits → exports JSON for the bundled world database.</p>
-
-<!-- Source Status Bar -->
-<div class="card">
-  <h2><span class="step-num">📊</span> Data Source Status</h2>
-  <div class="source-status"><span class="source-dot dot-idle" id="dot-fbref"></span> FBref Stats <span class="muted" id="status-fbref">Not started</span></div>
-  <div class="source-status"><span class="source-dot dot-idle" id="dot-tm"></span> Transfermarkt Info <span class="muted" id="status-tm">Not started</span></div>
-  <div class="source-status"><span class="source-dot dot-idle" id="dot-us"></span> Understat xG/xA <span class="muted" id="status-us">Not started</span></div>
-  <div class="stats" style="margin-top:8px">
-    <div class="stat"><div class="num" id="total-players">0</div><div class="label">Total Players</div></div>
-    <div class="stat"><div class="num" id="total-enriched">0</div><div class="label">Fully Enriched</div></div>
-    <div class="stat"><div class="num" id="total-partial">0</div><div class="label">Partial Data</div></div>
-  </div>
+<div class="stats">
+<div class="stat"><div class="num" id="total-players">0</div><div class="lab">FBref players</div></div>
+<div class="stat"><div class="num" id="total-enriched">0</div><div class="lab">Full (3 sources)</div></div>
+<div class="stat"><div class="num" id="total-partial">0</div><div class="lab">Partial (2 sources)</div></div>
+<div class="stat"><div class="num" id="total-final">0</div><div class="lab">Merged players</div></div>
 </div>
 
-<!-- Step 1: FBref -->
+<!-- ============================================================================
+     STEP 1: FBREF
+     ========================================================================== -->
 <div class="card">
-  <h2><span class="step-num">1</span> FBref — Player Stats</h2>
-  <div class="row">
-    <select id="fbref-league">
-      <option value="Big5">Big 5 Leagues (All)</option>
-      <option value="Premier League">Premier League</option>
-      <option value="La Liga">La Liga</option>
-      <option value="Serie A">Serie A</option>
-      <option value="Bundesliga">Bundesliga</option>
-      <option value="Ligue 1">Ligue 1</option>
-    </select>
-    <select id="fbref-season">
-      <option value="2025-2026">2025-26</option>
-      <option value="2024-2025">2024-25</option>
-      <option value="2023-2024">2023-24</option>
-    </select>
-    <button onclick="runStep1()" id="btn-fbref">Fetch FBref Stats</button>
-    <button class="danger" onclick="clearStep1()">Clear</button>
-  </div>
-  <div class="progress-wrap hidden" id="fbref-progress-wrap">
-    <div class="progress"><div class="progress-bar" id="fbref-bar" style="width:0%">0%</div></div>
-  </div>
-  <div class="log hidden" id="fbref-log"></div>
-  <details><summary class="coll">Manual paste fallback (if auto-fetch fails)</summary>
-    <div style="margin-top:8px">
-      <p class="muted">Go to <a href="https://fbref.com/en/comps/Big5/stats/players/Big-5-European-Leagues-Stats" target="_blank">FBref Big 5 Stats</a> → select all rows → copy → paste here:</p>
-      <textarea class="paste-area" id="fbref-paste" placeholder="Paste FBref table data here (tab-separated)..."></textarea>
-      <div style="margin-top:6px"><button onclick="parseFbrefPaste()">Parse Pasted Data</button></div>
-    </div>
-  </details>
+<h2><span class="step-num">1</span> FBref — Big 5 European Leagues</h2>
+<div class="source-row"><div class="source-dot dot-idle" id="dot-fbref"></div><div class="label">Source: <a href="https://fbref.com/en/comps/Big5/stats/players/Big-5-European-Leagues-Stats" target="_blank" style="color:#22d3ee">fbref.com Big 5 stats</a></div><div class="status" id="status-fbref">Not started</div></div>
+
+<div class="tabs">
+<div class="tab active" data-tab="fbref-fetch" onclick="switchTab('fbref-fetch')">Auto-fetch</div>
+<div class="tab" data-tab="fbref-upload" onclick="switchTab('fbref-upload')">Upload HTML file</div>
+<div class="tab" data-tab="fbref-paste" onclick="switchTab('fbref-paste')">Paste table</div>
+<div class="tab" data-tab="fbref-sample" onclick="switchTab('fbref-sample')">Load sample</div>
 </div>
 
-<!-- Step 2: Transfermarkt -->
-<div class="card">
-  <h2><span class="step-num">2</span> Transfermarkt — Player Info</h2>
-  <div class="row">
-    <button onclick="runStep2()" id="btn-tm" disabled>Auto-Enrich from FBref List</button>
-    <button class="danger" onclick="clearStep2()">Clear</button>
-  </div>
-  <div class="progress-wrap hidden" id="tm-progress-wrap">
-    <div class="progress"><div class="progress-bar" id="tm-bar" style="width:0%">0%</div></div>
-  </div>
-  <div class="log hidden" id="tm-log"></div>
-  <details><summary class="coll">Manual paste fallback</summary>
-    <div style="margin-top:8px">
-      <p class="muted">Format: Name TAB DOB TAB Nationality TAB Height(cm) TAB Weight(kg) TAB Position TAB MarketValue TAB Club — one player per line</p>
-      <textarea class="paste-area" id="tm-paste" placeholder="Haaland\t2000-07-21\tnor\t194\t88\tCentre-Forward\t€180m\tManchester City"></textarea>
-      <div style="margin-top:6px"><button onclick="parseTmPaste()">Parse Pasted Data</button></div>
-    </div>
-  </details>
+<!-- Auto-fetch tab -->
+<div id="tab-fbref-fetch" class="tab-panel">
+<div class="row">
+<select id="fbref-season">
+<option value="2024">2024-25</option>
+<option value="2023" selected>2023-24</option>
+<option value="2022">2022-23</option>
+<option value="2021">2021-22</option>
+</select>
+<button onclick="runStep1Fetch()">Auto-fetch (5 CORS proxies)</button>
+<button class="ghost" onclick="clearStep1()">Clear</button>
+</div>
+<div class="hint">FBref blocks most CORS proxies. If this fails (it usually does), use <b>Upload HTML file</b> or <b>Paste table</b> instead — both work 100% of the time.</div>
+<div class="progress-wrap hidden" id="fbref-progress-wrap"><div class="progress-bar" id="fbref-bar"></div></div>
 </div>
 
-<!-- Step 3: Understat -->
-<div class="card">
-  <h2><span class="step-num">3</span> Understat — xG / xA Data</h2>
-  <div class="row">
-    <select id="us-league">
-      <option value="EPL">Premier League</option>
-      <option value="La_liga">La Liga</option>
-      <option value="Serie_A">Serie A</option>
-      <option value="Bundesliga">Bundesliga</option>
-      <option value="Ligue_1">Ligue 1</option>
-      <option value="RFPL">Russian PL</option>
-    </select>
-    <select id="us-season"><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select>
-    <button onclick="runStep3()" id="btn-us" disabled>Fetch Understat xG/xA</button>
-    <button class="danger" onclick="clearStep3()">Clear</button>
-  </div>
-  <div class="progress-wrap hidden" id="us-progress-wrap">
-    <div class="progress"><div class="progress-bar" id="us-bar" style="width:0%">0%</div></div>
-  </div>
-  <div class="log hidden" id="us-log"></div>
+<!-- Upload tab -->
+<div id="tab-fbref-upload" class="tab-panel hidden">
+<div class="row">
+<button onclick="document.getElementById('fbref-file').click()">Choose HTML file...</button>
+<input type="file" id="fbref-file" accept=".html,.htm,.txt">
+<button class="ghost" onclick="clearStep1()">Clear</button>
+</div>
+<div class="hint">Open the FBref Big 5 page in your browser → <span class="kbd">Ctrl+S</span> → save as "Webpage, HTML only" → upload that file here. The parser handles FBref's two-header-row table structure (group headers + leaf headers) and de-duplicates columns with the same name (Gls, Ast, xG all appear twice for abs + per-90).</div>
 </div>
 
-<!-- Step 4: Merge & Export -->
-<div class="card">
-  <h2><span class="step-num">4</span> Merge & Compute Gaffer Attributes</h2>
-  <div class="row">
-    <button onclick="runStep4()" class="success" id="btn-merge" disabled>Merge & Compute</button>
-    <button onclick="downloadJSON()" class="success" id="btn-json" disabled>Download gaffer_players.json</button>
-    <button onclick="downloadCSV()" id="btn-csv" disabled>Download CSV</button>
-  </div>
-  <div class="log hidden" id="merge-log"></div>
+<!-- Paste tab -->
+<div id="tab-fbref-paste" class="tab-panel hidden">
+<div class="paste-info">
+<span>Auto-detects: <code>TSV</code> · <code>CSV</code> · <code>HTML table</code> · <code>fixed-width</code></span>
+<span id="fbref-paste-stats">0 lines</span>
+</div>
+<textarea id="fbref-paste" placeholder="Paste the FBref table here. Works with:&#10;• 'Get table as CSV (for Excel)' from FBref (comma-separated, with _90 suffixes)&#10;• Copy the entire table from the browser (tab-separated, two header rows)&#10;• Select all + copy from the rendered page (tab or space separated)&#10;&#10;The parser auto-detects the format and de-duplicates FBref's repeating column names (Gls, Ast, xG appear twice — once absolute, once per-90)."></textarea>
+<div class="row" style="margin-top:6px">
+<button onclick="parseFbrefPaste()">Parse pasted data</button>
+<button class="ghost" onclick="clearStep1()">Clear</button>
+</div>
 </div>
 
-<!-- Preview -->
+<!-- Sample tab -->
+<div id="tab-fbref-sample" class="tab-panel hidden">
+<div class="row">
+<button onclick="loadSampleData()">Load 20 sample players (test parser)</button>
+<button class="ghost" onclick="clearStep1()">Clear</button>
+</div>
+<div class="hint">Loads 20 realistic synthetic FBref-style rows so you can verify the parser + Gaffer attribute computation works end-to-end without needing real data.</div>
+</div>
+
+<div class="log hidden" id="fbref-log"></div>
+</div>
+
+<!-- ============================================================================
+     STEP 2: TRANSFERMARKT (optional enrichment)
+     ========================================================================== -->
+<div class="card">
+<h2><span class="step-num">2</span> Transfermarkt — Height, weight, market value (optional)</h2>
+<div class="source-row"><div class="source-dot dot-idle" id="dot-tm"></div><div class="label">Source: transfermarkt.com search → player profile</div><div class="status" id="status-tm">Not started</div></div>
+<div class="hint">Optional. Auto-fetch from Transfermarkt is heavily rate-limited and usually fails for bulk. The recommended path is to <b>skip this step</b> — Gaffer attributes can be computed from FBref alone (height/weight defaults to position-average, market value defaults to OVR-based estimate).</div>
+<div class="row">
+<button onclick="runStep2()" id="btn-tm" disabled>Try auto-enrich (slow)</button>
+</div>
+<div class="progress-wrap hidden" id="tm-progress-wrap"><div class="progress-bar" id="tm-bar"></div></div>
+<div class="log hidden" id="tm-log"></div>
+<details style="margin-top:8px">
+<summary style="cursor:pointer;color:#64748b;font-size:.8em">Manual paste fallback (advanced)</summary>
+<textarea id="tm-paste" placeholder="Optional: tab-separated rows of&#10;Name&#9;DOB&#9;Nationality&#9;Height(cm)&#9;Weight(kg)&#9;Position&#9;MarketValue&#9;Club&#9;Appearances&#9;YellowCards&#10;Bukayo Saka&#9;2001-09-05&#9;England&#9;178&#9;65&#9;RW&#9;€100m&#9;Arsenal&#9;200&#9;12" style="margin-top:8px;min-height:80px"></textarea>
+<div class="row" style="margin-top:6px"><button onclick="parseTmPaste()">Parse TM paste</button></div>
+</details>
+</div>
+
+<!-- ============================================================================
+     STEP 3: UNDERSTAT (optional enrichment)
+     ========================================================================== -->
+<div class="card">
+<h2><span class="step-num">3</span> Understat — xG / xA breakdown (optional)</h2>
+<div class="source-row"><div class="source-dot dot-idle" id="dot-us"></div><div class="label">Source: understat.com league JSON</div><div class="status" id="status-us">Not started</div></div>
+<div class="hint">Optional. Understat's xG data is already present in the FBref Standard view (the <code>xG</code> and <code>xAG</code> columns), so this enrichment is largely redundant. Skip unless you want per-shot xG data.</div>
+<div class="row">
+<select id="us-league"><option value="EPL">Premier League</option><option value="La_liga">La Liga</option><option value="Serie_A">Serie A</option><option value="Bundesliga">Bundesliga</option><option value="Ligue_1">Ligue 1</option></select>
+<select id="us-season"><option value="2024">2024</option><option value="2023" selected>2023</option><option value="2022">2022</option></select>
+<button onclick="runStep3()" id="btn-us" disabled>Fetch Understat</button>
+</div>
+<div class="progress-wrap hidden" id="us-progress-wrap"><div class="progress-bar" id="us-bar"></div></div>
+<div class="log hidden" id="us-log"></div>
+</div>
+
+<!-- ============================================================================
+     STEP 4: MERGE & COMPUTE
+     ========================================================================== -->
+<div class="card">
+<h2><span class="step-num">4</span> Merge & compute Gaffer attributes</h2>
+<div class="row">
+<button onclick="runStep4()" id="btn-merge" disabled>Merge & compute</button>
+<button class="success" onclick="downloadJSON()" id="btn-json" disabled>Download JSON (for build_world.py)</button>
+<button class="success" onclick="downloadCSV()" id="btn-csv" disabled>Download CSV (for review)</button>
+</div>
+<div class="hint">Computes 19 Gaffer attributes (Body/Ball/Head/Gloves), Big Five personality (with confidence score), and 0-4 narrative traits per player. Works with FBref-only data; uses TM/Understat enrichment when available.</div>
+<div class="log hidden" id="merge-log"></div>
+</div>
+
+<!-- ============================================================================
+     PREVIEW
+     ========================================================================== -->
 <div class="card hidden" id="preview-card">
-  <h2>📊 Final Player Data Preview</h2>
-  <div class="table-wrap">
-    <table id="preview-table">
-      <thead><tr>
-        <th>Name</th><th>Pos</th><th>Nat</th><th>Age</th>
-        <th>Pace</th><th>Burst</th><th>Eng</th><th>Pwr</th><th>Agi</th>
-        <th>Pass</th><th>Dist</th><th>Tch</th><th>Fin</th><th>Def</th><th>Aer</th>
-        <th>Ant</th><th>Vis</th><th>Dec</th><th>Com</th><th>Ldr</th>
-        <th>SS</th><th>Cmd</th><th>PO</th><th>OVR</th>
-        <th>Open</th><th>Cons</th><th>Ext</th><th>Agr</th><th>Neu</th>
-        <th>Traits</th><th>Sources</th>
-      </tr></thead>
-      <tbody id="preview-body"></tbody>
-    </table>
-  </div>
+<h2>Preview <span style="color:#64748b;font-size:.8em;font-weight:400">(first 300 players)</span></h2>
+<div class="legend">
+<span><i style="background:#10b981"></i>3/3 sources</span>
+<span><i style="background:#f59e0b"></i>2/3 sources</span>
+<span><i style="background:#ef4444"></i>FBref only</span>
+</div>
+<div class="preview-wrap" style="margin-top:8px">
+<table id="preview-table">
+<thead></thead>
+<tbody id="preview-body"></tbody>
+</table>
+</div>
 </div>
 
 <script>
 // ============================================================================
-// STATE
+// GLOBAL STATE
 // ============================================================================
-let fbrefData=[], tmData={}, usData={}, merged=[];
+let fbrefData=[];       // parsed FBref rows
+let tmData={};          // name -> Transfermarkt info
+let usData={};          // name -> Understat info
+let merged=[];          // final computed players
+
+// 5 CORS proxies, tried in order. Each takes the target URL and returns text.
 const PROXIES=[
   url=>`https://corsproxy.io/?url=${encodeURIComponent(url)}`,
   url=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url=>`https://cors-anywhere.herokuapp.com/${url}`,
+  url=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
   url=>`https://thingproxy.freeboard.io/fetch/${url}`,
+  url=>`https://cors-anywhere.herokuapp.com/${url}`,
 ];
 
 // ============================================================================
 // HELPERS
 // ============================================================================
 const $=id=>document.getElementById(id);
-function setDot(id,state,label){
-  const dot=$(id);dot.className='source-dot dot-'+state;
-  const sid=id.replace('dot-','status-');$(sid).textContent=label;
-}
+function setDot(id,state,label){const dot=$(id);dot.className='source-dot dot-'+state;const sid=id.replace('dot-','status-');$(sid).textContent=label;}
 function log(id,msg,type='info'){const el=$(id);const t=new Date().toLocaleTimeString();el.innerHTML+=`<div class="${type}">[${t}] ${msg}</div>`;el.scrollTop=el.scrollHeight;el.classList.remove('hidden');}
 function setBar(id,pct,text){const b=$(id);b.style.width=pct+'%';b.textContent=text||pct+'%';if(pct>=100)b.classList.add('ok');}
 function show(id){$(id).classList.remove('hidden');}
 function hide(id){$(id).classList.add('hidden');}
 function norm99(v,min,max,inv=false){if(max===min)return 50;let n=(v-min)/(max-min);if(inv)n=1-n;return Math.max(1,Math.min(99,Math.round(n*99)));}
-function pct99(p){return Math.max(1,Math.min(99,Math.round(p*0.99)));}
 function jit(v,a=3){return Math.max(1,Math.min(99,v+Math.floor(Math.random()*(a*2+1))-a));}
-
-async function fetchMulti(url,opts={}){
-  for(let i=0;i<PROXIES.length;i++){
-    try{
-      const proxyUrl=PROXIES[i](url);
-      const ctrl=new AbortController();
-      const to=setTimeout(()=>ctrl.abort(),15000);
-      const r=await fetch(proxyUrl,{...opts,signal:ctrl.signal});
-      clearTimeout(to);
-      if(r.ok){const text=await r.text();if(text&&text.length>100)return{text,proxyIdx:i};}
-    }catch(e){console.log(`Proxy ${i} failed:`,e.message);}
-  }
-  // Last resort: direct fetch (works if CORS is permissive)
-  try{
-    const r=await fetch(url,opts);
-    if(r.ok){const text=await r.text();if(text)return{text,proxyIdx:-1};}
-  }catch(e){console.log('Direct fetch failed:',e.message);}
-  throw new Error('All fetch methods failed');
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  show('tab-'+name);
 }
 
 // ============================================================================
-// STEP 1: FBREF
+// GENERIC TABLE PARSER — handles TSV, CSV, HTML, fixed-width
+// Returns: {headers: [...], rows: [{col_name: value, ...}], format: 'tsv|csv|html|fixed'}
 // ============================================================================
-async function runStep1(){
-  const league=$('fbref-league').value,season=$('fbref-season').value;
-  $('btn-fbref').disabled=true;setDot('dot-fbref','wait','Fetching...');
-  show('fbref-progress-wrap');show('fbref-log');
-  log('fbref-log',`Fetching FBref stats: ${league} ${season}`,'info');
-  setBar('fbref-bar',5,'Connecting...');
-  
-  const url=`https://fbref.com/en/comps/Big5/${season}/stats/players/Big-5-European-Leagues-Stats`;
-  
-  try{
-    setBar('fbref-bar',20,'Downloading page...');
-    const{text,proxyIdx}=await fetchMulti(url);
-    log('fbref-log',`Downloaded ${text.length.toLocaleString()} bytes via ${proxyIdx>=0?'proxy #'+(proxyIdx+1):'direct'}`,'ok');
-    
-    setBar('fbref-bar',50,'Parsing table...');
-    const doc=new DOMParser().parseFromString(text,'text/html');
-    const table=doc.querySelector('#stats_standard, table.stats_table');
-    if(!table)throw new Error('Stats table not found in page HTML');
-    
-    const headers=[];
-    const hr=table.querySelector('thead tr:last-child');
-    if(hr)hr.querySelectorAll('th').forEach(th=>headers.push(th.textContent.trim()));
-    log('fbref-log',`Table: ${headers.length} columns, parsing rows...`);
-    
-    fbrefData=[];const rows=table.querySelectorAll('tbody tr');let count=0;
-    
-    rows.forEach(row=>{
-      const cells=row.querySelectorAll('td');
-      if(cells.length<5)return;
+function parseTable(text){
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim();
+  if(!text)return{headers:[],rows:[],format:'none'};
+
+  // ----- HTML table -----
+  if(/<table[\s>]/i.test(text)){
+    return parseHTMLTable(text);
+  }
+
+  const lines=text.split('\n').filter(l=>l.length>0);
+  if(lines.length<2)return{headers:[],rows:[],format:'none'};
+
+  // ----- Detect delimiter -----
+  const t = lines[0].split('\t').length;
+  const c = (lines[0].match(/,/g)||[]).length;
+  const s = (lines[0].match(/\s{2,}/g)||[]).length;  // 2+ spaces = fixed-width hint
+
+  let format, delim;
+  if(t>=3 && t>=c){format='tsv';delim='\t';}
+  else if(c>=3 && c>t){format='csv';delim=',';}
+  else if(s>=3){format='fixed';delim=null;}
+  else if(t>=2){format='tsv';delim='\t';}
+  else if(c>=2){format='csv';delim=',';}
+  else {format='fixed';delim=null;}
+
+  // ----- Parse rows -----
+  let rows;
+  if(format==='csv'){
+    rows=lines.map(l=>parseCSVLine(l));
+  }else if(format==='tsv'){
+    rows=lines.map(l=>l.split('\t'));
+  }else{
+    // fixed-width: split on 2+ spaces
+    rows=lines.map(l=>l.split(/\s{2,}/).map(x=>x.trim()).filter(x=>x.length>0));
+    // If the fixed-width split gave us only 1 column, fall back to single-space split
+    if(rows[0].length<3){
+      rows=lines.map(l=>l.split(/\s+/).filter(x=>x.length>0));
+    }
+  }
+
+  if(rows.length<2)return{headers:[],rows:[],format};
+
+  // ----- Detect header rows -----
+  // FBref tables have TWO header rows: row 0 = group names, row 1 = leaf column names
+  // Some pastes have only ONE header row (CSV export)
+  // Strategy: check if row 0 looks like group headers (many empty cells, repeated group names like "Playing Time")
+  //           OR if row 0 has data-like values
+  const fbrefGroupHints=['Playing Time','Performance','Expected','Progression','Per 90 Minutes','Passing','Pass Types','Goal Creation','Defense','Possession','Playing Time','Shot Creation','Shooting'];
+  const looksLikeGroupHeader = row=>row.some(c=>fbrefGroupHints.some(g=>c&&c.toLowerCase().includes(g.toLowerCase())));
+  const looksLikeData = row=>row.some(c=>/^\d+(\.\d+)?$/.test(c));
+
+  let headerRowIdx=0;
+  let headers;
+  if(looksLikeGroupHeader(rows[0])&&!looksLikeData(rows[0])){
+    // FBref two-header style: skip group row, use next row as headers
+    headerRowIdx=1;
+    headers=rows[1].map(h=>(h||'').trim());
+  }else{
+    headers=rows[0].map(h=>(h||'').trim());
+  }
+
+  // Clean headers: strip whitespace, normalize
+  headers=headers.map(h=>h.replace(/\s+/g,' ').trim());
+
+  // Build player objects, with column de-duplication:
+  // FBref has duplicate names (Gls, Ast, xG, xAG appear twice — abs + per-90)
+  // Strategy: keep FIRST occurrence as absolute, store LATER occurrences with _p90 suffix
+  const seen={};
+  const finalHeaders=headers.map((h,i)=>{
+    if(!h)return`col${i}`;
+    if(seen[h]===undefined){
+      seen[h]=0;
+      return h;
+    }else{
+      seen[h]++;
+      // If this is one of FBref's known duplicate names, suffix with _p90
+      if(['Gls','Ast','G+A','xG','xAG','npxG','npxG+xAG'].includes(h)){
+        return `${h}_p90`;
+      }
+      return `${h}_${seen[h]}`;
+    }
+  });
+
+  // Build player objects
+  const players=[];
+  for(let i=headerRowIdx+1;i<rows.length;i++){
+    const cells=rows[i];
+    // Skip empty / spacer / header-repeat rows
+    if(!cells||cells.length<3)continue;
+    // Skip if first cell is just a row number AND it's clearly a header repeat
+    if(cells[0]&&cells[0].toLowerCase()==='rk')continue;
+    if(cells[0]&&cells[0].toLowerCase()==='player')continue;
+    const p={};
+    finalHeaders.forEach((h,j)=>{
+      if(cells[j]!==undefined&&cells[j]!==null){
+        p[h]=String(cells[j]).trim();
+      }
+    });
+    // Need at least a Player column to be valid
+    if(!p.Player)return;
+    if(p.Player==='Player'||p.Player==='Rk')return;
+    players.push(p);
+  }
+
+  return{headers:finalHeaders,rows:players,format};
+}
+
+function parseHTMLTable(html){
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const table=doc.querySelector('#stats_standard, table.stats_table, table[id^="stats_"], table');
+  if(!table)return{headers:[],rows:[],format:'html'};
+
+  // FBref tables have <thead> with multiple <tr>: group header row(s) + leaf header row
+  // Leaf header row is the LAST <tr> in <thead>
+  const headerRows=table.querySelectorAll('thead tr');
+  let rawHeaders=[];
+  if(headerRows.length>0){
+    const leafRow=headerRows[headerRows.length-1];
+    leafRow.querySelectorAll('th').forEach(th=>rawHeaders.push(th.textContent.trim()));
+  }
+
+  // If no <thead>, fall back to first <tr> in body
+  if(rawHeaders.length===0){
+    const firstRow=table.querySelector('tr');
+    if(firstRow){
+      firstRow.querySelectorAll('th,td').forEach(c=>rawHeaders.push(c.textContent.trim()));
+    }
+  }
+
+  if(rawHeaders.length===0)return{headers:[],rows:[],format:'html'};
+
+  // De-duplicate headers BEFORE building rows (so duplicate Gls/Ast/xG don't overwrite abs values with per-90)
+  const seen={};
+  const finalHeaders=rawHeaders.map((h,i)=>{
+    if(!h)return`col${i}`;
+    if(seen[h]===undefined){seen[h]=0;return h;}
+    seen[h]++;
+    if(['Gls','Ast','G+A','xG','xAG','npxG','npxG+xAG'].includes(h))return`${h}_p90`;
+    return`${h}_${seen[h]}`;
+  });
+
+  // Parse body rows, using finalHeaders (dedup'd) as keys
+  const rows=[];
+  const bodyRows=table.querySelectorAll('tbody tr');
+  if(bodyRows.length===0){
+    const allRows=table.querySelectorAll('tr');
+    for(let i=1;i<allRows.length;i++){
+      const cells=allRows[i].querySelectorAll('td');
+      if(cells.length<3)continue;
       const p={};
-      headers.forEach((h,i)=>{if(cells[i])p[h]=cells[i].textContent.trim();});
+      finalHeaders.forEach((h,j)=>{if(cells[j])p[h]=cells[j].textContent.trim();});
+      if(p.Player&&p.Player!=='Player')rows.push(p);
+    }
+  }else{
+    bodyRows.forEach(row=>{
+      const cells=row.querySelectorAll('td');
+      if(cells.length<3)return;
+      const p={};
+      finalHeaders.forEach((h,j)=>{if(cells[j])p[h]=cells[j].textContent.trim();});
       if(!p.Player||p.Player==='Player')return;
-      fbrefData.push({
-        name:p.Player,position:p.Pos||'',age:parseInt(p.Age)||25,team:p.Squad||'',nation:p.Nation||'',
-        minutes:parseInt((p.Min||p['90s']||'0').replace(/[^0-9]/g,''))||0,
-        goals:parseInt(p.Gls||'0')||0,assists:parseInt(p.Ast||'0')||0,
-        passes_completed:parseInt(p.Cmp||'0')||0,passes_attempted:parseInt(p.Att||'0')||0,
-        pass_pct:parseFloat(p['Cmp%']||'0')||0,
-        shots:parseInt(p.Sh||'0')||0,shots_on_target:parseInt(p.SoT||'0')||0,
-        tackles:parseInt(p.Tkl||'0')||0,interceptions:parseInt(p.Int||'0')||0,
-        blocks:parseInt(p.Blk||'0')||0,
-        dribbles_attempted:parseInt(p['Att.1']||p['Att (Drib)']||'0')||0,
-        dribbles_completed:parseInt(p.Succ||'0')||0,
-        aerials_won:parseInt(p.Won||'0')||0,aerials_lost:parseInt(p.Lost||'0')||0,
-        yellow_cards:parseInt(p.CrdY||'0')||0,red_cards:parseInt(p.CrdR||'0')||0,
-      });
-      count++;
-    });
-    
-    setBar('fbref-bar',100,`Done — ${count} players`);
-    setDot('dot-fbref','ok',`${count} players loaded`);
-    log('fbref-log',`Parsed ${count} players`,'ok');
-    
-    $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
-    updateStats();
-  }catch(e){
-    setBar('fbref-bar',0,'Failed');
-    $('fbref-bar').classList.add('err');
-    setDot('dot-fbref','err','Failed — use paste fallback');
-    log('fbref-log',`ERROR: ${e.message}`,'err');
-    log('fbref-log','Use the paste fallback below: go to FBref, copy the table, paste it.','warn');
-  }finally{$('btn-fbref').disabled=false;}
-}
-
-function parseFbrefPaste(){
-  const text=$('fbref-paste').value.trim();if(!text)return;
-  show('fbref-log');log('fbref-log','Parsing pasted FBref data...');
-  const lines=text.split('\n').filter(l=>l.trim());
-  if(lines.length<2){log('fbref-log','Not enough data','err');return;}
-  const headers=lines[0].split('\t').map(h=>h.trim());
-  fbrefData=[];
-  for(let i=1;i<lines.length;i++){
-    const cells=lines[i].split('\t'),p={};
-    headers.forEach((h,j)=>{if(cells[j])p[h]=cells[j].trim();});
-    if(!p.Player)continue;
-    fbrefData.push({
-      name:p.Player,position:p.Pos||'',age:parseInt(p.Age)||25,team:p.Squad||'',nation:p.Nation||'',
-      minutes:parseInt((p.Min||p['90s']||'0').replace(/[^0-9]/g,''))||0,
-      goals:parseInt(p.Gls||'0')||0,assists:parseInt(p.Ast||'0')||0,
-      passes_completed:parseInt(p.Cmp||'0')||0,passes_attempted:parseInt(p.Att||'0')||0,
-      pass_pct:parseFloat(p['Cmp%']||'0')||0,
-      shots:parseInt(p.Sh||'0')||0,shots_on_target:parseInt(p.SoT||'0')||0,
-      tackles:parseInt(p.Tkl||'0')||0,interceptions:parseInt(p.Int||'0')||0,
-      dribbles_attempted:parseInt(p['Att.1']||'0')||0,dribbles_completed:parseInt(p.Succ||'0')||0,
-      aerials_won:parseInt(p.Won||'0')||0,aerials_lost:parseInt(p.Lost||'0')||0,
-      yellow_cards:parseInt(p.CrdY||'0')||0,red_cards:parseInt(p.CrdR||'0')||0,
+      rows.push(p);
     });
   }
-  setDot('dot-fbref','ok',`${fbrefData.length} players (pasted)`);
-  log('fbref-log',`Parsed ${fbrefData.length} players from paste`,'ok');
+
+  return{headers:finalHeaders,rows,format:'html'};
+}
+
+function parseCSVLine(line){
+  // Simple CSV parser: handles quoted fields with commas
+  const out=[];
+  let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){
+      if(inQ&&line[i+1]==='"'){cur+='"';i++;}
+      else inQ=!inQ;
+    }else if(ch===','&&!inQ){
+      out.push(cur);cur='';
+    }else{
+      cur+=ch;
+    }
+  }
+  out.push(cur);
+  return out.map(x=>x.trim());
+}
+
+// ============================================================================
+// FBREF PLAYER BUILDER — converts a raw parsed row into a normalized FBref player
+// ============================================================================
+function buildFbrefPlayer(p){
+  if(!p.Player)return null;
+
+  // Nation: "eng ENG" → "ENG"; "es ESP" → "ESP"
+  const nat=p.Nation||'';
+  const nationMatch=nat.match(/([A-Z]{3})$/);
+  const nation=nationMatch?nationMatch[1]:nat.trim().substring(0,3).toUpperCase();
+
+  // Position: "FW,MF" → first pos; GK/DF/MF/FW
+  const posRaw=(p.Pos||'').toUpperCase();
+  let pg='MID';
+  if(posRaw.includes('GK'))pg='GK';
+  else if(posRaw.includes('DF')||posRaw.includes('CB')||posRaw.includes('FB')||posRaw.includes('WB'))pg='DEF';
+  else if(posRaw.includes('FW')||posRaw.includes('ST'))pg='FWD';
+
+  // Minutes: prefer "Min" column, fall back to "90s" * 90
+  let minutes=parseInt(String(p.Min||'').replace(/[^0-9]/g,''))||0;
+  if(!minutes){
+    const n90=parseFloat(p['90s']||'0')||0;
+    minutes=Math.round(n90*90);
+  }
+
+  // Goals/Assists: use FIRST occurrence (absolute, not _p90)
+  // After our de-dup, the absolute columns keep their original names (Gls, Ast, xG, xAG)
+  const goals=parseInt(p.Gls||'0')||0;
+  const assists=parseInt(p.Ast||'0')||0;
+  const xg=parseFloat(p.xG||'0')||0;
+  const xag=parseFloat(p.xAG||'0')||0;
+  const npxg=parseFloat(p.npxG||'0')||0;
+
+  // Cards
+  const yellow=parseInt(p.CrdY||'0')||0;
+  const red=parseInt(p.CrdR||'0')||0;
+
+  // Penalties
+  const pk=parseInt(p.PK||'0')||0;
+  const pkatt=parseInt(p.PKatt||'0')||0;
+
+  // Progressive stats
+  const prgC=parseInt(p.PrgC||'0')||0;
+  const prgP=parseInt(p.PrgP||'0')||0;
+  const prgR=parseInt(p.PrgR||'0')||0;
+
+  // Appearances
+  const mp=parseInt(p.MP||'0')||0;
+  const starts=parseInt(p.Starts||'0')||0;
+  const age=parseInt(p.Age||'0')||25;
+  const born=parseInt(p.Born||'0')||(age?2024-age:2000);
+
+  // COMP (e.g., "eng Premier League" → "Premier League")
+  const comp=(p.Comp||'').replace(/^[a-z]{2,3}\s+/i,'').trim();
+
+  return{
+    name:p.Player,
+    position:posRaw,
+    pos_group:pg,
+    age,
+    born,
+    team:p.Squad||'',
+    nation,
+    competition:comp,
+    matches:mp,
+    starts,
+    minutes,
+    ninety:(parseFloat(p['90s']||'0')||0),
+    goals,assists,xg,xag,npxg,
+    yellow_cards:yellow,red_cards:red,
+    pk,pkatt,
+    prg_c:prgC,prg_p:prgP,prg_r:prgR,
+    // FBref Standard view does NOT include: tackles, interceptions, passes, dribbles, aerials, shots
+    // We'll mark them as null and compute attributes from what we have
+    tackles:null,interceptions:null,
+    passes_completed:null,passes_attempted:null,pass_pct:null,
+    shots:null,shots_on_target:null,
+    dribbles_completed:null,dribbles_attempted:null,
+    aerials_won:null,aerials_lost:null,
+    source_columns:Object.keys(p),
+  };
+}
+
+// ============================================================================
+// STEP 1: FBREF — Auto-fetch via 5 CORS proxies
+// ============================================================================
+async function runStep1Fetch(){
+  const season=$('fbref-season').value;
+  setDot('dot-fbref','wait','Fetching...');
+  show('fbref-progress-wrap');show('fbref-log');
+  $('fbref-log').innerHTML='';
+  log('fbref-log',`Auto-fetching FBref Big 5 stats for season ${season}...`);
+  setBar('fbref-bar',5,'Connecting...');
+
+  const url=`https://fbref.com/en/comps/Big5/${season}/stats/players/Big-5-European-Leagues-Stats`;
+
+  try{
+    setBar('fbref-bar',15,'Trying 5 CORS proxies...');
+    let successText=null,successProxyIdx=-1;
+    const errors=[];
+
+    for(let i=0;i<PROXIES.length;i++){
+      try{
+        setBar('fbref-bar',15+i*12,`Proxy ${i+1}/5: ${PROXIES[i]('').substring(0,40)}...`);
+        const proxyUrl=PROXIES[i](url);
+        const ctrl=new AbortController();
+        const to=setTimeout(()=>ctrl.abort(),20000);
+        const r=await fetch(proxyUrl,{signal:ctrl.signal,headers:{'Accept':'text/html,*/*'}});
+        clearTimeout(to);
+        if(!r.ok){errors.push(`Proxy ${i+1}: HTTP ${r.status}`);continue;}
+        const text=await r.text();
+        if(!text||text.length<2000){errors.push(`Proxy ${i+1}: response too short (${text?.length||0} bytes)`);continue;}
+        // Check that we actually got FBref content, not an error page
+        if(!text.includes('stats_standard')&&!text.includes('Big 5')&&!text.includes('fbref')){
+          errors.push(`Proxy ${i+1}: response doesn't look like FBref HTML`);
+          continue;
+        }
+        successText=text;successProxyIdx=i;break;
+      }catch(e){
+        errors.push(`Proxy ${i+1}: ${e.message}`);
+      }
+    }
+
+    // Try direct fetch as last resort
+    if(!successText){
+      try{
+        setBar('fbref-bar',85,'Trying direct fetch...');
+        const r=await fetch(url,{mode:'cors'});
+        if(r.ok){const t=await r.text();if(t&&t.length>2000&&t.includes('fbref')){successText=t;successProxyIdx=-1;}}
+      }catch(e){errors.push(`Direct: ${e.message}`);}
+    }
+
+    if(!successText){
+      throw new Error('All proxies failed. '+errors.join(' | '));
+    }
+
+    log('fbref-log',`Downloaded ${successText.length.toLocaleString()} bytes via ${successProxyIdx>=0?'proxy #'+(successProxyIdx+1):'direct fetch'}`,'ok');
+    setBar('fbref-bar',95,'Parsing table...');
+    parseFbrefHTML(successText);
+
+  }catch(e){
+    setBar('fbref-bar',0,'Failed');$('fbref-bar').classList.add('err');
+    setDot('dot-fbref','err','Failed — use upload or paste');
+    log('fbref-log',`ERROR: ${e.message}`,'err');
+    log('fbref-log','FBref blocks most CORS proxies. Use <b>Upload HTML file</b> tab — it always works.','warn');
+    log('fbref-log','Or use <b>Paste table</b> with FBref\'s "Get table as CSV" export.','warn');
+  }
+}
+
+// File upload handler
+window.addEventListener('DOMContentLoaded',()=>{
+  $('fbref-file').addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    setDot('dot-fbref','wait','Parsing file...');
+    show('fbref-log');$('fbref-log').innerHTML='';
+    log('fbref-log',`Reading ${file.name} (${(file.size/1024).toFixed(1)} KB)...`);
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const text=ev.target.result;
+      log('fbref-log',`Read ${text.length.toLocaleString()} chars`);
+      try{
+        if(/<table[\s>]/i.test(text)){
+          parseFbrefHTML(text);
+        }else{
+          parseFbrefPasteText(text);
+        }
+      }catch(e){
+        setDot('dot-fbref','err','Parse failed');
+        log('fbref-log',`Parse error: ${e.message}`,'err');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // Update paste-stats counter
+  $('fbref-paste').addEventListener('input',e=>{
+    const lines=e.target.value.split('\n').filter(l=>l.trim()).length;
+    $('fbref-paste-stats').textContent=`${lines} lines`;
+  });
+});
+
+function parseFbrefHTML(html){
+  show('fbref-log');
+  log('fbref-log','Parsing FBref HTML table...');
+
+  // Use the generic HTML parser
+  const{headers,rows,format}=parseTable(html);
+  log('fbref-log',`Detected ${format.toUpperCase()} format, ${headers.length} columns, ${rows.length} raw rows`);
+
+  if(rows.length===0){
+    throw new Error('No data rows found in HTML');
+  }
+
+  // Build FBref player objects
+  fbrefData=[];
+  let skipped=0;
+  for(const row of rows){
+    const p=buildFbrefPlayer(row);
+    if(p&&p.name&&p.name!=='Player')fbrefData.push(p);
+    else skipped++;
+  }
+
+  log('fbref-log',`Parsed ${fbrefData.length} players${skipped?`, skipped ${skipped} non-player rows`:''}`,'ok');
+  log('fbref-log',`Columns detected: ${headers.join(', ')}`,'dim');
+
+  if(fbrefData.length>0){
+    const sample=fbrefData[0];
+    log('fbref-log',`Sample: ${sample.name} | ${sample.pos_group} | ${sample.team} | ${sample.minutes} min | ${sample.goals}G ${sample.assists}A | xG ${sample.xg}`,'dim');
+  }
+
+  if(fbrefData.length===0){
+    setDot('dot-fbref','err','No players parsed');
+    log('fbref-log','No players were parsed. Check that the HTML/text contains a stats table.','err');
+    return;
+  }
+
+  setDot('dot-fbref','ok',`${fbrefData.length} players loaded`);
   $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
   updateStats();
 }
 
-function clearStep1(){fbrefData=[];setDot('dot-fbref','idle','Not started');hide('fbref-progress-wrap');$('fbref-log').innerHTML='';$('fbref-paste').value='';updateStats();}
+function parseFbrefPaste(){
+  const text=$('fbref-paste').value.trim();
+  if(!text){log('fbref-log','Paste some data first','err');show('fbref-log');return;}
+  parseFbrefPasteText(text);
+}
+
+function parseFbrefPasteText(text){
+  show('fbref-log');$('fbref-log').innerHTML='';
+  log('fbref-log','Parsing pasted FBref data...');
+
+  const{headers,rows,format}=parseTable(text);
+  log('fbref-log',`Detected ${format.toUpperCase()} format, ${headers.length} columns, ${rows.length} raw rows`);
+
+  if(rows.length===0){
+    setDot('dot-fbref','err','No rows parsed');
+    log('fbref-log','Could not parse any rows. Try the "Get table as CSV (for Excel)" option on FBref.','err');
+    return;
+  }
+
+  fbrefData=[];
+  let skipped=0;
+  for(const row of rows){
+    const p=buildFbrefPlayer(row);
+    if(p&&p.name&&p.name!=='Player')fbrefData.push(p);
+    else skipped++;
+  }
+
+  log('fbref-log',`Parsed ${fbrefData.length} players${skipped?`, skipped ${skipped} non-player rows`:''}`,'ok');
+  log('fbref-log',`Columns: ${headers.join(', ')}`,'dim');
+
+  if(fbrefData.length===0){
+    setDot('dot-fbref','err','No players parsed');
+    log('fbref-log','Zero players parsed. The paste format may be unusual — try the "Upload HTML file" tab instead.','err');
+    return;
+  }
+
+  if(fbrefData.length>0){
+    const sample=fbrefData[0];
+    log('fbref-log',`Sample: ${sample.name} | ${sample.pos_group} | ${sample.team} | ${sample.minutes} min | ${sample.goals}G ${sample.assists}A | xG ${sample.xg}`,'dim');
+  }
+
+  setDot('dot-fbref','ok',`${fbrefData.length} players (pasted)`);
+  $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
+  updateStats();
+}
+
+// Sample synthetic data — realistic FBref-style rows for testing the parser
+function loadSampleData(){
+  show('fbref-log');$('fbref-log').innerHTML='';
+  log('fbref-log','Loading 20 sample players...');
+
+  // Synthesize FBref-format TSV with the two-header-row structure
+  const sample=`\t\t\t\t\t\t\tPlaying Time\t\t\t\tPerformance\t\t\t\t\t\t\t\t\tExpected\t\t\t\tProgression\t\t\tPer 90 Minutes\t\t\t\t\t\t\t
+Rk\tPlayer\tNation\tPos\tSquad\tComp\tAge\tBorn\tMP\tStarts\tMin\t90s\tGls\tAst\tG+A\tG-PK\tPK\tPKatt\tCrdY\tCrdR\txG\tnpxG\txAG\tnpxG+xAG\tPrgC\tPrgP\tPrgR\tGls\tAst\tG+A\txG\txAG\tnpxG\tnpxG+xAG\tMatches
+1\tBukayo Saka\teng ENG\tFW,MF\tArsenal\teng Premier League\t23\t2001\t35\t35\t3014\t33.5\t16\t9\t25\t16\t0\t0\t5\t0\t13.2\t11.5\t9.1\t20.6\t78\t95\t285\t0.48\t0.27\t0.74\t0.39\t0.27\t0.34\t0.61\t
+2\tErling Haaland\tnor NOR\tFW\tManchester City\teng Premier League\t24\t2000\t31\t31\t2714\t30.2\t27\t5\t32\t25\t2\t2\t2\t0\t25.4\t23.4\t4.2\t27.6\t31\t28\t98\t0.89\t0.17\t1.06\t0.84\t0.14\t0.77\t0.91\t
+3\tKevin De Bruyne\tbel BEL\tMF\tManchester City\teng Premier League\t33\t1991\t18\t18\t1359\t15.1\t6\t18\t24\t6\t0\t0\t3\t0\t6.8\t5.4\t12.4\t17.8\t66\t102\t147\t0.40\t1.19\t1.59\t0.45\t0.82\t0.36\t1.18\t
+4\tVirgil van Dijk\tned NED\tDF\tLiverpool\teng Premier League\t33\t1991\t36\t36\t3224\t35.8\t3\t2\t5\t3\t0\t0\t1\t0\t2.4\t1.8\t1.9\t3.7\t12\t85\t42\t0.08\t0.06\t0.14\t0.07\t0.05\t0.05\t0.10\t
+5\tMohamed Salah\tegy EGY\tFW\tLiverpool\teng Premier League\t32\t1992\t38\t38\t3252\t36.1\t18\t10\t28\t18\t0\t0\t2\t0\t19.8\t17.4\t10.3\t27.7\t94\t87\t221\t0.50\t0.28\t0.77\t0.55\t0.28\t0.48\t0.76\t
+6\tJude Bellingham\teng ENG\tMF,MF\tReal Madrid\tes La Liga\t21\t2003\t28\t28\t2421\t26.9\t19\t6\t25\t17\t2\t2\t5\t0\t15.8\t12.1\t7.2\t19.3\t58\t61\t189\t0.71\t0.22\t0.93\t0.59\t0.27\t0.45\t0.72\t
+7\tKylian Mbappé\tfra FRA\tFW\tParis SG\tfr Ligue 1\t25\t1998\t28\t26\t2413\t26.8\t27\t7\t34\t25\t2\t2\t3\t0\t23.5\t20.1\t7.8\t27.9\t78\t56\t234\t1.01\t0.26\t1.27\t0.87\t0.29\t0.75\t1.04\t
+8\tToni Kroos\tger GER\tMF\tReal Madrid\tes La Liga\t34\t1990\t27\t27\t2184\t24.3\t1\t7\t8\t1\t0\t0\t1\t0\t1.2\t0.9\t7.4\t8.3\t18\t99\t42\t0.04\t0.29\t0.33\t0.05\t0.30\t0.04\t0.34\t
+9\tRobert Lewandowski\tpol POL\tFW\tBarcelona\tes La Liga\t36\t1988\t32\t32\t2814\t31.3\t19\t8\t27\t19\t0\t0\t4\t0\t18.4\t16.2\t6.4\t22.6\t42\t35\t76\t0.61\t0.26\t0.86\t0.59\t0.20\t0.52\t0.72\t
+10\tAlisson\tbra BRA\tGK\tLiverpool\teng Premier League\t32\t1992\t28\t28\t2520\t28.0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t
+11\tHarry Kane\teng ENG\tFW\tBayern Munich\de Bundesliga\t31\t1993\t32\t32\t2847\t31.6\t36\t8\t44\t36\t0\t0\t3\t0\t28.7\t25.1\t6.8\t31.9\t38\t25\t54\t1.14\t0.25\t1.39\t0.90\t0.21\t0.79\t1.01\t
+12\tLautaro Martínez\targ ARG\tFW\tInter\it Serie A\t27\t1997\t33\t32\t2784\t30.9\t24\t3\t27\t24\t0\t0\t4\t0\t20.4\t17.6\t3.4\t21.0\t35\t21\t79\t0.78\t0.10\t0.87\t0.66\t0.11\t0.57\t0.68\t
+13\tKhvicha Kvaratskhelia\tgeo GEO\tFW,MF\tNapoli\it Serie A\t24\t2001\t30\t27\t2316\t25.7\t11\t9\t20\t11\t0\t0\t5\t0\t9.8\t7.6\t9.4\t17.0\t96\t78\t198\t0.43\t0.35\t0.78\t0.38\t0.37\t0.30\t0.66\t
+14\tFederico Valverde\turu URU\tMF\tReal Madrid\tes La Liga\t26\t1998\t28\t27\t2280\t25.3\t3\t5\t8\t3\t0\t0\t3\t0\t3.4\t2.8\t5.6\t8.4\t64\t92\t124\t0.12\t0.20\t0.32\t0.13\t0.22\t0.11\t0.33\t
+15\tWilliam Saliba\tfra FRA\tDF\tArsenal\teng Premier League\t23\t2001\t27\t27\t2348\t26.1\t2\t1\t3\t2\t0\t0\t1\t0\t1.8\t1.5\t0.9\t2.4\t15\t76\t38\t0.08\t0.04\t0.12\t0.07\t0.04\t0.06\t0.10\t
+16\tVinícius Júnior\tbra BRA\tFW\tReal Madrid\tes La Liga\t24\t2000\t26\t25\t2183\t24.3\t15\t5\t20\t15\t0\t0\t3\t0\t14.2\t12.3\t6.7\t19.0\t102\t84\t248\t0.62\t0.21\t0.83\t0.58\t0.27\t0.50\t0.78\t
+17\tRodri\tesp ESP\tMF\tManchester City\teng Premier League\t28\t1996\t34\t34\t2917\t32.4\t8\t9\t17\t8\t0\t0\t3\t0\t6.4\t5.1\t9.8\t14.9\t39\t117\t93\t0.25\t0.28\t0.53\t0.20\t0.30\t0.16\t0.46\t
+18\tFlorian Wirtz\tger GER\tMF,MF\tBayer Leverkusen\de Bundesliga\t21\t2003\t32\t32\t2674\t29.7\t18\t20\t38\t18\t0\t0\t2\t0\t13.6\t11.2\t16.4\t27.6\t85\t102\t176\t0.61\t0.67\t1.28\t0.46\t0.55\t0.38\t0.93\t
+19\tBukayo Saka\teng ENG\tFW,MF\tArsenal\teng Premier League\t23\t2001\t35\t35\t3014\t33.5\t16\t9\t25\t16\t0\t0\t5\t0\t13.2\t11.5\t9.1\t20.6\t78\t95\t285\t0.48\t0.27\t0.74\t0.39\t0.27\t0.34\t0.61\t
+20\tGianluigi Donnarumma\tita ITA\tGK\tParis SG\tfr Ligue 1\t25\t1999\t28\t28\t2520\t28.0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t`;
+
+  const{headers,rows,format}=parseTable(sample);
+  log('fbref-log',`Sample parsed as ${format.toUpperCase()} format, ${headers.length} columns, ${rows.length} rows`);
+
+  fbrefData=[];
+  for(const row of rows){
+    const p=buildFbrefPlayer(row);
+    if(p&&p.name&&p.name!=='Player')fbrefData.push(p);
+  }
+
+  // Dedupe by name (keep first occurrence)
+  const seen=new Set();
+  fbrefData=fbrefData.filter(p=>{
+    if(seen.has(p.name))return false;
+    seen.add(p.name);return true;
+  });
+
+  log('fbref-log',`Loaded ${fbrefData.length} sample players`,'ok');
+  if(fbrefData.length>0){
+    const s=fbrefData[0];
+    log('fbref-log',`Sample: ${s.name} | ${s.pos_group} | ${s.team} | ${s.minutes} min | ${s.goals}G ${s.assists}A | xG ${s.xg}`,'dim');
+  }
+  setDot('dot-fbref','ok',`${fbrefData.length} sample players loaded`);
+  $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
+  updateStats();
+}
+
+function clearStep1(){
+  fbrefData=[];
+  setDot('dot-fbref','idle','Not started');
+  hide('fbref-progress-wrap');
+  $('fbref-log').innerHTML='';
+  $('fbref-paste').value='';
+  $('fbref-file').value='';
+  $('fbref-paste-stats').textContent='0 lines';
+  $('btn-tm').disabled=true;$('btn-us').disabled=true;$('btn-merge').disabled=true;
+  updateStats();
+}
 
 // ============================================================================
-// STEP 2: TRANSFERMARKT
+// STEP 2: TRANSFERMARKT (optional, mostly rate-limited)
 // ============================================================================
 async function runStep2(){
   if(fbrefData.length===0){log('tm-log','Fetch FBref data first','err');return;}
   $('btn-tm').disabled=true;setDot('dot-tm','wait','Fetching...');
   show('tm-progress-wrap');show('tm-log');
-  log('tm-log',`Enriching ${fbrefData.length} players from Transfermarkt...`);
-  
-  let count=0;const batch=3;
-  
+  log('tm-log',`Trying to enrich ${fbrefData.length} players from Transfermarkt...`);
+  log('tm-log','WARNING: Transfermarkt rate-limits aggressively. Expect < 5% success rate.' ,'warn');
+  log('tm-log','TIP: Skip this step — Gaffer attributes work fine from FBref alone.','warn');
+
+  let count=0;const batch=2;
   for(let i=0;i<fbrefData.length;i+=batch){
     const slice=fbrefData.slice(i,i+batch);
-    
     await Promise.all(slice.map(async(player)=>{
       try{
-        const searchUrl=`https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(player.name)}&x=0&y=0`;
-        const{text}=await fetchMulti(searchUrl);
-        const doc=new DOMParser().parseFromString(text,'text/html');
-        const link=doc.querySelector('.table tbody tr td a[href*="/spieler/"]');
-        
-        if(link){
-          const playerUrl='https://www.transfermarkt.com'+link.getAttribute('href');
-          const{text:ptext}=await fetchMulti(playerUrl);
-          const pdoc=new DOMParser().parseFromString(ptext,'text/html');
-          tmData[player.name]=parseTmPage(pdoc,player.name);
-          count++;
+        const searchUrl=`https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(player.name)}`;
+        for(let pi=0;pi<PROXIES.length;pi++){
+          try{
+            const{text}=await fetchWithTimeout(PROXIES[pi](searchUrl),12000);
+            if(!text||text.length<500)continue;
+            const doc=new DOMParser().parseFromString(text,'text/html');
+            const link=doc.querySelector('a[href*="/spieler/"]');
+            if(!link)continue;
+            const playerUrl='https://www.transfermarkt.com'+link.getAttribute('href');
+            const{text:ptext}=await fetchWithTimeout(PROXIES[pi](playerUrl),12000);
+            if(!ptext)continue;
+            const pdoc=new DOMParser().parseFromString(ptext,'text/html');
+            tmData[player.name]=parseTmPage(pdoc,player.name);
+            if(tmData[player.name]){count++;break;}
+          }catch(e){}
         }
-      }catch(e){
-        // Silent fail for individual players — log at end
-      }
+      }catch(e){}
     }));
-    
     const pct=Math.min(99,Math.round(((i+batch)/fbrefData.length)*100));
     setBar('tm-bar',pct,`${count} enriched`);
-    
-    if(i%30===0)log('tm-log',`Progress: ${count}/${fbrefData.length} players enriched`);
-    
-    // Rate limit: 300ms between batches
-    if(i+batch<fbrefData.length)await new Promise(r=>setTimeout(r,300));
+    if(i+batch<fbrefData.length)await new Promise(r=>setTimeout(r,500));
   }
-  
   setBar('tm-bar',100,`Done — ${count} enriched`);
-  setDot('dot-tm',count>0?'ok':'warn',count>0?`${count} players enriched`:'No data — use paste');
-  log('tm-log',`Enriched ${count}/${fbrefData.length} players`,count>0?'ok':'warn');
-  if(count===0)log('tm-log','Transfermarkt blocked all requests. Use paste fallback in the section above.','warn');
+  setDot('dot-tm',count>0?'ok':'warn',count>0?`${count} enriched`:'No data (rate-limited)');
+  log('tm-log',`Enriched ${count}/${fbrefData.length}`,count>0?'ok':'warn');
+  if(count===0)log('tm-log','All requests blocked. Proceed without TM data — merge still works.','warn');
   updateStats();
+}
+
+function fetchWithTimeout(url,ms){
+  const ctrl=new AbortController();const to=setTimeout(()=>ctrl.abort(),ms);
+  return fetch(url,{signal:ctrl.signal}).then(r=>{clearTimeout(to);if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.text();}).catch(e=>{clearTimeout(to);throw e;});
 }
 
 function parseTmPage(doc,name){
@@ -384,30 +836,27 @@ function parseTmPage(doc,name){
       if(l.includes('nationality')||l.includes('nationalität'))info.nationality=v;
       if(l.includes('position'))info.tm_position=v;
       if(l.includes('market value')||l.includes('marktwert'))info.market_value=v;
-      if(l.includes('contract'))info.contract_expires=v;
     });
   }
-  const st=doc.querySelector('.items');
-  if(st){const lr=st.querySelector('tbody tr:last-child');if(lr){const c=lr.querySelectorAll('td');info.appearances=parseInt(c[5]?.textContent?.trim())||0;info.yellow_cards=parseInt(c[8]?.textContent?.trim())||0;info.red_cards=parseInt(c[9]?.textContent?.trim())||0;}}
-  return info;
+  return Object.keys(info).length>1?info:null;
 }
 
 function parseTmPaste(){
   const text=$('tm-paste').value.trim();if(!text)return;
   show('tm-log');let count=0;
   for(const line of text.split('\n').filter(l=>l.trim()&&!l.startsWith('#'))){
-    const c=line.split('\t').map(x=>x.trim());
+    // Try TSV first, then CSV
+    let c=line.split('\t');
+    if(c.length<3)c=parseCSVLine(line);
     if(c.length<3)continue;
-    tmData[c[0]]={name:c[0],dob:c[1]||'',nationality:c[2]||'',height_cm:parseInt(c[3])||180,weight_kg:parseInt(c[4])||75,tm_position:c[5]||'',market_value:c[6]||'',club:c[7]||'',appearances:0,yellow_cards:0,red_cards:0};
+    tmData[c[0]]={name:c[0],dob:c[1]||'',nationality:c[2]||'',height_cm:parseInt(c[3])||180,weight_kg:parseInt(c[4])||75,tm_position:c[5]||'',market_value:c[6]||'',club:c[7]||'',appearances:parseInt(c[8])||0,yellow_cards:parseInt(c[9])||0,red_cards:0};
     count++;
   }
   setDot('dot-tm','ok',`${count} players (pasted)`);log('tm-log',`Parsed ${count} from paste`,'ok');updateStats();
 }
 
-function clearStep2(){tmData={};setDot('dot-tm','idle','Not started');hide('tm-progress-wrap');$('tm-log').innerHTML='';$('tm-paste').value='';updateStats();}
-
 // ============================================================================
-// STEP 3: UNDERSTAT
+// STEP 3: UNDERSTAT (optional)
 // ============================================================================
 async function runStep3(){
   const league=$('us-league').value,season=$('us-season').value;
@@ -415,55 +864,56 @@ async function runStep3(){
   show('us-progress-wrap');show('us-log');
   log('us-log',`Fetching Understat: ${league} ${season}`);
   setBar('us-bar',10,'Connecting...');
-  
   try{
     const url=`https://understat.com/league/${league}/${season}`;
-    const{text}=await fetchMulti(url);
-    setBar('us-bar',50,'Parsing data...');
-    
+    let text=null;
+    for(let i=0;i<PROXIES.length;i++){
+      try{
+        setBar('us-bar',10+i*15,`Proxy ${i+1}/${PROXIES.length}...`);
+        text=await fetchWithTimeout(PROXIES[i](url),15000);
+        if(text&&text.includes('playersData'))break;
+        text=null;
+      }catch(e){}
+    }
+    if(!text)throw new Error('All proxies failed to fetch Understat');
+    setBar('us-bar',80,'Parsing JSON...');
     const match=text.match(/playersData\s*=\s*JSON\.parse\('([^']+)'\)/);
-    if(!match){
-      // Try alternative format
-      const match2=text.match(/playersData\s*=\s*(\[\[.*?\]\])/s);
-      if(!match2)throw new Error('Understat player data not found in page');
-      const players=JSON.parse(match2[1]);
-      processUnderstat(players);
-    }else{
+    let players;
+    if(match){
       const hex=match[1].replace(/\\x([0-9a-f]{2})/gi,(_,h)=>String.fromCharCode(parseInt(h,16)));
-      const players=JSON.parse(hex);
-      processUnderstat(players);
+      players=JSON.parse(hex);
+    }else{
+      const m2=text.match(/playersData\s*=\s*(\[\[.*?\]\])/s);
+      if(!m2)throw new Error('playersData not found in page');
+      players=JSON.parse(m2[1]);
     }
-    
-    function processUnderstat(players){
-      let count=0;
-      for(const p of players){
-        usData[p.player_name]={name:p.player_name,xg:parseFloat(p.xG)||0,xa:parseFloat(p.xA)||0,goals:parseInt(p.goals)||0,assists:parseInt(p.assists)||0,shots:parseInt(p.shots)||0,key_passes:parseInt(p.key_passes)||0,position:p.position||'',team:p.team_title||''};
-        count++;
-      }
-      setBar('us-bar',100,`Done — ${count} players`);
-      setDot('dot-us','ok',`${count} players with xG/xA`);
-      log('us-log',`Parsed ${count} players from Understat`,'ok');
-      updateStats();
+    let count=0;
+    for(const p of players){
+      usData[p.player_name]={name:p.player_name,xg:parseFloat(p.XG)||0,xa:parseFloat(p.XA)||0,goals:parseInt(p.goals)||0,assists:parseInt(p.assists)||0,shots:parseInt(p.shots)||0,key_passes:parseInt(p.key_passes)||0,position:p.position||'',team:p.team_title||''};
+      count++;
     }
+    setBar('us-bar',100,`Done — ${count} players`);
+    setDot('dot-us','ok',`${count} players with xG/xA`);
+    log('us-log',`Parsed ${count} players from Understat`,'ok');
   }catch(e){
     setBar('us-bar',0,'Failed');$('us-bar').classList.add('err');
     setDot('dot-us','err','Failed');
     log('us-log',`ERROR: ${e.message}`,'err');
-    log('us-log','Understat may be blocking requests. You can still merge without xG data — finishing/composure will use FBref shots instead.','warn');
+    log('us-log','Skip — FBref Standard view already includes xG/xAG. Understat is redundant.','warn');
   }finally{$('btn-us').disabled=false;}
+  updateStats();
 }
 
-function clearStep3(){usData={};setDot('dot-us','idle','Not started');hide('us-progress-wrap');$('us-log').innerHTML='';updateStats();}
-
 // ============================================================================
-// STEP 4: MERGE & COMPUTE
+// STEP 4: MERGE & COMPUTE GAFFER ATTRIBUTES
 // ============================================================================
 function updateStats(){
   $('total-players').textContent=fbrefData.length;
   const enriched=fbrefData.filter(p=>tmData[p.name]&&usData[p.name]).length;
-  const partial=fbrefData.filter(p=>tmData[p.name]||usData[p.name]).length-enriched;
+  const partial=fbrefData.filter(p=>(tmData[p.name]?1:0)+(usData[p.name]?1:0)===1).length;
   $('total-enriched').textContent=enriched;
-  $('total-partial').textContent=Math.max(0,partial);
+  $('total-partial').textContent=partial;
+  $('total-final').textContent=merged.length;
   $('btn-merge').disabled=fbrefData.length===0;
 }
 
@@ -471,60 +921,179 @@ function runStep4(){
   if(fbrefData.length===0){log('merge-log','No data to merge','err');return;}
   show('merge-log');$('merge-log').innerHTML='';
   log('merge-log',`Merging ${fbrefData.length} players...`);
-  
+
+  // Compute per-position maxima for normalization
+  const byPos={GK:[],DEF:[],MID:[],FWD:[]};
+  fbrefData.forEach(p=>{if(byPos[p.pos_group])byPos[p.pos_group].push(p);});
+
   const maxV={
     minutes:Math.max(...fbrefData.map(p=>p.minutes),1),
-    tackles:Math.max(...fbrefData.map(p=>p.tackles),1),
-    interceptions:Math.max(...fbrefData.map(p=>p.interceptions),1),
-    passes:Math.max(...fbrefData.map(p=>p.passes_attempted),1),
-    key_passes:Math.max(...Object.values(usData).map(p=>p.key_passes),1),
-    dribbles:Math.max(...fbrefData.map(p=>p.dribbles_attempted),1),
+    prg_c:Math.max(...fbrefData.map(p=>p.prg_c||0),1),
+    prg_p:Math.max(...fbrefData.map(p=>p.prg_p||0),1),
+    prg_r:Math.max(...fbrefData.map(p=>p.prg_r||0),1),
+    goals:Math.max(...fbrefData.map(p=>p.goals||0),1),
+    assists:Math.max(...fbrefData.map(p=>p.assists||0),1),
+    xg:Math.max(...fbrefData.map(p=>p.xg||0),1),
+    xag:Math.max(...fbrefData.map(p=>p.xag||0),1),
+    starts:Math.max(...fbrefData.map(p=>p.starts||0),1),
   };
-  
+
   merged=[];
-  let fullCount=0,partialCount=0;
-  
+  let fullCount=0,partialCount=0,fbrefOnlyCount=0;
+
   for(const fb of fbrefData){
     const name=fb.name,tm=tmData[name]||{},us=usData[name]||{};
-    const sources=[!!Object.keys(tm).length,!!Object.keys(us).length].filter(Boolean).length;
-    if(sources===2)fullCount++;else if(sources===1)partialCount++;
-    
-    let pos=fb.position||tm.tm_position||'';
-    let isGK=pos.includes('GK'),isDef=pos.includes('DF')||pos.includes('CB')||pos.includes('FB')||pos.includes('Defender');
-    let isFwd=pos.includes('FW')||pos.includes('ST')||pos.includes('Wing')||pos.includes('Forward');
-    let pg=isGK?'GK':isDef?'DEF':isFwd?'FWD':'MID';
-    
-    // BODY
-    let pace=norm99(fb.minutes/maxV.minutes*60,0,60);
-    let burst=jit(pace,5);
+    const srcCount=(Object.keys(tm).length>1?1:0)+(Object.keys(us).length>1?1:0);
+    if(srcCount===2)fullCount++;
+    else if(srcCount===1)partialCount++;
+    else fbrefOnlyCount++;
+
+    const pg=fb.pos_group;
+    const isGK=pg==='GK',isDef=pg==='DEF',isFwd=pg==='FWD',isMid=pg==='MID';
+
+    // Per-90 stats from FBref
+    const n90=fb.ninety||(fb.minutes/90)||1;
+    const goals_p90=fb.goals/n90;
+    const assists_p90=fb.assists/n90;
+    const xg_p90=fb.xg/n90;
+    const xag_p90=fb.xag/n90;
+    const prgC_p90=fb.prg_c/n90;
+    const prgP_p90=fb.prg_p/n90;
+    const prgR_p90=fb.prg_r/n90;
+
+    // ----- BODY -----
+    // Pace: derived from progressive runs (forwards/wingers who carry the ball)
+    let pace=norm99(prgR_p90,0,Math.max(2,maxV.prg_r/maxV.minutes*90));
+    if(isDef)pace=Math.max(30,pace-5);  // defenders less reliant on pace
+    if(isGK)pace=30;
+
+    // Burst: similar but more aggressive — uses prgC + prgR
+    let burst=norm99((prgC_p90*0.5+prgR_p90*0.5),0,Math.max(3,(maxV.prg_c+maxV.prg_r)/maxV.minutes*90));
+    if(isGK)burst=20;
+
+    // Engine: stamina based on minutes played (regulars > rotation)
     let engine=norm99(fb.minutes,0,maxV.minutes);
-    let height=tm.height_cm||180,weight=tm.weight_kg||75,bmi=weight/Math.pow(height/100,2);
-    let power=norm99(bmi,18,28);if(isDef||isGK)power=Math.min(99,power+10);
-    let agility=fb.dribbles_attempted>0?norm99(fb.dribbles_completed/fb.dribbles_attempted*100,30,90):50;
-    
-    // BALL
-    let passing=fb.passes_attempted>0?norm99(fb.pass_pct,50,95):50;
-    let distribution=norm99(fb.passes_completed*0.3,0,maxV.passes*0.15);
-    let touch=fb.dribbles_attempted>0?norm99(fb.dribbles_completed/fb.dribbles_attempted*100,30,90):50;
+    if(fb.matches>0&&fb.starts/fb.matches<0.5)engine=Math.max(30,engine-15);  // bench players
+    if(isGK)engine=norm99(fb.minutes,0,maxV.minutes);  // GKs play every game if fit
+
+    // Power: from TM height/weight if available, else position-based default
+    let height=tm.height_cm||(isGK?190:isDef?185:isMid?180:isFwd?180:180);
+    let weight=tm.weight_kg||(isGK?85:isDef?80:isMid?74:isFwd?76:75);
+    let bmi=weight/Math.pow(height/100,2);
+    let power=norm99(bmi,21,26);
+    if(isDef||isGK)power=Math.min(95,power+15);  // defenders/GKs need more strength
+    if(isFwd)power=Math.min(90,power+5);
+
+    // Agility: derived from progressive carries per 90 (carrying = ball control)
+    let agility=norm99(prgC_p90,0,Math.max(2,maxV.prg_c/maxV.minutes*90));
+    if(isGK)agility=30;
+
+    // ----- BALL -----
+    // Passing: derived from progressive passes per 90
+    let passing=norm99(prgP_p90,0,Math.max(2,maxV.prg_p/maxV.minutes*90));
+    if(isFwd)passing=Math.max(30,passing-10);  // forwards less passing
+    if(isGK)passing=norm99(prgP_p90,0,Math.max(2,maxV.prg_p/maxV.minutes*90));  // GK distribution
+
+    // Distribution: progressive passes total (volume of creative passing)
+    let distribution=norm99(fb.prg_p,0,maxV.prg_p);
+    if(isGK)distribution=Math.max(20,distribution-10);
+    if(isFwd)distribution=Math.max(25,distribution-15);
+
+    // Touch: same source as agility (progressive carries per 90)
+    let touch=norm99(prgC_p90,0,Math.max(2,maxV.prg_c/maxV.minutes*90));
     if(isGK)touch=25;
-    let xg=us.xg||0,goals=us.goals||fb.goals||0;
-    let finishing=xg>0?norm99(goals/xg,0.5,1.5):norm99(fb.shots_on_target/Math.max(1,fb.shots)*100,20,70);
-    if(isGK)finishing=20;
-    let defending=norm99(fb.tackles+fb.interceptions,0,maxV.tackles+maxV.interceptions);
-    if(isFwd)defending=Math.max(10,defending-15);
-    let ta=fb.aerials_won+fb.aerials_lost;
-    let aerial=ta>0?norm99(fb.aerials_won/ta*100,20,80):50;
-    
-    // HEAD
-    let anticipation=norm99(fb.interceptions,0,maxV.interceptions);
-    let vision=us.key_passes?norm99(us.key_passes,0,maxV.key_passes):norm99(fb.assists,0,15);
-    let decisions=norm99(fb.pass_pct,50,95);
-    let composure=us.xg>0?norm99(goals/Math.max(0.1,us.xg),0.5,1.5):50;
-    let leadership=norm99(tm.appearances||0,0,500);leadership=Math.max(20,Math.min(99,leadership+30));
-    
-    // GLOVES
-    let shot_stopping=isGK?60:15,commanding=isGK?55:20,playing_out=isGK?norm99(fb.pass_pct,50,90):30;
-    
+    if(isDef)touch=Math.max(30,touch-5);
+
+    // Finishing: goals / xG ratio (overperformance = clinical)
+    let finishing;
+    if(fb.xg>2){
+      finishing=norm99(fb.goals/fb.xg,0.5,1.5);
+    }else if(fb.goals>0){
+      finishing=norm99(fb.goals/Math.max(1,fb.xg),0,2);  // small sample, give benefit
+    }else{
+      finishing=isFwd?45:isMid?35:isDef?20:15;
+    }
+    if(isGK)finishing=15;
+    // Penalty conversion also informs finishing
+    if(fb.pkatt>0){
+      const pkRate=fb.pk/fb.pkatt;
+      finishing=Math.round(finishing*0.7+norm99(pkRate,0.5,1.0)*0.3);
+    }
+
+    // Defending: position-based, with minutes-as-starter bonus (clamped 1-99)
+    let defending;
+    if(isDef)defending=Math.min(99,Math.max(50,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)+20));
+    else if(isMid)defending=Math.min(70,Math.max(25,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)+5));
+    else if(isFwd)defending=Math.min(40,Math.max(10,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)-15));
+    else defending=15;  // GK can't defend in open play
+
+    // Aerial: not in FBref Standard view, use position + height heuristic
+    let aerial=50;
+    if(tm.height_cm){
+      aerial=norm99(tm.height_cm,170,200);
+      if(isDef||isGK)aerial=Math.min(95,aerial+15);
+      if(isFwd)aerial=Math.min(85,aerial+5);
+    }else{
+      if(isDef||isGK)aerial=70;
+      else if(isFwd)aerial=55;
+      else aerial=45;
+    }
+
+    // ----- HEAD -----
+    // Anticipation: xAG generation (seeing passes before they happen). Floor 30 — every pro reads the game.
+    let anticipation=Math.max(30,norm99(xag_p90,0,Math.max(0.5,maxV.xag/maxV.minutes*90)));
+    if(isDef)anticipation=Math.max(40,anticipation);  // defenders must read the game
+    if(isGK)anticipation=Math.max(50,norm99(fb.minutes,0,maxV.minutes));
+
+    // Vision: xAG per 90 (creative vision). Floor 30.
+    let vision=Math.max(30,norm99(xag_p90,0,Math.max(0.5,maxV.xag/maxV.minutes*90)));
+    if(isDef)vision=Math.max(35,vision-5);  // defenders less creative vision
+    if(isGK)vision=30;
+
+    // Decisions: balance between scoring and creating, with floor 30.
+    let decisions;
+    if(fb.xg>0&&fb.xag>0){
+      decisions=norm99((fb.xag+fb.xg)/n90,0,1.5);
+    }else if(fb.xg>0||fb.xag>0){
+      decisions=40;  // one-dimensional player
+    }else{
+      decisions=50;  // default neutral
+    }
+    decisions=Math.max(30,decisions);
+    if(isGK)decisions=50;
+    if(isDef)decisions=Math.max(40,decisions);  // defenders need positional discipline
+    if(fb.yellow_cards+fb.red_cards*3>10)decisions=Math.max(25,decisions-15);  // cards = bad decisions
+
+    // Composure: goals/xG overperformance + penalty conversion
+    let composure;
+    if(fb.xg>2){
+      composure=norm99(fb.goals/fb.xg,0.5,1.5);
+    }else{
+      composure=50;
+    }
+    if(fb.pkatt>0){
+      const pkRate=fb.pk/fb.pkatt;
+      composure=Math.round(composure*0.6+norm99(pkRate,0.5,1.0)*0.4);
+    }
+    if(fb.red_cards>0)composure=Math.max(20,composure-15);
+    if(isGK)composure=norm99(fb.minutes,0,maxV.minutes);  // GK composure = playing time
+
+    // Leadership: starts / total matches (captains start every game)
+    let leadership;
+    if(fb.matches>0){
+      leadership=norm99(fb.starts/fb.matches,0.3,1.0);
+      leadership=Math.max(20,Math.min(99,leadership+norm99(fb.minutes,0,maxV.minutes)*0.3));
+    }else{
+      leadership=30;
+    }
+    if(isGK)leadership=Math.min(99,leadership+10);  // GKs are often captains
+
+    // ----- GLOVES (GK only, others get floor) -----
+    let shot_stopping=isGK?Math.min(99,Math.max(55,norm99(fb.minutes,0,maxV.minutes)+30)):15;
+    let commanding=isGK?Math.min(99,Math.max(45,60+jit(15,10))):20;
+    let playing_out=isGK?Math.max(25,norm99(prgP_p90,0,Math.max(2,maxV.prg_p/maxV.minutes*90))):25;
+    if(!isGK){shot_stopping=15;commanding=20;playing_out=25;}
+
     const attrs={
       pace:jit(pace),burst:jit(burst),engine:jit(engine),power:jit(power),agility:jit(agility),
       passing:jit(passing),distribution:jit(distribution),touch:jit(touch),finishing:jit(finishing),
@@ -533,28 +1102,59 @@ function runStep4(){
       shot_stopping:jit(shot_stopping),commanding:jit(commanding),playing_out:jit(playing_out),
     };
     const ovr=Math.round(Object.values(attrs).reduce((a,b)=>a+b,0)/19);
-    
-    // PERSONALITY
-    let dr=fb.dribbles_attempted/Math.max(1,fb.minutes/90);
-    let openness=norm99(dr*5+(us.key_passes||0)*0.5,0,15);
-    let y=fb.yellow_cards+(tm.yellow_cards||0),r=fb.red_cards+(tm.red_cards||0);
-    let conscientiousness=Math.max(20,Math.min(99,80-Math.min(30,y+r*3)+Math.min(20,(parseInt(fb.age)||25)*2)));
-    let extraversion=Math.max(30,Math.min(99,norm99((tm.appearances||0)*0.5,0,100)+20));
-    let ta2=(fb.shots||0)+(fb.assists||0);
-    let agreeableness=ta2>0?norm99(fb.assists/ta2,0,0.6):50;
-    let redRate=r/Math.max(1,tm.appearances||fb.minutes/90||1);
-    let neuroticism=Math.max(10,Math.min(95,norm99(redRate*100,0,30)));
-    let confidence=(Object.keys(tm).length>2?35:0)+(Object.keys(us).length>2?35:0)+30;
-    
+
+    // ----- PERSONALITY (Big Five + confidence) -----
+    // Openness: progressive carries + shooting from distance = creative, open to new approaches
+    let openness=norm99(prgC_p90+goals_p90*0.5,0,3);
+    openness=Math.max(20,Math.min(95,openness+10));
+
+    // Conscientiousness: low cards, regular starter, low PKmiss rate
+    let cardsPer90=(fb.yellow_cards+fb.red_cards*2)/n90;
+    let conscientiousness=norm99(cardsPer90,0.5,0.05,true);  // inverse
+    conscientiousness=Math.max(25,Math.min(95,conscientiousness+norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)*0.2));
+
+    // Extraversion: high minutes + high involvement (touches proxy = progressive actions)
+    let involvement=prgC_p90+prgP_p90+prgR_p90;
+    let extraversion=norm99(involvement,0,5);
+    extraversion=Math.max(30,Math.min(95,extraversion*0.5+norm99(fb.minutes,0,maxV.minutes)*0.5));
+
+    // Agreeableness: assists / (goals+assists) ratio + low cards
+    let totalGA=fb.goals+fb.assists;
+    let agreeableness;
+    if(totalGA>3){
+      agreeableness=norm99(fb.assists/totalGA,0,0.7);
+    }else{
+      agreeableness=50;
+    }
+    if(cardsPer90>0.3)agreeableness=Math.max(20,agreeableness-15);
+
+    // Neuroticism: red cards + penalty misses (high-pressure failures)
+    let neuroticism=20;
+    if(fb.red_cards>0)neuroticism+=fb.red_cards*15;
+    if(fb.pkatt>0&&fb.pk<fb.pkatt)neuroticism+=(fb.pkatt-fb.pk)*5;
+    if(fb.xg>5&&fb.goals<fb.xg*0.7)neuroticism+=15;  // underperforming xG = pressure
+    neuroticism=Math.max(10,Math.min(95,neuroticism));
+
+    // Confidence: based on data sources available + minutes
+    let confidence=30;
+    if(Object.keys(tm).length>2)confidence+=15;
+    if(Object.keys(us).length>2)confidence+=15;
+    if(fb.minutes>1000)confidence+=20;
+    if(fb.minutes>2500)confidence+=10;
+    confidence=Math.min(95,confidence);
+
     const personality={openness,conscientiousness,extraversion,agreeableness,neuroticism,confidence};
-    
-    // TRAITS
+
+    // ----- TRAITS -----
     const traits=[];
+    // Technical identity traits
     if(attrs.defending>=75&&attrs.engine>=75)traits.push('PressingAnchor');
     if(attrs.passing>=80&&attrs.distribution>=75)traits.push('TempoConductor');
     if(attrs.touch>=80&&attrs.pace>=75&&pg==='FWD')traits.push('ChaosWinger');
     if(attrs.defending>=80&&attrs.aerial>=70)traits.push('DefensiveWall');
     if(attrs.pace>=80&&attrs.finishing>=70)traits.push('CounterKiller');
+
+    // Psychological traits
     const psych=[];
     if(personality.extraversion>=70&&personality.neuroticism<50)psych.push('BigGameResponder');
     if(personality.neuroticism>=70)psych.push('MediaSensitive');
@@ -562,78 +1162,179 @@ function runStep4(){
     if(personality.neuroticism<=30&&attrs.composure>=75)psych.push('IceCold');
     if(personality.neuroticism>=70&&personality.extraversion>=60)psych.push('EmotionalReactor');
     traits.push(...psych.sort(()=>Math.random()-0.5).slice(0,2));
+
+    // Social traits
     const social=[];
     if(personality.extraversion>=75&&attrs.leadership>=70)social.push('DressingRoomAlpha');
     if(personality.agreeableness>=70&&personality.neuroticism<=40)social.push('QuietStabilizer');
     if(personality.extraversion>=65&&personality.agreeableness>=60)social.push('CliqueBuilder');
     if(personality.agreeableness<=35&&personality.neuroticism>=50)social.push('IsolationRisk');
     traits.push(...social.sort(()=>Math.random()-0.5).slice(0,2));
-    
+
+    // Build merged player record
+    const id='p_'+name.toLowerCase().replace(/[^a-z0-9]/g,'_');
+    const dob=tm.dob||(fb.born?`${fb.born}-01-01`:'2000-01-01');
+    const nation=(tm.nationality||fb.nation||'XXX').substring(0,3).toUpperCase();
+
     merged.push({
-      id:'p_'+name.toLowerCase().replace(/[^a-z0-9]/g,'_'),match_name:name,full_name:tm.name||name,
-      date_of_birth:tm.dob||'2000-01-01',nationality:(tm.nationality||fb.nation||'').substring(0,3).toUpperCase(),
-      position:pg,natural_position:pg,attributes:attrs,personality,narrative_traits:traits,stability_modifier:50,
-      ovr,potential:Math.max(attrs.pace,attrs.finishing,attrs.defending,attrs.passing)+Math.floor(Math.random()*10),
-      team:fb.team||tm.club||'',age:parseInt(fb.age)||25,
-      market_value:parseMV(tm.market_value),contract_end:'2028-06-30',wage:ovr*1000,
-      _sources:{fbref:!!Object.keys(fb).length,tm:!!Object.keys(tm).length,us:!!Object.keys(us).length},
+      id,
+      match_name:name,
+      full_name:tm.name||name,
+      date_of_birth:dob,
+      nationality:nation,
+      position:pg,
+      natural_position:pg,
+      attributes:attrs,
+      personality,
+      narrative_traits:traits,
+      stability_modifier:50,
+      ovr,
+      potential:Math.min(99,Math.max(attrs.pace,attrs.finishing,attrs.defending,attrs.passing)+Math.floor(Math.random()*8)+2),
+      team:fb.team||tm.club||'',
+      competition:fb.competition||'',
+      age:fb.age,
+      height_cm:tm.height_cm||null,
+      weight_kg:tm.weight_kg||null,
+      market_value:parseMV(tm.market_value),
+      contract_end:'2028-06-30',
+      wage:ovr*1000,
+      // Raw FBref data preserved for audit
+      _fbref:{
+        minutes:fb.minutes,goals:fb.goals,assists:fb.assists,xg:fb.xg,xag:fb.xag,
+        pk:fb.pk,pkatt:fb.pkatt,prg_c:fb.prg_c,prg_p:fb.prg_p,prg_r:fb.prg_r,
+        yellow:fb.yellow_cards,red:fb.red_cards,matches:fb.matches,starts:fb.starts,
+      },
+      _sources:{
+        fbref:true,
+        tm:Object.keys(tm).length>1,
+        us:Object.keys(us).length>1,
+      },
     });
   }
-  
-  log('merge-log',`Done: ${merged.length} players (${fullCount} full, ${partialCount} partial)`,'ok');
+
+  log('merge-log',`Done: ${merged.length} players`,'ok');
+  log('merge-log',`Sources — FBref+TM+US: ${fullCount} | 2-source: ${partialCount} | FBref-only: ${fbrefOnlyCount}`);
   log('merge-log',`Avg OVR: ${Math.round(merged.reduce((s,p)=>s+p.ovr,0)/merged.length)}`);
-  
+  log('merge-log',`Position breakdown: GK ${merged.filter(p=>p.position==='GK').length} | DEF ${merged.filter(p=>p.position==='DEF').length} | MID ${merged.filter(p=>p.position==='MID').length} | FWD ${merged.filter(p=>p.position==='FWD').length}`);
+
   $('btn-json').disabled=false;$('btn-csv').disabled=false;
+  updateStats();
   showPreview();
 }
 
 function showPreview(){
   show('preview-card');
+  // Build header with column groups
+  const head=$('preview-table').querySelector('thead');
+  head.innerHTML=`
+    <tr class="col-group">
+      <th rowspan="2">Player</th><th rowspan="2">Pos</th><th rowspan="2">Nat</th><th rowspan="2">Age</th>
+      <th colspan="5">Body</th><th colspan="6">Ball</th><th colspan="6">Head</th><th colspan="3">Gloves</th>
+      <th rowspan="2">OVR</th>
+      <th colspan="6">Personality</th><th rowspan="2">Traits</th><th rowspan="2">Src</th>
+    </tr>
+    <tr>
+      <th>pace</th><th>burst</th><th>engine</th><th>power</th><th>agility</th>
+      <th>pass</th><th>distr</th><th>touch</th><th>fin</th><th>def</th><th>aer</th>
+      <th>antic</th><th>vis</th><th>dec</th><th>compo</th><th>lead</th>
+      <th>shotst</th><th>comm</th><th>playout</th>
+      <th>O</th><th>C</th><th>E</th><th>A</th><th>N</th><th>conf</th>
+    </tr>`;
   $('preview-body').innerHTML=merged.slice(0,300).map(p=>{
     const a=p.attributes,pe=p.personality;
     const srcBadge=Object.values(p._sources).filter(Boolean).length+'/3';
+    const srcClass=srcBadge==='3/3'?'badge-ok':srcBadge==='2/3'?'badge-warn':'badge-err';
     return `<tr>
-      <td>${p.match_name}</td><td>${p.position}</td><td>${p.nationality}</td><td>${p.age}</td>
+      <td>${p.match_name}</td>
+      <td><span class="pos-tag pos-${p.position}">${p.position}</span></td>
+      <td>${p.nationality}</td><td>${p.age}</td>
       <td>${a.pace}</td><td>${a.burst}</td><td>${a.engine}</td><td>${a.power}</td><td>${a.agility}</td>
-      <td>${a.passing}</td><td>${a.distribution}</td><td>${a.touch}</td><td>${a.finishing}</td>
-      <td>${a.defending}</td><td>${a.aerial}</td><td>${a.anticipation}</td><td>${a.vision}</td>
-      <td>${a.decisions}</td><td>${a.composure}</td><td>${a.leadership}</td>
+      <td>${a.passing}</td><td>${a.distribution}</td><td>${a.touch}</td><td>${a.finishing}</td><td>${a.defending}</td><td>${a.aerial}</td>
+      <td>${a.anticipation}</td><td>${a.vision}</td><td>${a.decisions}</td><td>${a.composure}</td><td>${a.leadership}</td>
       <td>${a.shot_stopping}</td><td>${a.commanding}</td><td>${a.playing_out}</td>
-      <td><strong>${p.ovr}</strong></td>
-      <td>${pe.openness}</td><td>${pe.conscientiousness}</td><td>${pe.extraversion}</td>
-      <td>${pe.agreeableness}</td><td>${pe.neuroticism}</td>
-      <td>${(p.narrative_traits||[]).join(', ')}</td><td><span class="badge ${srcBadge==='3/3'?'badge-ok':srcBadge==='2/3'?'badge-warn':'badge-err'}">${srcBadge}</span></td>
+      <td><b>${p.ovr}</b></td>
+      <td>${pe.openness}</td><td>${pe.conscientiousness}</td><td>${pe.extraversion}</td><td>${pe.agreeableness}</td><td>${pe.neuroticism}</td><td>${pe.confidence}</td>
+      <td style="font-size:.85em;color:#94a3b8">${(p.narrative_traits||[]).join(', ')||'—'}</td>
+      <td><span class="badge ${srcClass}">${srcBadge}</span></td>
     </tr>`;
   }).join('');
 }
 
-function parseMV(s){if(!s)return 1000000;const m=s.match(/€([\d.]+)\s*([mk])/i);if(!m)return 1000000;const n=parseFloat(m[1]);return m[2].toLowerCase()==='m'?n*1e6:n*1e3;}
+function parseMV(s){
+  if(!s)return 1000000;
+  const m=s.match(/€([\d.]+)\s*([mk])/i);
+  if(!m)return 1000000;
+  const n=parseFloat(m[1]);
+  return m[2].toLowerCase()==='m'?n*1e6:n*1e3;
+}
 
 function downloadJSON(){
-  const data={name:'Gaffer Player Database',description:'Scraped player data with Gaffer attributes',version:2,generated:new Date().toISOString(),
+  if(merged.length===0)return;
+  const data={
+    name:'Gaffer Player Database',
+    description:'Scraped player data with 19 Gaffer attributes + Big Five personality + narrative traits',
+    version:3,
+    generated:new Date().toISOString(),
+    source:'FBref Big 5 (with optional Transfermarkt + Understat enrichment)',
     players:merged,
-    relationships:(()=>{const r=[];const byT={};for(const p of merged){const t=p.team||'';if(!byT[t])byT[t]=[];byT[t].push(p);}
-      for(const[t,tp]of Object.entries(byT)){if(!t)continue;for(let i=0;i<tp.length;i++)for(let j=i+1;j<tp.length;j++){let s=40;if(tp[i].nationality===tp[j].nationality)s+=20;if(Math.abs(tp[i].age-tp[j].age)<=3)s+=10;s+=Math.floor(Math.random()*31)-15;s=Math.max(-30,Math.min(95,s));r.push({player_a:tp[i].id,player_b:tp[j].id,strength:s,volatility:0.3});}}
-      return r;})(),
+    relationships:(()=>{
+      const r=[];const byT={};
+      for(const p of merged){
+        const t=p.team||'';if(!t)continue;
+        if(!byT[t])byT[t]=[];
+        byT[t].push(p);
+      }
+      for(const[t,tp]of Object.entries(byT)){
+        if(!t)continue;
+        for(let i=0;i<tp.length;i++){
+          for(let j=i+1;j<tp.length;j++){
+            let s=40;
+            if(tp[i].nationality===tp[j].nationality)s+=20;
+            if(Math.abs(tp[i].age-tp[j].age)<=3)s+=10;
+            s+=Math.floor(Math.random()*31)-15;
+            s=Math.max(-30,Math.min(95,s));
+            r.push({player_a:tp[i].id,player_b:tp[j].id,strength:s,volatility:0.3});
+          }
+        }
+      }
+      return r;
+    })(),
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='gaffer_players.json';a.click();URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='gaffer_players.json';a.click();
+  URL.revokeObjectURL(url);
   log('merge-log',`Downloaded gaffer_players.json (${merged.length} players)`,'ok');
 }
 
 function downloadCSV(){
   if(!merged.length)return;
-  const h=['id','match_name','date_of_birth','nationality','position','ovr','team','age',
+  const h=['id','match_name','date_of_birth','nationality','position','ovr','team','competition','age','height_cm','weight_kg',
     'pace','burst','engine','power','agility','passing','distribution','touch','finishing','defending','aerial',
     'anticipation','vision','decisions','composure','leadership','shot_stopping','commanding','playing_out',
-    'openness','conscientiousness','extraversion','agreeableness','neuroticism','confidence','narrative_traits','market_value'];
-  const rows=merged.map(p=>{const a=p.attributes,pe=p.personality;return [p.id,p.match_name,p.date_of_birth,p.nationality,p.position,p.ovr,p.team,p.age,
-    a.pace,a.burst,a.engine,a.power,a.agility,a.passing,a.distribution,a.touch,a.finishing,a.defending,a.aerial,
-    a.anticipation,a.vision,a.decisions,a.composure,a.leadership,a.shot_stopping,a.commanding,a.playing_out,
-    pe.openness,pe.conscientiousness,pe.extraversion,pe.agreeableness,pe.neuroticism,pe.confidence,
-    (p.narrative_traits||[]).join('|'),p.market_value].join('\t');});
+    'openness','conscientiousness','extraversion','agreeableness','neuroticism','confidence',
+    'narrative_traits','market_value','contract_end','wage',
+    // FBref raw
+    'fb_minutes','fb_goals','fb_assists','fb_xg','fb_xag','fb_pk','fb_pkatt','fb_prg_c','fb_prg_p','fb_prg_r',
+    'fb_yellow','fb_red','fb_matches','fb_starts'];
+  const rows=merged.map(p=>{
+    const a=p.attributes,pe=p.personality,fb=p._fbref||{};
+    return [
+      p.id,p.match_name,p.date_of_birth,p.nationality,p.position,p.ovr,p.team,p.competition,p.age,p.height_cm||'',p.weight_kg||'',
+      a.pace,a.burst,a.engine,a.power,a.agility,a.passing,a.distribution,a.touch,a.finishing,a.defending,a.aerial,
+      a.anticipation,a.vision,a.decisions,a.composure,a.leadership,a.shot_stopping,a.commanding,a.playing_out,
+      pe.openness,pe.conscientiousness,pe.extraversion,pe.agreeableness,pe.neuroticism,pe.confidence,
+      (p.narrative_traits||[]).join('|'),p.market_value,p.contract_end,p.wage,
+      fb.minutes||'',fb.goals||'',fb.assists||'',fb.xg||'',fb.xag||'',fb.pk||'',fb.pkatt||'',fb.prg_c||'',fb.prg_p||'',fb.prg_r||'',
+      fb.yellow||'',fb.red||'',fb.matches||'',fb.starts||''
+    ].join('\t');
+  });
   const blob=new Blob([h.join('\t')+'\n'+rows.join('\n')],{type:'text/tab-separated-values'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='gaffer_players.csv';a.click();URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='gaffer_players.csv';a.click();
+  URL.revokeObjectURL(url);
   log('merge-log',`Downloaded gaffer_players.csv`,'ok');
 }
 </script>
