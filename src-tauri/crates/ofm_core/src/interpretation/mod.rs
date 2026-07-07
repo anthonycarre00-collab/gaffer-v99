@@ -1,4 +1,5 @@
 // Gaffer Phase 1 — Interpretation Surface
+use crate::game::{RevealTier, ScoutingKnowledge};
 use crate::game::Game;
 use crate::training::development_trajectory;
 use domain::player::{MediaSensitivity, Player, PlayerTrait, Position, PressureResponse};
@@ -36,6 +37,11 @@ pub struct PlayerMeaningSnapshot {
     pub spreadsheet_attributes:SpreadsheetAttributes,
     pub role_identity_explanation:ExplanationChain,pub stability_explanation:ExplanationChain,
     pub morale_state_explanation:ExplanationChain,pub pressure_response_explanation:ExplanationChain,
+    /// Gaffer Phase 7 — Scouting knowledge for this player (None if never scouted by user).
+    /// When present, the UI should hide attributes/personality/etc that are not yet revealed
+    /// at the current tier.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scouting_knowledge: Option<ScoutingKnowledge>,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -219,6 +225,8 @@ impl<'a> InterpretationSurfaceService<'a> {
             body_avg:attrs.body_avg(),ball_avg:attrs.ball_avg(),head_avg:attrs.head_avg(),gloves_avg:attrs.gloves_avg(),overall,
         };
         let club = self.game.teams.iter().find(|t| Some(&t.id)==player.team_id.as_ref()).map(|t|t.name.clone()).unwrap_or_else(||"No Club".into());
+        // Phase 7: Look up scouting knowledge for this player (None if never scouted)
+        let scouting_knowledge = self.game.scouting_knowledge.get(&player.id).cloned();
         PlayerMeaningSnapshot {
             display_name:player.match_name.clone(),club,role_identity_label,archetype_label,
             locker_room_role:"Unknown".into(),
@@ -233,6 +241,7 @@ impl<'a> InterpretationSurfaceService<'a> {
             growth_vector,training_alignment_label:"Unknown".into(),mentor_bonus_flag:false,
             spreadsheet_attributes:sa,role_identity_explanation:role_explanation,stability_explanation:se,
             morale_state_explanation:me,pressure_response_explanation:pe,
+            scouting_knowledge,
         }
     }
 

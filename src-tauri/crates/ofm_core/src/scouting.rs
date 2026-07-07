@@ -1,5 +1,14 @@
+mod progressive_reveal;
+pub use progressive_reveal::{
+    ALL_ATTRIBUTE_NAMES, key_attributes_for_position, fuzz_noise_range, fuzz_attribute,
+    get_attribute, ovr_band_label, potential_band_label,
+    should_reveal_potential, should_reveal_personality, should_reveal_narrative_traits,
+    should_reveal_stability, should_reveal_condition, should_reveal_morale, should_reveal_injury,
+    update_knowledge_after_assignment, get_or_create_knowledge,
+};
+
 use crate::game::{
-    Game, ScoutingAssignment, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
+    Game, RevealTier, ScoutingAssignment, ScoutingKnowledge, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
 };
 use domain::message::*;
 use domain::player::{Player, Position, SquadRole};
@@ -310,6 +319,24 @@ pub fn process_scouting(game: &mut Game) {
                 .and_then(|tid| game.teams.iter().find(|t| &t.id == tid))
                 .map(|t| t.name.clone());
 
+            // Phase 7: Update the ScoutingKnowledge for this player (progressive reveal).
+            // This must happen BEFORE building the report so the report reflects
+            // the new tier. We need a mutable borrow of the player data for fuzzing,
+            // but the player is borrowed immutably above — so we clone what we need.
+            let player_clone = player.clone();
+            let mut rng = rand::rng();
+            let knowledge = get_or_create_knowledge(&mut game.scouting_knowledge, &assignment.player_id);
+            update_knowledge_after_assignment(
+                knowledge,
+                &player_clone,
+                &assignment.scout_id,
+                judging_ability,
+                judging_potential,
+                &today,
+                &mut rng,
+            );
+            let tier_after = knowledge.reveal_tier;
+
             let msg = build_scout_report(
                 &assignment.id,
                 &scout_name,
@@ -327,6 +354,7 @@ pub fn process_scouting(game: &mut Game) {
                 judging_potential,
                 team_name.as_deref(),
                 &today,
+                tier_after,
             );
             game.messages.push(msg);
         }
@@ -738,6 +766,7 @@ fn build_scout_report(
     judging_potential: u8,
     team_name: Option<&str>,
     date: &str,
+    reveal_tier: RevealTier,
 ) -> InboxMessage {
     let mut rng = rand::rng();
 
@@ -767,19 +796,14 @@ fn build_scout_report(
         (fuzz(attrs.power), "Physical"),
     ];
 
-    // Discovery mechanic: scout ability determines how many attrs are revealed
-    // 80+: all 6 attrs + condition + morale
-    // 60-79: 5 attrs + condition
-    // 40-59: 3 attrs
-    // <40: 2 attrs
-    let reveal_count: usize = if judging_ability >= 80 {
-        6
-    } else if judging_ability >= 60 {
-        5
-    } else if judging_ability >= 40 {
-        3
-    } else {
-        2
+    // Phase 7: Progressive reveal — reveal depth is determined by tier, not scout ability.
+    // Surface: reveal 2 attrs (always show *something*)
+    // Detailed: reveal 5 attrs
+    // Complete: reveal all 6 attrs (the legacy report only has 6 slots)
+    let reveal_count: usize = match reveal_tier {
+        RevealTier::Surface => 2,
+        RevealTier::Detailed => 5,
+        RevealTier::Complete => 6,
     };
 
     // Shuffle indices to determine which attrs are hidden
@@ -806,12 +830,13 @@ fn build_scout_report(
     let defending = to_opt(4);
     let physical = to_opt(5);
 
-    let reported_condition = if judging_ability >= 60 {
+    // Phase 7: Condition/morale reveal driven by tier
+    let reported_condition = if should_reveal_condition(reveal_tier) {
         Some(condition)
     } else {
         None
     };
-    let reported_morale = if judging_ability >= 80 {
+    let reported_morale = if should_reveal_morale(reveal_tier) {
         Some(morale)
     } else {
         None
@@ -843,10 +868,11 @@ fn build_scout_report(
         "common.scoutRatings.belowAverage"
     };
 
-    // Potential assessment: use the player's actual potential (fuzzed) when the scout
-    // has sufficient judging_potential skill.  High-potential scouts can also spot
-    // Wonderkid-level talent accurately.
-    let potential_key = if judging_potential >= 70 {
+    // Potential assessment: Phase 7 — use tier-aware reveal policy.
+    // Surface: only with judging_potential >= 80
+    // Detailed: with judging_potential >= 70
+    // Complete: always
+    let potential_key = if should_reveal_potential(reveal_tier, judging_potential) {
         let fuzzed_potential = if player_potential > 0 {
             let delta: i16 = rng.random_range(-(noise_range as i16)..=(noise_range as i16));
             ((player_potential as i16) + delta).clamp(1, 99) as u32
@@ -932,6 +958,7 @@ fn build_scout_report(
 #[cfg(test)]
 mod tests {
     use super::build_scout_report;
+    use crate::game::RevealTier;
     use domain::message::{ActionType, MessageCategory, MessagePriority};
     use domain::player::PlayerAttributes;
 
@@ -978,6 +1005,7 @@ mod tests {
             83,
             Some("London FC"),
             "2026-08-01",
+            RevealTier::Complete,
         );
 
         assert_eq!(message.subject, "");

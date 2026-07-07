@@ -308,7 +308,9 @@ pub fn run() {
             get_squad_meaning,
             get_match_meaning,
             get_media_meaning,
-            get_player_relationships
+            get_player_relationships,
+            get_scouting_knowledge,
+            get_scouting_summary
         ])
         .run(tauri::generate_context!());
 

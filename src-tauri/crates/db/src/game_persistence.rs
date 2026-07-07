@@ -344,6 +344,7 @@ impl GamePersistenceReader {
             relationship_graph: ofm_core::relationships::RelationshipGraph::new(),
             memory_store: ofm_core::narrative::MemoryStore::new(),
             media_engine: ofm_core::media::MediaEngine::new(),
+            scouting_knowledge: std::collections::HashMap::new(),
         };
         game.promote_legacy_league();
         ofm_core::season_context::refresh_game_context(&mut game);

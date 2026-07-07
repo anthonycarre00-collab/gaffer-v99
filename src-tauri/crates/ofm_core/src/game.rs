@@ -4,7 +4,7 @@ use domain::manager::Manager;
 use domain::message::InboxMessage;
 use domain::national_team::NationalTeam;
 use domain::news::NewsArticle;
-use domain::player::{Player, Position};
+use domain::player::{PersonalityProfile, Player, Position};
 use domain::season::SeasonContext;
 use domain::staff::Staff;
 use domain::team::Team;
@@ -63,6 +63,78 @@ pub struct YouthScoutingAssignment {
     pub objective: YouthScoutingObjective,
     pub target_position: Option<Position>,
     pub days_remaining: u32,
+}
+
+// ============================================================================
+// GAFFER PHASE 7 — Scouting Progressive Reveal
+// ============================================================================
+
+/// Three-tier reveal progression. Each completed scouting assignment advances
+/// the tier (Surface → Detailed → Complete). Tier never regresses.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum RevealTier {
+    /// 1 completed assignment: name, position, club, age, nationality, rough OVR band
+    #[default]
+    Surface,
+    /// 2 assignments: + 5 key position attrs (fuzzed), condition, morale, injury
+    Detailed,
+    /// 3+ assignments: + all 19 attrs (fuzzed), exact OVR, exact potential,
+    /// Big Five personality, narrative_traits, stability label
+    Complete,
+}
+
+impl RevealTier {
+    pub fn label(&self) -> &'static str {
+        match self {
+            RevealTier::Surface => "Surface",
+            RevealTier::Detailed => "Detailed",
+            RevealTier::Complete => "Complete",
+        }
+    }
+    /// Advance to the next tier. Caps at Complete.
+    pub fn advance(&self) -> RevealTier {
+        match self {
+            RevealTier::Surface => RevealTier::Detailed,
+            RevealTier::Detailed => RevealTier::Complete,
+            RevealTier::Complete => RevealTier::Complete,
+        }
+    }
+}
+
+/// Persistent scouting knowledge for a single player, scoped to the user's manager.
+/// Keyed by `player_id` in `Game::scouting_knowledge`.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ScoutingKnowledge {
+    pub player_id: String,
+    pub reveal_tier: RevealTier,
+    pub times_scouted: u32,
+    pub last_scouted_date: String,
+    pub last_scout_id: String,
+    pub last_judging_ability: u8,
+    pub last_judging_potential: u8,
+    /// Fuzzed attribute cache from the last scout's reading.
+    /// Keyed by attribute name (e.g., "pace", "passing").
+    #[serde(default)]
+    pub fuzzed_attributes: HashMap<String, u8>,
+    pub fuzzed_ovr: Option<u8>,
+    pub fuzzed_potential: Option<u8>,
+    #[serde(default)]
+    pub revealed_personality: Option<PersonalityProfile>,
+    #[serde(default)]
+    pub revealed_narrative_traits: Vec<String>,
+    pub revealed_stability_label: Option<String>,
+    pub known_condition: Option<u8>,
+    pub known_morale: Option<u8>,
+    pub known_injury: Option<String>,
+}
+
+impl ScoutingKnowledge {
+    pub fn new(player_id: &str) -> Self {
+        Self {
+            player_id: player_id.to_string(),
+            ..Default::default()
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -134,6 +206,12 @@ pub struct Game {
     /// Gaffer Phase 5 — Media engine (pundits, betting, supplements, reactions).
     #[serde(default)]
     pub media_engine: crate::media::MediaEngine,
+
+    /// Gaffer Phase 7 — Per-player scouting knowledge for the user's manager.
+    /// Keyed by `player_id`. Each entry tracks the reveal tier (Surface/Detailed/Complete)
+    /// and the fuzzed attribute cache from the last scout's reading.
+    #[serde(default)]
+    pub scouting_knowledge: HashMap<String, ScoutingKnowledge>,
 }
 
 fn default_game_seed() -> u64 {
@@ -181,6 +259,7 @@ impl Game {
             relationship_graph: crate::relationships::RelationshipGraph::new(),
             memory_store: crate::narrative::MemoryStore::new(),
             media_engine: crate::media::MediaEngine::new(),
+            scouting_knowledge: HashMap::new(),
         };
         game.promote_legacy_league();
         crate::football_identity::upgrade_game_football_identities(&mut game);
