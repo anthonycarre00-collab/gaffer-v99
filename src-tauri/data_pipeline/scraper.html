@@ -3,931 +3,595 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gaffer — Player Data Scraper</title>
+<title>Gaffer — Player Data Scraper v2</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
-  h1 { color: #38bdf8; margin-bottom: 8px; }
-  h2 { color: #818cf8; margin: 16px 0 8px; font-size: 1.1em; }
-  .subtitle { color: #94a3b8; margin-bottom: 20px; font-size: 0.9em; }
-  .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
-  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
-  select, input, button { background: #334155; color: #e2e8f0; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; font-size: 0.9em; }
-  select { min-width: 200px; }
-  button { cursor: pointer; background: #2563eb; border-color: #3b82f6; font-weight: 600; transition: background 0.2s; }
-  button:hover { background: #3b82f6; }
-  button:disabled { background: #475569; cursor: not-allowed; }
-  button.success { background: #059669; border-color: #10b981; }
-  button.danger { background: #dc2626; border-color: #ef4444; }
-  .stats { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; }
-  .stat { background: #334155; padding: 8px 16px; border-radius: 8px; text-align: center; }
-  .stat .num { font-size: 1.5em; font-weight: 700; color: #38bdf8; }
-  .stat .label { font-size: 0.75em; color: #94a3b8; text-transform: uppercase; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.8em; margin-top: 8px; }
-  th { background: #334155; padding: 6px 8px; text-align: left; position: sticky; top: 0; cursor: pointer; }
-  th:hover { background: #475569; }
-  td { padding: 4px 8px; border-bottom: 1px solid #334155; }
-  tr:hover { background: #1e293b; }
-  .table-wrap { max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid #334155; }
-  .progress { width: 100%; height: 24px; background: #334155; border-radius: 12px; overflow: hidden; margin: 8px 0; }
-  .progress-bar { height: 100%; background: linear-gradient(90deg, #2563eb, #38bdf8); transition: width 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.75em; font-weight: 600; }
-  .log { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px; max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 0.8em; color: #94a3b8; }
-  .log .ok { color: #10b981; }
-  .log .err { color: #ef4444; }
-  .log .info { color: #38bdf8; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7em; font-weight: 600; }
-  .badge-ok { background: #059669; }
-  .badge-pending { background: #d97706; }
-  .badge-err { background: #dc2626; }
-  .tab-bar { display: flex; gap: 4px; margin-bottom: 12px; }
-  .tab { padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; background: #1e293b; border: 1px solid #334155; border-bottom: none; }
-  .tab.active { background: #334155; color: #38bdf8; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-  .paste-area { width: 100%; min-height: 100px; background: #0f172a; color: #e2e8f0; border: 1px solid #475569; border-radius: 8px; padding: 8px; font-family: monospace; font-size: 0.8em; }
-  .paste-area:focus { outline: none; border-color: #38bdf8; }
-  .hidden { display: none; }
-  .tooltip { position: relative; cursor: help; border-bottom: 1px dotted #94a3b8; }
-  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 100%; left: 0; background: #1e293b; padding: 4px 8px; border-radius: 4px; font-size: 0.75em; white-space: nowrap; z-index: 100; border: 1px solid #475569; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#cbd5e1;padding:20px;max-width:1400px;margin:0 auto}
+h1{color:#22d3ee;font-size:1.4em;margin-bottom:4px}
+.subtitle{color:#64748b;font-size:.85em;margin-bottom:20px}
+.card{background:#111827;border:1px solid #1e293b;border-radius:10px;padding:16px;margin-bottom:14px}
+.card h2{color:#818cf8;font-size:1em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.step-num{background:#312e81;color:#c7d2fe;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+select,input{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:7px 10px;font-size:.85em}
+select{min-width:180px}
+button{background:#2563eb;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s}
+button:hover:not(:disabled){background:#3b82f6;transform:translateY(-1px)}
+button:disabled{background:#334155;color:#64748b;cursor:not-allowed}
+button.success{background:#059669}button.success:hover:not(:disabled){background:#10b981}
+button.danger{background:#dc2626}button.danger:hover:not(:disabled){background:#ef4444}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.stat{background:#1e293b;padding:8px 14px;border-radius:8px;text-align:center;border:1px solid #334155}
+.stat .num{font-size:1.4em;font-weight:700;color:#22d3ee}
+.stat .label{font-size:.7em;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.progress-wrap{margin:8px 0}
+.progress{width:100%;height:22px;background:#1e293b;border-radius:11px;overflow:hidden;border:1px solid #334155}
+.progress-bar{height:100%;background:linear-gradient(90deg,#2563eb,#22d3ee);transition:width .3s;display:flex;align-items:center;justify-content:center;font-size:.72em;font-weight:600;color:#fff;white-space:nowrap}
+.progress-bar.err{background:linear-gradient(90deg,#dc2626,#f87171)}
+.progress-bar.ok{background:linear-gradient(90deg,#059669,#34d399)}
+.log{background:#0a0e1a;border:1px solid #1e293b;border-radius:6px;padding:8px;max-height:180px;overflow-y:auto;font-family:'Cascadia Code',monospace;font-size:.78em;line-height:1.5}
+.log .ok{color:#34d399}.log .err{color:#f87171}.log .warn{color:#fbbf24}.log .info{color:#22d3ee}.log .dim{color:#475569}
+.table-wrap{max-height:350px;overflow:auto;border:1px solid #1e293b;border-radius:6px;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:.75em}
+th{background:#1e293b;padding:5px 7px;text-align:left;position:sticky;top:0;z-index:1;cursor:pointer;white-space:nowrap}
+th:hover{background:#334155}
+td{padding:3px 7px;border-bottom:1px solid #1e293b;white-space:nowrap}
+tr:hover td{background:#111827}
+.paste-area{width:100%;min-height:80px;background:#0a0e1a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:8px;font-family:monospace;font-size:.78em;resize:vertical}
+.paste-area:focus{outline:none;border-color:#22d3ee}
+.paste-area::placeholder{color:#475569}
+.hidden{display:none!important}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.68em;font-weight:600}
+.badge-ok{background:#059669;color:#fff}.badge-warn{background:#d97706;color:#fff}.badge-err{background:#dc2626;color:#fff}.badge-info{background:#2563eb;color:#fff}
+.divider{height:1px;background:#1e293b;margin:12px 0}
+.source-status{display:flex;gap:8px;align-items:center;font-size:.8em;margin-bottom:6px}
+.source-dot{width:8px;height:8px;border-radius:50%}
+.dot-ok{background:#34d399}.dot-err{background:#f87171}.dot-wait{background:#fbbf24}.dot-idle{background:#475569}
+.muted{color:#64748b;font-size:.8em}
+a{color:#22d3ee;text-decoration:none}a:hover{text-decoration:underline}
+details{margin-top:8px}summary{cursor:pointer;color:#818cf8;font-size:.85em;padding:4px 0}
+.coll{color:#64748b}
 </style>
 </head>
 <body>
 
-<h1>⚽ Gaffer Player Data Scraper</h1>
-<p class="subtitle">Pull real player data from FBref, Transfermarkt, Understat & Sofascore → output Gaffer-format JSON for the bundled world database.</p>
+<h1>⚽ Gaffer Player Data Scraper v2</h1>
+<p class="subtitle">Pulls real player data from multiple sources → computes 19 Gaffer attributes + Big Five personality + narrative traits → exports JSON for the bundled world database.</p>
 
-<!-- Tab Bar -->
-<div class="tab-bar">
-  <div class="tab active" onclick="switchTab('fbref')">1. FBref Stats</div>
-  <div class="tab" onclick="switchTab('transfermarkt')">2. Transfermarkt Info</div>
-  <div class="tab" onclick="switchTab('understat')">3. Understat xG/xA</div>
-  <div class="tab" onclick="switchTab('merge')">4. Merge & Export</div>
-</div>
-
-<!-- =================== TAB 1: FBREF =================== -->
-<div id="tab-fbref" class="tab-content active">
-  <div class="card">
-    <h2>Step 1: Pull player stats from FBref</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:12px">FBref has the most comprehensive free stats. We fetch the Big 5 European Leagues player stats table.</p>
-    <div class="row">
-      <select id="fbref-league">
-        <option value="Big5">Big 5 Leagues (All)</option>
-        <option value="Premier League">Premier League</option>
-        <option value="La Liga">La Liga</option>
-        <option value="Serie A">Serie A</option>
-        <option value="Bundesliga">Bundesliga</option>
-        <option value="Ligue 1">Ligue 1</option>
-      </select>
-      <select id="fbref-season">
-        <option value="2025-2026">2025-26</option>
-        <option value="2024-2025">2024-25</option>
-        <option value="2023-2024">2023-24</option>
-      </select>
-      <button onclick="fetchFbref()">Fetch Stats</button>
-      <button class="danger" onclick="clearFbref()">Clear</button>
-    </div>
-    <div id="fbref-progress" class="hidden">
-      <div class="progress"><div class="progress-bar" id="fbref-bar" style="width:0%">0%</div></div>
-    </div>
-    <div id="fbref-stats" class="stats hidden">
-      <div class="stat"><div class="num" id="fbref-count">0</div><div class="label">Players</div></div>
-    </div>
-    <div class="log" id="fbref-log"></div>
-  </div>
-
-  <div class="card">
-    <h2>Alternative: Paste FBref table data</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:8px">If the fetch fails (CORS/rate limit), go to <a href="https://fbref.com/en/comps/Big5/stats/players/Big-5-European-Leagues-Stats" target="_blank" style="color:#38bdf8">FBref Big 5 Stats</a>, select all rows in the player table, copy, and paste here:</p>
-    <textarea class="paste-area" id="fbref-paste" placeholder="Paste copied FBref table data here (tab-separated)..." onchange="parseFbrefPaste()"></textarea>
-    <div style="margin-top:8px"><button onclick="parseFbrefPaste()">Parse Pasted Data</button></div>
-  </div>
-
-  <div class="card hidden" id="fbref-preview-card">
-    <h2>FBref Data Preview</h2>
-    <div class="table-wrap">
-      <table id="fbref-table">
-        <thead id="fbref-head"></thead>
-        <tbody id="fbref-body"></tbody>
-      </table>
-    </div>
+<!-- Source Status Bar -->
+<div class="card">
+  <h2><span class="step-num">📊</span> Data Source Status</h2>
+  <div class="source-status"><span class="source-dot dot-idle" id="dot-fbref"></span> FBref Stats <span class="muted" id="status-fbref">Not started</span></div>
+  <div class="source-status"><span class="source-dot dot-idle" id="dot-tm"></span> Transfermarkt Info <span class="muted" id="status-tm">Not started</span></div>
+  <div class="source-status"><span class="source-dot dot-idle" id="dot-us"></span> Understat xG/xA <span class="muted" id="status-us">Not started</span></div>
+  <div class="stats" style="margin-top:8px">
+    <div class="stat"><div class="num" id="total-players">0</div><div class="label">Total Players</div></div>
+    <div class="stat"><div class="num" id="total-enriched">0</div><div class="label">Fully Enriched</div></div>
+    <div class="stat"><div class="num" id="total-partial">0</div><div class="label">Partial Data</div></div>
   </div>
 </div>
 
-<!-- =================== TAB 2: TRANSFERMARKT =================== -->
-<div id="tab-transfermarkt" class="tab-content">
-  <div class="card">
-    <h2>Step 2: Pull player info from Transfermarkt</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:12px">Transfermarkt provides: DOB, nationality, height, weight, position, market value, contract, injuries, captain history.</p>
-    <div class="row">
-      <button onclick="fetchTransfermarkt()" id="tm-fetch-btn">Auto-Fetch (from FBref player list)</button>
-      <button class="danger" onclick="clearTransfermarkt()">Clear</button>
-    </div>
-    <div id="tm-progress" class="hidden">
-      <div class="progress"><div class="progress-bar" id="tm-bar" style="width:0%">0%</div></div>
-    </div>
-    <div id="tm-stats" class="stats hidden">
-      <div class="stat"><div class="num" id="tm-count">0</div><div class="label">Players Enriched</div></div>
-    </div>
-    <div class="log" id="tm-log"></div>
+<!-- Step 1: FBref -->
+<div class="card">
+  <h2><span class="step-num">1</span> FBref — Player Stats</h2>
+  <div class="row">
+    <select id="fbref-league">
+      <option value="Big5">Big 5 Leagues (All)</option>
+      <option value="Premier League">Premier League</option>
+      <option value="La Liga">La Liga</option>
+      <option value="Serie A">Serie A</option>
+      <option value="Bundesliga">Bundesliga</option>
+      <option value="Ligue 1">Ligue 1</option>
+    </select>
+    <select id="fbref-season">
+      <option value="2025-2026">2025-26</option>
+      <option value="2024-2025">2024-25</option>
+      <option value="2023-2024">2023-24</option>
+    </select>
+    <button onclick="runStep1()" id="btn-fbref">Fetch FBref Stats</button>
+    <button class="danger" onclick="clearStep1()">Clear</button>
   </div>
-
-  <div class="card">
-    <h2>Alternative: Paste Transfermarkt data</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:8px">Go to Transfermarkt player pages, copy the info box data, and paste here (one player per line, tab-separated):</p>
-    <textarea class="paste-area" id="tm-paste" placeholder="Format: PlayerName&lt;tab&gt;DOB&lt;tab&gt;Nationality&lt;tab&gt;Height(cm)&lt;tab&gt;Weight(kg)&lt;tab&gt;Position&lt;tab&gt;MarketValue&lt;tab&gt;Club&#10;&#10;Example:&#10;Haaland\t2000-07-21\tnor\t194cm\t88kg\tCentre-Forward\t€180m\tManchester City" onchange="parseTransfermarktPaste()"></textarea>
-    <div style="margin-top:8px"><button onclick="parseTransfermarktPaste()">Parse Pasted Data</button></div>
+  <div class="progress-wrap hidden" id="fbref-progress-wrap">
+    <div class="progress"><div class="progress-bar" id="fbref-bar" style="width:0%">0%</div></div>
   </div>
+  <div class="log hidden" id="fbref-log"></div>
+  <details><summary class="coll">Manual paste fallback (if auto-fetch fails)</summary>
+    <div style="margin-top:8px">
+      <p class="muted">Go to <a href="https://fbref.com/en/comps/Big5/stats/players/Big-5-European-Leagues-Stats" target="_blank">FBref Big 5 Stats</a> → select all rows → copy → paste here:</p>
+      <textarea class="paste-area" id="fbref-paste" placeholder="Paste FBref table data here (tab-separated)..."></textarea>
+      <div style="margin-top:6px"><button onclick="parseFbrefPaste()">Parse Pasted Data</button></div>
+    </div>
+  </details>
 </div>
 
-<!-- =================== TAB 3: UNDERSTAT =================== -->
-<div id="tab-understat" class="tab-content">
-  <div class="card">
-    <h2>Step 3: Pull xG/xA data from Understat</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:12px">Understat provides expected goals (xG), expected assists (xA), and shot data for finishing/composure calculation.</p>
-    <div class="row">
-      <select id="understat-league">
-        <option value="EPL">Premier League</option>
-        <option value="La_liga">La Liga</option>
-        <option value="Serie_A">Serie A</option>
-        <option value="Bundesliga">Bundesliga</option>
-        <option value="Ligue_1">Ligue 1</option>
-        <option value="RFPL">Russian Premier League</option>
-      </select>
-      <select id="understat-season">
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-      </select>
-      <button onclick="fetchUnderstat()">Fetch xG/xA</button>
-      <button class="danger" onclick="clearUnderstat()">Clear</button>
-    </div>
-    <div id="us-progress" class="hidden">
-      <div class="progress"><div class="progress-bar" id="us-bar" style="width:0%">0%</div></div>
-    </div>
-    <div id="us-stats" class="stats hidden">
-      <div class="stat"><div class="num" id="us-count">0</div><div class="label">Players with xG/xA</div></div>
-    </div>
-    <div class="log" id="us-log"></div>
+<!-- Step 2: Transfermarkt -->
+<div class="card">
+  <h2><span class="step-num">2</span> Transfermarkt — Player Info</h2>
+  <div class="row">
+    <button onclick="runStep2()" id="btn-tm" disabled>Auto-Enrich from FBref List</button>
+    <button class="danger" onclick="clearStep2()">Clear</button>
   </div>
+  <div class="progress-wrap hidden" id="tm-progress-wrap">
+    <div class="progress"><div class="progress-bar" id="tm-bar" style="width:0%">0%</div></div>
+  </div>
+  <div class="log hidden" id="tm-log"></div>
+  <details><summary class="coll">Manual paste fallback</summary>
+    <div style="margin-top:8px">
+      <p class="muted">Format: Name TAB DOB TAB Nationality TAB Height(cm) TAB Weight(kg) TAB Position TAB MarketValue TAB Club — one player per line</p>
+      <textarea class="paste-area" id="tm-paste" placeholder="Haaland\t2000-07-21\tnor\t194\t88\tCentre-Forward\t€180m\tManchester City"></textarea>
+      <div style="margin-top:6px"><button onclick="parseTmPaste()">Parse Pasted Data</button></div>
+    </div>
+  </details>
 </div>
 
-<!-- =================== TAB 4: MERGE & EXPORT =================== -->
-<div id="tab-merge" class="tab-content">
-  <div class="card">
-    <h2>Step 4: Merge all sources & compute Gaffer attributes</h2>
-    <p style="color:#94a3b8;font-size:0.85em;margin-bottom:12px">Combines FBref stats + Transfermarkt info + Understat xG/xA → computes 19 Gaffer attributes, Big Five personality, narrative traits, and relationship edges.</p>
-    <div class="stats">
-      <div class="stat"><div class="num" id="merge-fbref">0</div><div class="label">FBref Players</div></div>
-      <div class="stat"><div class="num" id="merge-tm">0</div><div class="label">Transfermarkt</div></div>
-      <div class="stat"><div class="num" id="merge-us">0</div><div class="label">Understat</div></div>
-      <div class="stat"><div class="num" id="merge-final">0</div><div class="label">Final Merged</div></div>
-    </div>
-    <div class="row">
-      <button onclick="mergeAndCompute()" class="success">Merge & Compute Gaffer Attributes</button>
-      <button onclick="downloadJSON()" class="success" id="download-btn" disabled>Download gaffer_players.json</button>
-      <button onclick="downloadCSV()" id="csv-btn" disabled>Download CSV</button>
-    </div>
-    <div class="log" id="merge-log"></div>
+<!-- Step 3: Understat -->
+<div class="card">
+  <h2><span class="step-num">3</span> Understat — xG / xA Data</h2>
+  <div class="row">
+    <select id="us-league">
+      <option value="EPL">Premier League</option>
+      <option value="La_liga">La Liga</option>
+      <option value="Serie_A">Serie A</option>
+      <option value="Bundesliga">Bundesliga</option>
+      <option value="Ligue_1">Ligue 1</option>
+      <option value="RFPL">Russian PL</option>
+    </select>
+    <select id="us-season"><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select>
+    <button onclick="runStep3()" id="btn-us" disabled>Fetch Understat xG/xA</button>
+    <button class="danger" onclick="clearStep3()">Clear</button>
   </div>
+  <div class="progress-wrap hidden" id="us-progress-wrap">
+    <div class="progress"><div class="progress-bar" id="us-bar" style="width:0%">0%</div></div>
+  </div>
+  <div class="log hidden" id="us-log"></div>
+</div>
 
-  <div class="card hidden" id="merge-preview-card">
-    <h2>Final Player Data Preview (with Gaffer Attributes)</h2>
-    <div class="table-wrap">
-      <table id="merge-table">
-        <thead><tr>
-          <th>Name</th><th>Pos</th><th>Nat</th><th>Age</th>
-          <th>Pace</th><th>Burst</th><th>Engine</th><th>Power</th><th>Agility</th>
-          <th>Pass</th><th>Dist</th><th>Touch</th><th>Fin</th><th>Def</th><th>Aer</th>
-          <th>Ant</th><th>Vis</th><th>Dec</th><th>Com</th><th>Ldr</th>
-          <th>SS</th><th>Cmd</th><th>PO</th>
-          <th>OVR</th>
-          <th>Open</th><th>Cons</th><th>Extr</th><th>Agree</th><th>Neuro</th>
-          <th>Traits</th>
-        </tr></thead>
-        <tbody id="merge-body"></tbody>
-      </table>
-    </div>
+<!-- Step 4: Merge & Export -->
+<div class="card">
+  <h2><span class="step-num">4</span> Merge & Compute Gaffer Attributes</h2>
+  <div class="row">
+    <button onclick="runStep4()" class="success" id="btn-merge" disabled>Merge & Compute</button>
+    <button onclick="downloadJSON()" class="success" id="btn-json" disabled>Download gaffer_players.json</button>
+    <button onclick="downloadCSV()" id="btn-csv" disabled>Download CSV</button>
+  </div>
+  <div class="log hidden" id="merge-log"></div>
+</div>
+
+<!-- Preview -->
+<div class="card hidden" id="preview-card">
+  <h2>📊 Final Player Data Preview</h2>
+  <div class="table-wrap">
+    <table id="preview-table">
+      <thead><tr>
+        <th>Name</th><th>Pos</th><th>Nat</th><th>Age</th>
+        <th>Pace</th><th>Burst</th><th>Eng</th><th>Pwr</th><th>Agi</th>
+        <th>Pass</th><th>Dist</th><th>Tch</th><th>Fin</th><th>Def</th><th>Aer</th>
+        <th>Ant</th><th>Vis</th><th>Dec</th><th>Com</th><th>Ldr</th>
+        <th>SS</th><th>Cmd</th><th>PO</th><th>OVR</th>
+        <th>Open</th><th>Cons</th><th>Ext</th><th>Agr</th><th>Neu</th>
+        <th>Traits</th><th>Sources</th>
+      </tr></thead>
+      <tbody id="preview-body"></tbody>
+    </table>
   </div>
 </div>
 
 <script>
 // ============================================================================
-// GLOBAL STATE
+// STATE
 // ============================================================================
-let fbrefData = [];      // Array of player stat objects from FBref
-let transfermarktData = {}; // Map of player_name -> info object
-let understatData = {};    // Map of player_name -> xG/xA object
-let mergedPlayers = [];    // Final merged array with Gaffer attributes
-
-// CORS proxy options (try multiple in case one is down)
-const CORS_PROXIES = [
-  'https://corsproxy.io/?url=',
-  'https://api.allorigins.win/raw?url=',
-  'https://cors-anywhere.herokuapp.com/',
+let fbrefData=[], tmData={}, usData={}, merged=[];
+const PROXIES=[
+  url=>`https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url=>`https://cors-anywhere.herokuapp.com/${url}`,
+  url=>`https://thingproxy.freeboard.io/fetch/${url}`,
 ];
 
 // ============================================================================
-// TAB SWITCHING
+// HELPERS
 // ============================================================================
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
+const $=id=>document.getElementById(id);
+function setDot(id,state,label){
+  const dot=$(id);dot.className='source-dot dot-'+state;
+  const sid=id.replace('dot-','status-');$(sid).textContent=label;
 }
+function log(id,msg,type='info'){const el=$(id);const t=new Date().toLocaleTimeString();el.innerHTML+=`<div class="${type}">[${t}] ${msg}</div>`;el.scrollTop=el.scrollHeight;el.classList.remove('hidden');}
+function setBar(id,pct,text){const b=$(id);b.style.width=pct+'%';b.textContent=text||pct+'%';if(pct>=100)b.classList.add('ok');}
+function show(id){$(id).classList.remove('hidden');}
+function hide(id){$(id).classList.add('hidden');}
+function norm99(v,min,max,inv=false){if(max===min)return 50;let n=(v-min)/(max-min);if(inv)n=1-n;return Math.max(1,Math.min(99,Math.round(n*99)));}
+function pct99(p){return Math.max(1,Math.min(99,Math.round(p*0.99)));}
+function jit(v,a=3){return Math.max(1,Math.min(99,v+Math.floor(Math.random()*(a*2+1))-a));}
 
-// ============================================================================
-// LOGGING
-// ============================================================================
-function log(elementId, msg, type = 'info') {
-  const logEl = document.getElementById(elementId);
-  const time = new Date().toLocaleTimeString();
-  logEl.innerHTML += `<div class="${type}">[${time}] ${msg}</div>`;
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-// ============================================================================
-// UTILITY: Fetch with CORS proxy fallback
-// ============================================================================
-async function fetchWithProxy(url) {
-  for (const proxy of CORS_PROXIES) {
-    try {
-      const proxyUrl = proxy + encodeURIComponent(url);
-      const resp = await fetch(proxyUrl, { timeout: 10000 });
-      if (resp.ok) {
-        return await resp.text();
-      }
-    } catch (e) {
-      console.log(`Proxy ${proxy} failed:`, e.message);
-    }
+async function fetchMulti(url,opts={}){
+  for(let i=0;i<PROXIES.length;i++){
+    try{
+      const proxyUrl=PROXIES[i](url);
+      const ctrl=new AbortController();
+      const to=setTimeout(()=>ctrl.abort(),15000);
+      const r=await fetch(proxyUrl,{...opts,signal:ctrl.signal});
+      clearTimeout(to);
+      if(r.ok){const text=await r.text();if(text&&text.length>100)return{text,proxyIdx:i};}
+    }catch(e){console.log(`Proxy ${i} failed:`,e.message);}
   }
-  throw new Error('All CORS proxies failed');
+  // Last resort: direct fetch (works if CORS is permissive)
+  try{
+    const r=await fetch(url,opts);
+    if(r.ok){const text=await r.text();if(text)return{text,proxyIdx:-1};}
+  }catch(e){console.log('Direct fetch failed:',e.message);}
+  throw new Error('All fetch methods failed');
 }
 
 // ============================================================================
-// NORMALIZATION (matches build_world.py logic)
+// STEP 1: FBREF
 // ============================================================================
-function normalize99(value, min, max, invert = false) {
-  if (max === min) return 50;
-  let n = (value - min) / (max - min);
-  if (invert) n = 1 - n;
-  return Math.max(1, Math.min(99, Math.round(n * 99)));
-}
-
-function percentile99(p) {
-  return Math.max(1, Math.min(99, Math.round(p * 0.99)));
-}
-
-function jitter(v, amt = 3) {
-  return Math.max(1, Math.min(99, v + Math.floor(Math.random() * (amt * 2 + 1)) - amt));
-}
-
-// ============================================================================
-// FBREF: Fetch player stats
-// ============================================================================
-async function fetchFbref() {
-  const league = document.getElementById('fbref-league').value;
-  const season = document.getElementById('fbref-season').value;
+async function runStep1(){
+  const league=$('fbref-league').value,season=$('fbref-season').value;
+  $('btn-fbref').disabled=true;setDot('dot-fbref','wait','Fetching...');
+  show('fbref-progress-wrap');show('fbref-log');
+  log('fbref-log',`Fetching FBref stats: ${league} ${season}`,'info');
+  setBar('fbref-bar',5,'Connecting...');
   
-  document.getElementById('fbref-progress').classList.remove('hidden');
-  document.getElementById('fbref-log').innerHTML = '';
-  log('fbref-log', `Fetching FBref stats for ${league} ${season}...`);
-
-  // FBref Big 5 leagues URL
-  const fbrefUrl = 'https://fbref.com/en/comps/Big5/' + season + '/stats/players/Big-5-European-Leagues-Stats';
+  const url=`https://fbref.com/en/comps/Big5/${season}/stats/players/Big-5-European-Leagues-Stats`;
   
-  try {
-    log('fbref-log', `Fetching from: ${fbrefUrl}`);
-    const html = await fetchWithProxy(fbrefUrl);
-    log('fbref-log', `Received ${html.length} bytes`, 'ok');
+  try{
+    setBar('fbref-bar',20,'Downloading page...');
+    const{text,proxyIdx}=await fetchMulti(url);
+    log('fbref-log',`Downloaded ${text.length.toLocaleString()} bytes via ${proxyIdx>=0?'proxy #'+(proxyIdx+1):'direct'}`,'ok');
     
-    // Parse HTML table
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const table = doc.querySelector('#stats_standard, table.stats_table');
+    setBar('fbref-bar',50,'Parsing table...');
+    const doc=new DOMParser().parseFromString(text,'text/html');
+    const table=doc.querySelector('#stats_standard, table.stats_table');
+    if(!table)throw new Error('Stats table not found in page HTML');
     
-    if (!table) {
-      log('fbref-log', 'Could not find stats table in HTML. Try paste method.', 'err');
-      return;
-    }
+    const headers=[];
+    const hr=table.querySelector('thead tr:last-child');
+    if(hr)hr.querySelectorAll('th').forEach(th=>headers.push(th.textContent.trim()));
+    log('fbref-log',`Table: ${headers.length} columns, parsing rows...`);
     
-    const headers = [];
-    const headerRow = table.querySelector('thead tr:last-child');
-    if (headerRow) {
-      headerRow.querySelectorAll('th').forEach(th => headers.push(th.textContent.trim()));
-    }
-    log('fbref-log', `Found ${headers.length} columns: ${headers.slice(0, 10).join(', ')}...`);
+    fbrefData=[];const rows=table.querySelectorAll('tbody tr');let count=0;
     
-    fbrefData = [];
-    const rows = table.querySelectorAll('tbody tr');
-    let count = 0;
-    
-    rows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      if (cells.length < 5) return;
-      
-      const player = {};
-      headers.forEach((h, i) => {
-        const cell = cells[i];
-        if (cell) {
-          player[h] = cell.textContent.trim();
-        }
-      });
-      
-      // Skip header rows and empty rows
-      if (!player.Player || player.Player === 'Player') return;
-      
-      // Store with normalized fields
+    rows.forEach(row=>{
+      const cells=row.querySelectorAll('td');
+      if(cells.length<5)return;
+      const p={};
+      headers.forEach((h,i)=>{if(cells[i])p[h]=cells[i].textContent.trim();});
+      if(!p.Player||p.Player==='Player')return;
       fbrefData.push({
-        name: player.Player,
-        position: player.Pos || player.Pos || '',
-        age: parseInt(player.Age) || 25,
-        team: player.Squad || player.Tm || '',
-        nation: player.Nation || '',
-        // Raw stats
-        minutes: parseInt((player.Min || player['90s'] || '0').replace(/[^0-9]/g, '')) || 0,
-        goals: parseInt(player.Gls || '0') || 0,
-        assists: parseInt(player.Ast || '0') || 0,
-        // Passing
-        passes_completed: parseInt(player['Cmp'] || '0') || 0,
-        passes_attempted: parseInt(player['Att'] || '0') || 0,
-        pass_pct: parseFloat(player['Cmp%'] || '0') || 0,
-        long_passes: parseInt(player['Cmp.1'] || '0') || 0, // progressive
-        // Shooting
-        shots: parseInt(player.Sh || '0') || 0,
-        shots_on_target: parseInt(player.SoT || '0') || 0,
-        // Defense
-        tackles: parseInt(player.Tkl || '0') || 0,
-        interceptions: parseInt(player.Int || '0') || 0,
-        blocks: parseInt(player.Blk || '0') || 0,
-        // Possession
-        dribbles_attempted: parseInt(player.Att.1 || player['Att (Drib)'] || '0') || 0,
-        dribbles_completed: parseInt(player.Succ || '0') || 0,
-        carries: parseInt(player.Car || '0') || 0,
-        // Aerial
-        aerials_won: parseInt(player.Won || '0') || 0,
-        aerials_lost: parseInt(player.Lost || '0') || 0,
-        // Cards
-        yellow_cards: parseInt(player.CrdY || '0') || 0,
-        red_cards: parseInt(player.CrdR || '0') || 0,
+        name:p.Player,position:p.Pos||'',age:parseInt(p.Age)||25,team:p.Squad||'',nation:p.Nation||'',
+        minutes:parseInt((p.Min||p['90s']||'0').replace(/[^0-9]/g,''))||0,
+        goals:parseInt(p.Gls||'0')||0,assists:parseInt(p.Ast||'0')||0,
+        passes_completed:parseInt(p.Cmp||'0')||0,passes_attempted:parseInt(p.Att||'0')||0,
+        pass_pct:parseFloat(p['Cmp%']||'0')||0,
+        shots:parseInt(p.Sh||'0')||0,shots_on_target:parseInt(p.SoT||'0')||0,
+        tackles:parseInt(p.Tkl||'0')||0,interceptions:parseInt(p.Int||'0')||0,
+        blocks:parseInt(p.Blk||'0')||0,
+        dribbles_attempted:parseInt(p['Att.1']||p['Att (Drib)']||'0')||0,
+        dribbles_completed:parseInt(p.Succ||'0')||0,
+        aerials_won:parseInt(p.Won||'0')||0,aerials_lost:parseInt(p.Lost||'0')||0,
+        yellow_cards:parseInt(p.CrdY||'0')||0,red_cards:parseInt(p.CrdR||'0')||0,
       });
       count++;
     });
     
-    log('fbref-log', `Parsed ${count} players from FBref`, 'ok');
+    setBar('fbref-bar',100,`Done — ${count} players`);
+    setDot('dot-fbref','ok',`${count} players loaded`);
+    log('fbref-log',`Parsed ${count} players`,'ok');
     
-    // Show stats
-    document.getElementById('fbref-stats').classList.remove('hidden');
-    document.getElementById('fbref-count').textContent = count;
-    document.getElementById('fbref-bar').style.width = '100%';
-    document.getElementById('fbref-bar').textContent = 'Done';
-    
-    // Show preview
-    showFbrefPreview();
-    updateMergeCounts();
-    
-  } catch (e) {
-    log('fbref-log', `Error: ${e.message}. Try the paste method below.`, 'err');
-    document.getElementById('fbref-bar').style.width = '0%';
-  }
+    $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
+    updateStats();
+  }catch(e){
+    setBar('fbref-bar',0,'Failed');
+    $('fbref-bar').classList.add('err');
+    setDot('dot-fbref','err','Failed — use paste fallback');
+    log('fbref-log',`ERROR: ${e.message}`,'err');
+    log('fbref-log','Use the paste fallback below: go to FBref, copy the table, paste it.','warn');
+  }finally{$('btn-fbref').disabled=false;}
 }
 
-function showFbrefPreview() {
-  if (fbrefData.length === 0) return;
-  document.getElementById('fbref-preview-card').classList.remove('hidden');
-  
-  const head = document.getElementById('fbref-head');
-  const body = document.getElementById('fbref-body');
-  
-  const cols = ['name', 'position', 'team', 'nation', 'age', 'minutes', 'goals', 'assists', 'pass_pct', 'tackles', 'interceptions'];
-  head.innerHTML = '<tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
-  
-  body.innerHTML = fbrefData.slice(0, 100).map(p => 
-    '<tr>' + cols.map(c => `<td>${p[c] ?? ''}</td>`).join('') + '</tr>'
-  ).join('');
-}
-
-function parseFbrefPaste() {
-  const text = document.getElementById('fbref-paste').value.trim();
-  if (!text) return;
-  
-  log('fbref-log', 'Parsing pasted FBref data...');
-  
-  const lines = text.split('\n').filter(l => l.trim());
-  if (lines.length < 2) {
-    log('fbref-log', 'Not enough data pasted', 'err');
-    return;
-  }
-  
-  // First line is headers
-  const headers = lines[0].split('\t').map(h => h.trim());
-  log('fbref-log', `Headers: ${headers.join(', ')}`);
-  
-  fbrefData = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cells = lines[i].split('\t');
-    const player = {};
-    headers.forEach((h, j) => {
-      if (cells[j]) player[h] = cells[j].trim();
-    });
-    
-    if (!player.Player) continue;
-    
+function parseFbrefPaste(){
+  const text=$('fbref-paste').value.trim();if(!text)return;
+  show('fbref-log');log('fbref-log','Parsing pasted FBref data...');
+  const lines=text.split('\n').filter(l=>l.trim());
+  if(lines.length<2){log('fbref-log','Not enough data','err');return;}
+  const headers=lines[0].split('\t').map(h=>h.trim());
+  fbrefData=[];
+  for(let i=1;i<lines.length;i++){
+    const cells=lines[i].split('\t'),p={};
+    headers.forEach((h,j)=>{if(cells[j])p[h]=cells[j].trim();});
+    if(!p.Player)continue;
     fbrefData.push({
-      name: player.Player,
-      position: player.Pos || '',
-      age: parseInt(player.Age) || 25,
-      team: player.Squad || '',
-      nation: player.Nation || '',
-      minutes: parseInt((player.Min || player['90s'] || '0').replace(/[^0-9]/g, '')) || 0,
-      goals: parseInt(player.Gls || '0') || 0,
-      assists: parseInt(player.Ast || '0') || 0,
-      passes_completed: parseInt(player.Cmp || '0') || 0,
-      passes_attempted: parseInt(player.Att || '0') || 0,
-      pass_pct: parseFloat(player['Cmp%'] || '0') || 0,
-      shots: parseInt(player.Sh || '0') || 0,
-      shots_on_target: parseInt(player.SoT || '0') || 0,
-      tackles: parseInt(player.Tkl || '0') || 0,
-      interceptions: parseInt(player.Int || '0') || 0,
-      dribbles_attempted: parseInt(player['Att.1'] || '0') || 0,
-      dribbles_completed: parseInt(player.Succ || '0') || 0,
-      aerials_won: parseInt(player.Won || '0') || 0,
-      aerials_lost: parseInt(player.Lost || '0') || 0,
-      yellow_cards: parseInt(player.CrdY || '0') || 0,
-      red_cards: parseInt(player.CrdR || '0') || 0,
+      name:p.Player,position:p.Pos||'',age:parseInt(p.Age)||25,team:p.Squad||'',nation:p.Nation||'',
+      minutes:parseInt((p.Min||p['90s']||'0').replace(/[^0-9]/g,''))||0,
+      goals:parseInt(p.Gls||'0')||0,assists:parseInt(p.Ast||'0')||0,
+      passes_completed:parseInt(p.Cmp||'0')||0,passes_attempted:parseInt(p.Att||'0')||0,
+      pass_pct:parseFloat(p['Cmp%']||'0')||0,
+      shots:parseInt(p.Sh||'0')||0,shots_on_target:parseInt(p.SoT||'0')||0,
+      tackles:parseInt(p.Tkl||'0')||0,interceptions:parseInt(p.Int||'0')||0,
+      dribbles_attempted:parseInt(p['Att.1']||'0')||0,dribbles_completed:parseInt(p.Succ||'0')||0,
+      aerials_won:parseInt(p.Won||'0')||0,aerials_lost:parseInt(p.Lost||'0')||0,
+      yellow_cards:parseInt(p.CrdY||'0')||0,red_cards:parseInt(p.CrdR||'0')||0,
     });
   }
-  
-  log('fbref-log', `Parsed ${fbrefData.length} players from pasted data`, 'ok');
-  document.getElementById('fbref-stats').classList.remove('hidden');
-  document.getElementById('fbref-count').textContent = fbrefData.length;
-  showFbrefPreview();
-  updateMergeCounts();
+  setDot('dot-fbref','ok',`${fbrefData.length} players (pasted)`);
+  log('fbref-log',`Parsed ${fbrefData.length} players from paste`,'ok');
+  $('btn-tm').disabled=false;$('btn-us').disabled=false;$('btn-merge').disabled=false;
+  updateStats();
 }
 
-function clearFbref() {
-  fbrefData = [];
-  document.getElementById('fbref-paste').value = '';
-  document.getElementById('fbref-preview-card').classList.add('hidden');
-  document.getElementById('fbref-stats').classList.add('hidden');
-  document.getElementById('fbref-log').innerHTML = '';
-  updateMergeCounts();
-}
+function clearStep1(){fbrefData=[];setDot('dot-fbref','idle','Not started');hide('fbref-progress-wrap');$('fbref-log').innerHTML='';$('fbref-paste').value='';updateStats();}
 
 // ============================================================================
-// TRANSFERMARKT: Fetch player info
+// STEP 2: TRANSFERMARKT
 // ============================================================================
-async function fetchTransfermarkt() {
-  if (fbrefData.length === 0) {
-    log('tm-log', 'No FBref data loaded. Fetch FBref first or paste data.', 'err');
-    return;
-  }
+async function runStep2(){
+  if(fbrefData.length===0){log('tm-log','Fetch FBref data first','err');return;}
+  $('btn-tm').disabled=true;setDot('dot-tm','wait','Fetching...');
+  show('tm-progress-wrap');show('tm-log');
+  log('tm-log',`Enriching ${fbrefData.length} players from Transfermarkt...`);
   
-  document.getElementById('tm-progress').classList.remove('hidden');
-  document.getElementById('tm-log').innerHTML = '';
-  log('tm-log', `Fetching Transfermarkt data for ${fbrefData.length} players...`);
+  let count=0;const batch=3;
   
-  let count = 0;
-  const batchSize = 5; // Process in small batches to avoid rate limits
-  
-  for (let i = 0; i < fbrefData.length; i += batchSize) {
-    const batch = fbrefData.slice(i, i + batchSize);
+  for(let i=0;i<fbrefData.length;i+=batch){
+    const slice=fbrefData.slice(i,i+batch);
     
-    for (const player of batch) {
-      try {
-        // Try to find player on Transfermarkt via search
-        const searchUrl = `https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(player.name)}&x=0&y=0`;
-        const html = await fetchWithProxy(searchUrl);
+    await Promise.all(slice.map(async(player)=>{
+      try{
+        const searchUrl=`https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(player.name)}&x=0&y=0`;
+        const{text}=await fetchMulti(searchUrl);
+        const doc=new DOMParser().parseFromString(text,'text/html');
+        const link=doc.querySelector('.table tbody tr td a[href*="/spieler/"]');
         
-        // Parse the search results to find player link
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const playerLink = doc.querySelector('.table tbody tr td a[href*="/spieler/"]');
-        
-        if (playerLink) {
-          // Fetch player page
-          const playerUrl = 'https://www.transfermarkt.com' + playerLink.getAttribute('href');
-          const playerHtml = await fetchWithProxy(playerUrl);
-          const playerDoc = new DOMParser().parseFromString(playerHtml, 'text/html');
-          
-          // Parse player info
-          transfermarktData[player.name] = parseTransfermarktPage(playerDoc, player.name);
+        if(link){
+          const playerUrl='https://www.transfermarkt.com'+link.getAttribute('href');
+          const{text:ptext}=await fetchMulti(playerUrl);
+          const pdoc=new DOMParser().parseFromString(ptext,'text/html');
+          tmData[player.name]=parseTmPage(pdoc,player.name);
           count++;
-        } else {
-          log('tm-log', `Not found on TM: ${player.name}`, 'err');
         }
-      } catch (e) {
-        log('tm-log', `Error fetching ${player.name}: ${e.message}`, 'err');
+      }catch(e){
+        // Silent fail for individual players — log at end
       }
-    }
+    }));
     
-    // Update progress
-    const pct = Math.min(100, Math.round(((i + batchSize) / fbrefData.length) * 100));
-    document.getElementById('tm-bar').style.width = pct + '%';
-    document.getElementById('tm-bar').textContent = pct + '%';
+    const pct=Math.min(99,Math.round(((i+batch)/fbrefData.length)*100));
+    setBar('tm-bar',pct,`${count} enriched`);
     
-    // Small delay between batches
-    await new Promise(r => setTimeout(r, 500));
+    if(i%30===0)log('tm-log',`Progress: ${count}/${fbrefData.length} players enriched`);
+    
+    // Rate limit: 300ms between batches
+    if(i+batch<fbrefData.length)await new Promise(r=>setTimeout(r,300));
   }
   
-  log('tm-log', `Enriched ${count} players from Transfermarkt`, 'ok');
-  document.getElementById('tm-stats').classList.remove('hidden');
-  document.getElementById('tm-count').textContent = count;
-  updateMergeCounts();
+  setBar('tm-bar',100,`Done — ${count} enriched`);
+  setDot('dot-tm',count>0?'ok':'warn',count>0?`${count} players enriched`:'No data — use paste');
+  log('tm-log',`Enriched ${count}/${fbrefData.length} players`,count>0?'ok':'warn');
+  if(count===0)log('tm-log','Transfermarkt blocked all requests. Use paste fallback in the section above.','warn');
+  updateStats();
 }
 
-function parseTransfermarktPage(doc, name) {
-  // Parse Transfermarkt player page for key info
-  const info = { name };
-  
-  // Date of birth
-  const dobEl = doc.querySelector('.dataValue');
-  // Height, weight, nationality etc are in info table
-  const infoTable = doc.querySelector('.auflistung');
-  if (infoTable) {
-    const rows = infoTable.querySelectorAll('tr');
-    rows.forEach(row => {
-      const label = row.querySelector('th')?.textContent?.trim().toLowerCase() || '';
-      const value = row.querySelector('td')?.textContent?.trim() || '';
-      if (label.includes('date of birth') || label.includes('geburtstag')) info.dob = value;
-      if (label.includes('height') || label.includes('größe')) {
-        const cm = value.match(/(\d{3})\s*cm/);
-        if (cm) info.height_cm = parseInt(cm[1]);
-        else {
-          const m = value.match(/1,\d{2}/);
-          if (m) info.height_cm = parseInt(m[0].replace(',', '')) ;
-        }
-      }
-      if (label.includes('weight') || label.includes('gewicht')) {
-        const kg = value.match(/(\d+)\s*kg/);
-        if (kg) info.weight_kg = parseInt(kg[1]);
-      }
-      if (label.includes('nationality') || label.includes('nationalität')) info.nationality = value;
-      if (label.includes('position')) info.tm_position = value;
-      if (label.includes('market value') || label.includes('marktwert')) info.market_value = value;
-      if (label.includes('contract')) info.contract_expires = value;
+function parseTmPage(doc,name){
+  const info={name};
+  const tbl=doc.querySelector('.auflistung');
+  if(tbl){
+    tbl.querySelectorAll('tr').forEach(row=>{
+      const l=(row.querySelector('th')?.textContent||'').trim().toLowerCase();
+      const v=(row.querySelector('td')?.textContent||'').trim();
+      if(l.includes('date of birth')||l.includes('geburtstag'))info.dob=v;
+      if(l.includes('height')||l.includes('größe')){const m=v.match(/(\d{3})\s*cm/);if(m)info.height_cm=parseInt(m[1]);else{const m2=v.match(/1,\d{2}/);if(m2)info.height_cm=parseInt(m2[0].replace(',',''));}}
+      if(l.includes('weight')||l.includes('gewicht')){const m=v.match(/(\d+)\s*kg/);if(m)info.weight_kg=parseInt(m[1]);}
+      if(l.includes('nationality')||l.includes('nationalität'))info.nationality=v;
+      if(l.includes('position'))info.tm_position=v;
+      if(l.includes('market value')||l.includes('marktwert'))info.market_value=v;
+      if(l.includes('contract'))info.contract_expires=v;
     });
   }
-  
-  // Appearances, cards from stats table
-  const statsTable = doc.querySelector('.items');
-  if (statsTable) {
-    const lastRow = statsTable.querySelector('tbody tr:last-child');
-    if (lastRow) {
-      const cells = lastRow.querySelectorAll('td');
-      info.appearances = parseInt(cells[5]?.textContent?.trim()) || 0;
-      info.yellow_cards = parseInt(cells[8]?.textContent?.trim()) || 0;
-      info.red_cards = parseInt(cells[9]?.textContent?.trim()) || 0;
-    }
-  }
-  
+  const st=doc.querySelector('.items');
+  if(st){const lr=st.querySelector('tbody tr:last-child');if(lr){const c=lr.querySelectorAll('td');info.appearances=parseInt(c[5]?.textContent?.trim())||0;info.yellow_cards=parseInt(c[8]?.textContent?.trim())||0;info.red_cards=parseInt(c[9]?.textContent?.trim())||0;}}
   return info;
 }
 
-function parseTransfermarktPaste() {
-  const text = document.getElementById('tm-paste').value.trim();
-  if (!text) return;
-  
-  log('tm-log', 'Parsing pasted Transfermarkt data...');
-  
-  const lines = text.split('\n').filter(l => l.trim() && !l.startsWith('#'));
-  let count = 0;
-  
-  for (const line of lines) {
-    const cells = line.split('\t').map(c => c.trim());
-    if (cells.length < 3) continue;
-    
-    transfermarktData[cells[0]] = {
-      name: cells[0],
-      dob: cells[1] || '',
-      nationality: cells[2] || '',
-      height_cm: parseInt(cells[3]) || 180,
-      weight_kg: parseInt(cells[4]) || 75,
-      tm_position: cells[5] || '',
-      market_value: cells[6] || '',
-      club: cells[7] || '',
-      yellow_cards: 0,
-      red_cards: 0,
-      appearances: 0,
-    };
+function parseTmPaste(){
+  const text=$('tm-paste').value.trim();if(!text)return;
+  show('tm-log');let count=0;
+  for(const line of text.split('\n').filter(l=>l.trim()&&!l.startsWith('#'))){
+    const c=line.split('\t').map(x=>x.trim());
+    if(c.length<3)continue;
+    tmData[c[0]]={name:c[0],dob:c[1]||'',nationality:c[2]||'',height_cm:parseInt(c[3])||180,weight_kg:parseInt(c[4])||75,tm_position:c[5]||'',market_value:c[6]||'',club:c[7]||'',appearances:0,yellow_cards:0,red_cards:0};
     count++;
   }
-  
-  log('tm-log', `Parsed ${count} players from pasted Transfermarkt data`, 'ok');
-  document.getElementById('tm-stats').classList.remove('hidden');
-  document.getElementById('tm-count').textContent = count;
-  updateMergeCounts();
+  setDot('dot-tm','ok',`${count} players (pasted)`);log('tm-log',`Parsed ${count} from paste`,'ok');updateStats();
 }
 
-function clearTransfermarkt() {
-  transfermarktData = {};
-  document.getElementById('tm-paste').value = '';
-  document.getElementById('tm-log').innerHTML = '';
-  document.getElementById('tm-stats').classList.add('hidden');
-  updateMergeCounts();
-}
+function clearStep2(){tmData={};setDot('dot-tm','idle','Not started');hide('tm-progress-wrap');$('tm-log').innerHTML='';$('tm-paste').value='';updateStats();}
 
 // ============================================================================
-// UNDERSTAT: Fetch xG/xA data
+// STEP 3: UNDERSTAT
 // ============================================================================
-async function fetchUnderstat() {
-  const league = document.getElementById('understat-league').value;
-  const season = document.getElementById('understat-season').value;
+async function runStep3(){
+  const league=$('us-league').value,season=$('us-season').value;
+  $('btn-us').disabled=true;setDot('dot-us','wait','Fetching...');
+  show('us-progress-wrap');show('us-log');
+  log('us-log',`Fetching Understat: ${league} ${season}`);
+  setBar('us-bar',10,'Connecting...');
   
-  document.getElementById('us-progress').classList.remove('hidden');
-  document.getElementById('us-log').innerHTML = '';
-  log('us-log', `Fetching Understat data for ${league} ${season}...`);
-  
-  try {
-    // Understat uses JSONP-like API
-    const url = `https://understat.com/league/${league}/${season}`;
-    const html = await fetchWithProxy(url);
+  try{
+    const url=`https://understat.com/league/${league}/${season}`;
+    const{text}=await fetchMulti(url);
+    setBar('us-bar',50,'Parsing data...');
     
-    // Understat embeds data in JavaScript variables
-    const playersMatch = html.match(/playersData\s*=\s*JSON\.parse\('([^']+)'\)/);
-    if (!playersMatch) {
-      log('us-log', 'Could not find player data in Understat response. Try paste method.', 'err');
-      return;
+    const match=text.match(/playersData\s*=\s*JSON\.parse\('([^']+)'\)/);
+    if(!match){
+      // Try alternative format
+      const match2=text.match(/playersData\s*=\s*(\[\[.*?\]\])/s);
+      if(!match2)throw new Error('Understat player data not found in page');
+      const players=JSON.parse(match2[1]);
+      processUnderstat(players);
+    }else{
+      const hex=match[1].replace(/\\x([0-9a-f]{2})/gi,(_,h)=>String.fromCharCode(parseInt(h,16)));
+      const players=JSON.parse(hex);
+      processUnderstat(players);
     }
     
-    // Decode the hex-encoded JSON
-    const hexStr = playersMatch[1].replace(/\\x([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-    const players = JSON.parse(hexStr);
-    
-    let count = 0;
-    for (const p of players) {
-      understatData[p.player_name] = {
-        name: p.player_name,
-        xg: parseFloat(p.xG) || 0,
-        xa: parseFloat(p.xA) || 0,
-        goals: parseInt(p.goals) || 0,
-        assists: parseInt(p.assists) || 0,
-        shots: parseInt(p.shots) || 0,
-        key_passes: parseInt(p.key_passes) || 0,
-        npg: parseInt(p.npg) || 0,
-        npxg: parseFloat(p.npxG) || 0,
-        position: p.position || '',
-        team: p.team_title || '',
-      };
-      count++;
+    function processUnderstat(players){
+      let count=0;
+      for(const p of players){
+        usData[p.player_name]={name:p.player_name,xg:parseFloat(p.xG)||0,xa:parseFloat(p.xA)||0,goals:parseInt(p.goals)||0,assists:parseInt(p.assists)||0,shots:parseInt(p.shots)||0,key_passes:parseInt(p.key_passes)||0,position:p.position||'',team:p.team_title||''};
+        count++;
+      }
+      setBar('us-bar',100,`Done — ${count} players`);
+      setDot('dot-us','ok',`${count} players with xG/xA`);
+      log('us-log',`Parsed ${count} players from Understat`,'ok');
+      updateStats();
     }
-    
-    log('us-log', `Parsed ${count} players from Understat`, 'ok');
-    document.getElementById('us-stats').classList.remove('hidden');
-    document.getElementById('us-count').textContent = count;
-    document.getElementById('us-bar').style.width = '100%';
-    document.getElementById('us-bar').textContent = 'Done';
-    updateMergeCounts();
-    
-  } catch (e) {
-    log('us-log', `Error: ${e.message}`, 'err');
-  }
+  }catch(e){
+    setBar('us-bar',0,'Failed');$('us-bar').classList.add('err');
+    setDot('dot-us','err','Failed');
+    log('us-log',`ERROR: ${e.message}`,'err');
+    log('us-log','Understat may be blocking requests. You can still merge without xG data — finishing/composure will use FBref shots instead.','warn');
+  }finally{$('btn-us').disabled=false;}
 }
 
-function clearUnderstat() {
-  understatData = {};
-  document.getElementById('us-log').innerHTML = '';
-  document.getElementById('us-stats').classList.add('hidden');
-  updateMergeCounts();
-}
+function clearStep3(){usData={};setDot('dot-us','idle','Not started');hide('us-progress-wrap');$('us-log').innerHTML='';updateStats();}
 
 // ============================================================================
-// MERGE & COMPUTE GAFFER ATTRIBUTES
+// STEP 4: MERGE & COMPUTE
 // ============================================================================
-function updateMergeCounts() {
-  document.getElementById('merge-fbref').textContent = fbrefData.length;
-  document.getElementById('merge-tm').textContent = Object.keys(transfermarktData).length;
-  document.getElementById('merge-us').textContent = Object.keys(understatData).length;
+function updateStats(){
+  $('total-players').textContent=fbrefData.length;
+  const enriched=fbrefData.filter(p=>tmData[p.name]&&usData[p.name]).length;
+  const partial=fbrefData.filter(p=>tmData[p.name]||usData[p.name]).length-enriched;
+  $('total-enriched').textContent=enriched;
+  $('total-partial').textContent=Math.max(0,partial);
+  $('btn-merge').disabled=fbrefData.length===0;
 }
 
-function mergeAndCompute() {
-  if (fbrefData.length === 0) {
-    log('merge-log', 'No FBref data to merge. Fetch or paste FBref data first.', 'err');
-    return;
-  }
+function runStep4(){
+  if(fbrefData.length===0){log('merge-log','No data to merge','err');return;}
+  show('merge-log');$('merge-log').innerHTML='';
+  log('merge-log',`Merging ${fbrefData.length} players...`);
   
-  document.getElementById('merge-log').innerHTML = '';
-  log('merge-log', `Merging ${fbrefData.length} FBref players with Transfermarkt and Understat data...`);
-  
-  // Find max values for normalization
-  const maxValues = {
-    minutes: Math.max(...fbrefData.map(p => p.minutes), 1),
-    tackles: Math.max(...fbrefData.map(p => p.tackles), 1),
-    interceptions: Math.max(...fbrefData.map(p => p.interceptions), 1),
-    passes: Math.max(...fbrefData.map(p => p.passes_attempted), 1),
-    key_passes: Math.max(...Object.values(understatData).map(p => p.key_passes), 1),
-    dribbles: Math.max(...fbrefData.map(p => p.dribbles_attempted), 1),
-    aerials: Math.max(...fbrefData.map(p => p.aerials_won + p.aerials_lost), 1),
+  const maxV={
+    minutes:Math.max(...fbrefData.map(p=>p.minutes),1),
+    tackles:Math.max(...fbrefData.map(p=>p.tackles),1),
+    interceptions:Math.max(...fbrefData.map(p=>p.interceptions),1),
+    passes:Math.max(...fbrefData.map(p=>p.passes_attempted),1),
+    key_passes:Math.max(...Object.values(usData).map(p=>p.key_passes),1),
+    dribbles:Math.max(...fbrefData.map(p=>p.dribbles_attempted),1),
   };
   
-  mergedPlayers = [];
+  merged=[];
+  let fullCount=0,partialCount=0;
   
-  for (const fb of fbrefData) {
-    const name = fb.name;
-    const tm = transfermarktData[name] || {};
-    const us = understatData[name] || {};
+  for(const fb of fbrefData){
+    const name=fb.name,tm=tmData[name]||{},us=usData[name]||{};
+    const sources=[!!Object.keys(tm).length,!!Object.keys(us).length].filter(Boolean).length;
+    if(sources===2)fullCount++;else if(sources===1)partialCount++;
     
-    // Determine position group
-    let pos = fb.position || tm.tm_position || '';
-    let isGK = pos.includes('GK');
-    let isDef = pos.includes('DF') || pos.includes('CB') || pos.includes('FB') || pos.includes('Defender');
-    let isFwd = pos.includes('FW') || pos.includes('ST') || pos.includes('Wing') || pos.includes('Forward');
-    let posGroup = isGK ? 'GK' : isDef ? 'DEF' : isFwd ? 'FWD' : 'MID';
+    let pos=fb.position||tm.tm_position||'';
+    let isGK=pos.includes('GK'),isDef=pos.includes('DF')||pos.includes('CB')||pos.includes('FB')||pos.includes('Defender');
+    let isFwd=pos.includes('FW')||pos.includes('ST')||pos.includes('Wing')||pos.includes('Forward');
+    let pg=isGK?'GK':isDef?'DEF':isFwd?'FWD':'MID';
     
-    // --- THE BODY (5) ---
-    let pace = normalize99(fb.minutes / maxValues.minutes * 60, 0, 60);
-    let burst = jitter(pace, 5);
-    let engine = normalize99(fb.minutes, 0, maxValues.minutes);
+    // BODY
+    let pace=norm99(fb.minutes/maxV.minutes*60,0,60);
+    let burst=jit(pace,5);
+    let engine=norm99(fb.minutes,0,maxV.minutes);
+    let height=tm.height_cm||180,weight=tm.weight_kg||75,bmi=weight/Math.pow(height/100,2);
+    let power=norm99(bmi,18,28);if(isDef||isGK)power=Math.min(99,power+10);
+    let agility=fb.dribbles_attempted>0?norm99(fb.dribbles_completed/fb.dribbles_attempted*100,30,90):50;
     
-    let height = tm.height_cm || 180;
-    let weight = tm.weight_kg || 75;
-    let bmi = weight / Math.pow(height / 100, 2);
-    let power = normalize99(bmi, 18, 28);
-    if (isDef || isGK) power = Math.min(99, power + 10);
+    // BALL
+    let passing=fb.passes_attempted>0?norm99(fb.pass_pct,50,95):50;
+    let distribution=norm99(fb.passes_completed*0.3,0,maxV.passes*0.15);
+    let touch=fb.dribbles_attempted>0?norm99(fb.dribbles_completed/fb.dribbles_attempted*100,30,90):50;
+    if(isGK)touch=25;
+    let xg=us.xg||0,goals=us.goals||fb.goals||0;
+    let finishing=xg>0?norm99(goals/xg,0.5,1.5):norm99(fb.shots_on_target/Math.max(1,fb.shots)*100,20,70);
+    if(isGK)finishing=20;
+    let defending=norm99(fb.tackles+fb.interceptions,0,maxV.tackles+maxV.interceptions);
+    if(isFwd)defending=Math.max(10,defending-15);
+    let ta=fb.aerials_won+fb.aerials_lost;
+    let aerial=ta>0?norm99(fb.aerials_won/ta*100,20,80):50;
     
-    let agility = fb.dribbles_attempted > 0 ? normalize99(fb.dribbles_completed / fb.dribbles_attempted * 100, 30, 90) : 50;
+    // HEAD
+    let anticipation=norm99(fb.interceptions,0,maxV.interceptions);
+    let vision=us.key_passes?norm99(us.key_passes,0,maxV.key_passes):norm99(fb.assists,0,15);
+    let decisions=norm99(fb.pass_pct,50,95);
+    let composure=us.xg>0?norm99(goals/Math.max(0.1,us.xg),0.5,1.5):50;
+    let leadership=norm99(tm.appearances||0,0,500);leadership=Math.max(20,Math.min(99,leadership+30));
     
-    // --- THE BALL (6) ---
-    let passing = fb.passes_attempted > 0 ? normalize99(fb.pass_pct, 50, 95) : 50;
-    let distribution = normalize99(fb.long_passes || 0, 0, Math.max(10, maxValues.passes * 0.05));
-    let touch = fb.dribbles_attempted > 0 ? normalize99(fb.dribbles_completed / fb.dribbles_attempted * 100, 30, 90) : 50;
-    if (isGK) touch = 25;
+    // GLOVES
+    let shot_stopping=isGK?60:15,commanding=isGK?55:20,playing_out=isGK?norm99(fb.pass_pct,50,90):30;
     
-    let xg = us.xg || 0;
-    let goals = us.goals || fb.goals || 0;
-    let finishing = xg > 0 ? normalize99(goals / xg, 0.5, 1.5) : normalize99(fb.shots_on_target / Math.max(1, fb.shots) * 100, 20, 70);
-    if (isGK) finishing = 20;
-    
-    let defending = normalize99((fb.tackles + fb.interceptions), 0, maxValues.tackles + maxValues.interceptions);
-    if (isFwd) defending = Math.max(10, defending - 15);
-    
-    let totalAerials = fb.aerials_won + fb.aerials_lost;
-    let aerial = totalAerials > 0 ? normalize99(fb.aerials_won / totalAerials * 100, 20, 80) : 50;
-    
-    // --- THE HEAD (5) ---
-    let anticipation = normalize99(fb.interceptions, 0, maxValues.interceptions);
-    let vision = us.key_passes ? normalize99(us.key_passes, 0, maxValues.key_passes) : normalize99(fb.assists, 0, 15);
-    let decisions = normalize99(fb.pass_pct, 50, 95);
-    let composure = us.xg > 0 ? normalize99(goals / Math.max(0.1, us.xg), 0.5, 1.5) : 50;
-    let leadership = normalize99(tm.appearances || 0, 0, 500);
-    leadership = Math.max(20, Math.min(99, leadership + 30));
-    
-    // --- THE GLOVES (3) ---
-    let shot_stopping = isGK ? 60 : 15;
-    let commanding = isGK ? 55 : 20;
-    let playing_out = isGK ? normalize99(fb.pass_pct, 50, 90) : 30;
-    
-    // Build attributes object
-    const attrs = {
-      pace: jitter(pace), burst: jitter(burst), engine: jitter(engine),
-      power: jitter(power), agility: jitter(agility),
-      passing: jitter(passing), distribution: jitter(distribution),
-      touch: jitter(touch), finishing: jitter(finishing),
-      defending: jitter(defending), aerial: jitter(aerial),
-      anticipation: jitter(anticipation), vision: jitter(vision),
-      decisions: jitter(decisions), composure: jitter(composure),
-      leadership: jitter(leadership),
-      shot_stopping: jitter(shot_stopping), commanding: jitter(commanding),
-      playing_out: jitter(playing_out),
+    const attrs={
+      pace:jit(pace),burst:jit(burst),engine:jit(engine),power:jit(power),agility:jit(agility),
+      passing:jit(passing),distribution:jit(distribution),touch:jit(touch),finishing:jit(finishing),
+      defending:jit(defending),aerial:jit(aerial),anticipation:jit(anticipation),vision:jit(vision),
+      decisions:jit(decisions),composure:jit(composure),leadership:jit(leadership),
+      shot_stopping:jit(shot_stopping),commanding:jit(commanding),playing_out:jit(playing_out),
     };
+    const ovr=Math.round(Object.values(attrs).reduce((a,b)=>a+b,0)/19);
     
-    // Compute OVR
-    const ovr = Math.round(Object.values(attrs).reduce((a, b) => a + b, 0) / 19);
+    // PERSONALITY
+    let dr=fb.dribbles_attempted/Math.max(1,fb.minutes/90);
+    let openness=norm99(dr*5+(us.key_passes||0)*0.5,0,15);
+    let y=fb.yellow_cards+(tm.yellow_cards||0),r=fb.red_cards+(tm.red_cards||0);
+    let conscientiousness=Math.max(20,Math.min(99,80-Math.min(30,y+r*3)+Math.min(20,(parseInt(fb.age)||25)*2)));
+    let extraversion=Math.max(30,Math.min(99,norm99((tm.appearances||0)*0.5,0,100)+20));
+    let ta2=(fb.shots||0)+(fb.assists||0);
+    let agreeableness=ta2>0?norm99(fb.assists/ta2,0,0.6):50;
+    let redRate=r/Math.max(1,tm.appearances||fb.minutes/90||1);
+    let neuroticism=Math.max(10,Math.min(95,norm99(redRate*100,0,30)));
+    let confidence=(Object.keys(tm).length>2?35:0)+(Object.keys(us).length>2?35:0)+30;
     
-    // --- Big Five Personality ---
-    let dribble_rate = fb.dribbles_attempted / Math.max(1, fb.minutes / 90);
-    let openness = normalize99(dribble_rate * 5 + (us.key_passes || 0) * 0.5, 0, 15);
+    const personality={openness,conscientiousness,extraversion,agreeableness,neuroticism,confidence};
     
-    let yellow = fb.yellow_cards + (tm.yellow_cards || 0);
-    let red = fb.red_cards + (tm.red_cards || 0);
-    let conscientiousness = Math.max(20, Math.min(99, 80 - Math.min(30, yellow + red * 3) + Math.min(20, (parseInt(fb.age) || 25) * 2)));
+    // TRAITS
+    const traits=[];
+    if(attrs.defending>=75&&attrs.engine>=75)traits.push('PressingAnchor');
+    if(attrs.passing>=80&&attrs.distribution>=75)traits.push('TempoConductor');
+    if(attrs.touch>=80&&attrs.pace>=75&&pg==='FWD')traits.push('ChaosWinger');
+    if(attrs.defending>=80&&attrs.aerial>=70)traits.push('DefensiveWall');
+    if(attrs.pace>=80&&attrs.finishing>=70)traits.push('CounterKiller');
+    const psych=[];
+    if(personality.extraversion>=70&&personality.neuroticism<50)psych.push('BigGameResponder');
+    if(personality.neuroticism>=70)psych.push('MediaSensitive');
+    if(personality.neuroticism>=60&&personality.conscientiousness>=60)psych.push('ProveThemWrong');
+    if(personality.neuroticism<=30&&attrs.composure>=75)psych.push('IceCold');
+    if(personality.neuroticism>=70&&personality.extraversion>=60)psych.push('EmotionalReactor');
+    traits.push(...psych.sort(()=>Math.random()-0.5).slice(0,2));
+    const social=[];
+    if(personality.extraversion>=75&&attrs.leadership>=70)social.push('DressingRoomAlpha');
+    if(personality.agreeableness>=70&&personality.neuroticism<=40)social.push('QuietStabilizer');
+    if(personality.extraversion>=65&&personality.agreeableness>=60)social.push('CliqueBuilder');
+    if(personality.agreeableness<=35&&personality.neuroticism>=50)social.push('IsolationRisk');
+    traits.push(...social.sort(()=>Math.random()-0.5).slice(0,2));
     
-    let extraversion = normalize99((tm.appearances || 0) * 0.5, 0, 100);
-    extraversion = Math.max(30, Math.min(99, extraversion + 20));
-    
-    let totalAttacks = (fb.shots || 0) + (fb.assists || 0);
-    let agreeableness = totalAttacks > 0 ? normalize99(fb.assists / totalAttacks, 0, 0.6) : 50;
-    
-    let redRate = red / Math.max(1, tm.appearances || fb.minutes / 90 || 1);
-    let neuroticism = normalize99(redRate * 100, 0, 30);
-    neuroticism = Math.max(10, Math.min(95, neuroticism));
-    
-    let confidence = (Object.keys(fb).length > 5 ? 30 : 0) + (Object.keys(tm).length > 2 ? 35 : 0) + (Object.keys(us).length > 2 ? 35 : 0);
-    
-    const personality = {
-      openness, conscientiousness, extraversion, agreeableness, neuroticism, confidence,
-    };
-    
-    // --- Narrative Traits ---
-    const narrativeTraits = assignTraits(attrs, personality, posGroup);
-    
-    // Build final player object
-    mergedPlayers.push({
-      id: 'p_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_'),
-      match_name: name,
-      full_name: tm.name || name,
-      date_of_birth: tm.dob || `2000-01-01`,
-      nationality: (tm.nationality || fb.nation || '').substring(0, 3).toUpperCase(),
-      position: posGroup,
-      natural_position: posGroup,
-      attributes: attrs,
-      personality,
-      narrative_traits: narrativeTraits,
-      stability_modifier: 50,
-      ovr,
-      potential: Math.max(attrs.pace, attrs.finishing, attrs.defending, attrs.passing) + Math.floor(Math.random() * 10),
-      team: fb.team || tm.club || '',
-      age: parseInt(fb.age) || 25,
-      market_value: parseMarketValue(tm.market_value),
-      contract_end: '2028-06-30',
-      wage: (ovr * 1000),
-      // Raw stats for reference
-      _source: {
-        fbref: { minutes: fb.minutes, goals: fb.goals, assists: fb.assists, tackles: fb.tackles, interceptions: fb.interceptions },
-        transfermarkt: { height: tm.height_cm, weight: tm.weight_kg, appearances: tm.appearances },
-        understat: { xg: us.xg, xa: us.xa, key_passes: us.key_passes },
-      },
+    merged.push({
+      id:'p_'+name.toLowerCase().replace(/[^a-z0-9]/g,'_'),match_name:name,full_name:tm.name||name,
+      date_of_birth:tm.dob||'2000-01-01',nationality:(tm.nationality||fb.nation||'').substring(0,3).toUpperCase(),
+      position:pg,natural_position:pg,attributes:attrs,personality,narrative_traits:traits,stability_modifier:50,
+      ovr,potential:Math.max(attrs.pace,attrs.finishing,attrs.defending,attrs.passing)+Math.floor(Math.random()*10),
+      team:fb.team||tm.club||'',age:parseInt(fb.age)||25,
+      market_value:parseMV(tm.market_value),contract_end:'2028-06-30',wage:ovr*1000,
+      _sources:{fbref:!!Object.keys(fb).length,tm:!!Object.keys(tm).length,us:!!Object.keys(us).length},
     });
   }
   
-  // Compute relationships
-  const relationships = computeRelationshipsJS(mergedPlayers);
+  log('merge-log',`Done: ${merged.length} players (${fullCount} full, ${partialCount} partial)`,'ok');
+  log('merge-log',`Avg OVR: ${Math.round(merged.reduce((s,p)=>s+p.ovr,0)/merged.length)}`);
   
-  log('merge-log', `Merged ${mergedPlayers.length} players with ${relationships.length} relationships`, 'ok');
-  log('merge-log', `Average OVR: ${Math.round(mergedPlayers.reduce((s,p) => s + p.ovr, 0) / mergedPlayers.length)}`, 'ok');
-  
-  document.getElementById('merge-final').textContent = mergedPlayers.length;
-  document.getElementById('download-btn').disabled = false;
-  document.getElementById('csv-btn').disabled = false;
-  
-  // Show preview
-  showMergePreview();
+  $('btn-json').disabled=false;$('btn-csv').disabled=false;
+  showPreview();
 }
 
-function assignTraits(attrs, pers, pos) {
-  const traits = [];
-  // Technical Identity
-  if (attrs.defending >= 75 && attrs.engine >= 75) traits.push('PressingAnchor');
-  if (attrs.passing >= 80 && attrs.distribution >= 75) traits.push('TempoConductor');
-  if (attrs.touch >= 80 && attrs.pace >= 75 && pos === 'FWD') traits.push('ChaosWinger');
-  if (attrs.defending >= 80 && attrs.aerial >= 70) traits.push('DefensiveWall');
-  if (attrs.pace >= 80 && attrs.finishing >= 70) traits.push('CounterKiller');
-  // Psychological
-  const psych = [];
-  if (pers.extraversion >= 70 && pers.neuroticism < 50) psych.push('BigGameResponder');
-  if (pers.neuroticism >= 70) psych.push('MediaSensitive');
-  if (pers.neuroticism >= 60 && pers.conscientiousness >= 60) psych.push('ProveThemWrong');
-  if (pers.neuroticism <= 30 && attrs.composure >= 75) psych.push('IceCold');
-  if (pers.neuroticism >= 70 && pers.extraversion >= 60) psych.push('EmotionalReactor');
-  traits.push(...psych.sort(() => Math.random() - 0.5).slice(0, 2));
-  // Social
-  const social = [];
-  if (pers.extraversion >= 75 && attrs.leadership >= 70) social.push('DressingRoomAlpha');
-  if (pers.agreeableness >= 70 && pers.neuroticism <= 40) social.push('QuietStabilizer');
-  if (pers.extraversion >= 65 && pers.agreeableness >= 60) social.push('CliqueBuilder');
-  if (pers.agreeableness <= 35 && pers.neuroticism >= 50) social.push('IsolationRisk');
-  traits.push(...social.sort(() => Math.random() - 0.5).slice(0, 2));
-  return traits;
-}
-
-function computeRelationshipsJS(players) {
-  const rels = [];
-  const byTeam = {};
-  for (const p of players) {
-    const t = p.team || '';
-    if (!byTeam[t]) byTeam[t] = [];
-    byTeam[t].push(p);
-  }
-  for (const [team, teamPlayers] of Object.entries(byTeam)) {
-    if (!team) continue;
-    for (let i = 0; i < teamPlayers.length; i++) {
-      for (let j = i + 1; j < teamPlayers.length; j++) {
-        let strength = 40;
-        if (teamPlayers[i].nationality === teamPlayers[j].nationality) strength += 20;
-        if (Math.abs((teamPlayers[i].age || 25) - (teamPlayers[j].age || 25)) <= 3) strength += 10;
-        strength += Math.floor(Math.random() * 31) - 15;
-        strength = Math.max(-30, Math.min(95, strength));
-        rels.push({ player_a: teamPlayers[i].id, player_b: teamPlayers[j].id, strength, volatility: 0.3 });
-      }
-    }
-  }
-  return rels;
-}
-
-function parseMarketValue(str) {
-  if (!str) return 1000000;
-  const m = str.match(/€([\d.]+)\s*([mk])/i);
-  if (!m) return 1000000;
-  const num = parseFloat(m[1]);
-  return m[2].toLowerCase() === 'm' ? num * 1000000 : num * 1000;
-}
-
-function showMergePreview() {
-  document.getElementById('merge-preview-card').classList.remove('hidden');
-  const body = document.getElementById('merge-body');
-  body.innerHTML = mergedPlayers.slice(0, 200).map(p => {
-    const a = p.attributes;
-    const pers = p.personality;
+function showPreview(){
+  show('preview-card');
+  $('preview-body').innerHTML=merged.slice(0,300).map(p=>{
+    const a=p.attributes,pe=p.personality;
+    const srcBadge=Object.values(p._sources).filter(Boolean).length+'/3';
     return `<tr>
       <td>${p.match_name}</td><td>${p.position}</td><td>${p.nationality}</td><td>${p.age}</td>
       <td>${a.pace}</td><td>${a.burst}</td><td>${a.engine}</td><td>${a.power}</td><td>${a.agility}</td>
@@ -936,66 +600,41 @@ function showMergePreview() {
       <td>${a.decisions}</td><td>${a.composure}</td><td>${a.leadership}</td>
       <td>${a.shot_stopping}</td><td>${a.commanding}</td><td>${a.playing_out}</td>
       <td><strong>${p.ovr}</strong></td>
-      <td>${pers.openness}</td><td>${pers.conscientiousness}</td><td>${pers.extraversion}</td>
-      <td>${pers.agreeableness}</td><td>${pers.neuroticism}</td>
-      <td>${(p.narrative_traits || []).join(', ')}</td>
+      <td>${pe.openness}</td><td>${pe.conscientiousness}</td><td>${pe.extraversion}</td>
+      <td>${pe.agreeableness}</td><td>${pe.neuroticism}</td>
+      <td>${(p.narrative_traits||[]).join(', ')}</td><td><span class="badge ${srcBadge==='3/3'?'badge-ok':srcBadge==='2/3'?'badge-warn':'badge-err'}">${srcBadge}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ============================================================================
-// DOWNLOAD
-// ============================================================================
-function downloadJSON() {
-  const data = {
-    name: 'Gaffer Player Database',
-    description: 'Scraped player data with computed Gaffer attributes',
-    version: 2,
-    generated: new Date().toISOString(),
-    players: mergedPlayers,
-    relationships: computeRelationshipsJS(mergedPlayers),
+function parseMV(s){if(!s)return 1000000;const m=s.match(/€([\d.]+)\s*([mk])/i);if(!m)return 1000000;const n=parseFloat(m[1]);return m[2].toLowerCase()==='m'?n*1e6:n*1e3;}
+
+function downloadJSON(){
+  const data={name:'Gaffer Player Database',description:'Scraped player data with Gaffer attributes',version:2,generated:new Date().toISOString(),
+    players:merged,
+    relationships:(()=>{const r=[];const byT={};for(const p of merged){const t=p.team||'';if(!byT[t])byT[t]=[];byT[t].push(p);}
+      for(const[t,tp]of Object.entries(byT)){if(!t)continue;for(let i=0;i<tp.length;i++)for(let j=i+1;j<tp.length;j++){let s=40;if(tp[i].nationality===tp[j].nationality)s+=20;if(Math.abs(tp[i].age-tp[j].age)<=3)s+=10;s+=Math.floor(Math.random()*31)-15;s=Math.max(-30,Math.min(95,s));r.push({player_a:tp[i].id,player_b:tp[j].id,strength:s,volatility:0.3});}}
+      return r;})(),
   };
-  
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'gaffer_players.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  
-  log('merge-log', `Downloaded gaffer_players.json (${mergedPlayers.length} players)`, 'ok');
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='gaffer_players.json';a.click();URL.revokeObjectURL(url);
+  log('merge-log',`Downloaded gaffer_players.json (${merged.length} players)`,'ok');
 }
 
-function downloadCSV() {
-  if (mergedPlayers.length === 0) return;
-  
-  const headers = ['id','match_name','full_name','date_of_birth','nationality','position','ovr','potential','team','age',
+function downloadCSV(){
+  if(!merged.length)return;
+  const h=['id','match_name','date_of_birth','nationality','position','ovr','team','age',
     'pace','burst','engine','power','agility','passing','distribution','touch','finishing','defending','aerial',
     'anticipation','vision','decisions','composure','leadership','shot_stopping','commanding','playing_out',
-    'openness','conscientiousness','extraversion','agreeableness','neuroticism','confidence',
-    'narrative_traits','market_value','wage'];
-  
-  const rows = mergedPlayers.map(p => {
-    const a = p.attributes, pe = p.personality;
-    return [p.id, p.match_name, p.full_name, p.date_of_birth, p.nationality, p.position, p.ovr, p.potential, p.team, p.age,
-      a.pace, a.burst, a.engine, a.power, a.agility, a.passing, a.distribution, a.touch, a.finishing, a.defending, a.aerial,
-      a.anticipation, a.vision, a.decisions, a.composure, a.leadership, a.shot_stopping, a.commanding, a.playing_out,
-      pe.openness, pe.conscientiousness, pe.extraversion, pe.agreeableness, pe.neuroticism, pe.confidence,
-      (p.narrative_traits || []).join('|'), p.market_value, p.wage
-    ].join('\t');
-  });
-  
-  const csv = [headers.join('\t'), ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/tab-separated-values' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'gaffer_players.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  
-  log('merge-log', `Downloaded gaffer_players.csv (${mergedPlayers.length} players)`, 'ok');
+    'openness','conscientiousness','extraversion','agreeableness','neuroticism','confidence','narrative_traits','market_value'];
+  const rows=merged.map(p=>{const a=p.attributes,pe=p.personality;return [p.id,p.match_name,p.date_of_birth,p.nationality,p.position,p.ovr,p.team,p.age,
+    a.pace,a.burst,a.engine,a.power,a.agility,a.passing,a.distribution,a.touch,a.finishing,a.defending,a.aerial,
+    a.anticipation,a.vision,a.decisions,a.composure,a.leadership,a.shot_stopping,a.commanding,a.playing_out,
+    pe.openness,pe.conscientiousness,pe.extraversion,pe.agreeableness,pe.neuroticism,pe.confidence,
+    (p.narrative_traits||[]).join('|'),p.market_value].join('\t');});
+  const blob=new Blob([h.join('\t')+'\n'+rows.join('\n')],{type:'text/tab-separated-values'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='gaffer_players.csv';a.click();URL.revokeObjectURL(url);
+  log('merge-log',`Downloaded gaffer_players.csv`,'ok');
 }
 </script>
 </body>
