@@ -1,5 +1,11 @@
 mod fitness_warnings;
+mod development;
 pub use fitness_warnings::check_squad_fitness_warnings;
+pub use development::{
+    is_under_pressure, regression_probability, apply_regression,
+    plateau_growth_factor, personality_growth_mod, position_focus_bonus,
+    development_trajectory, DevelopmentTrajectory,
+};
 
 use crate::game::Game;
 use crate::player_rating::refresh_player_derived;
@@ -196,12 +202,15 @@ fn train_player(
     // through Recovery focus here would inflate the injured-recovery base below
     // (9.0 instead of 3.0), giving exhausted injured AI players ~3x recovery.
     let recovery_focus = TrainingFocus::Recovery;
-    let player_focus = if !plan.is_user_team
+    // Clone the focus to break the immutable borrow on player.training_focus.
+    // This is required because Phase 6's apply_regression needs &mut player,
+    // which would conflict with the borrowed &TrainingFocus reference.
+    let player_focus: TrainingFocus = if !plan.is_user_team
         && is_training_day
         && player.injury.is_none()
         && player.condition < AI_FATIGUE_GUARD_CONDITION
     {
-        &recovery_focus
+        recovery_focus.clone()
     } else {
         // Determine this player's effective focus:
         // player override > group override > team default
@@ -209,14 +218,15 @@ fn train_player(
             .training_focus
             .as_ref()
             .or_else(|| plan.group_overrides.get(&player.id))
-            .unwrap_or(&plan.default_focus)
+            .cloned()
+            .unwrap_or_else(|| plan.default_focus.clone())
     };
 
     // On rest days or Recovery focus: no training cost
     let condition_cost: u8 = if !is_training_day {
         0
     } else {
-        match (player_focus, &plan.intensity) {
+        match (&player_focus, &plan.intensity) {
             (TrainingFocus::Recovery, _) => 0,
             (_, TrainingIntensity::Low) => 3,
             (_, TrainingIntensity::Medium) => 6,
@@ -228,7 +238,7 @@ fn train_player(
     let recovery_base: f64 = if !is_training_day {
         7.0 * plan.bonus.physio_mult * plan.medical_facility_mult
     } else {
-        match player_focus {
+        match &player_focus {
             TrainingFocus::Recovery => 9.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
             _ => 3.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
         }
@@ -278,21 +288,44 @@ fn train_player(
         0.3
     };
 
-    // Base gain per attribute per session, boosted by coaching staff
+    // ----- Phase 6: Development mechanics -----
+    // Plateau: players near their potential ceiling grow slower
+    let plateau_factor = plateau_growth_factor(player, age);
+    // Personality: Conscientiousness + Openness modulate growth
+    let personality_mod = personality_growth_mod(player);
+    // Position focus: training focus matching position = bonus growth
+    let position_bonus = position_focus_bonus(player, &player_focus);
+
+    // Base gain per attribute per session, boosted by coaching staff + Phase 6 mechanics
     let gain = 0.15
         * intensity_mult
         * age_factor
         * plan.bonus.coaching_mult
-        * plan.bonus.specialization_mult;
+        * plan.bonus.specialization_mult
+        * plateau_factor
+        * personality_mod
+        * position_bonus;
 
     // Peaked players (ovr == potential) get no attribute gains. Without this
     // gate, attribute drift lifts ovr, and `refresh_player_derived`'s
     // `potential = max(potential, ovr)` invariant silently raises the career
     // ceiling in lockstep — the ceiling stops being a ceiling.
     if player.potential > player.ovr {
-        apply_focus_gains(&mut player.attributes, player_focus, gain, rng);
+        apply_focus_gains(&mut player.attributes, &player_focus, gain, rng);
     }
-    apply_fitness_change(&mut player.fitness, player_focus, intensity_mult, rng);
+
+    // Phase 6: Stability Guard — low-stability players under pressure can regress.
+    // Rolled AFTER gains so a single session can either grow OR regress, not both.
+    let regression_prob = regression_probability(player);
+    if regression_prob > 0.0 {
+        use rand::RngExt;
+        let roll: f64 = rng.random_range(0.0..1.0);
+        if roll < regression_prob {
+            apply_regression(player, rng);
+        }
+    }
+
+    apply_fitness_change(&mut player.fitness, &player_focus, intensity_mult, rng);
 
     // Refresh position-weighted OVR and traits after attribute gains.
     refresh_player_derived(player, day.year);

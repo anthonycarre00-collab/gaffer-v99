@@ -1,5 +1,6 @@
 // Gaffer Phase 1 — Interpretation Surface
 use crate::game::Game;
+use crate::training::development_trajectory;
 use domain::player::{MediaSensitivity, Player, PlayerTrait, Position, PressureResponse};
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -199,6 +200,16 @@ impl<'a> InterpretationSurfaceService<'a> {
         let cl = if cc>=80 {"Flying"} else if cc>=65 {"Confident"} else if cc>=45 {"Steady"} else if cc>=25 {"Shaken"} else {"Rock Bottom"};
         let fl = if player.condition>=85&&player.fitness>=70 {"Fresh"} else if player.condition>=65&&player.fitness>=55 {"Match-fit"} else if player.condition>=40||player.fitness>=40 {"Tiring"} else {"Running on Empty"};
         let cfl = if player.stats.avg_rating>=7.5 {"In Form"} else if player.stats.avg_rating>=6.5 {"Steady"} else if player.stats.avg_rating>=5.5 {"Quiet"} else if player.stats.avg_rating>0.0 {"Off the Pace"} else {"No Recent Football"};
+        // Phase 6: development trajectory + growth vector from plateau/personality
+        let player_age = player.date_of_birth.split('-').next().and_then(|y| y.parse::<u32>().ok()).map(|by| 2024_u32.saturating_sub(by)).unwrap_or(25);
+        let traj = development_trajectory(player, player_age);
+        let trajectory_label = traj.label().to_string();
+        let growth_vector = match traj {
+            crate::training::DevelopmentTrajectory::Rising => "On the rise".to_string(),
+            crate::training::DevelopmentTrajectory::Peaked => "At his peak".to_string(),
+            crate::training::DevelopmentTrajectory::Plateaued => "Stalled at ceiling".to_string(),
+            crate::training::DevelopmentTrajectory::Declining => "Losing ground".to_string(),
+        };
         let sa = SpreadsheetAttributes {
             pace:attrs.pace,burst:attrs.burst,engine:attrs.engine,power:attrs.power,agility:attrs.agility,
             passing:attrs.passing,distribution:attrs.distribution,touch:attrs.touch,finishing:attrs.finishing,
@@ -213,13 +224,13 @@ impl<'a> InterpretationSurfaceService<'a> {
             locker_room_role:"Unknown".into(),
             narrative_status_tag: self.get_narrative_status_tag(player),
             current_form_label:cfl.to_string(),confidence_label:cl.into(),fatigue_label:fl.into(),
-            trajectory_label:"Unknown".into(),stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
+            trajectory_label,stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
             pressure_response_type:pr,media_sensitivity:msi,rivalry_trigger_flag:false,morale_state:ms.into(),
             strongest_positive_link: self.get_strongest_positive_link(player),
             strongest_negative_link: self.get_strongest_negative_link(player),
             chemistry_score: self.get_chemistry_score(player),
             clique_membership: self.get_clique_membership(player),
-            growth_vector:"Unknown".into(),training_alignment_label:"Unknown".into(),mentor_bonus_flag:false,
+            growth_vector,training_alignment_label:"Unknown".into(),mentor_bonus_flag:false,
             spreadsheet_attributes:sa,role_identity_explanation:role_explanation,stability_explanation:se,
             morale_state_explanation:me,pressure_response_explanation:pe,
         }
