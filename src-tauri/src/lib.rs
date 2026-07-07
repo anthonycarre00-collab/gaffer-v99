@@ -307,7 +307,8 @@ pub fn run() {
             get_player_meaning,
             get_squad_meaning,
             get_match_meaning,
-            get_media_meaning
+            get_media_meaning,
+            get_player_relationships
         ])
         .run(tauri::generate_context!());
 

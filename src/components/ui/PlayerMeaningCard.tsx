@@ -38,6 +38,51 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
         <div className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{snapshot.pressure_response_type === 'Thrives' ? 'Thrives under pressure' : snapshot.pressure_response_type === 'Channels' ? 'Channels pressure' : snapshot.pressure_response_type === 'Folds' ? 'Folds under pressure' : 'Escalates (high risk)'}</div>
         {exp === 'pressure' && snapshot.pressure_response_explanation.entries.map((e,i) => <div key={i} className="text-xs text-gray-400 mt-1">• {e.reason}</div>)}
       </div>
+
+      {/* Gaffer Phase 2 — Relationship panel */}
+      {(snapshot.strongest_positive_link || snapshot.strongest_negative_link) && (
+        <div className="rounded border border-gray-200 p-3 dark:border-gray-700">
+          <div className="text-xs uppercase text-gray-500">Relationships</div>
+          <div className="mt-1 space-y-1 text-xs">
+            {snapshot.strongest_positive_link && (
+              <div className="flex items-center gap-2">
+                <span className="text-green-600 dark:text-green-400">★</span>
+                <span className="text-gray-600 dark:text-gray-300">Closest ally:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_positive_link}</span>
+              </div>
+            )}
+            {snapshot.strongest_negative_link && (
+              <div className="flex items-center gap-2">
+                <span className="text-red-600 dark:text-red-400">⚠</span>
+                <span className="text-gray-600 dark:text-gray-300">Tension with:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_negative_link}</span>
+              </div>
+            )}
+            {snapshot.chemistry_score !== 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">◆</span>
+                <span className="text-gray-600 dark:text-gray-300">Chemistry:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{snapshot.chemistry_score > 0 ? '+' : ''}{snapshot.chemistry_score}</span>
+              </div>
+            )}
+            {snapshot.clique_membership.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-blue-600 dark:text-blue-400">●</span>
+                <span className="text-gray-600 dark:text-gray-300">Clique:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{snapshot.clique_membership.join(', ')}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Narrative traits */}
+      {snapshot.narrative_status_tag && snapshot.narrative_status_tag !== 'None' && (
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="accent">{snapshot.narrative_status_tag}</Badge>
+        </div>
+      )}
+
       <div className="border-t border-gray-200 pt-3 dark:border-gray-700">
         <button onClick={() => setShow(!show)} className="text-xs text-blue-600 hover:underline">{show ? 'Hide' : 'Show'} Advanced View</button>
         {show && (

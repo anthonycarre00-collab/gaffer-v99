@@ -570,6 +570,26 @@ fn update_post_match_morale(
             // Red card tanks morale
             if ps.red_cards > 0 {
                 individual_delta -= 8;
+                // Gaffer Phase 2 — Personality evolution: sent off triggers neuroticism increase
+                // Check if this was a derby/rivalry match for the SentOffInDerby event
+                let is_rivalry = game.relationship_graph.get(home_team_id, away_team_id)
+                    .map(|e| e.rivalry_flag)
+                    .unwrap_or(false);
+                let event_type = if is_rivalry {
+                    crate::relationships::PersonalityEventType::SentOffInDerby
+                } else {
+                    // Generic sent-off still increases neuroticism slightly
+                    crate::relationships::PersonalityEventType::PublicHumiliation
+                };
+                let event = crate::relationships::PersonalityEvent {
+                    event_type,
+                    date: game.clock.current_date.format("%Y-%m-%d").to_string(),
+                };
+                // Apply personality shift (need to find the player's season_shifts or create one)
+                // For now, apply directly — Phase 3 will add proper season tracking
+                let (o, c, e, a, n) = event.event_type.deltas();
+                player.personality.neuroticism = (player.personality.neuroticism as i16 + n as i16).clamp(0, 100) as u8;
+                player.personality.conscientiousness = (player.personality.conscientiousness as i16 + c as i16).clamp(0, 100) as u8;
             }
             // Poor rating lowers morale
             if ps.rating < 5.5 {
@@ -577,11 +597,84 @@ fn update_post_match_morale(
             } else if ps.rating > 7.5 {
                 individual_delta += 2;
             }
+
+            // Gaffer Phase 2 — Relationship updates: teammates who play together
+            // get a small positive boost. This runs at match level (not per-player).
+            // Actual relationship updates happen in update_relationships_post_match().
         }
 
         let total_delta = capped_positive_recovery(result_delta + individual_delta, player);
         let new_morale = (base_morale + total_delta).clamp(10, 100) as u8;
         player.morale = new_morale;
+    }
+
+    // Gaffer Phase 2 — Update relationships after match
+    update_relationships_post_match(game, report, home_team_id, away_team_id);
+}
+
+/// Gaffer Phase 2 — Update player relationships based on match outcome.
+///
+/// Teammates who win together get +2 strength.
+/// Teammates who lose together get -1 strength (shared misery, but bonding).
+/// Teammates who draw get +1 (neutral shared experience).
+/// Players with high neuroticism + red card may create tension with teammates.
+fn update_relationships_post_match(
+    game: &mut Game,
+    report: &engine::MatchReport,
+    home_team_id: &str,
+    away_team_id: &str,
+) {
+    let home_won = report.home_goals > report.away_goals;
+    let away_won = report.away_goals > report.home_goals;
+    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
+
+    for (team_id, won) in [(home_team_id, home_won), (away_team_id, away_won)] {
+        // Get all players on this team
+        let team_player_ids: Vec<String> = game
+            .players
+            .iter()
+            .filter(|p| p.team_id.as_deref() == Some(team_id))
+            .map(|p| p.id.clone())
+            .collect();
+
+        if team_player_ids.len() < 2 {
+            continue;
+        }
+
+        // Determine relationship delta based on result
+        let delta: i8 = if won {
+            2 // Winning together bonds teammates
+        } else if report.home_goals == report.away_goals {
+            1 // Drawing is neutral-positive
+        } else {
+            -1 // Losing together is slightly negative but also bonds (shared misery)
+        };
+
+        // Update all intra-team relationships
+        for i in 0..team_player_ids.len() {
+            for j in (i + 1)..team_player_ids.len() {
+                game.relationship_graph
+                    .modify_strength(&team_player_ids[i], &team_player_ids[j], delta);
+            }
+        }
+
+        // Check for red cards — player with red card may create tension
+        for player_id in &team_player_ids {
+            if let Some(ps) = report.player_stats.get(player_id) {
+                if ps.red_cards > 0 {
+                    // Red card player loses relationship strength with all teammates
+                    for other_id in &team_player_ids {
+                        if other_id != player_id {
+                            game.relationship_graph.modify_strength(
+                                player_id,
+                                other_id,
+                                -3, // Teammates blame the sent-off player
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
