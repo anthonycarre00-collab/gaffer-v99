@@ -8,29 +8,29 @@ The game ships as a **desktop app with a fully populated world database**:
 - Each season: regens replace retiring players (world continues forever)
 - Save files persist the user's career indefinitely
 
-## Current Status (as of Phase 7)
+## Current Status (as of Phase 9)
 
 | Phase | Status | Description |
 |-------|--------|-------------|
 | 0 | ✅ Done | Repo setup, docs, conflict resolution |
 | 1 | ✅ Done | 19 attrs + personality + stability + interpretation surface |
-| 2.1-2.6 | ✅ Done | RelationshipGraph + narrative traits + personality evolution + frontend display |
-| 3 | ✅ Done | Narrative engine & memory system (35 event types, 18 story threads, cooldowns) |
-| 4 | ✅ Done | Match engine integration (engine migrated, SquadPulse 7-factor formula, harmony modifier) |
-| 5 | ✅ Done | Media ecosystem (5 pundits, betting sentiment, weekly supplements, match ratings) |
-| 6 | ✅ Done | Training overhaul (stability guard, plateau system, personality effects, position focus bonus) |
-| 7 | ✅ Done | Scouting progressive reveal (3-tier Surface/Detailed/Complete, scout accuracy decoupled from reveal depth) |
-| **0.5** | **🟡 PARTIAL** | **Bundled world DB exists (8 teams / 144 players sample data). Real-data pipeline (scraper.html v3 + build_world.py) is built but parser not yet wired in build_world.py — TODO at line 554.** |
-| **0.5-FE** | **🔴 BLOCKED** | **Frontend InterpretationSurface UI: PlayerMeaningCard exists but is NOT rendered anywhere. meaningStore.ts has a React anti-pattern (side-effect in render). No `meaning.*` i18n keys in any locale. Backend works, frontend dead.** |
-| 8 | ⏳ Next | Season loop + regen system |
-| 9 | ⏳ | Balance & polish + CI/CD + i18n voice pass |
+| 2 | ✅ Done | RelationshipGraph + narrative traits + personality evolution + frontend display |
+| 3 | ✅ Done | Narrative engine & memory system |
+| 4 | ✅ Done | Match engine integration (engine migrated, SquadPulse 7-factor formula) |
+| 5 | ✅ Done | Media ecosystem (pundits, betting, supplements, match ratings) |
+| 6 | ✅ Done | Training overhaul (stability guard, plateau, personality effects, position focus) |
+| 7 | ✅ Done | Scouting progressive reveal (3-tier Surface/Detailed/Complete) |
+| 8 | ✅ Done | Season loop + regen system |
+| 0.5 | ✅ Done | Real player data: 3,376 players from FBref via Hugging Face, 114 teams, 5 leagues |
+| 0.5-FE | ✅ Done | InterpretationSurface frontend: SquadPulseCard, MediaPulseCard, PlayerMeaningCard wired |
+| 9 | ✅ Done | CI/CD fixes (develop→main), 0 TS errors, meaning.* i18n in 11 locales, CSP, lint script |
 
 ## Test Status
 
-- 493 Rust lib tests pass (across ofm_core, engine, domain, db)
-- 149 frontend test files exist (not all passing — 21 pre-existing upstream TS errors in test files)
-- 0 `unimplemented!()` / `todo!()` / FIXME / HACK markers in codebase (excellent hygiene)
-- 2 documented TODOs (build_world.py parser stub, end_of_season hemisphere edge case)
+- 515 Rust lib tests pass
+- 0 TypeScript errors (was 21 pre-existing upstream)
+- 0 `unimplemented!()` / `todo!()` / FIXME markers
+- All 4 Rust library crates build successfully
 
 ## Architecture Audit Findings (post-Phase 7)
 
