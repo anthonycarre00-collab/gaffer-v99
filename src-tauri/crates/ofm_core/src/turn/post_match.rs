@@ -640,6 +640,22 @@ fn update_post_match_morale(
         is_rivalry,
         &player_stats,
     );
+
+    // Gaffer Phase 5 — Process media reactions
+    let home_team_name = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.name.clone()).unwrap_or_default();
+    let away_team_name = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.name.clone()).unwrap_or_default();
+    let home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let mut rng = rand::rng();
+    let _reactions = game.media_engine.process_match(
+        &date,
+        &home_team_name,
+        &away_team_name,
+        report.home_goals,
+        report.away_goals,
+        is_rivalry,
+        &mut rng,
+    );
 }
 
 /// Gaffer Phase 2 — Update player relationships based on match outcome.

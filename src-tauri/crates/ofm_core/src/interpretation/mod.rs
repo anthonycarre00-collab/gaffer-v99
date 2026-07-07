@@ -169,7 +169,13 @@ impl<'a> InterpretationSurfaceService<'a> {
     }
 
     pub fn media_meaning(&self) -> MediaMeaningSnapshot {
-        MediaMeaningSnapshot { active_story_count:0,top_headline:None,pundit_disagreement_active:false,betting_sentiment_trend:"Stable".into() }
+        let summary = self.game.media_engine.media_summary();
+        MediaMeaningSnapshot {
+            active_story_count: self.game.memory_store.active_thread_count() as u32,
+            top_headline: summary.top_headline,
+            pundit_disagreement_active: summary.pundit_disagreement_active,
+            betting_sentiment_trend: summary.betting_sentiment_trend,
+        }
     }
 
     fn build_player_snapshot(&self, player: &Player) -> PlayerMeaningSnapshot {

@@ -21,6 +21,7 @@ pub mod history_generation;
 pub mod interpretation;
 pub mod job_offers;
 pub mod live_match_manager;
+pub mod media;
 pub mod messages;
 pub mod narrative;
 pub mod relationships;

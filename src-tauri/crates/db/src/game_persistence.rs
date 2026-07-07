@@ -343,6 +343,7 @@ impl GamePersistenceReader {
             deterministic_seed: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(42),
             relationship_graph: ofm_core::relationships::RelationshipGraph::new(),
             memory_store: ofm_core::narrative::MemoryStore::new(),
+            media_engine: ofm_core::media::MediaEngine::new(),
         };
         game.promote_legacy_league();
         ofm_core::season_context::refresh_game_context(&mut game);

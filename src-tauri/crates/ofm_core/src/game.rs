@@ -130,6 +130,10 @@ pub struct Game {
     /// Gaffer Phase 3 — Narrative memory store (memories + story threads + cooldowns).
     #[serde(default)]
     pub memory_store: crate::narrative::MemoryStore,
+
+    /// Gaffer Phase 5 — Media engine (pundits, betting, supplements, reactions).
+    #[serde(default)]
+    pub media_engine: crate::media::MediaEngine,
 }
 
 fn default_game_seed() -> u64 {
@@ -176,6 +180,7 @@ impl Game {
             deterministic_seed: default_game_seed(),
             relationship_graph: crate::relationships::RelationshipGraph::new(),
             memory_store: crate::narrative::MemoryStore::new(),
+            media_engine: crate::media::MediaEngine::new(),
         };
         game.promote_legacy_league();
         crate::football_identity::upgrade_game_football_identities(&mut game);
