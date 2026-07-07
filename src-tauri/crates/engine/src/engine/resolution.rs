@@ -87,14 +87,14 @@ fn resolve_midfield<R: Rng>(
     let attacker = snap_player(ctx, att_side, Position::Midfielder, rng);
     let defender = snap_player(ctx, def_side, Position::Midfielder, rng);
 
-    let att_rating = (attacker.dribbling as f64
+    let att_rating = (attacker.touch as f64
         + attacker.passing as f64
         + attacker.vision as f64
         + attacker.teamwork as f64)
         / 4.0
         * trait_bonus(&attacker, TraitContext::Midfield);
-    let def_rating = (defender.tackling as f64
-        + defender.positioning as f64
+    let def_rating = (defender.defending as f64
+        + defender.anticipation as f64
         + defender.decisions as f64
         + defender.teamwork as f64)
         / 4.0
@@ -167,15 +167,15 @@ fn resolve_attacking_third<R: Rng>(
     let attacker = snap_player(ctx, att_side, Position::Forward, rng);
     let defender = snap_player(ctx, def_side, Position::Defender, rng);
 
-    let att_rating = (attacker.dribbling as f64
+    let att_rating = (attacker.touch as f64
         + attacker.pace as f64
         + attacker.agility as f64
         + attacker.composure as f64)
         / 4.0
         * trait_bonus(&attacker, TraitContext::Dribbling);
     let def_rating = (defender.defending as f64
-        + defender.tackling as f64
-        + defender.positioning as f64
+        + defender.defending as f64
+        + defender.anticipation as f64
         + defender.aerial as f64)
         / 4.0
         * trait_bonus(&defender, TraitContext::Tackling);
@@ -294,11 +294,11 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let def_cond = if def_side == Side::Home { ctx.home_condition } else { ctx.away_condition };
 
     let shoot_rating =
-        (shooter.shooting as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0
+        (shooter.finishing as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0
             * trait_bonus(&shooter, TraitContext::Shooting)
             * att_cond;
     let gk_rating =
-        (goalkeeper.handling as f64 + goalkeeper.reflexes as f64 + goalkeeper.positioning as f64)
+        (goalkeeper.shot_stopping as f64 + goalkeeper.shot_stopping as f64 + goalkeeper.anticipation as f64)
             / 3.0
             * trait_bonus(&goalkeeper, TraitContext::Goalkeeping)
             * def_cond;
@@ -371,7 +371,7 @@ pub(super) fn effective_midfield(ctx: &MatchContext, side: Side) -> f64 {
 fn effective_press(ctx: &MatchContext, pressing_side: Side) -> f64 {
     let team = ctx.team(pressing_side);
     let base = team.position_attr_avg(Position::Midfielder, |p| {
-        ((p.stamina as u16 + p.tackling as u16 + p.pace as u16) / 3) as u8
+        ((p.engine as u16 + p.defending as u16 + p.pace as u16) / 3) as u8
     });
     let modifier = play_style_modifier(team.play_style, PlayStylePhase::Press, true);
     base * modifier

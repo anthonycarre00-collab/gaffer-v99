@@ -25,8 +25,8 @@ impl LiveMatchState {
         let taker = self.pick_penalty_taker(kicking_side, rng);
         let gk = self.pick_goalkeeper(kicking_side.opposite());
 
-        let shoot_skill = (taker.shooting as f64 + taker.composure as f64) / 2.0;
-        let gk_skill = (gk.reflexes as f64 + gk.handling as f64) / 2.0;
+        let shoot_skill = (taker.finishing as f64 + taker.composure as f64) / 2.0;
+        let gk_skill = (gk.shot_stopping as f64 + gk.shot_stopping as f64) / 2.0;
 
         // Fatigue affects penalty accuracy in shootout
         let taker_condition = self
@@ -120,8 +120,8 @@ impl LiveMatchState {
         };
         let gk = self.snap_player(att_side.opposite(), Position::Goalkeeper, rng);
 
-        let shoot_skill = (taker.shooting as f64 + taker.decisions as f64) / 2.0;
-        let gk_skill = (gk.positioning as f64 + gk.decisions as f64) / 2.0;
+        let shoot_skill = (taker.finishing as f64 + taker.decisions as f64) / 2.0;
+        let gk_skill = (gk.anticipation as f64 + gk.decisions as f64) / 2.0;
         let conversion = (0.75 + (shoot_skill - gk_skill) / 300.0).clamp(0.55, 0.92);
         let zone = Zone::attacking_box(att_side);
 

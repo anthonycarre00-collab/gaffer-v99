@@ -30,9 +30,9 @@ impl LiveMatchState {
             if self.sent_off.contains(&p.id) {
                 continue;
             }
-            let stamina_factor = p.stamina as f64 / 100.0;
+            let stamina_factor = p.engine as f64 / 100.0;
             let fitness_factor = p.fitness as f64 / 100.0;
-            // Higher stamina → less depletion; higher fitness → less depletion.
+            // Higher engine → less depletion; higher fitness → less depletion.
             // Fitness scales the base depletion more aggressively (unfit players tire much faster).
             let depletion =
                 fatigue_rate * (1.0 - stamina_factor * 0.5) * (1.3 - fitness_factor * 0.6);
@@ -109,14 +109,14 @@ impl LiveMatchState {
                 return PlayerSnap::from(p);
             }
         }
-        // Fallback: pick the forward with highest shooting
+        // Fallback: pick the forward with highest finishing
         let team = self.team_ref(side);
         let mut candidates: Vec<&PlayerData> = team
             .players
             .iter()
             .filter(|p| !self.sent_off.contains(&p.id))
             .collect();
-        candidates.sort_by(|a, b| b.shooting.cmp(&a.shooting));
+        candidates.sort_by(|a, b| b.finishing.cmp(&a.finishing));
         if let Some(p) = candidates.first() {
             PlayerSnap::from(p)
         } else {
@@ -157,7 +157,7 @@ impl LiveMatchState {
     pub(super) fn effective_press(&self, pressing_side: Side) -> f64 {
         let team = self.team_ref(pressing_side);
         let base = team.position_attr_avg(Position::Midfielder, |p| {
-            ((p.stamina as u16 + p.tackling as u16 + p.pace as u16) / 3) as u8
+            ((p.engine as u16 + p.defending as u16 + p.pace as u16) / 3) as u8
         });
         let modifier = play_style_modifier(team.play_style, PlayStylePhase::Press, true);
         base * modifier
@@ -303,26 +303,28 @@ mod commentary_detail_tests {
             condition: 90,
             fitness: 75,
             pace: 70,
-            stamina: 70,
-            strength: 70,
+            engine: 70,
+            power: 70,
             agility: 70,
             passing: 70,
-            shooting: 70,
-            tackling: 70,
-            dribbling: 70,
+            finishing: 70,
             defending: 70,
-            positioning: 70,
+            touch: 70,
+            anticipation: 70,
             vision: 70,
             decisions: 70,
             composure: 70,
             aggression: 70,
             teamwork: 70,
             leadership: 70,
-            handling: 70,
-            reflexes: 70,
+            shot_stopping: 70,
             aerial: 70,
             traits: vec![],
             role: crate::types::PlayerRole::Standard,
+            burst: 50,
+            distribution: 50,
+            commanding: 50,
+            playing_out: 50,
         }
     }
 

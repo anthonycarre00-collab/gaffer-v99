@@ -176,7 +176,7 @@ impl LiveMatchState {
 
         // Collect outfield players (skip GK) sorted by defensive-ness
         // (defenders first, then midfielders, then forwards) using a simple
-        // heuristic: defending+tackling vs shooting+dribbling
+        // heuristic: defending+defending vs finishing+touch
         let mut outfield_indices: Vec<usize> = team
             .players
             .iter()
@@ -189,8 +189,8 @@ impl LiveMatchState {
         outfield_indices.sort_by(|&a, &b| {
             let pa = &team.players[a];
             let pb = &team.players[b];
-            let def_a = (pa.defending as u16 + pa.tackling as u16 + pa.strength as u16) as f64;
-            let def_b = (pb.defending as u16 + pb.tackling as u16 + pb.strength as u16) as f64;
+            let def_a = (pa.defending as u16 + pa.defending as u16 + pa.power as u16) as f64;
+            let def_b = (pb.defending as u16 + pb.defending as u16 + pb.power as u16) as f64;
             def_b
                 .partial_cmp(&def_a)
                 .unwrap_or(std::cmp::Ordering::Equal)

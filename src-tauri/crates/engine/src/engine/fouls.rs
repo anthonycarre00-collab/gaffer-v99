@@ -104,8 +104,8 @@ pub(super) fn resolve_penalty<R: Rng>(ctx: &mut MatchContext, minute: u8, att_si
     let taker = snap_player(ctx, att_side, Position::Forward, rng);
     let gk = snap_player(ctx, att_side.opposite(), Position::Goalkeeper, rng);
 
-    let shoot_skill = (taker.shooting as f64 + taker.decisions as f64) / 2.0;
-    let gk_skill = (gk.positioning as f64 + gk.decisions as f64) / 2.0;
+    let shoot_skill = (taker.finishing as f64 + taker.decisions as f64) / 2.0;
+    let gk_skill = (gk.anticipation as f64 + gk.decisions as f64) / 2.0;
     let conversion = (0.75 + (shoot_skill - gk_skill) / 300.0).clamp(0.55, 0.92);
     let zone = Zone::attacking_box(att_side);
 

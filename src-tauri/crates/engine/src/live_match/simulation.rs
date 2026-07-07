@@ -166,7 +166,7 @@ impl LiveMatchState {
             Side::Away => self.away_possession_ticks += 1,
         }
 
-        // Deplete stamina for all on-pitch players
+        // Deplete engine for all on-pitch players
         self.deplete_stamina_tick();
 
         // Simulate 1-3 actions per minute

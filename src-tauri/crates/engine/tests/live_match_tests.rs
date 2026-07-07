@@ -20,26 +20,28 @@ fn make_player(id: &str, name: &str, pos: Position, skill: u8) -> PlayerData {
         condition: 90,
         fitness: 75,
         pace: skill,
-        stamina: skill,
-        strength: skill,
+        engine: skill,
+        power: skill,
         agility: skill,
         passing: skill,
-        shooting: skill,
-        tackling: skill,
-        dribbling: skill,
+        finishing: skill,
         defending: skill,
-        positioning: skill,
+        touch: skill,
+        anticipation: skill,
         vision: skill,
         decisions: skill,
         composure: skill,
         aggression: skill,
         teamwork: skill,
         leadership: skill,
-        handling: skill,
-        reflexes: skill,
+        shot_stopping: skill,
         aerial: skill,
         traits: vec![],
         role: PlayerRole::Standard,
+        burst: 50,
+        distribution: 50,
+        commanding: 50,
+        playing_out: 50,
     }
 }
 
@@ -675,7 +677,7 @@ fn stamina_depletes_over_match() {
     // condition_adjusted_skill function does use them.
     // For a more direct test, we check the report's implied effects.
 
-    // Instead, run full match and check that it finishes (stamina doesn't crash)
+    // Instead, run full match and check that it finishes (engine doesn't crash)
     run_to_finish(&mut state, &mut rng);
     assert!(state.is_finished());
 }
@@ -1291,26 +1293,28 @@ fn make_player_with_traits(
         condition: 90,
         fitness: 75,
         pace: skill,
-        stamina: skill,
-        strength: skill,
+        engine: skill,
+        power: skill,
         agility: skill,
         passing: skill,
-        shooting: skill,
-        tackling: skill,
-        dribbling: skill,
+        finishing: skill,
         defending: skill,
-        positioning: skill,
+        touch: skill,
+        anticipation: skill,
         vision: skill,
         decisions: skill,
         composure: skill,
         aggression: skill,
         teamwork: skill,
         leadership: skill,
-        handling: skill,
-        reflexes: skill,
+        shot_stopping: skill,
         aerial: skill,
         traits: traits.iter().map(|t| t.to_string()).collect(),
         role: PlayerRole::Standard,
+        burst: 50,
+        distribution: 50,
+        commanding: 50,
+        playing_out: 50,
     }
 }
 

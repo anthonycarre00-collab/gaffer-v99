@@ -82,44 +82,51 @@ pub struct PlayerData {
     #[serde(default)]
     pub ovr: u8,
     pub condition: u8, // 0-100
-    /// Long-term physical shape (0-100). Multiplies stamina depletion rate in-match.
+    /// Long-term physical shape (0-100). Multiplies engine depletion rate in-match.
     #[serde(default = "default_fitness")]
     pub fitness: u8,
 
-    // Physical
+    // The Body (5) — Gaffer Phase 4 migrated attrs
     pub pace: u8,
-    pub stamina: u8,
-    pub strength: u8,
+    #[serde(default = "default_engine_attr")]
+    pub burst: u8,
+    pub engine: u8,
+    pub power: u8,
     #[serde(default = "default_engine_attr")]
     pub agility: u8,
 
-    // Technical
+    // The Ball (6)
     pub passing: u8,
-    pub shooting: u8,
-    pub tackling: u8,
-    pub dribbling: u8,
+    #[serde(default = "default_engine_attr")]
+    pub distribution: u8,
+    pub touch: u8,
+    pub finishing: u8,
     pub defending: u8,
+    #[serde(default = "default_engine_attr")]
+    pub aerial: u8,
 
-    // Mental
-    pub positioning: u8,
+    // The Head (5)
+    pub anticipation: u8,
     pub vision: u8,
     pub decisions: u8,
     #[serde(default = "default_engine_attr")]
     pub composure: u8,
     #[serde(default = "default_engine_attr")]
-    pub aggression: u8,
-    #[serde(default = "default_engine_attr")]
-    pub teamwork: u8,
-    #[serde(default = "default_engine_attr")]
     pub leadership: u8,
 
-    // Goalkeeper
+    // Personality-derived (kept for engine simulation — populated from Big Five in bridge code)
     #[serde(default = "default_engine_attr")]
-    pub handling: u8,
+    pub aggression: u8,  // Derived from personality.neuroticism
     #[serde(default = "default_engine_attr")]
-    pub reflexes: u8,
+    pub teamwork: u8,    // Derived from personality.agreeableness
+
+    // The Gloves (3, GK)
     #[serde(default = "default_engine_attr")]
-    pub aerial: u8,
+    pub shot_stopping: u8,
+    #[serde(default = "default_engine_attr")]
+    pub commanding: u8,
+    #[serde(default = "default_engine_attr")]
+    pub playing_out: u8,
 
     // Traits (string names matching domain::player::PlayerTrait variants)
     #[serde(default)]
@@ -141,16 +148,16 @@ impl PlayerData {
     /// Overall rating (simple mean of core 11 attributes).
     pub fn overall(&self) -> f64 {
         (self.pace as f64
-            + self.stamina as f64
-            + self.strength as f64
+            + self.engine as f64
+            + self.power as f64
             + self.passing as f64
-            + self.shooting as f64
-            + self.tackling as f64
-            + self.dribbling as f64
+            + self.finishing as f64
             + self.defending as f64
-            + self.positioning as f64
+            + self.touch as f64
+            + self.anticipation as f64
             + self.vision as f64
-            + self.decisions as f64)
+            + self.decisions as f64
+            + self.composure as f64)
             / 11.0
     }
 
@@ -289,11 +296,11 @@ impl TeamData {
     /// Composite defense rating (from defenders + goalkeeper).
     pub fn defense_rating(&self) -> f64 {
         let def_avg = self.position_attr_avg(Position::Defender, |p| {
-            ((p.defending as u16 + p.tackling as u16 + p.positioning as u16 + p.strength as u16)
+            ((p.defending as u16 + p.aerial as u16 + p.anticipation as u16 + p.power as u16)
                 / 4) as u8
         });
         let gk_avg = self.position_attr_avg(Position::Goalkeeper, |p| {
-            ((p.positioning as u16 + p.decisions as u16 + p.strength as u16 + p.pace as u16) / 4)
+            ((p.shot_stopping as u16 + p.commanding as u16 + p.anticipation as u16 + p.decisions as u16) / 4)
                 as u8
         });
         def_avg * 0.7 + gk_avg * 0.3
@@ -302,18 +309,17 @@ impl TeamData {
     /// Composite midfield rating.
     pub fn midfield_rating(&self) -> f64 {
         self.position_attr_avg(Position::Midfielder, |p| {
-            ((p.passing as u16 + p.vision as u16 + p.decisions as u16 + p.stamina as u16) / 4) as u8
+            ((p.passing as u16 + p.distribution as u16 + p.vision as u16 + p.engine as u16) / 4) as u8
         })
     }
 
     /// Composite attack rating (from forwards + midfielders).
     pub fn attack_rating(&self) -> f64 {
         let fwd_avg = self.position_attr_avg(Position::Forward, |p| {
-            ((p.shooting as u16 + p.dribbling as u16 + p.pace as u16 + p.positioning as u16) / 4)
-                as u8
+            ((p.finishing as u16 + p.touch as u16 + p.pace as u16 + p.burst as u16) / 4) as u8
         });
         let mid_contrib = self.position_attr_avg(Position::Midfielder, |p| {
-            ((p.shooting as u16 + p.passing as u16 + p.vision as u16) / 3) as u8
+            ((p.finishing as u16 + p.passing as u16 + p.distribution as u16) / 3) as u8
         });
         fwd_avg * 0.75 + mid_contrib * 0.25
     }
@@ -321,7 +327,7 @@ impl TeamData {
     /// Goalkeeper save rating.
     pub fn goalkeeper_rating(&self) -> f64 {
         self.position_attr_avg(Position::Goalkeeper, |p| {
-            ((p.positioning as u16 + p.decisions as u16 + p.pace as u16 + p.strength as u16) / 4)
+            ((p.shot_stopping as u16 + p.commanding as u16 + p.playing_out as u16 + p.anticipation as u16) / 4)
                 as u8
         })
     }

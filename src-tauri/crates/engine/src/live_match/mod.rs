@@ -235,7 +235,7 @@ pub struct LiveMatchState {
     et_first_half_stoppage: u8,
     et_second_half_stoppage: u8,
 
-    // Per-minute stamina depletion tracking (player_id → current effective condition)
+    // Per-minute engine depletion tracking (player_id → current effective condition)
     player_conditions: HashMap<String, f64>,
 
     // Penalty shootout state

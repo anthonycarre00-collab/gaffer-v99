@@ -35,10 +35,14 @@ fn mk(id: &str, pos: Position) -> PlayerData {
     PlayerData {
         id: id.to_string(), name: id.to_string(), position: pos,
         ovr: 70, condition: 90, fitness: 75,
-        pace: 70, stamina: 70, strength: 70, agility: 70, passing: 70, shooting: 70,
-        tackling: 70, dribbling: 70, defending: 70, positioning: 70, vision: 70,
+        pace: 70, engine: 70, power: 70, agility: 70, passing: 70, finishing: 70,
+        defending: 70, touch: 70, defending: 70, anticipation: 70, vision: 70,
         decisions: 70, composure: 70, aggression: 70, teamwork: 70, leadership: 70,
-        handling: 70, reflexes: 70, aerial: 70, traits: vec![], role: PlayerRole::Standard,
+        shot_stopping: 70, shot_stopping: 70, aerial: 70, traits: vec![], role: PlayerRole::Standard,
+        burst: 50,
+        distribution: 50,
+        commanding: 50,
+        playing_out: 50,
     }
 }
 
@@ -229,7 +233,7 @@ fn batch_fast_break_creates_more_chances_than_slow() {
 }
 
 // ---------------------------------------------------------------------------
-// Pressing stamina cost (live engine only — it tracks in-match condition).
+// Pressing engine cost (live engine only — it tracks in-match condition).
 // ---------------------------------------------------------------------------
 
 /// Total end-of-match condition for (home, away) given each side's tactics.

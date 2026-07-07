@@ -86,13 +86,13 @@ impl LiveMatchState {
         let attacker = self.snap_player(att_side, Position::Midfielder, rng);
         let defender = self.snap_player(def_side, Position::Midfielder, rng);
 
-        let att_raw = (attacker.dribbling as f64
+        let att_raw = (attacker.touch as f64
             + attacker.passing as f64
             + attacker.vision as f64
             + attacker.teamwork as f64)
             / 4.0;
-        let def_raw = (defender.tackling as f64
-            + defender.positioning as f64
+        let def_raw = (defender.defending as f64
+            + defender.anticipation as f64
             + defender.decisions as f64
             + defender.teamwork as f64)
             / 4.0;
@@ -165,14 +165,14 @@ impl LiveMatchState {
         let attacker = self.snap_player(att_side, Position::Forward, rng);
         let defender = self.snap_player(def_side, Position::Defender, rng);
 
-        let att_raw = (attacker.dribbling as f64
+        let att_raw = (attacker.touch as f64
             + attacker.pace as f64
             + attacker.agility as f64
             + attacker.composure as f64)
             / 4.0;
         let def_raw = (defender.defending as f64
-            + defender.tackling as f64
-            + defender.positioning as f64
+            + defender.defending as f64
+            + defender.anticipation as f64
             + defender.aerial as f64)
             / 4.0;
         let att_rating = self.condition_adjusted_skill(&attacker.id, att_raw)
@@ -318,12 +318,12 @@ impl LiveMatchState {
         let goalkeeper = self.snap_player(def_side, Position::Goalkeeper, rng);
 
         let shoot_raw =
-            (shooter.shooting as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0;
+            (shooter.finishing as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0;
         let shoot_rating = self.condition_adjusted_skill(&shooter.id, shoot_raw)
             * trait_bonus(&shooter, TraitContext::Shooting);
-        let gk_raw = (goalkeeper.handling as f64
-            + goalkeeper.reflexes as f64
-            + goalkeeper.positioning as f64)
+        let gk_raw = (goalkeeper.shot_stopping as f64
+            + goalkeeper.shot_stopping as f64
+            + goalkeeper.anticipation as f64)
             / 3.0;
         let gk_rating = self.condition_adjusted_skill(&goalkeeper.id, gk_raw)
             * trait_bonus(&goalkeeper, TraitContext::Goalkeeping);
@@ -532,26 +532,28 @@ mod event_detail_tests {
             condition: 90,
             fitness: 75,
             pace: 70,
-            stamina: 70,
-            strength: 70,
+            engine: 70,
+            power: 70,
             agility: 70,
             passing: 70,
-            shooting: 70,
-            tackling: 70,
-            dribbling: 70,
+            finishing: 70,
             defending: 70,
-            positioning: 70,
+            touch: 70,
+            anticipation: 70,
             vision: 70,
             decisions: 70,
             composure: 70,
             aggression: 70,
             teamwork: 70,
             leadership: 70,
-            handling: 70,
-            reflexes: 70,
+            shot_stopping: 70,
             aerial: 70,
             traits: vec![],
             role: crate::types::PlayerRole::Standard,
+            burst: 50,
+            distribution: 50,
+            commanding: 50,
+            playing_out: 50,
         }
     }
 
