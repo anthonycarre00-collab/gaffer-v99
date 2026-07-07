@@ -73,19 +73,95 @@ impl<'a> InterpretationSurfaceService<'a> {
         if squad.is_empty() {
             return SquadMeaningSnapshot { squad_harmony_score:50,tactical_coherence_score:50,pressure_level:"Unknown".into(),media_heat:0,dressing_room_tension_flag:false,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:"Unknown".into(),identity_alignment_label:"Unknown".into(),harmony_explanation:ExplanationChain::new() };
         }
-        let am: f64 = squad.iter().map(|p| p.morale as f64).sum::<f64>() / squad.len() as f64;
+
+        let squad_ids: Vec<String> = squad.iter().map(|p| p.id.clone()).collect();
+
+        // Gaffer Phase 4 — Full SquadPulse formula (7 factors)
+        // See: docs/gaffer/BIBLE_CURATED.md §16
+        let avg_morale: f64 = squad.iter().map(|p| p.morale as f64).sum::<f64>() / squad.len() as f64;
+        let positive_density = self.game.relationship_graph.positive_density(&squad_ids) as f64;
+        let conflict_severity = self.game.relationship_graph.conflict_severity(&squad_ids) as f64;
+
+        // Leadership stability: average leadership of top leaders
+        let mut leadership_vals: Vec<u8> = squad.iter().map(|p| p.attributes.leadership).collect();
+        leadership_vals.sort_by(|a, b| b.cmp(a));
+        let leader_count = leadership_vals.len().min(3).max(1);
+        let leadership_stability: f64 = leadership_vals.iter().take(leader_count)
+            .map(|&v| v as f64).sum::<f64>() / leader_count as f64;
+
+        // Recent result momentum: from team form (W=+1, D=0, L=-1)
+        let team = self.game.teams.iter().find(|t| Some(&t.id) == self.game.manager.team_id.as_ref());
+        let result_momentum: f64 = team
+            .map(|t| {
+                let count = t.form.len().min(5);
+                if count == 0 {
+                    return 50.0;
+                }
+                let sum: f64 = t.form.iter().rev().take(5)
+                    .map(|r| match r.as_str() { "W" => 1.0, "D" => 0.0, "L" => -1.0, _ => 0.0 })
+                    .sum();
+                ((sum + count as f64) / (count as f64 * 2.0)) * 100.0
+            })
+            .unwrap_or(50.0);
+
+        // Media pressure: count active story threads (Phase 3)
+        let media_pressure: f64 = self.game.memory_store.active_thread_count() as f64 * 5.0;
+
+        // Tactical alignment: placeholder (Phase 4 full implementation would check formation fit)
+        let tactical_alignment: f64 = 50.0;
+
+        // SquadPulse = weighted composite (see BIBLE_CURATED.md §16)
+        let squad_pulse: f64 =
+            (avg_morale * 0.25)
+          + (positive_density * 0.20)
+          + (tactical_alignment * 0.15)
+          + (result_momentum * 0.15)
+          + (leadership_stability * 0.10)
+          - (conflict_severity * 0.10)
+          - (media_pressure * 0.05);
+
+        let squad_pulse = squad_pulse.clamp(0.0, 100.0);
+
+        // Fatigue
         let ac: f64 = squad.iter().map(|p| p.condition as f64).sum::<f64>() / squad.len() as f64;
         let af: f64 = squad.iter().map(|p| p.fitness as f64).sum::<f64>() / squad.len() as f64;
         let fb = if ac<40.0||af<40.0 {"High"} else if ac<70.0||af<60.0 {"Moderate"} else {"Low"};
-        let pl = if am<35.0 {"Crushing"} else if am<55.0 {"High"} else if am<75.0 {"Moderate"} else {"Low"};
-        let mut he = ExplanationChain::new();
-        he.push(format!("SquadPulse (Phase 1 placeholder) = avg morale = {:.0}", am), Some("squad_pulse_phase1".into()));
-        let tension = self.game.relationship_graph.has_tension(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
-        let density = self.game.relationship_graph.positive_density(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
-        let conflict = self.game.relationship_graph.conflict_severity(&squad.iter().map(|p| p.id.clone()).collect::<Vec<_>>());
-        he.push(format!("Positive relationship density: {}%, Conflict severity: {}%", density, conflict), Some("squad_relationships".into()));
 
-        SquadMeaningSnapshot { squad_harmony_score:am.round() as u8,tactical_coherence_score:50,pressure_level:pl.into(),media_heat:0,dressing_room_tension_flag:tension,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:fb.into(),identity_alignment_label:"Unknown".into(),harmony_explanation:he }
+        // Pressure level
+        let pl = if squad_pulse<35.0 {"Crushing"} else if squad_pulse<55.0 {"High"} else if squad_pulse<75.0 {"Moderate"} else {"Low"};
+
+        // Tension + density
+        let tension = self.game.relationship_graph.has_tension(&squad_ids);
+        let density = positive_density as u8;
+        let conflict = conflict_severity as u8;
+
+        // Active story threads
+        let threads: Vec<String> = self.game.memory_store.active_threads()
+            .iter()
+            .map(|t| format!("{:?} ({:.0})", t.thread_type, t.momentum_score))
+            .collect();
+
+        let mut he = ExplanationChain::new();
+        he.push(format!("SquadPulse (Phase 4 full formula) = {:.1}", squad_pulse), Some("squad_pulse_phase4".into()));
+        he.push(format!("  Morale × 0.25 = {:.1} × 0.25 = {:.1}", avg_morale, avg_morale * 0.25), None);
+        he.push(format!("  Positive density × 0.20 = {:.0} × 0.20 = {:.1}", positive_density, positive_density * 0.20), None);
+        he.push(format!("  Result momentum × 0.15 = {:.0} × 0.15 = {:.1}", result_momentum, result_momentum * 0.15), None);
+        he.push(format!("  Leadership × 0.10 = {:.0} × 0.10 = {:.1}", leadership_stability, leadership_stability * 0.10), None);
+        he.push(format!("  Conflict severity × -0.10 = {:.0} × -0.10 = {:.1}", conflict_severity, -(conflict_severity * 0.10)), None);
+        he.push(format!("  Media pressure × -0.05 = {:.0} × -0.05 = {:.1}", media_pressure, -(media_pressure * 0.05)), None);
+
+        SquadMeaningSnapshot {
+            squad_harmony_score: squad_pulse.round() as u8,
+            tactical_coherence_score: tactical_alignment as u8,
+            pressure_level: pl.into(),
+            media_heat: media_pressure as u8,
+            dressing_room_tension_flag: tension,
+            emerging_story_threads: threads,
+            chemistry_hotspots: vec![],
+            fatigue_risk_band: fb.into(),
+            identity_alignment_label: "Unknown".into(),
+            harmony_explanation: he,
+        }
     }
 
     pub fn match_meaning(&self) -> MatchMeaningSnapshot {
@@ -254,11 +330,13 @@ mod tests {
         assert!(!snap.stability_label.is_empty());
     }
 
-    #[test] fn squad_snapshot_uses_morale_average() {
+    #[test] fn squad_snapshot_uses_full_squad_pulse_formula() {
         let game = make_test_game();
         let svc = InterpretationSurfaceService::new(&game);
         let snap = svc.squad_meaning();
-        assert_eq!(snap.squad_harmony_score, 80);
+        // SquadPulse = (80×0.25) + (0×0.20) + (50×0.15) + (50×0.15) + (50×0.10) - (0×0.10) - (0×0.05) = 40
+        assert_eq!(snap.squad_harmony_score, 40);
+        assert!(!snap.harmony_explanation.is_empty());
     }
 
     #[test] fn stability_label_str_matches_expected_gaffer_voice() {
