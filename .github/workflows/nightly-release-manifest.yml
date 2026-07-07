@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   publish-nightly-release-metadata:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.target_commitish == 'develop' || startsWith(github.event.release.tag_name, 'nightly-') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.target_commitish == 'main' || startsWith(github.event.release.tag_name, 'nightly-') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -53,8 +53,8 @@ jobs:
           RELEASE_MANIFEST_FILE: nightly-release-manifest.json
           RELEASE_CHECKSUMS_FILE: nightly-checksums.txt
           RELEASE_SOURCE_WORKFLOW_FILE: ${{ github.event_name == 'release' && 'nightly-tauri-action.yml' || '' }}
-          RELEASE_SOURCE_WORKFLOW_BRANCH: ${{ github.event_name == 'release' && github.event.release.target_commitish == 'develop' && 'develop' || '' }}
-          RELEASE_SOURCE_WORKFLOW_HEAD_SHA: ${{ github.event_name == 'release' && github.event.release.target_commitish != 'develop' && github.event.release.target_commitish || '' }}
+          RELEASE_SOURCE_WORKFLOW_BRANCH: ${{ github.event_name == 'release' && github.event.release.target_commitish == 'main' && 'main' || '' }}
+          RELEASE_SOURCE_WORKFLOW_HEAD_SHA: ${{ github.event_name == 'release' && github.event.release.target_commitish != 'main' && github.event.release.target_commitish || '' }}
         run: node .github/scripts/generate-release-manifest.mjs
 
       - name: Upload nightly manifest assets to release

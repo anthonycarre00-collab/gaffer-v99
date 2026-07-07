@@ -3955,5 +3955,51 @@
   "generation": {
     "title": "生成与完善",
     "coverage": "您的包涵盖"
+  },
+  "meaning": {
+    "loading": "Loading...",
+    "noPlayerSelected": "No player selected.",
+    "stability": "Stability",
+    "form": "Form",
+    "confidence": "Confidence",
+    "fatigue": "Fatigue",
+    "morale": "Morale",
+    "pressureResponse": "Pressure Response",
+    "relationships": "Relationships",
+    "closestAlly": "Closest ally:",
+    "tensionWith": "Tension with:",
+    "chemistry": "Chemistry:",
+    "clique": "Clique:",
+    "showAdvanced": "Show Advanced View",
+    "hideAdvanced": "Hide Advanced View",
+    "showBreakdown": "Show breakdown",
+    "hideBreakdown": "Hide breakdown",
+    "squadPulse": {
+      "title": "Squad Pulse",
+      "harmonyScore": "Harmony Score",
+      "pressureLevel": "Pressure Level",
+      "tensionFlag": "Dressing Room Tension",
+      "storyThreads": "Emerging Stories",
+      "fatigueRisk": "Fatigue Risk",
+      "tacticalCoherence": "Tactical Coherence",
+      "mediaHeat": "Media Heat",
+      "identityAlignment": "Identity Alignment"
+    },
+    "media": {
+      "title": "Media Pulse",
+      "activeStories": "active",
+      "topHeadline": "Top Headline",
+      "punditDisagreement": "Pundit Disagreement",
+      "bettingTrend": "Betting Sentiment",
+      "noActiveStories": "The press is quiet... for now.",
+      "disagreementActive": "Pundits split",
+      "disagreementCalm": "Consensus"
+    },
+    "pressureResponseTypes": {
+      "Thrives": "Thrives under pressure",
+      "Channels": "Channels pressure",
+      "Folds": "Folds under pressure",
+      "Escalates": "Escalates (high risk)"
+    }
   }
 }

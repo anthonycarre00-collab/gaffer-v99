@@ -9,7 +9,7 @@ on:
         type: string
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   publish-tauri-nightly:
@@ -43,13 +43,13 @@ jobs:
 
           nightly_date="$(date -u +%F)"
           short_sha="${GITHUB_SHA::7}"
-          tag="${INPUT_RELEASE_TAG:-nightly-develop-${nightly_date}-${short_sha}}"
+          tag="${INPUT_RELEASE_TAG:-nightly-main-${nightly_date}-${short_sha}}"
 
           {
             echo "tag=$tag"
             echo "release_name=Openfoot Manager Nightly"
             echo "release_body<<EOF"
-            echo "Automated nightly build from develop (${nightly_date}, ${short_sha})."
+            echo "Automated nightly build from main (${nightly_date}, ${short_sha})."
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
