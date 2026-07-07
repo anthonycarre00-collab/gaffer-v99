@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaffer — One-Click Player Scraper</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e1a;color:#cbd5e1;padding:20px;max-width:900px;margin:0 auto}
+h1{color:#22d3ee;font-size:1.5em;margin-bottom:4px}
+.subtitle{color:#64748b;font-size:.9em;margin-bottom:20px}
+.step{background:#111827;border:1px solid #1e293b;border-radius:10px;padding:16px;margin-bottom:14px}
+.step h2{color:#818cf8;font-size:1em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.step-num{background:#312e81;color:#c7d2fe;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0}
+.step p{color:#94a3b8;font-size:.85em;line-height:1.5;margin-bottom:10px}
+.step a{color:#22d3ee;text-decoration:none}
+.step a:hover{text-decoration:underline}
+textarea{width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:10px;font-family:'SF Mono',Consolas,monospace;font-size:.8em;min-height:180px;resize:vertical}
+textarea:focus{outline:none;border-color:#3b82f6}
+button{background:#2563eb;color:#fff;border:none;border-radius:6px;padding:12px 24px;font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;width:100%}
+button:hover:not(:disabled){background:#3b82f6}
+button:disabled{background:#334155;color:#64748b;cursor:not-allowed}
+button.success{background:#059669}
+button.success:hover{background:#10b981}
+.progress{background:#1e293b;border-radius:6px;height:22px;overflow:hidden;margin-top:10px;border:1px solid #334155;display:none}
+.progress.show{display:block}
+.progress-bar{height:100%;background:linear-gradient(90deg,#3b82f6,#22d3ee);transition:width .3s;color:#fff;font-size:.7em;line-height:22px;padding:0 8px;white-space:nowrap;width:0}
+.log{background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:8px;font-family:'SF Mono',Consolas,monospace;font-size:.78em;min-height:60px;max-height:180px;overflow-y:auto;margin-top:10px;color:#94a3b8}
+.log .ok{color:#10b981}.log .err{color:#ef4444}.log .warn{color:#f59e0b}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.stat{background:#1e293b;padding:8px 14px;border-radius:8px;text-align:center;border:1px solid #334155}
+.stat .num{font-size:1.4em;font-weight:700;color:#22d3ee}
+.stat .lab{color:#64748b;font-size:.7em;text-transform:uppercase;letter-spacing:.5px}
+.hint{background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;margin-top:8px;font-size:.8em;color:#94a3b8;line-height:1.5}
+.hint b{color:#e2e8f0}
+.hint code{background:#1e293b;padding:1px 5px;border-radius:3px;color:#22d3ee;font-family:monospace}
+.hidden{display:none}
+.download-link{display:inline-block;margin-top:10px;color:#10b981;font-weight:600;text-decoration:none;font-size:.9em}
+.download-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<h1>Gaffer — Player Data Scraper</h1>
+<div class="subtitle">3 steps. No installation. No Python. No terminal. Just paste and click.</div>
+
+<!-- STEP 1 -->
+<div class="step">
+<h2><span class="step-num">1</span> Open FBref and copy the table</h2>
+<p>Click this link to open the FBref Big 5 stats page, then select all the text and copy it:</p>
+<p style="margin-bottom:8px"><a href="https://fbref.com/en/comps/Big5/stats/players/Big-5-European-Leagues-Stats" target="_blank" style="font-size:1em;font-weight:600">📊 Open FBref Big 5 Stats →</a></p>
+<div class="hint">
+<b>How to copy:</b> On the FBref page, press <code>Ctrl+A</code> (select all) then <code>Ctrl+C</code> (copy).
+<br>Or: click anywhere on the stats table, press <code>Ctrl+A</code> twice (selects table first, then whole page), then <code>Ctrl+C</code>.
+<br>Don't worry about formatting — this tool handles TSV, CSV, HTML, and plain text.
+</div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step">
+<h2><span class="step-num">2</span> Paste the data here</h2>
+<p>Click in the box below and press <code>Ctrl+V</code> to paste what you copied:</p>
+<textarea id="paste-area" placeholder="Click here and press Ctrl+V to paste the FBref table data...
+
+The parser auto-detects:
+• Tab-separated (browser copy)
+• CSV (FBref export)
+• HTML table (saved page source)
+• Fixed-width columns
+
+It also handles FBref's duplicate column names (Gls, Ast, xG appear twice — once for totals, once for per-90). Only the total values are used."></textarea>
+<div class="stats" id="paste-stats" style="display:none">
+<div class="stat"><div class="num" id="line-count">0</div><div class="lab">Lines pasted</div></div>
+</div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step">
+<h2><span class="step-num">3</span> Download the player data file</h2>
+<p>Click the button. A file called <code>gaffer_players.json</code> will download automatically.</p>
+<button id="process-btn" disabled>⬇ Download Player Data</button>
+<div class="progress" id="progress"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="log hidden" id="log"></div>
+<div class="stats hidden" id="result-stats"></div>
+<a href="#" class="download-link hidden" id="download-link">⬇ Click here if download didn't start automatically</a>
+</div>
+
+<div class="hint" style="margin-top:20px">
+<b>What happens next:</b> Once you have <code>gaffer_players.json</code>, it goes into the game's data pipeline folder.
+The game's world builder converts it into the bundled world database. You only need to do this once —
+the data ships with the game forever after.
+<br><br>
+<b>Having trouble?</b> If the paste doesn't parse, try going to FBref → click the "Share & Export" button above the stats table →
+"Get table as CSV (for Excel)" → copy that CSV text → paste here. That format always works.
+</div>
+
+<script>
+// ============================================================================
+// PARSER — handles TSV, CSV, HTML, fixed-width (ported from working Python)
+// ============================================================================
+function parseTable(text){
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim();
+  if(!text)return{headers:[],rows:[],format:'none'};
+
+  // HTML table
+  if(/<table[\s>]/i.test(text))return parseHTMLTable(text);
+
+  const lines=text.split('\n').filter(l=>l.length>0);
+  if(lines.length<2)return{headers:[],rows:[],format:'none'};
+
+  // Detect delimiter
+  const tabCount=lines[0].split('\t').length;
+  const commaCount=(lines[0].match(/,/g)||[]).length;
+  const spaceCount=(lines[0].match(/\s{2,}/g)||[]).length;
+
+  let format,rows;
+  if(tabCount>=3&&tabCount>=commaCount){format='tsv';rows=lines.map(l=>l.split('\t'));}
+  else if(commaCount>=3&&commaCount>tabCount){format='csv';rows=lines.map(l=>parseCSVLine(l));}
+  else if(spaceCount>=3){format='fixed';rows=lines.map(l=>l.split(/\s{2,}/).map(x=>x.trim()).filter(x=>x.length>0));}
+  else if(tabCount>=2){format='tsv';rows=lines.map(l=>l.split('\t'));}
+  else if(commaCount>=2){format='csv';rows=lines.map(l=>parseCSVLine(l));}
+  else{format='space';rows=lines.map(l=>l.split(/\s+/).filter(x=>x.length>0));}
+
+  if(rows.length<2)return{headers:[],rows:[],format};
+
+  // Detect FBref's two-header-row structure (group headers + leaf headers)
+  const groupHints=['Playing Time','Performance','Expected','Progression','Per 90','Passing','Defense','Possession','Shooting'];
+  const looksLikeGroupHeader=row=>row.some(c=>c&&groupHints.some(g=>c.toLowerCase().includes(g.toLowerCase())));
+  const looksLikeData=row=>row.some(c=>/^\d+(\.\d+)?$/.test(c));
+
+  let headerRowIdx=0,headers;
+  if(looksLikeGroupHeader(rows[0])&&!looksLikeData(rows[0])){
+    headerRowIdx=1;
+    headers=rows[1].map(h=>(h||'').trim());
+  }else{
+    headers=rows[0].map(h=>(h||'').trim());
+  }
+  headers=headers.map(h=>h.replace(/\s+/g,' ').trim());
+
+  // De-duplicate headers (Gls, Ast, xG appear twice — keep first, suffix second with _p90)
+  const seen={};
+  const finalHeaders=headers.map((h,i)=>{
+    if(!h)return`col${i}`;
+    if(seen[h]===undefined){seen[h]=0;return h;}
+    seen[h]++;
+    if(['Gls','Ast','G+A','xG','xAG','npxG','npxG+xAG'].includes(h))return`${h}_p90`;
+    return`${h}_${seen[h]}`;
+  });
+
+  // Build player objects
+  const players=[];
+  for(let i=headerRowIdx+1;i<rows.length;i++){
+    const cells=rows[i];
+    if(!cells||cells.length<3)continue;
+    const first=cells[0]?cells[0].toString().toLowerCase():'';
+    if(first==='rk'||first==='player'||first==='')continue;
+    const p={};
+    finalHeaders.forEach((h,j)=>{
+      if(cells[j]!==undefined&&cells[j]!==null)p[h]=String(cells[j]).trim();
+    });
+    if(!p.Player||p.Player==='Player')continue;
+    players.push(p);
+  }
+  return{headers:finalHeaders,rows:players,format};
+}
+
+function parseCSVLine(line){
+  const out=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(ch===','&&!inQ){out.push(cur);cur='';}
+    else{cur+=ch;}
+  }
+  out.push(cur);
+  return out.map(x=>x.trim());
+}
+
+function parseHTMLTable(html){
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const table=doc.querySelector('#stats_standard, table.stats_table, table[id^="stats_"], table');
+  if(!table)return{headers:[],rows:[],format:'html'};
+
+  const headerRows=table.querySelectorAll('thead tr');
+  let rawHeaders=[];
+  if(headerRows.length>0){
+    const leafRow=headerRows[headerRows.length-1];
+    leafRow.querySelectorAll('th').forEach(th=>rawHeaders.push(th.textContent.trim()));
+  }
+  if(rawHeaders.length===0){
+    const firstRow=table.querySelector('tr');
+    if(firstRow)firstRow.querySelectorAll('th,td').forEach(c=>rawHeaders.push(c.textContent.trim()));
+  }
+  if(rawHeaders.length===0)return{headers:[],rows:[],format:'html'};
+
+  // De-duplicate
+  const seen={};
+  const finalHeaders=rawHeaders.map((h,i)=>{
+    if(!h)return`col${i}`;
+    if(seen[h]===undefined){seen[h]=0;return h;}
+    seen[h]++;
+    if(['Gls','Ast','G+A','xG','xAG','npxG','npxG+xAG'].includes(h))return`${h}_p90`;
+    return`${h}_${seen[h]}`;
+  });
+
+  const rows=[];
+  const bodyRows=table.querySelectorAll('tbody tr');
+  if(bodyRows.length===0){
+    const allRows=table.querySelectorAll('tr');
+    for(let i=1;i<allRows.length;i++){
+      const cells=allRows[i].querySelectorAll('td');
+      if(cells.length<3)continue;
+      const p={};
+      finalHeaders.forEach((h,j)=>{if(cells[j])p[h]=cells[j].textContent.trim();});
+      if(p.Player&&p.Player!=='Player')rows.push(p);
+    }
+  }else{
+    bodyRows.forEach(row=>{
+      const cells=row.querySelectorAll('td');
+      if(cells.length<3)return;
+      const p={};
+      finalHeaders.forEach((h,j)=>{if(cells[j])p[h]=cells[j].textContent.trim();});
+      if(!p.Player||p.Player==='Player')return;
+      rows.push(p);
+    });
+  }
+  return{headers:finalHeaders,rows,format:'html'};
+}
+
+// ============================================================================
+// PLAYER BUILDER — converts parsed row to normalized player with 19 attrs
+// ============================================================================
+function buildPlayer(p){
+  // Nation: "eng ENG" → "ENG"
+  const nat=p.Nation||'';
+  const natMatch=nat.match(/([A-Z]{3})$/);
+  const nation=natMatch?natMatch[1]:nat.trim().substring(0,3).toUpperCase();
+
+  // Position
+  const posRaw=(p.Pos||'').toUpperCase();
+  let position='MID';
+  if(posRaw.includes('GK'))position='GK';
+  else if(posRaw.includes('DF')||posRaw.includes('CB')||posRaw.includes('FB')||posRaw.includes('WB'))position='DEF';
+  else if(posRaw.includes('FW')||posRaw.includes('ST'))position='FWD';
+
+  // Minutes
+  let minutes=parseInt(String(p.Min||'').replace(/[^0-9]/g,''))||0;
+  if(!minutes){const n90=parseFloat(p['90s']||'0')||0;minutes=Math.round(n90*90);}
+
+  const goals=parseInt(p.Gls||'0')||0;
+  const assists=parseInt(p.Ast||'0')||0;
+  const xg=parseFloat(p.xG||'0')||0;
+  const xag=parseFloat(p.xAG||'0')||0;
+  const yellow=parseInt(p.CrdY||'0')||0;
+  const red=parseInt(p.CrdR||'0')||0;
+  const pk=parseInt(p.PK||'0')||0;
+  const pkatt=parseInt(p.PKatt||'0')||0;
+  const prgC=parseInt(p.PrgC||'0')||0;
+  const prgP=parseInt(p.PrgP||'0')||0;
+  const prgR=parseInt(p.PrgR||'0')||0;
+  const mp=parseInt(p.MP||'0')||0;
+  const starts=parseInt(p.Starts||'0')||0;
+  const ageStr=p.Age||'';
+  const age=parseInt(ageStr.split('-')[0])||25;
+  const born=parseInt(p.Born||'0')||(2024-age);
+  const comp=(p.Comp||'').replace(/^[a-z]{2,3}\s+/i,'').trim();
+
+  return{
+    name:p.Player,position,pos_raw:posRaw,age,born,
+    team:p.Squad||'',nation,competition:comp,
+    matches:mp,starts,minutes,ninety:(parseFloat(p['90s']||'0')||0),
+    goals,assists,xg,xag,yellow_cards:yellow,red_cards:red,
+    pk,pkatt,prg_c:prgC,prg_p:prgP,prg_r:prgR,
+    height_cm:null,weight_kg:null,market_value:null,contract_end:null,
+  };
+}
+
+// ============================================================================
+// ATTRIBUTE COMPUTATION
+// ============================================================================
+function norm99(v,min,max,inv){
+  if(max===min)return 50;
+  let n=(v-min)/(max-min);
+  if(inv)n=1-n;
+  return Math.max(1,Math.min(99,Math.round(n*99)));
+}
+
+function computeAttributes(players){
+  if(!players.length)return players;
+
+  const maxV={
+    minutes:Math.max(...players.map(p=>p.minutes),1),
+    prg_c:Math.max(...players.map(p=>p.prg_c||0),1),
+    prg_p:Math.max(...players.map(p=>p.prg_p||0),1),
+    prg_r:Math.max(...players.map(p=>p.prg_r||0),1),
+    xg:Math.max(...players.map(p=>p.xg||0),1),
+    xag:Math.max(...players.map(p=>p.xag||0),1),
+  };
+
+  for(const fb of players){
+    const pg=fb.position;
+    const isGK=pg==='GK',isDef=pg==='DEF',isFwd=pg==='FWD';
+    const n90=fb.ninety||(fb.minutes/90)||1;
+    const prgC_p90=fb.prg_c/n90,prgP_p90=fb.prg_p/n90,prgR_p90=fb.prg_r/n90;
+    const xg_p90=fb.xg/n90,xag_p90=fb.xag/n90;
+    const goals_p90=fb.goals/n90,assists_p90=fb.assists/n90;
+
+    // BODY
+    let pace=norm99(prgR_p90,0,Math.max(2,maxV.prg_r/maxV.minutes*90));
+    if(isDef)pace=Math.max(30,pace-5);if(isGK)pace=30;
+    let burst=norm99((prgC_p90+prgR_p90)/2,0,Math.max(3,(maxV.prg_c+maxV.prg_r)/maxV.minutes*90));
+    if(isGK)burst=20;
+    let engine=norm99(fb.minutes,0,maxV.minutes);
+    if(fb.matches>0&&fb.starts/fb.matches<0.5)engine=Math.max(30,engine-15);
+    const height=fb.height_cm||(isGK?190:isDef?185:180);
+    const weight=fb.weight_kg||(isGK?85:isDef?80:74);
+    const bmi=weight/Math.pow(height/100,2);
+    let power=norm99(bmi,21,26);
+    if(isDef||isGK)power=Math.min(95,power+15);if(isFwd)power=Math.min(90,power+5);
+    let agility=norm99(prgC_p90,0,Math.max(2,maxV.prg_c/maxV.minutes*90));
+    if(isGK)agility=30;
+
+    // BALL
+    let passing=norm99(prgP_p90,0,Math.max(2,maxV.prg_p/maxV.minutes*90));
+    if(isFwd)passing=Math.max(30,passing-10);
+    let distribution=norm99(fb.prg_p,0,maxV.prg_p);
+    if(isGK)distribution=Math.max(20,distribution-10);if(isFwd)distribution=Math.max(25,distribution-15);
+    let touch=norm99(prgC_p90,0,Math.max(2,maxV.prg_c/maxV.minutes*90));
+    if(isGK)touch=25;if(isDef)touch=Math.max(30,touch-5);
+
+    let finishing;
+    if(fb.xg>2)finishing=norm99(fb.goals/fb.xg,0.5,1.5);
+    else if(fb.goals>0)finishing=norm99(fb.goals/Math.max(1,fb.xg),0,2);
+    else finishing=isFwd?45:isMid?35:isDef?20:15;
+    if(isGK)finishing=15;
+    if(fb.pkatt>0)finishing=Math.round(finishing*0.7+norm99(fb.pk/fb.pkatt,0.5,1.0)*0.3);
+
+    let defending;
+    if(isDef)defending=Math.min(99,Math.max(50,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)+20));
+    else if(isMid)defending=Math.min(70,Math.max(25,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)+5));
+    else if(isFwd)defending=Math.min(40,Math.max(10,norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)-15));
+    else defending=15;
+
+    let aerial;
+    if(fb.height_cm){aerial=norm99(fb.height_cm,170,200);if(isDef||isGK)aerial=Math.min(95,aerial+15);if(isFwd)aerial=Math.min(85,aerial+5);}
+    else{if(isDef||isGK)aerial=70;else if(isFwd)aerial=55;else aerial=45;}
+
+    // HEAD
+    let anticipation=Math.max(30,norm99(xag_p90,0,Math.max(0.5,maxV.xag/maxV.minutes*90)));
+    if(isGK)anticipation=Math.max(50,norm99(fb.minutes,0,maxV.minutes));
+    let vision=Math.max(30,norm99(xag_p90,0,Math.max(0.5,maxV.xag/maxV.minutes*90)));
+    if(isFwd)vision=Math.max(30,vision-5);if(isGK)vision=30;
+    let decisions;
+    if(fb.xg>0&&fb.xag>0)decisions=norm99((fb.xag+fb.xg)/n90,0,1.5);
+    else if(fb.xg>0||fb.xag>0)decisions=40;
+    else decisions=50;
+    decisions=Math.max(30,decisions);
+    if(isGK)decisions=50;if(isDef)decisions=Math.max(40,decisions);
+    if(fb.yellow_cards+fb.red_cards*3>10)decisions=Math.max(25,decisions-15);
+    let composure;
+    if(fb.xg>2)composure=norm99(fb.goals/fb.xg,0.5,1.5);else composure=50;
+    if(fb.pkatt>0)composure=Math.round(composure*0.6+norm99(fb.pk/fb.pkatt,0.5,1.0)*0.4);
+    if(fb.red_cards>0)composure=Math.max(20,composure-15);
+    if(isGK)composure=norm99(fb.minutes,0,maxV.minutes);
+    let leadership;
+    if(fb.matches>0){leadership=norm99(fb.starts/fb.matches,0.3,1.0);leadership=Math.max(20,Math.min(99,leadership+norm99(fb.minutes,0,maxV.minutes)*0.3));}
+    else leadership=30;
+    if(isGK)leadership=Math.min(99,leadership+10);
+
+    // GLOVES
+    let shot_stopping=isGK?Math.min(99,Math.max(55,norm99(fb.minutes,0,maxV.minutes)+30)):15;
+    let commanding=isGK?Math.min(99,Math.max(45,60)):20;
+    let playing_out=isGK?Math.max(25,norm99(prgP_p90,0,Math.max(2,maxV.prg_p/maxV.minutes*90))):25;
+    if(!isGK){shot_stopping=15;commanding=20;playing_out=25;}
+
+    const attrs={pace,burst,engine,power,agility,passing,distribution,touch,finishing,defending,aerial,anticipation,vision,decisions,composure,leadership,shot_stopping,commanding,playing_out};
+    const ovr=Math.round(Object.values(attrs).reduce((a,b)=>a+b,0)/19);
+
+    // PERSONALITY
+    const cardsPer90=(fb.yellow_cards+fb.red_cards*2)/n90;
+    let openness=norm99(prgC_p90+goals_p90*0.5,0,3);
+    openness=Math.max(20,Math.min(95,openness+10));
+    let conscientiousness=norm99(cardsPer90,0.5,0.05,true);
+    conscientiousness=Math.max(25,Math.min(95,conscientiousness+norm99(fb.minutes,maxV.minutes*0.3,maxV.minutes)*0.2));
+    const involvement=prgC_p90+prgP_p90+prgR_p90;
+    let extraversion=norm99(involvement,0,5);
+    extraversion=Math.max(30,Math.min(95,extraversion*0.5+norm99(fb.minutes,0,maxV.minutes)*0.5));
+    const totalGA=fb.goals+fb.assists;
+    let agreeableness=totalGA>3?norm99(fb.assists/totalGA,0,0.7):50;
+    if(cardsPer90>0.3)agreeableness=Math.max(20,agreeableness-15);
+    let neuroticism=20;
+    if(fb.red_cards>0)neuroticism+=fb.red_cards*15;
+    if(fb.pkatt>0&&fb.pk<fb.pkatt)neuroticism+=(fb.pkatt-fb.pk)*5;
+    if(fb.xg>5&&fb.goals<fb.xg*0.7)neuroticism+=15;
+    neuroticism=Math.max(10,Math.min(95,neuroticism));
+
+    const personality={openness,conscientiousness,extraversion,agreeableness,neuroticism,confidence:100};
+
+    // TRAITS
+    const traits=[];
+    if(attrs.defending>=75&&attrs.engine>=75)traits.push('PressingAnchor');
+    if(attrs.passing>=80&&attrs.distribution>=75)traits.push('TempoConductor');
+    if(attrs.touch>=80&&attrs.pace>=75&&pg==='FWD')traits.push('ChaosWinger');
+    if(attrs.defending>=80&&attrs.aerial>=70)traits.push('DefensiveWall');
+    if(attrs.pace>=80&&attrs.finishing>=70)traits.push('CounterKiller');
+    if(personality.extraversion>=70&&personality.neuroticism<50)traits.push('BigGameResponder');
+    if(personality.neuroticism>=70)traits.push('MediaSensitive');
+    if(personality.neuroticism<=30&&attrs.composure>=75)traits.push('IceCold');
+    const finalTraits=traits.slice(0,3);
+
+    // Build final record
+    fb.attributes=attrs;
+    fb.personality=personality;
+    fb.narrative_traits=finalTraits;
+    fb.stability_modifier=50;
+    fb.ovr=ovr;
+    fb.potential=Math.min(99,Math.max(attrs.pace,attrs.finishing,attrs.defending,attrs.passing)+5);
+    fb.id='p_'+fb.name.toLowerCase().replace(/[^a-z0-9]/g,'_');
+    fb.match_name=fb.name;
+    fb.full_name=fb.name;
+    fb.date_of_birth=`${fb.born}-01-01`;
+    fb.nationality=fb.nation;
+    fb.market_value=fb.market_value||ovr*1000000;
+    fb.contract_end=fb.contract_end||'2028-06-30';
+    fb.wage=ovr*1000;
+  }
+  return players;
+}
+
+// ============================================================================
+// RELATIONSHIPS
+// ============================================================================
+function computeRelationships(players){
+  const relationships=[];
+  const byTeam={};
+  for(const p of players){const t=p.team;if(!byTeam[t])byTeam[t]=[];byTeam[t].push(p);}
+  for(const[team,tp]of Object.entries(byTeam)){
+    if(!team)continue;
+    for(let i=0;i<tp.length;i++){
+      for(let j=i+1;j<tp.length;j++){
+        let s=40;
+        if(tp[i].nationality===tp[j].nationality)s+=20;
+        if(Math.abs(tp[i].age-tp[j].age)<=3)s+=10;
+        s+=Math.floor(Math.random()*31)-15;
+        s=Math.max(-30,Math.min(95,s));
+        relationships.push({player_a:tp[i].id,player_b:tp[j].id,strength:s,volatility:0.3});
+      }
+    }
+  }
+  return relationships;
+}
+
+// ============================================================================
+// UI WIRING
+// ============================================================================
+const $=id=>document.getElementById(id);
+const pasteArea=$('paste-area');
+const processBtn=$('process-btn');
+const log=$('log');
+const progressBar=$('progress-bar');
+const progress=$('progress');
+const resultStats=$('result-stats');
+const downloadLink=$('download-link');
+
+function logMsg(msg,type='info'){
+  const t=new Date().toLocaleTimeString();
+  log.innerHTML+=`<div class="${type}">[${t}] ${msg}</div>`;
+  log.scrollTop=log.scrollHeight;
+  log.classList.remove('hidden');
+}
+
+function setProgress(pct,text){
+  progressBar.style.width=pct+'%';
+  progressBar.textContent=text||pct+'%';
+  if(pct>=100)progressBar.classList.add('ok');
+}
+
+// Track paste content
+pasteArea.addEventListener('input',()=>{
+  const lines=pasteArea.value.split('\n').filter(l=>l.trim()).length;
+  $('line-count').textContent=lines;
+  $('paste-stats').style.display='flex';
+  processBtn.disabled=pasteArea.value.trim().length===0;
+});
+
+// Process button
+processBtn.addEventListener('click',()=>{
+  const text=pasteArea.value.trim();
+  if(!text){logMsg('Paste some data first!','err');return;}
+
+  progress.classList.add('show');
+  log.innerHTML='';
+  log.classList.remove('hidden');
+  resultStats.classList.add('hidden');
+  downloadLink.classList.add('hidden');
+  setProgress(10,'Parsing...');
+
+  setTimeout(()=>{
+    try{
+      logMsg(`Parsing pasted data (${text.length.toLocaleString()} chars)...`);
+      const{headers,rows,format}=parseTable(text);
+      logMsg(`Detected ${format.toUpperCase()} format, ${headers.length} columns, ${rows.length} rows`,'ok');
+
+      if(rows.length===0){
+        logMsg('No player rows found. Try the "Get table as CSV" option on FBref.','err');
+        setProgress(0,'Failed');
+        return;
+      }
+
+      setProgress(40,'Building players...');
+      const players=rows.map(buildPlayer).filter(p=>p&&p.name);
+      logMsg(`Built ${players.length} player records`);
+
+      setProgress(60,'Computing attributes...');
+      computeAttributes(players);
+      const avgOvr=Math.round(players.reduce((s,p)=>s+p.ovr,0)/players.length);
+      logMsg(`Average OVR: ${avgOvr}`,'ok');
+
+      setProgress(80,'Computing relationships...');
+      const relationships=computeRelationships(players);
+      logMsg(`Generated ${relationships.length} relationships`);
+
+      setProgress(95,'Building output...');
+      const output={
+        name:'Gaffer Player Database',
+        description:`Real player data (${players.length} players, source: paste)`,
+        version:3,
+        generated:new Date().toISOString(),
+        source:'paste',
+        players,
+        relationships,
+      };
+
+      const blob=new Blob([JSON.stringify(output,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      a.download='gaffer_players.json';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      downloadLink.href=url;
+      downloadLink.download='gaffer_players.json';
+      downloadLink.classList.remove('hidden');
+
+      setProgress(100,`Done — ${players.length} players`);
+      logMsg(`Downloaded gaffer_players.json (${players.length} players, ${relationships.length} relationships)`,'ok');
+
+      // Show result stats
+      const posCounts={};
+      players.forEach(p=>{posCounts[p.position]=(posCounts[p.position]||0)+1;});
+      const teams=new Set(players.map(p=>p.team));
+      resultStats.innerHTML=`
+        <div class="stat"><div class="num">${players.length}</div><div class="lab">Players</div></div>
+        <div class="stat"><div class="num">${teams.size}</div><div class="lab">Teams</div></div>
+        <div class="stat"><div class="num">${relationships.length}</div><div class="lab">Relationships</div></div>
+        <div class="stat"><div class="num">${avgOvr}</div><div class="lab">Avg OVR</div></div>
+      `;
+      resultStats.classList.remove('hidden');
+
+      processBtn.textContent='✓ Done — Download again';
+      processBtn.classList.add('success');
+    }catch(e){
+      logMsg(`ERROR: ${e.message}`,'err');
+      setProgress(0,'Failed');
+      console.error(e);
+    }
+  },100);
+});
+</script>
+</body>
+</html>
