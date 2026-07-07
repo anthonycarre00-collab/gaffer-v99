@@ -8,7 +8,7 @@ The game ships as a **desktop app with a fully populated world database**:
 - Each season: regens replace retiring players (world continues forever)
 - Save files persist the user's career indefinitely
 
-## Current Status (as of Phase 9)
+## Current Status (as of Phase 9 — COMPLETE)
 
 | Phase | Status | Description |
 |-------|--------|-------------|
@@ -31,6 +31,46 @@ The game ships as a **desktop app with a fully populated world database**:
 - 0 TypeScript errors (was 21 pre-existing upstream)
 - 0 `unimplemented!()` / `todo!()` / FIXME markers
 - All 4 Rust library crates build successfully
+
+## NEXT: Grand Plan — UI Overhaul + Desktop Build + Expand
+
+See: `docs/gaffer/GRAND_PLAN_UI_BUILD_EXPAND.md` (comprehensive, 300+ lines)
+
+### Execution Order
+
+```
+Phase A (1-2 days)  — Build + verify the desktop executable (USER runs npm run tauri dev)
+Phase B (10-14 days) — Full UI overhaul: logos, colors, screens, icons, everything
+Phase C (ongoing)    — Expand functionality: transfers, youth academy UI, match day, etc.
+```
+
+### Phase A: Desktop Build Verification (USER ACTION REQUIRED)
+1. Install Node.js (https://nodejs.org, LTS version)
+2. Install Rust (https://rustup.rs)
+3. Install system libs (Windows: VS C++ Build Tools; Mac: Xcode CLI; Linux: webkit2gtk)
+4. Clone repo: `git clone https://github.com/anthonycarre00-collab/gaffer.git`
+5. Run: `cd gaffer && npm install && npm run tauri dev`
+6. Report what happens (works / error / screenshot)
+
+### Phase B: Full UI Overhaul (10 sub-phases)
+- B.1: Design foundation (Pitch Green #2D5A3D, Brass #B8924A, Mahogany #7A2E1F, IBM Plex Mono, Source Serif 4)
+- B.2: Logo + brand identity (Gaffer wordmark, app icon, splash screen)
+- B.3: Custom icon system (30+ Gaffer-specific SVG icons, replacing lucide-react)
+- B.4: Core layout shell (masthead, sidebar, utility bar)
+- B.5: Home dashboard ("Manager's Desk" with SquadPulse strip)
+- B.6: Player Detail ("Scouting Dossier" with hex attribute cluster)
+- B.7: Match Day ("The Dugout at 7:45pm" with live commentary feed)
+- B.8: Secondary screens (Squad clipboard, Training whiteboard, Scouting cork board, Transfers newspaper)
+- B.9: Component polish pass (buttons, cards, tables, forms, badges)
+- B.10: Dark mode + theme system
+
+### Phase C: Expand Functionality (priority order)
+- C.1: Transfer AI (3 days)
+- C.2: Youth Academy UI (2 days)
+- C.3: Match Day Experience (4 days)
+- C.4: Manager Career Progression (3 days)
+- C.5: Team Finances UI (2 days)
+- C.6: International Management (5 days, stretch)
 
 ## Architecture Audit Findings (post-Phase 7)
 
