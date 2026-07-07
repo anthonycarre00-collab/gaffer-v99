@@ -302,6 +302,7 @@ def enrich_with_wikidata(players, rate_limit=1.0):
 
 
 def norm99(value, min_val, max_val, invert=False):
+    """Normalize a value to 1-99 scale using ABSOLUTE benchmarks (not dataset-relative)."""
     if max_val == min_val:
         return 50
     normalized = (value - min_val) / (max_val - min_val)
@@ -311,24 +312,22 @@ def norm99(value, min_val, max_val, invert=False):
 
 
 def compute_gaffer_attributes(players):
-    """Compute 19 Gaffer attributes + Big Five personality from real stats."""
+    """Compute 19 Gaffer attributes + Big Five personality from real stats.
+
+    Uses ABSOLUTE football benchmarks (not dataset-relative) so that:
+    - Elite players (Haaland, Kane) → OVR 80-90
+    - Good players (Saka, Salah) → OVR 70-80
+    - Average starters → OVR 55-65
+    - Bench players → OVR 40-55
+    - Squad fillers → OVR 30-45
+
+    OVR is POSITION-WEIGHTED — outfield players don't get dragged down
+    by their 15 in shot_stopping.
+    """
     print(f"\n[4/4] Computing 19 Gaffer attributes + personality...")
 
     if not players:
         return players
-
-    # Compute maxima for normalization
-    maxV = {
-        'minutes': max(p['minutes'] for p in players) or 1,
-        'tackles': max(p['tackles'] for p in players) or 1,
-        'interceptions': max(p['interceptions'] for p in players) or 1,
-        'passes_attempted': max(p['passes_attempted'] for p in players) or 1,
-        'passes_progressive_distance': max(p['passes_progressive_distance'] for p in players) or 1,
-        'passes_into_final_third': max(p['passes_into_final_third'] for p in players) or 1,
-        'shots': max(p['shots'] for p in players) or 1,
-        'goals': max(p['goals'] for p in players) or 1,
-        'assists': max(p['assists'] for p in players) or 1,
-    }
 
     for fb in players:
         pg = fb['position']
@@ -346,146 +345,194 @@ def compute_gaffer_attributes(players):
             (fb['passes_completed'] / fb['passes_attempted'] * 100) if fb['passes_attempted'] > 0 else 75
         )
 
-        # Use shots_on_target_pct as a proxy for technical quality when available
+        # Shots on target %
         sot_pct = (fb['shots_on_target'] / fb['shots'] * 100) if fb['shots'] > 0 else 0
 
-        # Progressive actions per 90 (creativity/attacking intent proxy)
+        # Progressive actions per 90
         prog_actions = (fb['passes_into_final_third'] or 0) + (fb['passes_into_penalty_area'] or 0)
         prog_p90 = prog_actions / n90 if prog_actions else 0
 
-        # ----- BODY -----
-        # Pace: use shots_per90 as proxy for forwards (fast players shoot more),
-        # progressive actions for midfielders, minutes for defenders
-        if is_fwd:
-            pace = norm99(fb['shots'] / n90, 1, 5)
-        elif is_mid:
-            pace = norm99(prog_p90, 0, 5)
-        else:
-            pace = norm99(fb['minutes'], maxV['minutes'] * 0.3, maxV['minutes'])
-        pace = max(35, min(99, pace + 20))  # boost — pro athletes are fast
-        if is_gk: pace = 30
+        # Defensive actions per 90
+        def_actions = ((fb['tackles'] or fb['tackles_won'] or 0) + fb['interceptions']) / n90
 
-        burst = pace  # similar
-        if is_gk: burst = 20
-
-        engine = norm99(fb['minutes'], 0, maxV['minutes'])
-        if fb['matches'] > 0 and fb['starts'] / fb['matches'] < 0.5:
-            engine = max(30, engine - 15)
-        engine = max(40, engine)  # floor — even bench players are fit
-
-        # Power from height/weight if available
+        # Height/weight (from Wikidata if available, else position defaults)
         height = fb.get('height_cm') or (190 if is_gk else 185 if is_def else 180)
         weight = fb.get('weight_kg') or (85 if is_gk else 80 if is_def else 74 if is_mid else 76)
+
+        # ===== BASE OVR — anchors all attributes =====
+        # Start from minutes played (regulars are better players)
+        base_ovr = norm99(fb['minutes'], 200, 3400)  # 200min→1, 3400min→99
+        base_ovr = max(35, min(75, base_ovr))  # clamp to 35-75 range
+
+        # Boost for attacking output (goals + assists)
+        ga = fb['goals'] + fb['assists']
+        if ga >= 25: base_ovr = max(base_ovr, 78)
+        elif ga >= 20: base_ovr = max(base_ovr, 75)
+        elif ga >= 15: base_ovr = max(base_ovr, 72)
+        elif ga >= 10: base_ovr = max(base_ovr, 68)
+        elif ga >= 6: base_ovr = max(base_ovr, 63)
+        elif ga >= 3: base_ovr = max(base_ovr, 58)
+
+        # Boost for defensive output (tackles + interceptions per 90)
+        if is_def or is_mid:
+            if def_actions >= 7: base_ovr = max(base_ovr, 72)
+            elif def_actions >= 5: base_ovr = max(base_ovr, 68)
+            elif def_actions >= 3: base_ovr = max(base_ovr, 62)
+
+        # Boost for passing quality
+        if pass_pct >= 88: base_ovr = max(base_ovr, 70)
+        elif pass_pct >= 85: base_ovr = max(base_ovr, 65)
+
+        # GK boost from clean sheets
+        if is_gk and fb.get('gk_clean_sheets', 0) >= 10:
+            base_ovr = max(base_ovr, 72)
+        elif is_gk and fb.get('gk_clean_sheets', 0) >= 5:
+            base_ovr = max(base_ovr, 65)
+
+        # ===== BODY (5 attrs) =====
+        # Pace: not directly measurable from FBref standard stats.
+        # Proxy: base 55-70 from minutes, boost for forwards who score a lot.
+        pace = 55 + (base_ovr - 50) * 0.3  # center around base_ovr
+        if is_fwd and fb['goals'] >= 15: pace = max(pace, 80)
+        elif is_fwd and fb['goals'] >= 10: pace = max(pace, 75)
+        elif is_fwd and fb['goals'] >= 5: pace = max(pace, 70)
+        if is_gk: pace = 30
+        if is_def: pace = min(pace, 75)  # defenders slower on average
+        pace = max(40, min(95, int(pace)))
+
+        burst = pace - 5  # burst slightly lower than pace
+        burst = max(35, burst)
+
+        engine = norm99(fb['minutes'], 200, 3400)  # absolute benchmark
+        engine = max(40, min(90, engine + 20))  # shift up — pros are fit
+
         bmi = weight / ((height / 100) ** 2)
         power = norm99(bmi, 21, 26)
-        if is_def or is_gk: power = min(95, power + 15)
-        if is_fwd: power = min(90, power + 5)
-        power = max(40, power)
+        if is_def or is_gk: power = min(95, power + 20)
+        if is_fwd: power = min(90, power + 10)
+        power = max(45, power)
 
-        agility = norm99(sot_pct, 20, 60) if sot_pct > 0 else 50
-        if is_gk: agility = 30
-        agility = max(35, agility)
+        agility = 50 + (base_ovr - 50) * 0.3
+        if sot_pct > 0: agility = max(agility, norm99(sot_pct, 20, 55))
+        if is_gk: agility = 35
+        agility = max(40, min(90, int(agility)))
 
-        # ----- BALL -----
-        passing = norm99(pass_pct, 65, 90)
-        if is_fwd: passing = max(40, passing - 5)
-        passing = max(40, passing)
+        # ===== BALL (6 attrs) =====
+        passing = norm99(pass_pct, 65, 92)  # absolute: 65%→1, 92%→99
+        passing = max(45, min(90, passing + 10))  # shift up
+        if is_fwd: passing = max(45, passing - 5)
 
-        distribution = norm99(fb['passes_attempted'], 0, maxV['passes_attempted']) if fb['passes_attempted'] > 0 else 50
-        if is_gk: distribution = max(30, distribution)
-        if is_fwd: distribution = max(30, distribution)
-        distribution = max(35, distribution)
+        distribution = norm99(fb['passes_attempted'], 100, 2500) if fb['passes_attempted'] > 0 else 50
+        distribution = max(40, min(88, distribution + 10))
+        if is_gk: distribution = max(35, distribution - 5)
 
-        touch = norm99(sot_pct, 20, 60) if sot_pct > 0 else norm99(prog_p90, 0, 5)
+        touch = 50 + (base_ovr - 50) * 0.4
+        if sot_pct > 0: touch = max(touch, norm99(sot_pct, 20, 55) + 10)
+        if prog_p90 > 0: touch = max(touch, min(88, norm99(prog_p90, 0, 8) + 30))
         if is_gk: touch = 25
-        if is_def: touch = max(35, touch)
-        touch = max(35, touch)
+        touch = max(40, min(88, int(touch)))
 
-        # Finishing from goals/shots ratio — the key stat
+        # Finishing: the key stat — goals per shot
         if fb['shots'] > 5:
-            # goals_per_shot ranges from ~0.03 (poor) to ~0.20 (elite)
-            finishing = norm99(fb['goals'] / fb['shots'], 0.03, 0.20)
-        elif fb['goals'] > 3:
-            finishing = norm99(fb['goals'], 3, maxV['goals'])
+            finishing = norm99(fb['goals'] / fb['shots'], 0.03, 0.25)
+        elif fb['goals'] > 0:
+            finishing = norm99(fb['goals'], 1, 30)
         else:
-            finishing = 45 if is_fwd else 35 if is_mid else 20 if is_def else 15
-        # Forwards who score a lot get boosted
-        if is_fwd and fb['goals'] >= 15:
-            finishing = max(finishing, 80)
-        elif is_fwd and fb['goals'] >= 10:
-            finishing = max(finishing, 70)
-        elif is_fwd and fb['goals'] >= 5:
-            finishing = max(finishing, 60)
-        # Defenders/midfielders don't get finishing boosts from a few goals
-        if is_def:
-            finishing = min(45, finishing)
-        elif is_mid and not is_fwd:
-            finishing = min(55, finishing)
-        if is_gk: finishing = 15
-        if fb['pkatt'] > 0:
-            finishing = round(finishing * 0.7 + norm99(fb['pk'] / fb['pkatt'], 0.5, 1.0) * 0.3)
+            finishing = 40 if is_fwd else 30 if is_mid else 20 if is_def else 15
 
-        # Defending from tackles + interceptions
-        defending_raw = (fb['tackles'] or fb['tackles_won'] or 0) + fb['interceptions']
+        # Major boosts for prolific scorers
+        if is_fwd and fb['goals'] >= 20: finishing = max(finishing, 88)
+        elif is_fwd and fb['goals'] >= 15: finishing = max(finishing, 82)
+        elif is_fwd and fb['goals'] >= 10: finishing = max(finishing, 75)
+        elif is_fwd and fb['goals'] >= 5: finishing = max(finishing, 65)
+        elif is_mid and fb['goals'] >= 10: finishing = max(finishing, 70)
+        elif is_mid and fb['goals'] >= 5: finishing = max(finishing, 60)
+
+        # Caps for non-attackers
+        if is_def: finishing = min(45, finishing)
+        elif is_mid and not is_fwd: finishing = min(65, finishing)
+        if is_gk: finishing = 15
+        # Hard cap — nobody is a perfect 99 finisher
+        finishing = min(92, finishing)
+
+        # Penalty conversion bonus
+        if fb['pkatt'] > 0:
+            pk_rate = fb['pk'] / fb['pkatt']
+            finishing = round(finishing * 0.7 + norm99(pk_rate, 0.5, 1.0) * 0.3)
+
+        # Defending: tackles + interceptions per 90
         if is_def:
-            defending = min(99, max(55, norm99(defending_raw, 0, maxV['tackles'] + maxV['interceptions']) + 25))
+            defending = norm99(def_actions, 2, 9)  # absolute: 2/90→1, 9/90→99
+            defending = max(60, min(92, defending + 25))  # shift up for defenders
         elif is_mid:
-            defending = min(75, max(35, norm99(defending_raw, 0, maxV['tackles'] + maxV['interceptions']) + 10))
+            defending = norm99(def_actions, 1, 7)
+            defending = max(40, min(75, defending + 15))
         elif is_fwd:
-            defending = min(45, max(15, norm99(defending_raw, 0, maxV['tackles'] + maxV['interceptions'])))
+            defending = norm99(def_actions, 0, 5)
+            defending = max(15, min(45, defending))
         else:
             defending = 15
 
-        # Aerial from height
-        if fb.get('height_cm'):
-            aerial = norm99(fb['height_cm'], 170, 200)
-            if is_def or is_gk: aerial = min(95, aerial + 15)
-            if is_fwd: aerial = min(85, aerial + 5)
+        # Aerial from height (absolute)
+        aerial = norm99(height, 168, 198)
+        if is_def or is_gk: aerial = min(95, aerial + 20)
+        if is_fwd: aerial = min(85, aerial + 10)
+        aerial = max(40, aerial)
+
+        # ===== HEAD (5 attrs) =====
+        anticipation = 50 + (base_ovr - 50) * 0.3
+        if fb['interceptions'] > 0:
+            anticipation = max(anticipation, norm99(fb['interceptions'] / n90, 0, 4) + 30)
+        if is_gk: anticipation = max(55, norm99(fb['minutes'], 200, 3400) + 20)
+        anticipation = max(45, min(88, int(anticipation)))
+
+        vision = 50 + (base_ovr - 50) * 0.4
+        if prog_p90 > 0:
+            vision = max(vision, min(88, norm99(prog_p90, 0, 8) + 35))
+        if fb['assists'] >= 10: vision = max(vision, 80)
+        elif fb['assists'] >= 5: vision = max(vision, 72)
+        if is_fwd: vision = max(45, vision - 5)
+        if is_gk: vision = 35
+        vision = max(45, min(88, int(vision)))
+
+        decisions = norm99(pass_pct, 65, 92)
+        decisions = max(45, min(85, decisions + 10))
+        if is_gk: decisions = 60
+        if fb['yellow_cards'] + fb['red_cards'] * 3 > 12:
+            decisions = max(35, decisions - 10)
+
+        # Composure from goals/shots ratio + penalty conversion
+        if fb['shots'] > 10:
+            composure = norm99(fb['goals'] / fb['shots'], 0.03, 0.25)
+        elif fb['goals'] > 0:
+            composure = norm99(fb['goals'], 1, 30)
         else:
-            aerial = 70 if (is_def or is_gk) else 55 if is_fwd else 45
-
-        # ----- HEAD -----
-        anticipation = max(40, norm99(fb['interceptions'], 0, maxV['interceptions']) if fb['interceptions'] else 50)
-        if is_gk: anticipation = max(55, norm99(fb['minutes'], 0, maxV['minutes']))
-
-        vision = max(40, norm99(prog_p90, 0, 5) if prog_p90 else 50)
-        if is_fwd: vision = max(35, vision - 5)
-        if is_gk: vision = 30
-
-        decisions = norm99(pass_pct, 65, 90)
-        decisions = max(40, decisions)
-        if is_gk: decisions = 55
-        if is_def: decisions = max(45, decisions)
-        if fb['yellow_cards'] + fb['red_cards'] * 3 > 10:
-            decisions = max(30, decisions - 15)
-
-        # Composure from goals vs expectations
-        if fb['shots'] > 10 and fb['goals'] >= 0:
-            composure = norm99(fb['goals'] / fb['shots'], 0.03, 0.20)
-        elif fb['goals'] > 3:
-            composure = norm99(fb['goals'], 3, maxV['goals'])
-        else:
-            composure = 50
+            composure = 50 + (base_ovr - 50) * 0.2
         if fb['pkatt'] > 0:
             composure = round(composure * 0.6 + norm99(fb['pk'] / fb['pkatt'], 0.5, 1.0) * 0.4)
-        if fb['red_cards'] > 0: composure = max(25, composure - 15)
-        if is_gk: composure = norm99(fb['minutes'], 0, maxV['minutes'])
-        composure = max(40, composure)
+        if fb['red_cards'] > 0: composure = max(30, composure - 10)
+        if is_gk: composure = max(55, norm99(fb['minutes'], 200, 3400) + 20)
+        composure = max(45, min(88, composure))
 
         if fb['matches'] > 0:
-            leadership = norm99(fb['starts'] / fb['matches'], 0.3, 1.0)
-            leadership = max(30, min(99, leadership + norm99(fb['minutes'], 0, maxV['minutes']) * 0.3))
+            leadership = norm99(fb['starts'] / fb['matches'], 0.2, 1.0)
+            leadership = max(40, min(85, leadership + 25))
         else:
-            leadership = 35
-        if is_gk: leadership = min(99, leadership + 10)
+            leadership = 40
+        if is_gk: leadership = min(88, leadership + 8)
+        if fb['minutes'] >= 2500: leadership = max(leadership, 65)  # regulars lead
 
-        # ----- GLOVES -----
+        # ===== GLOVES (3 attrs, GK only) =====
         if is_gk:
             gk_save_pct = fb.get('gk_save_pct', 0)
-            shot_stopping = norm99(gk_save_pct, 50, 85) if gk_save_pct > 0 else norm99(fb['minutes'], 0, maxV['minutes'])
-            shot_stopping = min(99, max(60, shot_stopping + 30))
-            commanding = min(99, max(50, 65 + (norm99(fb['gk_clean_sheets'], 0, 20) if fb['gk_clean_sheets'] else 0) // 2))
-            playing_out = max(35, distribution)
+            if gk_save_pct > 0:
+                shot_stopping = norm99(gk_save_pct, 55, 82)
+                shot_stopping = max(60, min(90, shot_stopping + 20))
+            else:
+                shot_stopping = max(60, norm99(fb['minutes'], 200, 3400) + 25)
+            cs = fb.get('gk_clean_sheets', 0)
+            commanding = max(50, min(85, 55 + cs * 2))
+            playing_out = max(40, min(75, distribution))
         else:
             shot_stopping = 15
             commanding = 20
@@ -499,21 +546,43 @@ def compute_gaffer_attributes(players):
             'composure': composure, 'leadership': leadership,
             'shot_stopping': shot_stopping, 'commanding': commanding, 'playing_out': playing_out,
         }
-        ovr = round(sum(attrs.values()) / 19)
 
-        # ----- PERSONALITY -----
+        # ===== POSITION-WEIGHTED OVR =====
+        # Only average the RELEVANT attributes for each position
+        if is_gk:
+            ovr_attrs = [attrs['shot_stopping'], attrs['commanding'], attrs['playing_out'],
+                        attrs['composure'], attrs['leadership'], attrs['anticipation']]
+        elif is_def:
+            ovr_attrs = [attrs['defending'], attrs['aerial'], attrs['power'],
+                        attrs['anticipation'], attrs['pace'], attrs['composure'],
+                        attrs['decisions'], attrs['passing']]
+        elif is_mid:
+            ovr_attrs = [attrs['passing'], attrs['distribution'], attrs['vision'],
+                        attrs['engine'], attrs['decisions'], attrs['composure'],
+                        attrs['touch'], attrs['defending']]
+        else:  # FWD
+            ovr_attrs = [attrs['finishing'], attrs['touch'], attrs['pace'],
+                        attrs['composure'], attrs['aerial'], attrs['agility'],
+                        attrs['vision']]
+        ovr = round(sum(ovr_attrs) / len(ovr_attrs))
+
+        # Final OVR adjustment — blend with base_ovr for stability
+        ovr = round(ovr * 0.7 + base_ovr * 0.3)
+        ovr = max(30, min(92, ovr))
+
+        # ===== PERSONALITY =====
         cards_per90 = (fb['yellow_cards'] + fb['red_cards'] * 2) / n90
-        openness = max(20, min(95, norm99(prog_p90 + goals_p90 * 0.5, 0, 3) + 10))
-        conscientiousness = max(25, min(95, norm99(cards_per90, 0.5, 0.05, invert=True) + norm99(fb['minutes'], maxV['minutes'] * 0.3, maxV['minutes']) * 0.2))
-        extraversion = max(30, min(95, norm99(prog_p90, 0, 5) * 0.5 + norm99(fb['minutes'], 0, maxV['minutes']) * 0.5))
+        openness = max(25, min(90, 50 + int(prog_p90 * 5) + int(goals_p90 * 10)))
+        conscientiousness = max(25, min(90, 70 - int(cards_per90 * 30) + (10 if fb['minutes'] > 2000 else 0)))
+        extraversion = max(30, min(90, 50 + int((prog_p90 + goals_p90 + assists_p90) * 8) + int(fb['minutes'] / 100)))
         total_ga = fb['goals'] + fb['assists']
         agreeableness = norm99(fb['assists'] / total_ga, 0, 0.7) if total_ga > 3 else 50
-        if cards_per90 > 0.3: agreeableness = max(20, agreeableness - 15)
+        agreeableness = max(30, min(85, agreeableness + 20))
+        if cards_per90 > 0.3: agreeableness = max(25, agreeableness - 15)
         neuroticism = 20
-        if fb['red_cards'] > 0: neuroticism += fb['red_cards'] * 15
-        if fb['pkatt'] > 0 and fb['pk'] < fb['pkatt']: neuroticism += (fb['pkatt'] - fb['pk']) * 5
-        if fb['goals'] > 10 and fb['shots'] > 0 and fb['goals'] / fb['shots'] < 0.08: neuroticism += 15
-        neuroticism = max(10, min(95, neuroticism))
+        if fb['red_cards'] > 0: neuroticism += fb['red_cards'] * 12
+        if fb['pkatt'] > 0 and fb['pk'] < fb['pkatt']: neuroticism += (fb['pkatt'] - fb['pk']) * 4
+        neuroticism = max(10, min(80, neuroticism))
 
         personality = {
             'openness': openness, 'conscientiousness': conscientiousness,
@@ -521,16 +590,16 @@ def compute_gaffer_attributes(players):
             'neuroticism': neuroticism, 'confidence': 100,
         }
 
-        # ----- TRAITS -----
+        # ===== TRAITS =====
         traits = []
-        if attrs['defending'] >= 75 and attrs['engine'] >= 75: traits.append('PressingAnchor')
-        if attrs['passing'] >= 80 and attrs['distribution'] >= 75: traits.append('TempoConductor')
-        if attrs['touch'] >= 80 and attrs['pace'] >= 75 and pg == 'FWD': traits.append('ChaosWinger')
-        if attrs['defending'] >= 80 and attrs['aerial'] >= 70: traits.append('DefensiveWall')
-        if attrs['pace'] >= 80 and attrs['finishing'] >= 70: traits.append('CounterKiller')
-        if personality['extraversion'] >= 70 and personality['neuroticism'] < 50: traits.append('BigGameResponder')
-        if personality['neuroticism'] >= 70: traits.append('MediaSensitive')
-        if personality['neuroticism'] <= 30 and attrs['composure'] >= 75: traits.append('IceCold')
+        if attrs['defending'] >= 75 and attrs['engine'] >= 70: traits.append('PressingAnchor')
+        if attrs['passing'] >= 78 and attrs['distribution'] >= 72: traits.append('TempoConductor')
+        if attrs['touch'] >= 75 and attrs['pace'] >= 75 and pg == 'FWD': traits.append('ChaosWinger')
+        if attrs['defending'] >= 78 and attrs['aerial'] >= 70: traits.append('DefensiveWall')
+        if attrs['pace'] >= 78 and attrs['finishing'] >= 70: traits.append('CounterKiller')
+        if personality['extraversion'] >= 65 and personality['neuroticism'] < 50: traits.append('BigGameResponder')
+        if personality['neuroticism'] >= 65: traits.append('MediaSensitive')
+        if personality['neuroticism'] <= 30 and attrs['composure'] >= 70: traits.append('IceCold')
         traits = traits[:3]
 
         # Build final record
@@ -539,7 +608,7 @@ def compute_gaffer_attributes(players):
         fb['narrative_traits'] = traits
         fb['stability_modifier'] = 50
         fb['ovr'] = ovr
-        fb['potential'] = min(99, max(attrs['pace'], attrs['finishing'], attrs['defending'], attrs['passing']) + 5)
+        fb['potential'] = min(95, ovr + max(0, 25 - fb['age'])) if fb['age'] < 25 else ovr
         fb['id'] = 'p_' + fb['name'].lower().replace(' ', '_').replace('-', '_').replace("'", '')
         fb['match_name'] = fb['name']
         fb['full_name'] = fb['name']
@@ -547,9 +616,9 @@ def compute_gaffer_attributes(players):
             fb['date_of_birth'] = f"{fb['born']}-01-01"
         fb['nationality'] = fb['nation']
         fb['competition'] = fb['league_name']
-        fb['market_value'] = fb.get('market_value') or ovr * 1_000_000
+        fb['market_value'] = fb.get('market_value') or max(100000, ovr * ovr * 10000)
         fb['contract_end'] = fb.get('contract_end') or '2028-06-30'
-        fb['wage'] = ovr * 1000
+        fb['wage'] = max(1000, ovr * ovr * 15)
 
     avg_ovr = sum(p['ovr'] for p in players) // len(players)
     print(f"      Average OVR: {avg_ovr}")
