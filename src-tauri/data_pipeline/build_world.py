@@ -536,6 +536,319 @@ def generate_sample_world():
     }
 
 # ===========================================================================
+# Real-data pipeline — converts scraper.html output to WorldData format
+# ===========================================================================
+
+# Hand-curated team metadata for top Big 5 leagues teams.
+# Procedural generation fills in any team not listed here.
+TEAM_METADATA = {
+    # Premier League
+    "Arsenal": {"id": "arsenal", "short_name": "ARS", "league": "Premier League", "country": "England", "reputation": 85, "city": "London", "stadium": "Emirates Stadium", "capacity": 60704, "formation": "4-3-3"},
+    "Manchester City": {"id": "man_city", "short_name": "MCI", "league": "Premier League", "country": "England", "reputation": 90, "city": "Manchester", "stadium": "Etihad Stadium", "capacity": 53400, "formation": "4-3-3"},
+    "Liverpool": {"id": "liverpool", "short_name": "LIV", "league": "Premier League", "country": "England", "reputation": 88, "city": "Liverpool", "stadium": "Anfield", "capacity": 61276, "formation": "4-3-3"},
+    "Manchester United": {"id": "man_united", "short_name": "MUN", "league": "Premier League", "country": "England", "reputation": 85, "city": "Manchester", "stadium": "Old Trafford", "capacity": 74310, "formation": "4-2-3-1"},
+    "Chelsea": {"id": "chelsea", "short_name": "CHE", "league": "Premier League", "country": "England", "reputation": 82, "city": "London", "stadium": "Stamford Bridge", "capacity": 40341, "formation": "4-2-3-1"},
+    "Tottenham": {"id": "tottenham", "short_name": "TOT", "league": "Premier League", "country": "England", "reputation": 80, "city": "London", "stadium": "Tottenham Hotspur Stadium", "capacity": 62850, "formation": "4-2-3-1"},
+    # La Liga
+    "Real Madrid": {"id": "real_madrid", "short_name": "RMA", "league": "La Liga", "country": "Spain", "reputation": 92, "city": "Madrid", "stadium": "Santiago Bernabéu", "capacity": 81044, "formation": "4-3-3"},
+    "Barcelona": {"id": "barcelona", "short_name": "BAR", "league": "La Liga", "country": "Spain", "reputation": 90, "city": "Barcelona", "stadium": "Camp Nou", "capacity": 99354, "formation": "4-3-3"},
+    "Atlético Madrid": {"id": "atletico_madrid", "short_name": "ATM", "league": "La Liga", "country": "Spain", "reputation": 84, "city": "Madrid", "stadium": "Metropolitano", "capacity": 67700, "formation": "3-5-2"},
+    # Serie A
+    "Inter": {"id": "inter", "short_name": "INT", "league": "Serie A", "country": "Italy", "reputation": 84, "city": "Milan", "stadium": "San Siro", "capacity": 75923, "formation": "3-5-2"},
+    "Milan": {"id": "milan", "short_name": "MIL", "league": "Serie A", "country": "Italy", "reputation": 82, "city": "Milan", "stadium": "San Siro", "capacity": 75923, "formation": "4-2-3-1"},
+    "Juventus": {"id": "juventus", "short_name": "JUV", "league": "Serie A", "country": "Italy", "reputation": 83, "city": "Turin", "stadium": "Allianz Stadium", "capacity": 41507, "formation": "4-3-3"},
+    "Napoli": {"id": "napoli", "short_name": "NAP", "league": "Serie A", "country": "Italy", "reputation": 80, "city": "Naples", "stadium": "Diego Maradona", "capacity": 54726, "formation": "4-3-3"},
+    # Bundesliga
+    "Bayern Munich": {"id": "bayern_munich", "short_name": "BAY", "league": "Bundesliga", "country": "Germany", "reputation": 90, "city": "Munich", "stadium": "Allianz Arena", "capacity": 75000, "formation": "4-2-3-1"},
+    "Borussia Dortmund": {"id": "dortmund", "short_name": "DOR", "league": "Bundesliga", "country": "Germany", "reputation": 82, "city": "Dortmund", "stadium": "Signal Iduna Park", "capacity": 81365, "formation": "4-2-3-1"},
+    "Bayer Leverkusen": {"id": "leverkusen", "short_name": "LEV", "league": "Bundesliga", "country": "Germany", "reputation": 78, "city": "Leverkusen", "stadium": "BayArena", "capacity": 30210, "formation": "3-4-3"},
+    # Ligue 1
+    "Paris SG": {"id": "psg", "short_name": "PSG", "league": "Ligue 1", "country": "France", "reputation": 88, "city": "Paris", "stadium": "Parc des Princes", "capacity": 47929, "formation": "4-3-3"},
+    "Marseille": {"id": "marseille", "short_name": "MAR", "league": "Ligue 1", "country": "France", "reputation": 76, "city": "Marseille", "stadium": "Vélodrome", "capacity": 67394, "formation": "4-2-3-1"},
+}
+
+# Seeded rivalry pairs (hand-curated)
+SEEDED_RIVALRIES = [
+    {"team_a": "arsenal", "team_b": "tottenham", "name": "North London Derby", "intensity": 95},
+    {"team_a": "man_united", "team_b": "man_city", "name": "Manchester Derby", "intensity": 90},
+    {"team_a": "man_united", "team_b": "liverpool", "name": "North West Derby", "intensity": 95},
+    {"team_a": "arsenal", "team_b": "chelsea", "name": "London Derby", "intensity": 75},
+    {"team_a": "real_madrid", "team_b": "barcelona", "name": "El Clásico", "intensity": 100},
+    {"team_a": "real_madrid", "team_b": "atletico_madrid", "name": "Madrid Derby", "intensity": 85},
+    {"team_a": "inter", "team_b": "juventus", "name": "Derby d'Italia", "intensity": 85},
+    {"team_a": "inter", "team_b": "milan", "name": "Derby della Madonnina", "intensity": 90},
+    {"team_a": "bayern_munich", "team_b": "dortmund", "name": "Der Klassiker", "intensity": 85},
+    {"team_a": "psg", "team_b": "marseille", "name": "Le Classique", "intensity": 85},
+]
+
+# Map scraper position codes to Gaffer Position enum strings
+POSITION_MAP = {
+    "GK": "Goalkeeper",
+    "DEF": "Defender",
+    "MID": "Midfielder",
+    "FWD": "Forward",
+}
+
+
+def slugify(name):
+    """Convert a team name to a slug ID (e.g., 'Manchester City' → 'manchester_city')."""
+    return name.lower().replace(" ", "_").replace(".", "").replace("-", "_")
+
+
+def get_team_metadata(team_name):
+    """Look up hand-curated metadata, or generate procedurally if not found."""
+    if team_name in TEAM_METADATA:
+        meta = TEAM_METADATA[team_name]
+        return {
+            "id": meta["id"],
+            "name": team_name,
+            "short_name": meta.get("short_name") or "".join(w[0] for w in team_name.split()[:3]).upper()[:3],
+            "country": meta["country"],
+            "football_nation": meta["country"],
+            "city": meta["city"],
+            "stadium_name": meta["stadium"],
+            "stadium_capacity": meta["capacity"],
+            "league_id": slugify(meta["league"]),
+            "league_name": meta["league"],
+            "reputation": meta["reputation"] * 10,  # scale to 0-1000
+            "formation": meta["formation"],
+            "finance": 50_000_000,
+            "wage_budget": 5_000_000,
+            "transfer_budget": 50_000_000,
+            "play_style": "Balanced",
+        }
+    # Procedural fallback — derive short_name from first 3 chars of team name
+    short_name = team_name[:3].upper()
+    return {
+        "id": slugify(team_name),
+        "name": team_name,
+        "short_name": short_name,
+        "country": "Unknown",
+        "football_nation": "Unknown",
+        "city": "Unknown",
+        "stadium_name": f"{team_name} Stadium",
+        "stadium_capacity": 30000,
+        "league_id": "unknown_league",
+        "league_name": "Unknown League",
+        "reputation": 500,
+        "formation": "4-4-2",
+        "finance": 10_000_000,
+        "wage_budget": 1_000_000,
+        "transfer_budget": 5_000_000,
+        "play_style": "Balanced",
+    }
+
+
+def convert_scraper_player(player_data, team_id, jersey_number):
+    """Convert a scraper-format player to WorldData player format."""
+    pos_str = player_data.get("position", "MID")
+    position = POSITION_MAP.get(pos_str, "Midfielder")
+
+    attrs = player_data.get("attributes", {})
+    personality = player_data.get("personality", {})
+    narrative_traits = player_data.get("narrative_traits", [])
+
+    return {
+        "id": player_data.get("id", slugify(player_data.get("match_name", "unknown"))),
+        "match_name": player_data.get("match_name", "Unknown"),
+        "full_name": player_data.get("full_name", player_data.get("match_name", "Unknown")),
+        "date_of_birth": player_data.get("date_of_birth", "2000-01-01"),
+        "nationality": player_data.get("nationality", "ENG"),
+        "football_nation": player_data.get("nationality", "ENG"),
+        "birth_country": player_data.get("nationality", "ENG"),
+        "media": {"face": None},
+        "position": position,
+        "natural_position": position,
+        "alternate_positions": [],
+        "footedness": "Right",
+        "weak_foot": 3,
+        "attributes": {
+            "pace": attrs.get("pace", 50),
+            "burst": attrs.get("burst", 50),
+            "engine": attrs.get("engine", 50),
+            "power": attrs.get("power", 50),
+            "agility": attrs.get("agility", 50),
+            "passing": attrs.get("passing", 50),
+            "distribution": attrs.get("distribution", 50),
+            "touch": attrs.get("touch", 50),
+            "finishing": attrs.get("finishing", 50),
+            "defending": attrs.get("defending", 50),
+            "aerial": attrs.get("aerial", 50),
+            "anticipation": attrs.get("anticipation", 50),
+            "vision": attrs.get("vision", 50),
+            "decisions": attrs.get("decisions", 50),
+            "composure": attrs.get("composure", 50),
+            "leadership": attrs.get("leadership", 50),
+            "shot_stopping": attrs.get("shot_stopping", 50),
+            "commanding": attrs.get("commanding", 50),
+            "playing_out": attrs.get("playing_out", 50),
+        },
+        "condition": 100,
+        "morale": 75,
+        "fitness": 75,
+        "injury": None,
+        "team_id": team_id,
+        "retired": False,
+        "former_team_id": None,
+        "retired_season": None,
+        "squad_role": "Senior",
+        "traits": [],
+        "personality": {
+            "openness": personality.get("openness", 50),
+            "conscientiousness": personality.get("conscientiousness", 50),
+            "extraversion": personality.get("extraversion", 50),
+            "agreeableness": personality.get("agreeableness", 50),
+            "neuroticism": personality.get("neuroticism", 50),
+            "confidence": personality.get("confidence", 100),
+        },
+        "stability_modifier": player_data.get("stability_modifier", 50),
+        "narrative_traits": narrative_traits,
+        "ovr": player_data.get("ovr", 50),
+        "potential": player_data.get("potential", player_data.get("ovr", 50)),
+        "contract_end": player_data.get("contract_end", "2028-06-30"),
+        "wage": player_data.get("wage", 10000),
+        "market_value": player_data.get("market_value", 1_000_000),
+        "stats": {
+            "appearances": 0, "goals": 0, "assists": 0, "clean_sheets": 0,
+            "yellow_cards": 0, "red_cards": 0, "avg_rating": 0.0, "minutes_played": 0,
+            "shots": 0, "shots_on_target": 0, "passes_completed": 0, "passes_attempted": 0,
+            "tackles_won": 0, "interceptions": 0, "fouls_committed": 0,
+        },
+        "career": [],
+        "movement_history": [],
+        "training_focus": None,
+        "transfer_listed": False,
+        "loan_listed": False,
+        "transfer_offers": [],
+        "loan_offers": [],
+        "active_loan": None,
+        "morale_core": {"manager_trust": 50, "unresolved_issue": None, "recent_treatment": None, "pending_promise": None, "talk_cooldown_until": None, "renewal_state": None},
+        "jersey_number": jersey_number,
+    }
+
+
+def build_world_from_scraper_data(scraper_file):
+    """
+    Build a complete WorldData dict from scraper.html output (gaffer_players.json).
+
+    The scraper produces players with 19 Gaffer attributes, Big Five personality,
+    and narrative traits. This function:
+    1. Loads the scraper output
+    2. Groups players by team → generates team records (hand-curated metadata
+       for top teams, procedural for others)
+    3. Converts each player to WorldData format
+    4. Passes through relationships from the scraper
+    5. Loads hand-curated rivalries
+    6. Returns a complete WorldData dict ready for gaffer_world.json
+    """
+    with open(scraper_file, "r", encoding="utf-8") as f:
+        scraper_data = json.load(f)
+
+    scraper_players = scraper_data.get("players", [])
+    scraper_relationships = scraper_data.get("relationships", [])
+
+    print(f"  Loaded {len(scraper_players)} players from scraper output")
+    print(f"  Loaded {len(scraper_relationships)} pre-computed relationships")
+
+    # Group players by team
+    players_by_team = {}
+    for p in scraper_players:
+        team = p.get("team", "Unknown")
+        if team not in players_by_team:
+            players_by_team[team] = []
+        players_by_team[team].append(p)
+
+    print(f"  Found {len(players_by_team)} teams")
+
+    # Generate team records
+    teams = []
+    team_id_map = {}  # team_name → team_id
+    for team_name, team_players in players_by_team.items():
+        meta = get_team_metadata(team_name)
+        team_id_map[team_name] = meta["id"]
+        teams.append({
+            "id": meta["id"],
+            "name": meta["name"],
+            "short_name": meta["short_name"],
+            "country": meta["country"],
+            "football_nation": meta["football_nation"],
+            "city": meta["city"],
+            "stadium_name": meta["stadium_name"],
+            "stadium_capacity": meta["stadium_capacity"],
+            "reputation": meta["reputation"],
+            "finance": meta["finance"],
+            "wage_budget": meta["wage_budget"],
+            "transfer_budget": meta["transfer_budget"],
+            "formation": meta["formation"],
+            "play_style": meta["play_style"],
+            "manager_id": None,
+            "training_focus": "Tactical",
+            "training_intensity": "Medium",
+            "training_schedule": "Balanced",
+            "training_groups": [],
+            "form": [],
+            "facilities": {"training": 1, "medical": 1, "youth": 1},
+            "kit_pattern": "Solid",
+            "primary_color": "#1a1a1a",
+            "secondary_color": "#ffffff",
+        })
+
+    # Convert players to WorldData format
+    players = []
+    for team_name, team_players in players_by_team.items():
+        team_id = team_id_map[team_name]
+        for idx, scraper_player in enumerate(team_players):
+            player = convert_scraper_player(scraper_player, team_id, idx + 1)
+            players.append(player)
+
+    print(f"  Converted {len(players)} players to WorldData format")
+
+    # Pass through relationships from scraper (already in the right format)
+    relationships = scraper_relationships
+    print(f"  Preserved {len(relationships)} relationships")
+
+    # Load seeded rivalries
+    rivalries = SEEDED_RIVALRIES
+    print(f"  Loaded {len(rivalries)} seeded rivalries")
+
+    # Generate leagues from team metadata
+    leagues_by_name = {}
+    for team in teams:
+        meta = get_team_metadata(team["name"])
+        league_name = meta["league_name"]
+        if league_name not in leagues_by_name and league_name != "Unknown League":
+            leagues_by_name[league_name] = {
+                "id": slugify(league_name),
+                "name": league_name,
+                "country": meta["country"],
+                "num_teams": sum(1 for t in teams if get_team_metadata(t["name"])["league_name"] == league_name),
+                "reputation": 800,
+            }
+    leagues = list(leagues_by_name.values())
+
+    # Use the first league as the "primary" league for backward compat
+    primary_league = leagues[0] if leagues else None
+
+    # Deterministic seed from player count + first player ID
+    seed_str = f"{len(players)}:{scraper_players[0].get('id', 'x')}" if scraper_players else "0"
+    deterministic_seed = int(hashlib.md5(seed_str.encode()).hexdigest()[:8], 16)
+
+    return {
+        "name": "Gaffer Real World",
+        "description": f"Real player data from FBref Big 5 ({len(players)} players, {len(teams)} teams)",
+        "version": 3,
+        "teams": teams,
+        "players": players,
+        "staff": [],
+        "competitions": leagues,
+        "league": primary_league,
+        "relationships": relationships,
+        "rivalries": rivalries,
+        "deterministic_seed": deterministic_seed,
+    }
+
+
+# ===========================================================================
 # Main
 # ===========================================================================
 
@@ -548,13 +861,18 @@ def main():
     
     # Check if input data exists
     has_input = INPUT_DIR.exists() and any(INPUT_DIR.iterdir())
-    
+
     if has_input:
-        print("\n[1] Reading input data from data_pipeline/input/...")
-        # TODO: Read real player data from CSV/JSON files
-        # For now, fall through to sample generation
-        print("  (Input data found but parser not yet implemented — using sample world)")
-        world = generate_sample_world()
+        print("\n[1] Reading real player data from data_pipeline/input/...")
+        scraper_file = INPUT_DIR / "gaffer_players.json"
+        if scraper_file.exists():
+            print(f"  Found {scraper_file.name} ({scraper_file.stat().st_size / 1024:.1f} KB)")
+            world = build_world_from_scraper_data(scraper_file)
+        else:
+            print(f"  gaffer_players.json not found in {INPUT_DIR}")
+            print("  Run scraper.html first to produce it, then re-run this script.")
+            print("  Falling back to sample world...")
+            world = generate_sample_world()
     else:
         print("\n[1] No input data found — generating sample world...")
         world = generate_sample_world()
