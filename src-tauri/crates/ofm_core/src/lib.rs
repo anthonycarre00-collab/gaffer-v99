@@ -22,6 +22,7 @@ pub mod interpretation;
 pub mod job_offers;
 pub mod live_match_manager;
 pub mod messages;
+pub mod narrative;
 pub mod relationships;
 pub mod national_team;
 pub mod nations;

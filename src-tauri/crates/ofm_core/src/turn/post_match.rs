@@ -610,6 +610,36 @@ fn update_post_match_morale(
 
     // Gaffer Phase 2 — Update relationships after match
     update_relationships_post_match(game, report, home_team_id, away_team_id);
+
+    // Gaffer Phase 3 — Process narrative memories
+    let player_stats: Vec<(String, u8, u8, u8, f32)> = game
+        .players
+        .iter()
+        .filter_map(|p| {
+            if p.team_id.as_deref() == Some(home_team_id) || p.team_id.as_deref() == Some(away_team_id) {
+                report.player_stats.get(&p.id).map(|ps| {
+                    (p.id.clone(), ps.goals as u8, ps.assists as u8, ps.red_cards as u8, ps.rating)
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    let is_rivalry = game.relationship_graph.get(home_team_id, away_team_id)
+        .map(|e| e.rivalry_flag)
+        .unwrap_or(false);
+
+    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let mut engine = crate::narrative::NarrativeEngine::new(&mut game.memory_store, &date);
+    engine.process_match_result(
+        home_team_id,
+        away_team_id,
+        report.home_goals,
+        report.away_goals,
+        is_rivalry,
+        &player_stats,
+    );
 }
 
 /// Gaffer Phase 2 — Update player relationships based on match outcome.

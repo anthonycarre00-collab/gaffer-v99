@@ -128,7 +128,8 @@ impl<'a> InterpretationSurfaceService<'a> {
         let club = self.game.teams.iter().find(|t| Some(&t.id)==player.team_id.as_ref()).map(|t|t.name.clone()).unwrap_or_else(||"No Club".into());
         PlayerMeaningSnapshot {
             display_name:player.match_name.clone(),club,role_identity_label,archetype_label,
-            locker_room_role:"Unknown".into(),narrative_status_tag:"None".into(),
+            locker_room_role:"Unknown".into(),
+            narrative_status_tag: self.get_narrative_status_tag(player),
             current_form_label:cfl.to_string(),confidence_label:cl.into(),fatigue_label:fl.into(),
             trajectory_label:"Unknown".into(),stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
             pressure_response_type:pr,media_sensitivity:msi,rivalry_trigger_flag:false,morale_state:ms.into(),
@@ -183,6 +184,22 @@ impl<'a> InterpretationSurfaceService<'a> {
             .filter(|c| c.member_ids.contains(&player.id))
             .map(|c| format!("{:?} ({} members)", c.clique_type, c.member_ids.len()))
             .collect()
+    }
+
+    /// Get the player's current narrative status tag from active story threads.
+    fn get_narrative_status_tag(&self, player: &Player) -> String {
+        let threads = self.game.memory_store.threads_for(&player.id);
+        if threads.is_empty() {
+            return "None".to_string();
+        }
+        // Return the highest-momentum thread's tag
+        let top = threads.iter()
+            .max_by(|a, b| a.momentum_score.partial_cmp(&b.momentum_score).unwrap_or(std::cmp::Ordering::Equal));
+        match top {
+            Some(t) if t.momentum_score > 50.0 => format!("{:?} ★", t.thread_type),
+            Some(t) if t.momentum_score > 20.0 => format!("{:?}", t.thread_type),
+            _ => "None".to_string(),
+        }
     }
 
     fn derive_role_identity(&self, player: &Player) -> String {

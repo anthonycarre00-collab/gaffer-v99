@@ -126,6 +126,10 @@ pub struct Game {
     /// Gaffer Phase 2 — Player relationship graph.
     #[serde(default)]
     pub relationship_graph: crate::relationships::RelationshipGraph,
+
+    /// Gaffer Phase 3 — Narrative memory store (memories + story threads + cooldowns).
+    #[serde(default)]
+    pub memory_store: crate::narrative::MemoryStore,
 }
 
 fn default_game_seed() -> u64 {
@@ -171,6 +175,7 @@ impl Game {
             package_lockfile: vec![],
             deterministic_seed: default_game_seed(),
             relationship_graph: crate::relationships::RelationshipGraph::new(),
+            memory_store: crate::narrative::MemoryStore::new(),
         };
         game.promote_legacy_league();
         crate::football_identity::upgrade_game_football_identities(&mut game);
