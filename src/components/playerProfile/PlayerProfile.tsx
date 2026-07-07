@@ -14,7 +14,7 @@ import {
   type ContractTerminationPreviewData,
 } from "../../services/contractService";
 import DashboardModalFrame from "../dashboard/DashboardModalFrame";
-import { Button, Select } from "../ui";
+import { Button, Select, PlayerMeaningCard } from "../ui";
 import { getRoleOptions } from "../../lib/playerRoles";
 import { getDeployedPosition } from "../squad/SquadTab.helpers";
 import { setPlayerRole as setPlayerRoleService } from "../../services/squadService";
@@ -843,6 +843,9 @@ export default function PlayerProfile({
           listLabel={t("common.listView")}
           radarLabel={t("common.radarView")}
         />
+
+        {/* Gaffer Phase 0.5-FE — Meaning snapshot card (third column) */}
+        <PlayerMeaningCard playerId={player.id} />
       </div>
 
       {/* Full-width data cards, stacked for a uniform page */}

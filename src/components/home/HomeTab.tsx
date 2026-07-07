@@ -41,6 +41,8 @@ import {
 import { useTranslation } from "react-i18next";
 import HomeOnboardingChecklistCard from "./HomeOnboardingChecklistCard";
 import JobOpportunitiesCard from "./JobOpportunitiesCard";
+import { SquadPulseCard } from "./SquadPulseCard";
+import { MediaPulseCard } from "./MediaPulseCard";
 
 interface HomeTabProps {
   gameState: GameStateData;
@@ -263,6 +265,12 @@ export default function HomeTab({
               teamForm={myTeam?.form ?? []}
               onNavigate={onNavigate}
             />
+          </div>
+
+          {/* Gaffer Phase 0.5-FE — Squad Pulse + Media Pulse row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <SquadPulseCard />
+            <MediaPulseCard />
           </div>
 
           {/* Row 2: Four secondary cards */}
