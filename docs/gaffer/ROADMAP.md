@@ -1,90 +1,72 @@
-# Gaffer Implementation Roadmap
+# Gaffer Implementation Roadmap (Revised)
+
+## Critical Path Understanding
+
+The game ships as a **desktop app with a fully populated world database**:
+- All real players, teams, leagues, staff, competitions, rivalries pre-built
+- Player starts new game → loads bundled DB → plays immediately
+- Each season: regens replace retiring players (world continues forever)
+- Save files persist the user's career indefinitely
 
 ## Current Status
 
 | Phase | Status | Description |
 |-------|--------|-------------|
 | 0 | ✅ Done | Repo setup, docs, conflict resolution |
-| 0.5 | ⏳ Pending | Real player data scraping pipeline (can parallel with Phase 2) |
-| 1 | ✅ Done | Interpretation surface + 19-attribute restructure + personality + stability |
-| 2 | 🔄 Next | Personality & relationship engine |
-| 3 | ⏳ Pending | Narrative engine & memory system |
-| 4 | ⏳ Pending | Match engine integration (SquadPulse, harmony modifier) |
-| 5 | ⏳ Pending | Media ecosystem activation |
-| 6 | ⏳ Pending | Training overhaul (probabilistic growth, stability guard) |
-| 7 | ⏳ Pending | Scouting progressive reveal |
-| 8 | ⏳ Pending | Season loop validation |
-| 9 | ⏳ Pending | Balance & polish (includes CI/CD workflow updates) |
+| 1 | ✅ Done | 19 attrs + personality + stability + interpretation surface |
+| 2.1-2.2 | ✅ Done | RelationshipGraph + narrative traits + wiring |
+| **0.5** | **🔄 CRITICAL PATH** | **Build the bundled world database (real players + relationships + personalities)** |
+| 2.3+ | ⏳ After 0.5 | Seed relationships/personalities from DB, personality evolution, frontend display |
+| 3 | ⏳ | Narrative engine & memory system |
+| 4 | ⏳ | Match engine integration |
+| 5 | ⏳ | Media ecosystem |
+| 6 | ⏳ | Training overhaul |
+| 7 | ⏳ | Scouting progressive reveal |
+| 8 | ⏳ | Season loop + regen system |
+| 9 | ⏳ | Balance & polish + CI/CD |
 
-## Phase 1 — Completed
+## Phase 0.5 — Bundled World Database (CRITICAL PATH)
 
-- 19 Gaffer attributes (Body/Ball/Head/Gloves) replacing 18 FM-style attrs
-- PersonalityProfile (Big Five + confidence) with PressureResponse + MediaSensitivity
-- StabilityModifier (hidden 0-100, 5-tier Gaffer-voice labels)
-- PlayerTrait enum (17 renamed variants)
-- Deterministic seed in Game struct
-- InterpretationSurfaceService module (4 snapshot methods + 3 tests)
-- 4 Tauri commands wired
-- Frontend: types, meaningStore, PlayerMeaningCard, i18n (11 locales)
-- All Rust crates compile (397 ofm_core lib tests pass)
-- All production TypeScript compiles (0 errors)
+**Goal:** Build the complete, pre-populated world database that ships with the desktop app.
 
-## Phase 2 — Personality & Relationship Engine (next)
+**The database must contain:**
+- All real players (name, DOB, nationality, position, 19 Gaffer attributes, contract, wage, market value)
+- All real teams (name, league, reputation, finances, stadium, colors, formation)
+- All real leagues/competitions (fixtures, standings, rules)
+- All real staff (managers, coaches, scouts, physios)
+- Pre-computed Big Five personality profiles (with confidence scores)
+- Pre-computed relationship edges (based on shared national team, club history, etc.)
+- Pre-assigned narrative traits
+- Seeded rivalry pairs (El Clásico, North London Derby, etc.)
 
-**Goal:** Give players and staff inner lives. The biggest "major surgery" item.
+**Pipeline steps:**
+1. Scrape player data from 3+ sources (FBref, Transfermarkt, Understat, Sofascore)
+2. Aggregate + normalize attributes to 0-99 Gaffer scale
+3. Infer Big Five personality from observable data (card rates, assist ratios, captaincy)
+4. Calculate confidence scores
+5. Pre-compute relationship edges (shared nationality, shared club history, known friendships/rivalries)
+6. Assign narrative traits based on playing style + career history
+7. Tag rivalry pairs
+8. Package as SQLite database (bundled with Tauri app)
 
-**Tasks:**
-1. Big Five inference pipeline for real players (from observable football data)
-2. Personality evolution engine (events shift Big Five, capped ±15/season/axis)
-3. RelationshipGraph (player↔player edges with strength, volatility, narrative tags)
-4. Clique detection algorithm
-5. 14 narrative traits assigned (5 Technical Identity + 5 Psychological + 4 Social)
-6. Wire personality into match engine hooks (PressureResponse — full integration in Phase 4)
-7. Wire personality into training (Conscientiousness affects growth — full integration in Phase 6)
-8. Frontend: relationship graph visualization
-9. Frontend: personality display in player card
-10. Save schema migration for personality + relationships + narrative traits
+**Deliverable:** A SQLite `.db` file containing the full football world, ready to bundle with the desktop app.
 
-**Deliverable:** Every player has a personality (with confidence score), every player-pair has a relationship edge, cliques are detectable.
+**Estimated effort:** 3-4 weeks (this is the foundation everything else stands on)
 
-**Estimated effort:** 3-4 weeks
+## Phase 8 — Season Loop + Regen System
 
-## Phase 0.5 — Real Player Data Pipeline (can run parallel with Phase 2)
-
-**Goal:** Build the data scraping + aggregation pipeline.
+**Goal:** Keep the world alive forever.
 
 **Tasks:**
-1. Identify 3+ data sources (FBref, Transfermarkt, Understat, Sofascore)
-2. Build scrapers (Rust reqwest + scraper, or Python requests + beautifulsoup)
-3. Aggregation pipeline (average attrs across sources, normalize to 0-99)
-4. Personality inference (from card rates, assist ratios, captaincy, etc.)
-5. Confidence score calculation
-6. Rivalry pairs dataset (El Clásico, North London, etc.)
-7. Output: JSON datasets consumable by world generator
+1. End-of-season processing: retire old players, generate regens
+2. Regen generation: new youth players with:
+   - Procedural names (from nationality-appropriate name pools)
+   - Random attributes (within position-appropriate ranges)
+   - Big Five personality assigned directly (confidence = 100)
+   - Narrative traits assigned probabilistically
+   - Initial relationship edges to teammates
+3. Youth academy integration
+4. Age-based attribute decline (stability guard from Phase 1)
+5. Save file persistence (the world state carries forward)
 
-**Estimated effort:** 2-3 weeks
-
-## Phase 9 — Balance & Polish (includes CI/CD)
-
-**Additional tasks added:**
-- Update build-check.yml: `branches: develop` → `branches: main`, `cargo test --workspace` → `cargo test --workspace --lib`
-- Update tauri-action.yml: `branches: release` → `branches: main` when ready for auto-builds
-- Update nightly workflows for new repo structure
-- Verify Rust version pin (currently 1.95.0)
-
-## Resolved Conflicts (from CONFLICTS.md)
-
-1. Real player data: ✅ Use real names + data (future randomisation option)
-2. Strict architecture: ⏳ Phased migration (Phase 1 laid foundation)
-3. Spreadsheet mode: ✅ Coexist via toggle
-4. Rare swearing: ✅ Mild default, Raw occasional
-5. Stability Modifier: ✅ 5-tier Gaffer-voice labels, number hidden
-6. Performance budget: ⏳ Validate post-Phase 3
-7. No meta tactic: ⏳ Validate in Phase 4
-8. Voice acting: ✅ None, text-only permanent
-9. Rivalries: ✅ Both seeded real + emergent
-10. Three fantasies: ✅ Context-rotating emphasis
-11. Silence vs fatigue: ⏳ Design in Phase 5
-12. AI references bible: ✅ docs/gaffer/ is persistence layer
-13. Personality data: ✅ Big Five with inference + confidence scores
-14. Attribute differentiation: ✅ 19 attrs in Body/Ball/Head/Gloves, no FM copying
+**Estimated effort:** 2-3 weeks (after Phase 4-6 are done)
