@@ -258,7 +258,42 @@ pub struct WorldData {
     /// league creation). Not persisted to save files; cleared on load.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub build_notices: Vec<String>,
+
+    /// Gaffer Phase 2 — Pre-computed relationship edges from the bundled world DB.
+    /// Loaded into Game.relationship_graph when starting a new game.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub relationships: Vec<BundledRelationship>,
+
+    /// Gaffer Phase 2 — Seeded rivalry pairs from the bundled world DB.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub rivalries: Vec<BundledRivalry>,
 }
+
+/// A pre-computed relationship edge stored in the world database JSON.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BundledRelationship {
+    pub player_a: String,
+    pub player_b: String,
+    #[serde(default = "default_strength")]
+    pub strength: i8,
+    #[serde(default = "default_vol")]
+    pub volatility: f32,
+}
+
+fn default_strength() -> i8 { 0 }
+fn default_vol() -> f32 { 0.3 }
+
+/// A seeded rivalry pair stored in the world database JSON.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BundledRivalry {
+    pub team_a: String,
+    pub team_b: String,
+    pub name: String,
+    #[serde(default = "default_intensity")]
+    pub intensity: u8,
+}
+
+fn default_intensity() -> u8 { 50 }
 
 /// Lightweight metadata shown in the UI when listing available databases.
 #[derive(Debug, Clone, Serialize, Deserialize)]

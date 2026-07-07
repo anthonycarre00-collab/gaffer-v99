@@ -347,10 +347,25 @@ fn build_game_from_world_data(
         world_history,
         metadata,
         extra_translations,
+        relationships,
+        rivalries,
         ..
     } = world;
 
     let mut game = Game::new(clock, manager, teams, players, staff, vec![]);
+
+    // Gaffer Phase 2 — Load pre-computed relationships from bundled world DB
+    for rel in &relationships {
+        game.relationship_graph.set(
+            &rel.player_a,
+            &rel.player_b,
+            ofm_core::relationships::RelationshipEdge {
+                strength: rel.strength,
+                volatility: rel.volatility,
+                ..Default::default()
+            },
+        );
+    }
     if game
         .staff
         .iter()

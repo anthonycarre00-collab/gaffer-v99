@@ -13698,6 +13698,12 @@
     }
   ],
   "staff": [],
+  "managers": [],
+  "competitions": [],
+  "national_teams": [],
+  "regions": [],
+  "default_active_regions": [],
+  "default_active_competitions": [],
   "league": {
     "id": "league_1",
     "name": "Gaffer Premier League",
@@ -13705,6 +13711,22 @@
     "num_teams": 8,
     "reputation": 800
   },
+  "news": [],
+  "stats": {
+    "player_matches": [],
+    "team_matches": []
+  },
+  "world_history": {
+    "seasons": [],
+    "rivalries": [],
+    "awards": []
+  },
+  "metadata": {
+    "kind": "RosterBaseline",
+    "base_year": 2026
+  },
+  "extra_translations": {},
+  "build_notices": [],
   "relationships": [
     {
       "player_a": "p_1_1",
@@ -21070,6 +21092,5 @@
       "name": "Der Klassiker",
       "intensity": 75
     }
-  ],
-  "deterministic_seed": 42
+  ]
 }
