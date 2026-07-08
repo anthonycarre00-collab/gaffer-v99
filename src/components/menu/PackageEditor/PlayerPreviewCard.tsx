@@ -158,7 +158,7 @@ export function PlayerPreviewCard({ editing, photoDataUrl, teams }: PlayerPrevie
  style={{ width: `${(val / 99) * 100}%` }}
  />
  </div>
- <span className="w-5 text-right text-[10px] font-bold tabular-nums text-gray-700 dark:text-gray-200 flex-shrink-0">
+ <span className="w-5 text-right text-[10px] font-mono font-bold tabular-nums text-gray-700 dark:text-gray-200 flex-shrink-0">
  {val}
  </span>
  </div>

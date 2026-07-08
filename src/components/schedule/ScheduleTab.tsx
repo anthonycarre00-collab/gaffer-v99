@@ -799,7 +799,7 @@ function StandingsView({
  >
  {gd > 0 ? `+${gd}` : gd}
  </td>
- <td className="px-4 py-3 text-center font-heading text-sm font-bold tabular-nums text-gray-800 dark:text-gray-100">
+ <td className="px-4 py-3 text-center font-heading text-sm font-mono font-bold tabular-nums text-gray-800 dark:text-gray-100">
  {entry.points}
  </td>
  </tr>

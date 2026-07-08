@@ -594,7 +594,7 @@ export function SubPanel({
  key={i}
  className="flex items-center gap-1.5 py-0.5 text-[11px]"
  >
- <span className="w-5 text-right font-heading tabular-nums text-gray-600 dark:text-gray-500">
+ <span className="w-5 text-right font-mono tabular-nums text-gray-600 dark:text-gray-500">
  {sub.minute}'
  </span>
  <span className="text-success-400">▲</span>

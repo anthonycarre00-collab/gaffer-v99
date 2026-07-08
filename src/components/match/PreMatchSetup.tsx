@@ -579,14 +579,14 @@ export default function PreMatchSetup({
  </span>
  <div className="flex items-center">
  <span
- className={`text-[10px] font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(p.ovr)}`}
+ className={`text-[10px] font-mono font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(p.ovr)}`}
  >
  {p.ovr}
  </span>
  {keyStats.map((s) => (
  <span
  key={s.label}
- className={`text-[10px] font-heading tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
+ className={`text-[10px] font-mono tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
  >
  {getStatVal(p, s.key)}
  </span>

@@ -32,7 +32,7 @@ interface MatchSlotProps {
 
 function ScoreBadge({ score }: { score: number }): JSX.Element {
  return (
- <span className="w-6 text-center text-xs font-bold font-heading tabular-nums">
+ <span className="w-6 text-center text-xs font-bold font-mono tabular-nums">
  {score}
  </span>
  );

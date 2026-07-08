@@ -184,7 +184,7 @@ export default function PreMatchLineup({
 
  const jerseyChip = (playerId: string) =>
  jerseyNumberById ? (
- <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+ <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
  {jerseyNumberById.get(playerId) ?? "–"}
  </span>
  ) : null;
@@ -215,7 +215,7 @@ export default function PreMatchLineup({
  {translatePositionAbbreviation(t, pos)}
  </span>
  <span
- className={`flex items-center gap-1 text-sm font-mono font-bold tabular-nums ${ok ? "text-primary-700 dark:text-primary-400" : "text-accent-600 dark:text-accent-400"}`}
+ className={`flex items-center gap-1 text-sm font-mono font-mono font-bold tabular-nums ${ok ? "text-primary-700 dark:text-primary-400" : "text-accent-600 dark:text-accent-400"}`}
  >
  {actual}/{needed}
  {!ok && <AlertTriangle className="w-3 h-3 text-accent-600 dark:text-accent-400" />}
@@ -333,14 +333,14 @@ export default function PreMatchLineup({
  )}
  <div className="flex items-center gap-0">
  <span
- className={`text-[10px] font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(posOvr)}`}
+ className={`text-[10px] font-mono font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(posOvr)}`}
  >
  {posOvr}
  </span>
  {keyStats.map((s) => (
  <span
  key={s.label}
- className={`text-[10px] font-heading tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
+ className={`text-[10px] font-mono tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
  >
  {getStatVal(p, s.key)}
  </span>
@@ -436,7 +436,7 @@ export default function PreMatchLineup({
  {keyStats.map((s) => (
  <span
  key={s.label}
- className={`text-[10px] font-heading tabular-nums w-7 text-center ${statColor(getStatVal(bp, s.key))}`}
+ className={`text-[10px] font-mono tabular-nums w-7 text-center ${statColor(getStatVal(bp, s.key))}`}
  >
  {getStatVal(bp, s.key)}
  </span>

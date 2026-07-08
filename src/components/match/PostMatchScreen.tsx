@@ -529,7 +529,7 @@ export default function PostMatchScreen({
  {r.player_name}
  </td>
  <td
- className={`px-3 py-2 text-right font-mono font-bold tabular-nums ${
+ className={`px-3 py-2 text-right font-mono font-mono font-bold tabular-nums ${
  r.delta > 0
  ? "text-success-500"
  : r.delta < 0

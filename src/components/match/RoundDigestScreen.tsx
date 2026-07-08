@@ -443,7 +443,7 @@ export default function RoundDigestScreen({
  >
  {entry.team_name}
  </span>
- <span className="font-mono font-bold tabular-nums text-gray-500 dark:text-gray-400">
+ <span className="font-mono font-mono font-bold tabular-nums text-gray-500 dark:text-gray-400">
  {entry.points}
  </span>
  </div>
@@ -474,7 +474,7 @@ export default function RoundDigestScreen({
  >
  {entry.player_name}
  </span>
- <span className="font-mono font-bold tabular-nums text-accent-400">
+ <span className="font-mono font-mono font-bold tabular-nums text-accent-400">
  {entry.current_goals}
  </span>
  </div>
@@ -569,7 +569,7 @@ export default function RoundDigestScreen({
  key={`${event.minute}-${event.event_type}-${index}`}
  className="flex items-center gap-2 text-xs"
  >
- <span className="w-8 text-right font-heading tabular-nums text-gray-500 dark:text-gray-400">
+ <span className="w-8 text-right font-mono tabular-nums text-gray-500 dark:text-gray-400">
  {event.minute}'
  </span>
  <span>{display.icon}</span>

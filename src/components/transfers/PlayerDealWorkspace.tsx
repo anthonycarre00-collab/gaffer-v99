@@ -275,7 +275,7 @@ export default function PlayerDealWorkspace({
  <aside className="min-h-0 space-y-4 lg:overflow-y-auto">
  <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>{t("common.ovr")}</p>
- <p className="mt-1 font-heading text-3xl font-bold tabular-nums text-primary-500">
+ <p className="mt-1 font-heading text-3xl font-mono font-bold tabular-nums text-primary-500">
  {ovr}
  </p>
  <div className="mt-4 grid grid-cols-2 gap-3">

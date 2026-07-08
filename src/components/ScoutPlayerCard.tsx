@@ -117,7 +117,7 @@ export default function ScoutPlayerCard({ report, onPlayerClick }: ScoutPlayerCa
  <div className="flex-1">
  <ProgressBar value={attr.value} size="sm" />
  </div>
- <span className="text-xs font-bold tabular-nums text-gray-700 dark:text-gray-200 w-6 text-right">
+ <span className="text-xs font-mono font-bold tabular-nums text-gray-700 dark:text-gray-200 w-6 text-right">
  {attr.value}
  </span>
  </>

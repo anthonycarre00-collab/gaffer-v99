@@ -411,7 +411,7 @@ function AttrBar({ label, value }: { label: string; value: number }) {
  <div className="flex justify-between text-xs mb-0.5">
  <span className="text-gray-500 dark:text-gray-400">{label}</span>
  <span
- className={`font-mono font-bold tabular-nums ${value >= 70 ? "text-primary-500" : value >= 50 ? "text-accent-500" : "text-gray-400"}`}
+ className={`font-mono font-mono font-bold tabular-nums ${value >= 70 ? "text-primary-500" : value >= 50 ? "text-accent-500" : "text-gray-400"}`}
  >
  {value}
  </span>

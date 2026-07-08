@@ -73,7 +73,7 @@ export default function DashboardResultsRecapModal({
  to: transfer.to,
  })}
  </span>
- <span className="shrink-0 font-mono font-bold tabular-nums">
+ <span className="shrink-0 font-mono font-mono font-bold tabular-nums">
  {formatVal(transfer.fee)}
  </span>
  </div>
@@ -121,7 +121,7 @@ export default function DashboardResultsRecapModal({
  <span className="flex-1 truncate text-right">
  {match.home_team}
  </span>
- <span className="flex flex-col items-center font-mono font-bold tabular-nums">
+ <span className="flex flex-col items-center font-mono font-mono font-bold tabular-nums">
  <span>
  {match.home_goals} - {match.away_goals}
  </span>
