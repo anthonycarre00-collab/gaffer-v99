@@ -2,16 +2,29 @@ use rand::{Rng, RngExt};
 
 use crate::event::{EventType, MatchEvent};
 use crate::shared::{
-    PlayStylePhase, TraitContext, home_mod, play_style_modifier, role_attribute_modifier,
-    tactics_buildup_mod, tactics_cross_probability, tactics_defensive_conversion_mod,
-    tactics_foul_modifier, tactics_pressing_press, tactics_shape_modifier,
-    tactics_tempo_progression, trait_bonus,
+    PlayStylePhase, TraitContext, home_mod, morale_modifier, play_style_modifier,
+    role_attribute_modifier, stability_pressure_modifier, tactics_buildup_mod,
+    tactics_cross_probability, tactics_defensive_conversion_mod, tactics_foul_modifier,
+    tactics_pressing_press, tactics_shape_modifier, tactics_tempo_progression, trait_bonus,
 };
 use crate::types::{Position, Side, Zone};
 
 use super::MatchContext;
 use super::fouls::{self, maybe_foul};
 use super::snap_player;
+
+// ---------------------------------------------------------------------------
+// Pressure detection — late game with close score = pressure situation
+// ---------------------------------------------------------------------------
+
+fn is_pressure_situation(ctx: &MatchContext, minute: u8) -> bool {
+    // Pressure kicks in after 70 minutes when the score is within 1 goal
+    if minute < 70 {
+        return false;
+    }
+    let goal_diff = (ctx.home_score as i16 - ctx.away_score as i16).abs();
+    goal_diff <= 1
+}
 
 // ---------------------------------------------------------------------------
 // Action resolution per zone
@@ -51,7 +64,8 @@ fn resolve_buildup<R: Rng>(
         + passer.composure as f64
         + passer.teamwork as f64)
         / 4.0
-        * trait_bonus(&passer, TraitContext::Passing);
+        * trait_bonus(&passer, TraitContext::Passing)
+        * morale_modifier(passer.morale);
     let press = effective_press(ctx, def_side);
     let ball_zone = ctx.ball_zone;
 
@@ -92,13 +106,15 @@ fn resolve_midfield<R: Rng>(
         + attacker.vision as f64
         + attacker.teamwork as f64)
         / 4.0
-        * trait_bonus(&attacker, TraitContext::Midfield);
+        * trait_bonus(&attacker, TraitContext::Midfield)
+        * morale_modifier(attacker.morale);
     let def_rating = (defender.defending as f64
         + defender.anticipation as f64
         + defender.decisions as f64
         + defender.teamwork as f64)
         / 4.0
-        * trait_bonus(&defender, TraitContext::Tackling);
+        * trait_bonus(&defender, TraitContext::Tackling)
+        * morale_modifier(defender.morale);
 
     let att_mod = play_style_modifier(
         ctx.team(att_side).play_style,
@@ -164,6 +180,7 @@ fn resolve_attacking_third<R: Rng>(
     def_side: Side,
     rng: &mut R,
 ) {
+    let pressure = is_pressure_situation(ctx, minute);
     let attacker = snap_player(ctx, att_side, Position::Forward, rng);
     let defender = snap_player(ctx, def_side, Position::Defender, rng);
 
@@ -172,13 +189,17 @@ fn resolve_attacking_third<R: Rng>(
         + attacker.agility as f64
         + attacker.composure as f64)
         / 4.0
-        * trait_bonus(&attacker, TraitContext::Dribbling);
+        * trait_bonus(&attacker, TraitContext::Dribbling)
+        * morale_modifier(attacker.morale)
+        * stability_pressure_modifier(attacker.stability, pressure);
     let def_rating = (defender.defending as f64
         + defender.defending as f64
         + defender.anticipation as f64
         + defender.aerial as f64)
         / 4.0
-        * trait_bonus(&defender, TraitContext::Tackling);
+        * trait_bonus(&defender, TraitContext::Tackling)
+        * morale_modifier(defender.morale)
+        * stability_pressure_modifier(defender.stability, pressure);
 
     let att_mod = play_style_modifier(ctx.team(att_side).play_style, PlayStylePhase::Attack, true)
         * role_attribute_modifier(attacker.role, PlayStylePhase::Attack);
@@ -293,15 +314,25 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let att_cond = if att_side == Side::Home { ctx.home_condition } else { ctx.away_condition };
     let def_cond = if def_side == Side::Home { ctx.home_condition } else { ctx.away_condition };
 
+    let pressure = is_pressure_situation(ctx, minute);
+    let stability_mod = stability_pressure_modifier(shooter.stability, pressure);
+    let morale_mod = morale_modifier(shooter.morale);
+
     let shoot_rating =
         (shooter.finishing as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0
             * trait_bonus(&shooter, TraitContext::Shooting)
-            * att_cond;
+            * att_cond
+            * stability_mod
+            * morale_mod;
+    let gk_stability_mod = stability_pressure_modifier(goalkeeper.stability, pressure);
+    let gk_morale_mod = morale_modifier(goalkeeper.morale);
     let gk_rating =
         (goalkeeper.shot_stopping as f64 + goalkeeper.shot_stopping as f64 + goalkeeper.anticipation as f64)
             / 3.0
             * trait_bonus(&goalkeeper, TraitContext::Goalkeeping)
-            * def_cond;
+            * def_cond
+            * gk_stability_mod
+            * gk_morale_mod;
 
     let accuracy =
         (ctx.config.shot_accuracy_base + (shoot_rating - 50.0) / 200.0).clamp(0.15, 0.85);
