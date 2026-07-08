@@ -1029,6 +1029,13 @@
         "3": "Youth",
         "4": "Recovery"
       }
+    },
+    "advice": {
+      "critical": "The lads are absolutely shattered. You need to dial it back before someone breaks down.",
+      "warning": "Squad's looking leggy. A recovery session wouldn't go amiss.",
+      "ok": "Fitness levels are decent. You could push harder if you want, but no need to risk it.",
+      "good": "The boys are flying. Training's sharp and the intensity is spot on.",
+      "excellent": "Squad's in peak condition. Everything's clicking — keep doing what you're doing."
     }
   },
   "staff": {
@@ -1194,6 +1201,14 @@
       "Media": "Media",
       "System": "System",
       "JobOffer": "Job Offers"
+    },
+    "senderRoles": {
+      "headPhysio": "Head Physio",
+      "assistantManager": "Assistant Gaffer",
+      "chiefScout": "Chief Scout",
+      "chairman": "Chairman",
+      "directorOfFootball": "Director of Football",
+      "agent": "Agent"
     }
   },
   "manager": {
@@ -1568,6 +1583,22 @@
       "SeasonPreview": "Season Preview",
       "Editorial": "Editorial",
       "ManagerialChange": "Managerial"
+    },
+    "headlines": {
+      "managerSacked": "SACKED! {{manager}} given the boot at {{club}}",
+      "managerHired": "{{club}} appoint {{manager}} — 'the right man for the job'",
+      "titleRace": "Title race hots up: {{club}} close the gap on {{leaders}}",
+      "relegation": "Danger zone: {{club}} staring down the barrel",
+      "wonderkid": "Wonderkid alert: {{player}} attracting interest from {{club}}",
+      "recordFee": "RECORD! {{club}} smash the transfer window with €{{fee}}M swoop for {{player}}",
+      "injuryCrisis": "Crisis at {{club}}: {{count}} players sidelined",
+      "winningStreak": "{{club}} on fire: {{count}} wins on the bounce",
+      "losingStreak": "Nightmare run: {{club}} haven't won in {{count}}",
+      "cupUpset": "GIANTKILLING! {{underdog}} dump {{giant}} out of the cup",
+      "derbyWin": "Derby delight! {{winner}} get one over on {{loser}}",
+      "cleanSheet": "Wall of steel: {{club}} keep {{count}}th clean sheet of the season",
+      "goalscoring": "{{player}} can't stop scoring — {{count}} in {{games}} games",
+      "dressingRoom": "Dressing room unrest at {{club}} — players not happy with the gaffer"
     }
   },
   "playerProfile": {
@@ -1868,7 +1899,34 @@
     "morale": "Morale",
     "estimatedAttributes": "Estimated Attributes",
     "undiscovered": "Not discovered",
-    "confidence": "Confidence"
+    "confidence": "Confidence",
+    "reportPhrases": {
+      "excellent": [
+        "This lad's the real deal. Get him signed before someone else does.",
+        "Top talent. He'd walk into most teams in this league.",
+        "Quality player. Technically superb and reads the game well."
+      ],
+      "good": [
+        "Solid prospect. Worth a punt at the right price.",
+        "Decent player. Would add depth to the squad.",
+        "He's got something about him. Could develop nicely."
+      ],
+      "average": [
+        "Nothing special. Wouldn't break the bank for him.",
+        "He's okay. Squad player at best, if I'm being honest.",
+        "Average. You've probably got better already in the reserves."
+      ],
+      "poor": [
+        "Give him a miss. Not good enough for this level.",
+        "I wouldn't bother. We'd be wasting our time and money.",
+        "He's not what we're looking for. Move on."
+      ],
+      "wonderkid": [
+        "Remember the name. This kid's going to be a star.",
+        "Special talent. Get in early before the big clubs circle.",
+        "He's got everything. Technically gifted, great attitude, and only {{age}}."
+      ]
+    }
   },
   "match": {
     "live": "LIVE",
@@ -1968,7 +2026,32 @@
     "ft": "FT",
     "firstHalfEvents": "First Half Events",
     "noMajorEvents": "No major events.",
-    "teamTalk": "Team Talk",
+    "teamTalk": {
+      "attacking": {
+        "label": "Go for the throat",
+        "description": "Tell them to attack with everything they've got. High risk, high reward."
+      },
+      "motivational": {
+        "label": "Fire them up",
+        "description": "An impassioned speech to get the blood pumping. Works best with emotional players."
+      },
+      "calm": {
+        "label": "Keep it measured",
+        "description": "Calm instruction. Don't panic, stick to the plan. Best for composure."
+      },
+      "critical": {
+        "label": "Read them the riot act",
+        "description": "Give them a proper rollicking. Might motivate — might backfire spectacularly."
+      },
+      "tactician": {
+        "label": "Tweak the system",
+        "description": "Tactical adjustment. Shift the formation or instructions."
+      },
+      "individual": {
+        "label": "Quiet word",
+        "description": "Pull a specific player aside for individual instruction."
+      }
+    },
     "teamTalkPrompt": "Choose how you address the team at half time.",
     "teamTalkOptions": {
       "calm": {
@@ -2029,7 +2112,32 @@
     "matchComplete": "Match complete.",
     "addressPress": "Address the press or head back.",
     "skip": "Skip",
-    "pressConference": "Press Conference",
+    "pressConference": {
+      "praiseTeam": {
+        "label": "Praise the lads",
+        "response": "I thought the boys were tremendous today. Every single one of them put a shift in and that's all you can ask for."
+      },
+      "praiseIndividual": {
+        "label": "Sing out a player",
+        "response": "{{player}} was different class today. That's the level he's capable of — if he keeps this up, the sky's the limit."
+      },
+      "deflect": {
+        "label": "Bat it away",
+        "response": "Look, I'm not getting into that. We focus on the next game and that's it. Next question."
+      },
+      "criticize": {
+        "label": "Tell it straight",
+        "response": "We weren't good enough. Simple as that. I'm not going to dress it up — we need to be better."
+      },
+      "humble": {
+        "label": "Stay humble",
+        "response": "It's a good result but we keep our feet on the ground. There's a long way to go this season."
+      },
+      "windUp": {
+        "label": "Wind up the opposition",
+        "response": "If that's the best they've got, I'm not worried. We'll see how they get on when they come to our place."
+      }
+    },
     "pressSubtitle": "Post-match press conference — {{team}}",
     "skipConference": "Skip Conference →",
     "submitting": "Submitting...",
@@ -2264,231 +2372,93 @@
       "PenaltyAwarded": "Penalty Awarded"
     },
     "commentary": {
-      "Goal": {
-        "headline": "GOOAL!",
-        "lines": {
-          "0": "{{player}} finds the net for {{team}}!",
-          "1": "{{player}} buries it! What a finish!",
-          "2": "{{player}} scores for {{team}}!"
-        },
-        "opener": {
-          "headline": "GOOAL!",
-          "lines": {
-            "0": "{{player}} breaks the deadlock for {{team}}!",
-            "1": "First blood to {{team}} — {{player}} strikes!"
-          }
-        },
-        "equaliser": {
-          "headline": "GOOAL!",
-          "lines": {
-            "0": "{{player}} levels it for {{team}}! Game on!",
-            "1": "{{team}} are back on terms — {{player}} with the equaliser!"
-          }
-        },
-        "extends": {
-          "headline": "GOOAL!",
-          "lines": {
-            "0": "{{player}} adds another for {{team}}!",
-            "1": "{{player}} scores again — {{team}} pulling clear!"
-          }
-        },
-        "consolation": {
-          "headline": "GOAL",
-          "lines": {
-            "0": "{{player}} grabs one back for {{team}}.",
-            "1": "A consolation for {{team}} as {{player}} scores."
-          }
-        },
-        "brace": {
-          "headline": "GOOAL!",
-          "lines": {
-            "0": "{{player}} scores another goal — that's a brace!",
-            "1": "Two for {{player}} now!"
-          }
-        },
-        "hattrick": {
-          "headline": "HAT-TRICK!",
-          "lines": {
-            "0": "{{player}} completes the hat-trick! Take a bow!",
-            "1": "Three goals for {{player}} — what a day!"
-          }
-        }
-      },
-      "PenaltyGoal": {
-        "headline": "PENALTY — GOAL!",
-        "lines": {
-          "0": "{{player}} sends the keeper the wrong way! {{team}} score from the spot.",
-          "1": "Ice cold from {{player}} — penalty converted for {{team}}!"
-        }
-      },
-      "PenaltyMiss": {
-        "headline": "PENALTY MISSED!",
-        "lines": {
-          "0": "{{player}} fluffs it from the spot! What a let-off for {{opponent}}!",
-          "1": "Saved! {{player}} will be having nightmares about that penalty."
-        }
-      },
-      "PenaltyAwarded": {
-        "headline": "PENALTY!",
-        "lines": {
-          "0": "The referee points to the spot — penalty to {{team}}!",
-          "1": "It's a penalty for {{team}}! Huge moment."
-        }
-      },
-      "ShotSaved": {
-        "headline": "GREAT SAVE!",
-        "lines": {
-          "0": "{{player}} forces a save out of the keeper.",
-          "1": "The keeper denies {{player}}!"
-        },
-        "routine": {
-          "headline": "SAVED",
-          "lines": {
-            "0": "A comfortable stop from {{player}}'s effort.",
-            "1": "Straight at the keeper from {{player}}."
-          }
-        },
-        "strong": {
-          "headline": "GOOD SAVE!",
-          "lines": {
-            "0": "The keeper has to be alert to keep out {{player}}!",
-            "1": "Strong hands to deny {{player}}!"
-          }
-        },
-        "worldClass": {
-          "headline": "WHAT A SAVE!",
-          "lines": {
-            "0": "Incredible! The keeper somehow claws out {{player}}'s effort!",
-            "1": "World-class stop to deny {{player}} a certain goal!"
-          }
-        }
-      },
-      "ShotOffTarget": {
-        "headline": "THAT WAS CLOSE!",
-        "lines": {
-          "0": "{{player}} drags it just wide for {{team}}.",
-          "1": "So close! {{player}} can't quite find the target."
-        },
-        "speculative": {
-          "headline": "OFF TARGET",
-          "lines": {
-            "0": "{{player}} has a go from distance but it's well off.",
-            "1": "Ambitious from {{player}} — nowhere near."
-          }
-        },
-        "decent": {
-          "headline": "CLOSE!",
-          "lines": {
-            "0": "{{player}} sees the effort flash past the post.",
-            "1": "Not far away from {{player}}!"
-          }
-        },
-        "bigChance": {
-          "headline": "HOW DID THAT MISS?!",
-          "lines": {
-            "0": "{{player}} really should have scored there — agonisingly wide!",
-            "1": "A glorious chance goes begging for {{team}}! {{player}} will be kicking himself."
-          }
-        }
-      },
-      "ShotBlocked": {
-        "headline": "BLOCKED!",
-        "lines": {
-          "0": "{{player}}'s shot is blocked by a brave defender.",
-          "1": "Bodies in the way! {{player}} is denied."
-        },
-        "bigChance": {
-          "headline": "GREAT BLOCK!",
-          "lines": {
-            "0": "A crucial block stops {{player}} from a great position!",
-            "1": "Last-ditch defending to deny {{player}}!"
-          }
-        }
-      },
-      "Foul": {
-        "headline": "FOUL",
-        "lines": {
-          "0": "{{player}} fouls {{victim}}. Free kick to {{opponent}}.",
-          "1": "{{player}} gives away a free kick against {{victim}}."
-        },
-        "hard": {
-          "headline": "IT'S A FOUL",
-          "lines": {
-            "0": "{{player}} goes hard on {{victim}}! Foul for {{opponent}}.",
-            "1": "A meaty challenge from {{player}} on {{victim}}."
-          }
-        },
-        "reckless": {
-          "headline": "RECKLESS!",
-          "lines": {
-            "0": "{{player}} flies in on {{victim}} — that's a dangerous one!",
-            "1": "Crunching foul by {{player}} on {{victim}}! The ref won't like that."
-          }
-        }
-      },
-      "YellowCard": {
-        "headline": "YELLOW CARD",
-        "lines": {
-          "0": "{{player}} goes into the book for {{team}}.",
-          "1": "A yellow card for {{player}}."
-        }
-      },
-      "RedCard": {
-        "headline": "RED CARD!",
-        "lines": {
-          "0": "{{player}} is sent off! {{team}} down to ten!",
-          "1": "Straight red for {{player}}! Disaster for {{team}}."
-        }
-      },
-      "SecondYellow": {
-        "headline": "SECOND YELLOW — OFF!",
-        "lines": {
-          "0": "{{player}} picks up a second yellow and is sent off!",
-          "1": "Two yellows and gone — {{player}} leaves {{team}} a man short."
-        }
-      },
-      "Injury": {
-        "headline": "INJURY",
-        "lines": {
-          "0": "{{player}} is down and needs treatment.",
-          "1": "Concern for {{team}} as {{player}} goes down injured."
-        }
-      },
-      "Substitution": {
-        "headline": "SUBSTITUTION",
-        "lines": {
-          "0": "{{team}} make a change: {{player}} on, {{victim}} off.",
-          "1": "{{player}} replaces {{victim}} for {{team}}."
-        }
-      },
-      "KickOff": {
-        "headline": "KICK-OFF",
-        "lines": {
-          "0": "We're underway!",
-          "1": "The match is on!"
-        }
-      },
-      "HalfTime": {
-        "headline": "HALF TIME",
-        "lines": {
-          "0": "The referee blows for half time.",
-          "1": "That's the end of the first half."
-        }
-      },
-      "SecondHalfStart": {
-        "headline": "SECOND HALF",
-        "lines": {
-          "0": "We're back underway for the second half.",
-          "1": "Off we go again for the second half!"
-        }
-      },
-      "FullTime": {
-        "headline": "FULL TIME",
-        "lines": {
-          "0": "That's it — full time!",
-          "1": "The referee brings the match to an end."
-        }
-      }
+      "goal": [
+        "GOAL! {{scorer}} smashes it home! The stadium erupts!",
+        "BACK OF THE NET! {{scorer}} with a clinical finish!",
+        "He's only gone and done it! {{scorer}} finds the bottom corner!",
+        "GOAL! You couldn't write a better script! {{scorer}} sends the fans wild!",
+        "It's in! {{scorer}} rifles it past the keeper — what a strike!",
+        "GOAL! {{scorer}} cool as you like, slots it home with ice in the veins!",
+        "The net bulges! {{scorer}} with a poacher's finish!",
+        "GOAL! {{scorer}} deserves that — been knocking on the door all game!",
+        "What a finish! {{scorer}} bends it into the top corner — unstoppable!",
+        "GOAL! {{scorer}} reacts first — predatory instinct!"
+      ],
+      "goalConceded": [
+        "Oh no. They've scored. {{scorer}} punishes a defensive lapse.",
+        "That's poor. {{scorer}} given far too much space and makes us pay.",
+        "Bloody hell. {{scorer}} slips through — we've been caught napping.",
+        "That's criminal defending. {{scorer}} taps it in unmarked.",
+        "We've been hit on the break. {{scorer}} finishes coolly.",
+        "Soft goal to concede. {{scorer}} barely had to work for that."
+      ],
+      "save": [
+        "Brilliant save! The keeper claws it away!",
+        "Incredible stop! How did he keep that out?!",
+        "The goalkeeper says NO! Magnificent reflexes!",
+        "World-class save! That's why he's between the sticks!",
+        "Denied! The keeper reads it perfectly!",
+        "What a stop! The keeper came up big when it mattered!"
+      ],
+      "miss": [
+        "He's skied it! How did he miss that?!",
+        "Wide! That should've been the opener — dreadful finish.",
+        "Off the post! Inches away from something special.",
+        "Over the bar! He'll be having nightmares about that one.",
+        "Dragged wide! That's a bad miss — he knows it too."
+      ],
+      "tackle": [
+        "Crunching tackle! That's how you win the ball back!",
+        "He's won it cleanly! A defender's tackle.",
+        "Rock solid at the back — nobody's getting past him today.",
+        "Big tackle! That's lifted the whole team!",
+        "Reads it perfectly and wins the ball. Class defending."
+      ],
+      "card": [
+        "Yellow card. Reckless challenge — he can have no complaints.",
+        "Booked. That's been coming — he's been living on the edge.",
+        "Yellow. The ref's had enough of the persistent fouling.",
+        "Red card! He's off! The ref had no choice — that was dangerous.",
+        "Red! An absolute disgrace of a tackle. He's walked."
+      ],
+      "halfTime": [
+        "Half-time. The gaffer's got 15 minutes to sort this out.",
+        "That's the break. Time for a breather and a rethink.",
+        "Half-time and it's anyone's game. What does the manager do?",
+        "The whistle goes for half-time. Tactics board time."
+      ],
+      "fullTime": [
+        "Full-time. The players trudge off — what a result!",
+        "That's it! The final whistle blows and the fans go mental!",
+        "Full-time. The gaffer will be pleased with that.",
+        "It's all over. A proper performance — everyone did their job.",
+        "Full-time. That's a bitter pill to swallow.",
+        "The whistle goes. Not good enough today — back to the drawing board."
+      ],
+      "substitution": [
+        "{{on}} comes on for {{off}}. Fresh legs.",
+        "Change: {{off}} off, {{on}} on. The gaffer rolls the dice.",
+        "Substitution: {{on}} replaces {{off}}. Time for something different.",
+        "{{on}} enters the fray. Can he make the difference?"
+      ],
+      "penalty": [
+        "Penalty! The ref points to the spot!",
+        "Penalty awarded! That's a stonewaller!",
+        "He's given it! Penalty — the defender's been caught dawdling.",
+        "Penalty! The keeper fouled him — no doubts about that one."
+      ],
+      "penaltyMissed": [
+        "MISSED! He's blown it from the spot!",
+        "Saved! The keeper guesses right — what a moment!",
+        "Off the post! He's hit the woodwork from 12 yards!",
+        "Skied it! Over the bar from the spot — that's criminal!"
+      ],
+      "injury": [
+        "He's down. This doesn't look good — the physio's on.",
+        "Injury concern. He's clutching his {{part}} — could be serious.",
+        "That's a nasty one. He'll need to come off.",
+        "He's limping. The gaffer won't risk him — get the stretcher on."
+      ]
     },
     "matchReport": "Match Report",
     "playerRatings": "Player Ratings",
@@ -4006,6 +3976,28 @@
       "Channels": "Channels pressure",
       "Folds": "Folds under pressure",
       "Escalates": "Escalates (high risk)"
+    }
+  },
+  "stability": {
+    "rollOfTheDice": {
+      "label": "Roll of the Dice",
+      "description": "This player is a walking lottery ticket. One week he's unplayable, the next he's invisible. You never know which version turns up."
+    },
+    "runsHotAndCold": {
+      "label": "Runs Hot and Cold",
+      "description": "Capable of brilliance but disappears when the going gets tough. Needs an arm around the shoulder — or a boot up the backside."
+    },
+    "steadyHand": {
+      "label": "Steady Hand",
+      "description": "Doesn't set the world alight but rarely lets you down. A seven-out-of-ten merchant — every squad needs them."
+    },
+    "trustedLieutenant": {
+      "label": "Trusted Lieutenant",
+      "description": "When the pressure's on, he's the one you want on the pitch. Reliable as they come and the gaffer knows it."
+    },
+    "mrReliable": {
+      "label": "Mr. Reliable",
+      "description": "Ice in the veins. Big game player. When everyone else is panicking, he's steady as a rock. Worth his weight in gold."
     }
   }
 }
