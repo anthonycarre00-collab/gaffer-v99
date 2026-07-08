@@ -367,7 +367,7 @@ fn build_game_from_world_data(
         metadata,
         extra_translations,
         relationships,
-        rivalries,
+        rivalries: _,
         ..
     } = world;
 

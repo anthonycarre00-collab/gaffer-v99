@@ -42,6 +42,8 @@ fn make_player(id: &str, name: &str, pos: Position, skill: u8) -> PlayerData {
         distribution: 50,
         commanding: 50,
         playing_out: 50,
+        stability: 50,
+        morale: 75,
     }
 }
 
@@ -1315,6 +1317,8 @@ fn make_player_with_traits(
         distribution: 50,
         commanding: 50,
         playing_out: 50,
+        stability: 50,
+        morale: 75,
     }
 }
 

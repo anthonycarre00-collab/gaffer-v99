@@ -583,7 +583,7 @@ fn make_player(
     }
 
     let base = avg_ovr as f64;
-    let (shoot_off, tackle_off, pass_off, defend_off, gk_off) = match position {
+    let (shoot_off, tackle_off, pass_off, _defend_off, gk_off) = match position {
         Position::Goalkeeper => (-25.0, 0.0, 0.0, 10.0, 20.0),
         Position::Defender => (-18.0, 12.0, -5.0, 18.0, -15.0),
         Position::Midfielder => (-3.0, 5.0, 12.0, 0.0, -15.0),

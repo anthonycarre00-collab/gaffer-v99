@@ -624,7 +624,7 @@ impl<'a> NarrativeEngine<'a> {
         }
 
         // Player-level memories
-        for (player_id, goals, assists, red_cards, rating) in player_stats {
+        for (player_id, goals, _assists, red_cards, rating) in player_stats {
             // Hat trick
             if *goals >= 3 {
                 self.create_memory(player_id, EntityType::Player, MemoryEventType::HatTrick, 0.9,

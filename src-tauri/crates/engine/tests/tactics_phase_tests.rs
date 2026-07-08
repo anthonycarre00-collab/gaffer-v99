@@ -43,6 +43,8 @@ fn mk(id: &str, pos: Position) -> PlayerData {
         distribution: 50,
         commanding: 50,
         playing_out: 50,
+        stability: 50,
+        morale: 75,
     }
 }
 

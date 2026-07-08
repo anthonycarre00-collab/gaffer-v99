@@ -37,6 +37,8 @@ fn make_player(id: &str, name: &str, position: Position, skill: u8) -> PlayerDat
         distribution: 50,
         commanding: 50,
         playing_out: 50,
+        stability: 50,
+        morale: 75,
     }
 }
 
