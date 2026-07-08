@@ -40,6 +40,9 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
     let footedness_str = format!("{:?}", p.footedness);
     let training_focus_str: Option<String> = p.training_focus.as_ref().map(|f| format!("{:?}", f));
 
+    let personality_json = serde_json::to_string(&p.personality).unwrap_or_default();
+    let narrative_traits_json = serde_json::to_string(&p.narrative_traits).unwrap_or_default();
+
     conn.execute(
         "INSERT INTO players
          (id, match_name, full_name, date_of_birth, nationality, football_nation, birth_country, position,
@@ -47,8 +50,9 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
           contract_end, wage, market_value, stats, career,
           transfer_listed, loan_listed, transfer_offers, alternate_positions,
           natural_position, training_focus, morale_core, footedness, weak_foot, fitness, squad_role,
-          ovr, potential, media_json, jersey_number, loan_offers, active_loan, movement_history)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35, ?36, ?37, ?38)
+          ovr, potential, media_json, jersey_number, loan_offers, active_loan, movement_history,
+          personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35, ?36, ?37, ?38, ?39, ?40, ?41, ?42, ?43)
          ON CONFLICT(id) DO UPDATE SET
            match_name = excluded.match_name,
            full_name = excluded.full_name,
@@ -86,7 +90,12 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
            jersey_number = excluded.jersey_number,
            loan_offers = excluded.loan_offers,
            active_loan = excluded.active_loan,
-           movement_history = excluded.movement_history",
+           movement_history = excluded.movement_history,
+           personality_json = excluded.personality_json,
+           stability_modifier = excluded.stability_modifier,
+           narrative_traits_json = excluded.narrative_traits_json,
+           former_team_id = excluded.former_team_id,
+           retired_season = excluded.retired_season",
         params![
             p.id,
             p.match_name,
@@ -126,6 +135,11 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
             loan_offers_json,
             active_loan_json,
             movement_history_json,
+            personality_json,
+            p.stability_modifier as i64,
+            narrative_traits_json,
+            p.former_team_id,
+            p.retired_season.map(|s| s as i64),
         ],
     )
     .map_err(|_| GAME_PERSISTENCE_WRITE_ERROR.to_string())?;
@@ -201,7 +215,8 @@ pub fn load_all_players(conn: &Connection) -> Result<Vec<Player>, String> {
                     natural_position, training_focus, morale_core, footedness, weak_foot, fitness, squad_role,
                     ovr, potential, COALESCE(media_json, '{}'), jersey_number,
                     COALESCE(loan_offers, '[]'), active_loan,
-                    COALESCE(movement_history, '[]')
+                    COALESCE(movement_history, '[]'),
+                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season
              FROM players",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -228,7 +243,8 @@ pub fn load_players_by_team(conn: &Connection, team_id: &str) -> Result<Vec<Play
                     natural_position, training_focus, morale_core, footedness, weak_foot, fitness, squad_role,
                     ovr, potential, COALESCE(media_json, '{}'), jersey_number,
                     COALESCE(loan_offers, '[]'), active_loan,
-                    COALESCE(movement_history, '[]')
+                    COALESCE(movement_history, '[]'),
+                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season
              FROM players WHERE team_id = ?1",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -313,13 +329,24 @@ fn row_to_player(row: &rusqlite::Row) -> rusqlite::Result<Player> {
         injury: injury_json.and_then(|j| serde_json::from_str(&j).ok()),
         team_id: row.get(12)?,
         retired: retired != 0,
-        former_team_id: None,
-        retired_season: None,
+        former_team_id: row.get::<_, Option<String>>(43).ok().flatten(),
+        retired_season: row.get::<_, Option<i64>>(44).ok().flatten().map(|s| s as u32),
         squad_role: parse_squad_role(&squad_role_str),
         traits: serde_json::from_str(&traits_json).unwrap_or_default(),
-        personality: domain::player::PersonalityProfile::default(),
-        stability_modifier: 50,
-        narrative_traits: Vec::new(),
+        personality: {
+            let json_str: Option<String> = row.get(39).ok().flatten();
+            json_str.and_then(|s| serde_json::from_str(&s).ok())
+                .unwrap_or_default()
+        },
+        stability_modifier: {
+            let val: Option<i32> = row.get(40).ok().flatten();
+            val.unwrap_or(50) as u8
+        },
+        narrative_traits: {
+            let json_str: Option<String> = row.get(41).ok().flatten();
+            json_str.and_then(|s| serde_json::from_str(&s).ok())
+                .unwrap_or_default()
+        },
         ovr,
         potential,
         contract_end: row.get(15)?,

@@ -8,7 +8,12 @@ CREATE TABLE game_meta (
     start_date      TEXT NOT NULL,
     game_date       TEXT NOT NULL,
     created_at      TEXT NOT NULL DEFAULT (datetime('now')),
-    last_played_at  TEXT NOT NULL DEFAULT (datetime('now'))
+    last_played_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    -- Gaffer game-level state (Phase 2-7, persisted as JSON blobs)
+    relationship_graph_json   TEXT DEFAULT NULL,
+    memory_store_json         TEXT DEFAULT NULL,
+    media_engine_json         TEXT DEFAULT NULL,
+    scouting_knowledge_json   TEXT DEFAULT NULL
 );
 
 CREATE TABLE managers (
@@ -73,7 +78,13 @@ CREATE TABLE players (
     career              TEXT NOT NULL DEFAULT '[]',
     transfer_listed     INTEGER NOT NULL DEFAULT 0,
     loan_listed         INTEGER NOT NULL DEFAULT 0,
-    transfer_offers     TEXT NOT NULL DEFAULT '[]'
+    transfer_offers     TEXT NOT NULL DEFAULT '[]',
+    -- Gaffer fields (Phase 1-8)
+    personality_json            TEXT DEFAULT NULL,
+    stability_modifier          INTEGER NOT NULL DEFAULT 50,
+    narrative_traits_json       TEXT DEFAULT NULL,
+    former_team_id              TEXT DEFAULT NULL,
+    retired_season              INTEGER DEFAULT NULL
 );
 
 CREATE TABLE staff (
