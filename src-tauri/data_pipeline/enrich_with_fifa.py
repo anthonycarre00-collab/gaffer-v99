@@ -52,11 +52,16 @@ FIFA_TO_FBREF_LEAGUE = {
 
 
 def download_fifa_data():
-    """Download FIFA23 Big 5 player data from Hugging Face."""
+    """Download FIFA23 Big 5 player data from Hugging Face.
+    
+    Downloads in chunks to handle the 5.6GB file reliably.
+    Shows progress so the user knows it's working.
+    """
     import pandas as pd
     
     print("[1] Downloading FIFA23 data from Hugging Face...")
-    print("    (5.6GB file, filtering to Big 5 + FIFA 23 only)")
+    print("    (5.6GB file — downloading in chunks, this takes 5-15 minutes)")
+    print("    DO NOT close this window!")
     
     cols = ['short_name', 'long_name', 'fifa_version', 'fifa_update', 'overall', 'potential',
             'height_cm', 'weight_kg', 'age', 'club_name', 'league_name', 'nationality_name',
@@ -64,7 +69,35 @@ def download_fifa_data():
             'value_eur', 'wage_eur']
     
     url = 'https://huggingface.co/datasets/jsulz/FIFA23/resolve/main/male_players.csv'
-    df = pd.read_csv(url, usecols=cols)
+    local_file = Path(__file__).parent / 'input' / 'fifa23_raw.csv'
+    local_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Download in chunks to disk (resumable, shows progress)
+    if not local_file.exists() or local_file.stat().st_size < 1_000_000:
+        print(f"    Streaming to {local_file.name}...")
+        r = requests.get(url, headers=HEADERS, stream=True, timeout=600)
+        total_size = int(r.headers.get('content-length', 0))
+        downloaded = 0
+        chunk_count = 0
+        
+        with open(local_file, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024 * 1024):  # 1MB chunks
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    chunk_count += 1
+                    if chunk_count % 50 == 0:  # print every 50MB
+                        pct = (downloaded / total_size * 100) if total_size else 0
+                        mb = downloaded / 1024 / 1024
+                        print(f"    {mb:.0f} MB / {total_size/1024/1024:.0f} MB ({pct:.0f}%)")
+        
+        print(f"    Download complete: {downloaded / 1024 / 1024:.0f} MB")
+    else:
+        print(f"    Already downloaded: {local_file.name} ({local_file.stat().st_size / 1024 / 1024:.0f} MB)")
+    
+    # Read from local file (much faster, no network issues)
+    print("    Parsing CSV...")
+    df = pd.read_csv(local_file, usecols=cols, encoding='utf-8', low_memory=False)
     print(f"    Total rows: {len(df):,}")
     
     # Filter to FIFA 23, latest update, Big 5 leagues
@@ -76,9 +109,17 @@ def download_fifa_data():
     print(f"    Height coverage: {df['height_cm'].notna().sum()}/{len(df)}")
     print(f"    Weight coverage: {df['weight_kg'].notna().sum()}/{len(df)}")
     
-    # Save
+    # Save filtered version
     df.to_csv(FIFA_CSV, index=False)
-    print(f"    Saved to {FIFA_CSV}")
+    print(f"    Saved filtered FIFA data to {FIFA_CSV.name}")
+    
+    # Clean up the raw download to save disk space
+    try:
+        local_file.unlink()
+        print(f"    Cleaned up raw download ({local_file.name})")
+    except:
+        pass  # don't fail if cleanup fails
+    
     return df
 
 
