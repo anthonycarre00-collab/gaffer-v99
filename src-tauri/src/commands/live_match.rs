@@ -298,24 +298,24 @@ mod tests {
 
         PlayerAttributes {
             pace: 65,
+           burst: 65, burst: 65,
             engine: 65,
             power: 65,
             agility: 65,
             passing: 65,
+           distribution: 65, distribution: 65,
+            touch: if is_goalkeeper { 30 } else { 65 },
             finishing: if is_goalkeeper { 30 } else { 65 },
             defending: if is_goalkeeper { 30 } else { 65 },
-            touch: if is_goalkeeper { 30 } else { 65 },
-            defending: if is_goalkeeper { 30 } else { 65 },
+            aerial: 60,
             anticipation: 65,
             vision: 65,
             decisions: 65,
             composure: 65,
-            aggression: 50,
-            teamwork: 65,
             leadership: 50,
             shot_stopping: if is_goalkeeper { 75 } else { 20 },
-            shot_stopping: if is_goalkeeper { 75 } else { 20 },
-            aerial: 60,
+           commanding: 60, commanding: if is_goalkeeper { 65 } else { 20 },
+          playing_out: 25, playing_out: 60, playing_out: if is_goalkeeper { 60 } else { 25 },
         }
     }
 
@@ -772,7 +772,7 @@ mod tests {
             .unwrap();
         composed.attributes.composure = 90;
         composed.attributes.leadership = 90;
-        composed.attributes.aggression = 20;
+        composed.personality.neuroticism = 20;  // low neuroticism = composed
         composed.morale_core.manager_trust = 80;
 
         let volatile = game
@@ -782,7 +782,7 @@ mod tests {
             .unwrap();
         volatile.attributes.composure = 20;
         volatile.attributes.leadership = 20;
-        volatile.attributes.aggression = 90;
+        volatile.personality.neuroticism = 90;  // high neuroticism = volatile
         volatile.morale_core.manager_trust = 25;
         volatile.morale_core.unresolved_issue = Some(PlayerIssue {
             category: PlayerIssueCategory::Morale,

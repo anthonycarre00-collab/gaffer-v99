@@ -10,8 +10,10 @@ fn team_talk_action_key(tone: &str, context: &str) -> String {
 fn team_talk_personality_factor(player: &domain::player::Player) -> i32 {
     let composure = i32::from(player.attributes.composure);
     let leadership = i32::from(player.attributes.leadership);
-    let aggression = i32::from(player.attributes.aggression);
-    ((composure + leadership - aggression) / 6).clamp(-20, 20)
+    // Old FM "aggression" attribute was removed in Gaffer Phase 1.
+    // Use neuroticism as the closest proxy — high neuroticism = reactive/volatile.
+    let volatility = i32::from(player.personality.neuroticism);
+    ((composure + leadership - volatility) / 6).clamp(-20, 20)
 }
 
 fn adjust_weight(weight: &mut u32, delta: i32) {

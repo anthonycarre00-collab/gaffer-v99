@@ -387,13 +387,13 @@ pub fn info_player_profile(ctx: Arc<McpContext>, player_id: String) -> Result<St
         output.push_str("\n### Attributes\n\n| Attr | Val | Attr | Val | Attr | Val |\n|------|-----|------|-----|------|-----|\n");
         let attrs = &player.attributes;
         let attr_rows = [
-            [("Pace", attrs.pace), ("Shooting", attrs.finishing), ("Passing", attrs.passing)],
-            [("Dribbling", attrs.touch), ("Defending", attrs.defending), ("Tackling", attrs.defending)],
-            [("Strength", attrs.power), ("Stamina", attrs.engine), ("Agility", attrs.agility)],
+            [("Pace", attrs.pace), ("Burst", attrs.burst), ("Engine", attrs.engine)],
+            [("Power", attrs.power), ("Agility", attrs.agility), ("Passing", attrs.passing)],
+            [("Distribution", attrs.distribution), ("Touch", attrs.touch), ("Finishing", attrs.finishing)],
+            [("Defending", attrs.defending), ("Aerial", attrs.aerial), ("Anticipation", attrs.anticipation)],
             [("Vision", attrs.vision), ("Decisions", attrs.decisions), ("Composure", attrs.composure)],
-            [("Positioning", attrs.anticipation), ("Aggression", attrs.aggression), ("Teamwork", attrs.teamwork)],
-            [("Leadership", attrs.leadership), ("Handling", attrs.shot_stopping), ("Reflexes", attrs.shot_stopping)],
-            [("Aerial", attrs.aerial), ("", 0), ("", 0)],
+            [("Leadership", attrs.leadership), ("Shot Stopping", attrs.shot_stopping), ("Commanding", attrs.commanding)],
+            [("Playing Out", attrs.playing_out), ("", 0), ("", 0)],
         ];
         for row in &attr_rows {
             // Skip empty cells at the end

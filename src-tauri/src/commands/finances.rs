@@ -178,24 +178,23 @@ mod tests {
     fn make_player() -> Player {
         let attrs = PlayerAttributes {
             pace: 65,
+            burst: 65,
             engine: 65,
             power: 65,
             agility: 65,
             passing: 65,
+            distribution: 65,
             finishing: 65,
             defending: 65,
             touch: 65,
-            defending: 65,
             anticipation: 65,
             vision: 65,
             decisions: 65,
             composure: 65,
-            aggression: 50,
-            teamwork: 65,
             leadership: 50,
             shot_stopping: 20,
-            shot_stopping: 30,
-            aerial: 60,
+            commanding: 20,
+           playing_out: 20, playing_out: 20,aerial: 60,
         };
         let mut player = Player::new(
             "player-1".to_string(),

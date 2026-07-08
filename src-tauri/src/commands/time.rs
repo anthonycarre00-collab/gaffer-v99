@@ -507,24 +507,23 @@ mod tests {
     fn default_attrs() -> PlayerAttributes {
         PlayerAttributes {
             pace: 60,
+            burst: 60,
             engine: 60,
             power: 60,
             agility: 60,
             passing: 60,
+            distribution: 60,
             finishing: 60,
             defending: 60,
             touch: 60,
-            defending: 60,
             anticipation: 60,
             vision: 60,
             decisions: 60,
             composure: 60,
-            aggression: 60,
-            teamwork: 60,
             leadership: 60,
             shot_stopping: 60,
-            shot_stopping: 60,
-            aerial: 60,
+            commanding: 60,
+           playing_out: 60, playing_out: 60,aerial: 60,
         }
     }
 
