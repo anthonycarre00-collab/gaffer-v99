@@ -4,7 +4,6 @@ import {
  LoaderIcon,
  SearchIcon,
  SettingsIcon,
- TrophyIcon,
 } from "../ui/icons";
 import type { JSX, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -352,12 +351,11 @@ export default function DashboardHeader({
  </button>
  )}
  <div>
- <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100">
+ <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400">
  {activeTabLabel}
  </h2>
  <p className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
- <TrophyIcon className="h-3.5 w-3.5" />
- <span className="font-medium">{currentDate}</span>
+ <span className="font-mono font-medium">{currentDate}</span>
  </p>
  </div>
  </div>

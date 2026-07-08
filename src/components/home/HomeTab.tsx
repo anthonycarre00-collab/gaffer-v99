@@ -249,7 +249,7 @@ export default function HomeTab({
  <>
  {/* Row 1: Next Match (3/4) + League Position (1/4) */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
- <Card accent="primary" className="md:col-span-2 lg:col-span-3">
+ <Card className="card-enter md:col-span-2 lg:col-span-3" accent="primary">
  <CardHeader>{t("home.nextMatch")}</CardHeader>
  <CardBody>
  <NextMatchDisplay gameState={gameState} />
