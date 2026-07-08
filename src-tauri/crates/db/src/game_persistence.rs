@@ -131,6 +131,11 @@ fn write_game_to_connection(
                 .map_err(|_| game_persistence_write_error())?,
             extra_translations_json,
             package_lockfile_json,
+            // Gaffer game-level state (Phase 2-7)
+            relationship_graph_json: serde_json::to_string(&game.relationship_graph).ok(),
+            memory_store_json: serde_json::to_string(&game.memory_store).ok(),
+            media_engine_json: serde_json::to_string(&game.media_engine).ok(),
+            scouting_knowledge_json: serde_json::to_string(&game.scouting_knowledge).ok(),
         },
     )?;
 
@@ -341,10 +346,18 @@ impl GamePersistenceReader {
                     .map_err(|_| "be.error.gamePersistence.loadFailed".to_string())?
             },
             deterministic_seed: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(42),
-            relationship_graph: ofm_core::relationships::RelationshipGraph::new(),
-            memory_store: ofm_core::narrative::MemoryStore::new(),
-            media_engine: ofm_core::media::MediaEngine::new(),
-            scouting_knowledge: std::collections::HashMap::new(),
+            relationship_graph: meta.relationship_graph_json.as_deref()
+                .and_then(|s| serde_json::from_str(s).ok())
+                .unwrap_or_else(ofm_core::relationships::RelationshipGraph::new),
+            memory_store: meta.memory_store_json.as_deref()
+                .and_then(|s| serde_json::from_str(s).ok())
+                .unwrap_or_else(ofm_core::narrative::MemoryStore::new),
+            media_engine: meta.media_engine_json.as_deref()
+                .and_then(|s| serde_json::from_str(s).ok())
+                .unwrap_or_else(ofm_core::media::MediaEngine::new),
+            scouting_knowledge: meta.scouting_knowledge_json.as_deref()
+                .and_then(|s| serde_json::from_str(s).ok())
+                .unwrap_or_default(),
         };
         game.promote_legacy_league();
         ofm_core::season_context::refresh_game_context(&mut game);
@@ -391,6 +404,10 @@ mod tests {
             active_competition_ids_json: "[]".to_string(),
             extra_translations_json: "{}".to_string(),
             package_lockfile_json: "[]".to_string(),
+            relationship_graph_json: None,
+            memory_store_json: None,
+            media_engine_json: None,
+            scouting_knowledge_json: None,
         }
     }
 

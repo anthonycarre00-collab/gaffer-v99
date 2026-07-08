@@ -38,6 +38,15 @@ pub struct GameMeta {
     pub extra_translations_json: String,
     #[serde(default = "default_package_lockfile_json")]
     pub package_lockfile_json: String,
+    // Gaffer game-level state (Phase 2-7)
+    #[serde(default)]
+    pub relationship_graph_json: Option<String>,
+    #[serde(default)]
+    pub memory_store_json: Option<String>,
+    #[serde(default)]
+    pub media_engine_json: Option<String>,
+    #[serde(default)]
+    pub scouting_knowledge_json: Option<String>,
 }
 
 fn default_vacant_team_days_json() -> String {
@@ -81,8 +90,8 @@ fn default_package_lockfile_json() -> String {
 /// Insert or replace the singleton game_meta row.
 pub fn upsert_meta(conn: &Connection, meta: &GameMeta) -> Result<(), String> {
     conn.execute(
-        "INSERT OR REPLACE INTO game_meta (id, save_id, save_name, manager_id, start_date, game_date, created_at, last_played_at, vacant_team_days_json, world_history_json, available_staff_market_last_activity_date, save_format_version, world_format_version, app_version, source_world_id, source_world_kind, active_region_ids_json, active_competition_ids_json, extra_translations_json, package_lockfile_json)
-         VALUES ('singleton', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19)",
+        "INSERT OR REPLACE INTO game_meta (id, save_id, save_name, manager_id, start_date, game_date, created_at, last_played_at, vacant_team_days_json, world_history_json, available_staff_market_last_activity_date, save_format_version, world_format_version, app_version, source_world_id, source_world_kind, active_region_ids_json, active_competition_ids_json, extra_translations_json, package_lockfile_json, relationship_graph_json, memory_store_json, media_engine_json, scouting_knowledge_json)
+         VALUES ('singleton', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)",
         params![
             meta.save_id,
             meta.save_name,
@@ -103,6 +112,10 @@ pub fn upsert_meta(conn: &Connection, meta: &GameMeta) -> Result<(), String> {
             meta.active_competition_ids_json,
             meta.extra_translations_json,
             meta.package_lockfile_json,
+            meta.relationship_graph_json,
+            meta.memory_store_json,
+            meta.media_engine_json,
+            meta.scouting_knowledge_json,
         ],
     )
     .map_err(|_| GAME_PERSISTENCE_WRITE_ERROR.to_string())?;
@@ -113,7 +126,7 @@ pub fn upsert_meta(conn: &Connection, meta: &GameMeta) -> Result<(), String> {
 pub fn load_meta(conn: &Connection) -> Result<Option<GameMeta>, String> {
     let mut stmt = conn
         .prepare(
-            "SELECT save_id, save_name, manager_id, start_date, game_date, created_at, last_played_at, vacant_team_days_json, world_history_json, available_staff_market_last_activity_date, save_format_version, world_format_version, app_version, source_world_id, source_world_kind, active_region_ids_json, active_competition_ids_json, extra_translations_json, package_lockfile_json
+            "SELECT save_id, save_name, manager_id, start_date, game_date, created_at, last_played_at, vacant_team_days_json, world_history_json, available_staff_market_last_activity_date, save_format_version, world_format_version, app_version, source_world_id, source_world_kind, active_region_ids_json, active_competition_ids_json, extra_translations_json, package_lockfile_json, relationship_graph_json, memory_store_json, media_engine_json, scouting_knowledge_json
              FROM game_meta WHERE id = 'singleton'",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -146,6 +159,10 @@ pub fn load_meta(conn: &Connection) -> Result<Option<GameMeta>, String> {
                 package_lockfile_json: row
                     .get(18)
                     .unwrap_or_else(|_| default_package_lockfile_json()),
+                relationship_graph_json: row.get(19).ok().flatten(),
+                memory_store_json: row.get(20).ok().flatten(),
+                media_engine_json: row.get(21).ok().flatten(),
+                scouting_knowledge_json: row.get(22).ok().flatten(),
             })
         })
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
