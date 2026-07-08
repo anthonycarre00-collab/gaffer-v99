@@ -229,7 +229,7 @@
     "readMessagesDesc": "Important info from the board and staff awaits"
   },
   "home": {
-    "nextMatch": "Next Match",
+    "nextMatch": "Next Up",
     "nextOpponent": "Next Opponent",
     "leaguePosition": "League Position",
     "standings": "Standings",
@@ -459,7 +459,7 @@
     "contract": "Contract",
     "renewContract": "Renew Contract",
     "status": "Status",
-    "average": "Average",
+    "average": "Avg",
     "goalsFor": "GF",
     "goalsAgainst": "GA",
     "goalDifference": "GD",
@@ -1656,7 +1656,7 @@
     "avgRating": "Avg Rating",
     "careerHistory": "Career History",
     "noCareer": "No career history yet — first season.",
-    "movementHistory": "Movement History",
+    "movementHistory": "Transfer Trail",
     "noMovementHistory": "No transfer or loan movement recorded yet.",
     "movementPermanentTransfer": "Transfer",
     "movementLoanStart": "Loan",
@@ -1871,7 +1871,7 @@
     "confidence": "Confidence"
   },
   "match": {
-    "live": "Live",
+    "live": "LIVE",
     "paused": "Paused",
     "events": "Events",
     "stats": "Stats",

@@ -147,7 +147,7 @@ export default function DashboardSidebar({
 
   return (
     <aside
-      className={`bg-navy-800 dark:bg-navy-800 border-r border-navy-700 text-white flex h-screen sticky top-0 shrink-0 flex-col transition-[width] duration-200 ${collapsed ? "w-20" : "w-64"
+      className={`leather-texture bg-navy-800 dark:bg-navy-800 border-r border-navy-700 text-white flex h-screen sticky top-0 shrink-0 flex-col transition-[width] duration-200 ${collapsed ? "w-20" : "w-64"
         }`}
     >
       {/* Brand — Gaffer logo */}
@@ -162,9 +162,9 @@ export default function DashboardSidebar({
           >
             <div className="w-8 h-8 flex items-center justify-center">
               <img
-                src="/gaffer-icon.svg"
+                src="../assets/gaffer-logo-pro.png"
                 alt="Gaffer"
-                className="w-8 h-8"
+                className="w-8 h-8 rounded"
               />
             </div>
             {collapsed ? null : (

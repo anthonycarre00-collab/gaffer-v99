@@ -86,13 +86,13 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
   };
 
   return (
-    <div className="py-8 px-4">
+    <div className="py-8 px-4 awards-bg">
       {step === "review" && (
         <>
           {/* Hero */}
           <div className="text-center mb-8">
-            <div className={`w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4 ${isChampion
-                ? "bg-gradient-to-br from-accent-400 to-accent-600 shadow-lg shadow-accent-500/30"
+            <div className={`w-20 h-20 mx-auto rounded flex items-center justify-center mb-4 ${isChampion
+                ? "bgc-accent-500"
                 : "bg-gradient-to-br from-navy-700 to-navy-800"
               }`}>
               {isChampion ? <Crown className="w-10 h-10 text-white" /> : <Trophy className="w-10 h-10 text-gray-300" />}

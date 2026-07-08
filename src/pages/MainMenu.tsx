@@ -697,10 +697,14 @@ export default function MainMenu() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-navy-900 transition-colors duration-500 relative overflow-x-hidden">
-      {/* Background gradient accents */}
+      {/* Background — stadium at night */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary-500/10 dark:bg-primary-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent-400/10 dark:bg-accent-400/5 rounded-full blur-3xl" />
+        <img
+          src="../assets/stadium-night-bg.png"
+          alt=""
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80" />
       </div>
 
       {/* Theme Toggle */}
@@ -712,11 +716,11 @@ export default function MainMenu() {
         <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
         <div className="bg-white dark:bg-navy-800 p-8 rounded-b-lg border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
-          {/* Gaffer Logo */}
+          {/* Gaffer Logo — professional AI-generated */}
           <img
-            src="/gaffer-icon.svg"
+            src="../assets/gaffer-logo-pro.png"
             alt="Gaffer"
-            className="mx-auto w-16 h-16"
+            className="mx-auto w-24 h-24 rounded"
           />
           <h1 className="text-center font-heading text-3xl font-bold uppercase tracking-wider text-accent-500 mt-3">
             Gaffer
