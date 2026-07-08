@@ -368,7 +368,7 @@
     }
   },
   "youthAcademy": {
-    "title": "Youth Academy",
+    "title": "The Academy",
     "playersUnder21": "{{count}} academy players",
     "recoveryTitle": "Build your academy",
     "recoveryDescription": "Delegate eligible under-21 players from your senior squad or open scouting to look for more prospects.",
@@ -398,7 +398,16 @@
     "potExcellent": "Excellent",
     "potPromising": "Promising",
     "potDecent": "Decent",
-    "potLimited": "Limited"
+    "potLimited": "Limited",
+    "prospects": "Prospects",
+    "intake": "Fresh Intake",
+    "promote": "Promote to First Team",
+    "release": "Release",
+    "noProspects": "No prospects in the academy right now. Check back next season.",
+    "wonderkid": "One to watch. This lad's got potential written all over him.",
+    "promising": "Promising. Could develop into a useful player with the right guidance.",
+    "average": "Average prospect. Might make the grade, might not.",
+    "weak": "Slim chances. He's got a lot of work to do."
   },
   "common": {
     "loading": "Loading...",
@@ -620,7 +629,25 @@
       "SteadyHand": "Steady Hand",
       "TrustedLieutenant": "Trusted Lieutenant",
       "MrReliable": "Mr. Reliable"
-    }
+    },
+    "delete": "Delete",
+    "edit": "Edit",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "error": "Something went wrong",
+    "success": "Done",
+    "noData": "Nothing to show here",
+    "filter": "Filter",
+    "sort": "Sort",
+    "apply": "Apply",
+    "reset": "Reset",
+    "none": "None",
+    "club": "Club",
+    "available": "Available",
+    "suspended": "Suspended",
+    "onLoan": "On Loan"
   },
   "teamSelection": {
     "title": "Choose Your Club",
@@ -1053,10 +1080,12 @@
     "hireStaff": "Hire staff member",
     "best": "Best",
     "roles": {
-      "AssistantManager": "Assistant Manager",
+      "Manager": "Gaffer",
+      "AssistantManager": "Assistant Gaffer",
       "Coach": "Coach",
+      "Physio": "Physio",
       "Scout": "Scout",
-      "Physio": "Physio"
+      "GoalkeepingCoach": "GK Coach"
     },
     "attrs": {
       "coaching": "Coaching",
@@ -1066,12 +1095,18 @@
     },
     "specializations": {
       "Fitness": "Fitness",
-      "Technique": "Technique",
-      "Tactics": "Tactics",
-      "Defending": "Defending",
-      "Attacking": "Attacking",
-      "GoalKeeping": "Goalkeeping",
-      "Youth": "Youth Dev"
+      "Technique": "Technical",
+      "Tactics": "Tactical",
+      "Defending": "Defensive",
+      "Attacking": "Attacking"
+    },
+    "hire": "Bring In",
+    "release": "Let Go",
+    "advice": {
+      "noStaff": "You haven't got any backroom staff. The lads are training themselves. Sort it out.",
+      "poorCoaching": "The coaching is poor. Players aren't developing. Time to upgrade.",
+      "goodCoaching": "Coaching setup is solid. The players are getting what they need.",
+      "excellentCoaching": "Top-class backroom team. The players couldn't be in better hands."
     }
   },
   "finances": {
@@ -1149,7 +1184,24 @@
     "contractExpiresOn": "Expires {{date}}",
     "atRiskWages": "{{amount}}/wk at risk",
     "noContractRisks": "No imminent contract risks",
-    "selectRiskPlayer": "Select {{player}}"
+    "selectRiskPlayer": "Select {{player}}",
+    "budgetTransfer": "Transfer Kitty",
+    "budgetWages": "Wage Bill",
+    "balance": "Bank Balance",
+    "income": "Money In",
+    "expenses": "Money Out",
+    "profit": "Net",
+    "weeklyWages": "Weekly Wage Bill",
+    "sponsorIncome": "Sponsorship Deal",
+    "matchdayIncome": "Matchday Revenue",
+    "transferSpending": "Transfer Outlay",
+    "facilityUpgrades": "Facility Investment",
+    "warnings": {
+      "overspend": "You're spending money you haven't got. The chairman wants a word.",
+      "tight": "Budget's tight. Watch the pennies or the board will come knocking.",
+      "healthy": "Finances are looking healthy. Spend wisely.",
+      "flush": "Money to burn. The board might loosen the purse strings."
+    }
   },
   "inbox": {
     "title": "Inbox",
@@ -1214,7 +1266,7 @@
   "manager": {
     "managerOf": "Manager of {{team}}",
     "reputation": "Reputation",
-    "careerStats": "Career Statistics",
+    "careerStats": "The Record",
     "boardStatus": "Board Status",
     "satisfaction": "Satisfaction",
     "careerHistory": "Career History",
@@ -1224,7 +1276,7 @@
     "wins": "Wins",
     "draws": "Draws",
     "losses": "Losses",
-    "trophies": "Trophies",
+    "trophies": "Silverware",
     "winPercent": "Win %",
     "boardVeryPleased": "The board is very pleased with your work.",
     "boardSatisfied": "The board is satisfied with your performance.",
@@ -1237,7 +1289,18 @@
     "fanBehind": "Fans are behind the team.",
     "fanMixed": "Fan sentiment is mixed.",
     "fanRestless": "Fans are growing restless.",
-    "fanUnrest": "Fan unrest — protests likely."
+    "fanUnrest": "Fan unrest — protests likely.",
+    "career": "Career",
+    "matchesManaged": "Matches",
+    "winRate": "Win Rate",
+    "bestFinish": "Best Finish",
+    "sacked": "You've been given the tin tack. Pack your things.",
+    "hired": "You've got the job! The fans are expecting big things.",
+    "jobOffer": "Job Offer",
+    "interest": "Interested",
+    "notInterested": "Not Interested",
+    "apply": "Throw Your Hat In",
+    "applied": "Application sent. Don't hold your breath."
   },
   "managersWorld": {
     "title": "Managers",
@@ -1308,10 +1371,10 @@
     "loan": "Loan",
     "none": "None",
     "listed": "Listed",
-    "makeBid": "Make Transfer Bid",
+    "makeBid": "Table a Bid",
     "makeLoanOffer": "Make Loan Offer",
     "offerContract": "Offer Contract",
-    "makeOffer": "Make Offer",
+    "makeOffer": "Make an Offer",
     "dealType": "Deal type",
     "dealChooserHint": "Choose how to approach this player. Only available routes can be started.",
     "dealTransferDescription": "Permanent move with a transfer fee.",
@@ -1339,9 +1402,9 @@
     "bidImpactWagePressure": "Projected wage budget usage {{percent}}%",
     "bidImpactOverTransferBudget": "This bid exceeds your transfer budget",
     "bidImpactOverBalance": "This bid would push the club into debt",
-    "bidAccepted": "Bid accepted! Player signed.",
+    "bidAccepted": "They've accepted! Now it's down to the player.",
     "bidCountered": "They came back with revised terms.",
-    "bidRejected": "Bid rejected — offer too low.",
+    "bidRejected": "They've told us where to go. The bid wasn't enough.",
     "loanEndDate": "Loan End Date",
     "loanPeriod": "Loan Length",
     "loanPeriodThreeMonths": "3 months",
@@ -1418,7 +1481,23 @@
     "transferFeedbackCounterHeadline": "They want more before shaking hands.",
     "transferFeedbackCounterDetail": "The bid was close enough to keep talking, but their side are signalling a price nearer {{fee}}.",
     "transferFeedbackRejectedHeadline": "They shut this round down.",
-    "transferFeedbackRejectedDetail": "The proposal did not move them enough. You would need a stronger fee, closer to {{fee}}, to reopen serious talks."
+    "transferFeedbackRejectedDetail": "The proposal did not move them enough. You would need a stronger fee, closer to {{fee}}, to reopen serious talks.",
+    "negotiate": "Negotiate",
+    "accept": "Snap Their Hand Off",
+    "reject": "Tell Them to Do One",
+    "withdraw": "Walk Away",
+    "transferListed": "Transfer Listed",
+    "loanListed": "Available for Loan",
+    "freeAgent": "Free Agent",
+    "deadline": "Transfer Deadline",
+    "rumours": "The Rumour Mill",
+    "signed": "Signed!",
+    "failed": "Deal Collapsed",
+    "playerAgreed": "He's agreed terms. Get the shirt ready.",
+    "playerRejected": "He's turned us down. Didn't fancy the project.",
+    "noBudget": "You haven't got the money. The chairman's not budging.",
+    "askingPrice": "They want €{{fee}}M. That's a lot of money.",
+    "marketValue": "Market value: €{{fee}}M"
   },
   "transferCentreWorld": {
     "title": "Transfer Centre",
@@ -1805,7 +1884,7 @@
       "normal": "Normal",
       "fast": "Fast"
     },
-    "uiScale": "UI Scale",
+    "uiScale": "Interface Size",
     "uiScaleDesc": "Adjust font size and spacing for readability",
     "uiScaleOptions": {
       "small": "Small",
@@ -1820,7 +1899,10 @@
     "enterFullscreen": "Enter",
     "exitFullscreen": "Exit",
     "switchToLightMode": "Switch to light mode",
-    "switchToDarkMode": "Switch to dark mode"
+    "switchToDarkMode": "Switch to dark mode",
+    "appearance": "Look & Feel",
+    "darkMode": "Floodlit (Dark)",
+    "lightMode": "Daylight (Light)"
   },
   "preMatch": {
     "formationFit": "Formation Fit",
@@ -3999,5 +4081,28 @@
       "label": "Mr. Reliable",
       "description": "Ice in the veins. Big game player. When everyone else is panicking, he's steady as a rock. Worth his weight in gold."
     }
+  },
+  "competitions": {
+    "league": "League",
+    "cup": "Cup",
+    "continental": "Europe",
+    "table": "Table",
+    "fixtures": "Fixtures",
+    "results": "Results",
+    "topScorer": "Golden Boot",
+    "mostAssists": "Most Assists",
+    "bestDefence": "Meanest Defence",
+    "position": "Pos",
+    "played": "P",
+    "won": "W",
+    "drawn": "D",
+    "lost": "L",
+    "goalsFor": "GF",
+    "goalsAgainst": "GA",
+    "goalDifference": "GD",
+    "points": "Pts",
+    "form": "Form",
+    "championsLeague": "Champions League spots",
+    "relegation": "Relegation zone"
   }
 }
