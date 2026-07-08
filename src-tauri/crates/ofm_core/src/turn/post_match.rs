@@ -630,7 +630,7 @@ fn update_post_match_morale(
         .map(|e| e.rivalry_flag)
         .unwrap_or(false);
 
-    let _date = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
     let mut engine = crate::narrative::NarrativeEngine::new(&mut game.memory_store, &date);
     engine.process_match_result(
         home_team_id,
@@ -702,7 +702,7 @@ fn update_relationships_post_match(
 ) {
     let home_won = report.home_goals > report.away_goals;
     let away_won = report.away_goals > report.home_goals;
-    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let _date = game.clock.current_date.format("%Y-%m-%d").to_string();
 
     for (team_id, won) in [(home_team_id, home_won), (away_team_id, away_won)] {
         // Get all players on this team

@@ -221,7 +221,7 @@ pub(super) fn generate_random_player_from_def(
     let group = position.to_group_position();
     let is_gk = matches!(group, Position::Goalkeeper);
     let is_def = matches!(group, Position::Defender);
-    let _is_fwd = matches!(group, Position::Forward);
+    let is_fwd = matches!(group, Position::Forward);
 
     let attributes = PlayerAttributes {
         pace: rng.random_range(40..95),
@@ -524,7 +524,7 @@ pub(super) fn attributes_for_overall(
     let group = position.to_group_position();
     let is_gk = matches!(group, Position::Goalkeeper);
     let is_def = matches!(group, Position::Defender);
-    let is_fwd = matches!(group, Position::Forward);
+    let _is_fwd = matches!(group, Position::Forward);
 
     PlayerAttributes {
         pace: jitter(base, 8, 30, 97, rng),

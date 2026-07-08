@@ -428,6 +428,8 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 // Personality-derived for engine simulation
                 aggression: p.personality.neuroticism,
                 teamwork: p.personality.agreeableness,
+                stability: p.stability_modifier,
+                morale: p.morale,
                 // GK attrs
                 shot_stopping: p.attributes.shot_stopping,
                 commanding: p.attributes.commanding,
