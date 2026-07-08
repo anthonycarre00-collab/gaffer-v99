@@ -30,6 +30,14 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
     defaultValue: snapshot.pressure_response_type,
   });
 
+  // Scouting knowledge — show reveal tier badge if player has been scouted
+  const scoutingTier = snapshot.scouting_knowledge?.reveal_tier;
+  const scoutingBadge = scoutingTier ? (
+    <Badge variant={scoutingTier === 'Complete' ? 'success' : scoutingTier === 'Detailed' ? 'accent' : 'neutral'}>
+      Scout: {scoutingTier}
+    </Badge>
+  ) : null;
+
   return (
     <Card className="p-5 space-y-4">
       <div>
@@ -40,6 +48,7 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
         <div className="mt-1 flex flex-wrap gap-2">
           <Badge variant="primary">{snapshot.archetype_label}</Badge>
           <Badge variant="neutral">{snapshot.role_identity_label}</Badge>
+          {scoutingBadge}
         </div>
       </div>
 
