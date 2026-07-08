@@ -458,6 +458,9 @@ fn to_engine_player(
         // Personality-derived for engine simulation
         aggression: p.personality.neuroticism,
         teamwork: p.personality.agreeableness,
+        // Gaffer Phase 6 — stability + morale passed to engine for pressure mechanics
+        stability: p.stability_modifier,
+        morale: p.morale,
         // GK attrs
         shot_stopping: p.attributes.shot_stopping,
         commanding: p.attributes.commanding,

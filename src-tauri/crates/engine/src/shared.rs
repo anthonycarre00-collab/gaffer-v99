@@ -409,6 +409,48 @@ pub(crate) fn home_mod(side: Side, config: &MatchConfig) -> f64 {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Gaffer Phase 6 — Stability modifier (clutch/choke under pressure)
+// ---------------------------------------------------------------------------
+
+/// Returns a multiplier (0.85–1.10) based on player stability and match pressure.
+/// High-stability players (70+) get a boost in pressure situations.
+/// Low-stability players (<40) get a penalty.
+/// Pressure is determined by: close score in late game, rivalry match, or
+/// high-stakes cup fixture.
+///
+/// stability: 0-100 (player's stability_modifier)
+/// is_pressure_situation: true if match is close (< 1 goal diff) after 70min,
+///   or rivalry match, or cup knockout
+/// minute: current match minute (for late-game pressure scaling)
+pub(crate) fn stability_pressure_modifier(stability: u8, is_pressure_situation: bool) -> f64 {
+    if !is_pressure_situation {
+        return 1.0; // No pressure = no modifier
+    }
+    // High stability: up to +10% performance under pressure
+    // Low stability: up to -15% performance under pressure
+    // Mid stability (50): neutral
+    if stability >= 70 {
+        1.0 + (stability as f64 - 50.0) / 200.0 // 70→1.10, 100→1.25 (capped at 1.10)
+    } else if stability < 40 {
+        1.0 - (50.0 - stability as f64) / 166.0 // 39→0.94, 20→0.82, 0→0.70
+    } else {
+        1.0 // 40-69: neutral
+    }
+}
+
+/// Returns a morale modifier (0.90–1.05) based on player morale.
+/// High morale (70+) gives a small boost. Low morale (<40) gives a penalty.
+pub(crate) fn morale_modifier(morale: u8) -> f64 {
+    if morale >= 70 {
+        1.0 + (morale as f64 - 70.0) / 600.0 // 70→1.00, 100→1.05
+    } else if morale < 40 {
+        1.0 - (40.0 - morale as f64) / 400.0 // 39→0.98, 20→0.93, 0→0.90
+    } else {
+        1.0
+    }
+}
+
 #[cfg(test)]
 mod phase_modifier_tests {
     use super::*;

@@ -119,6 +119,14 @@ pub struct PlayerData {
     pub aggression: u8,  // Derived from personality.neuroticism
     #[serde(default = "default_engine_attr")]
     pub teamwork: u8,    // Derived from personality.agreeableness
+    /// Gaffer Phase 6 — stability modifier (0-100, hidden). Affects clutch/choke
+    /// under pressure. High stability = performs better in big matches/rivalries.
+    /// Low stability = prone to mistakes under pressure.
+    #[serde(default = "default_stability")]
+    pub stability: u8,
+    /// Gaffer — player morale (0-100). Affects effort and decision-making.
+    #[serde(default = "default_engine_attr")]
+    pub morale: u8,
 
     // The Gloves (3, GK)
     #[serde(default = "default_engine_attr")]
@@ -137,6 +145,10 @@ pub struct PlayerData {
 }
 
 fn default_engine_attr() -> u8 {
+    50
+}
+
+fn default_stability() -> u8 {
     50
 }
 

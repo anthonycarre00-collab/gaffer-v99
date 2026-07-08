@@ -212,15 +212,24 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
 
       {step === "done" && summary && (
         <div className="text-center">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4 shadow-lg shadow-primary-500/30">
+          <div className="w-20 h-20 mx-auto rounded bgc-primary-500 flex items-center justify-center mb-4">
             <Star className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-heading font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide mb-2">
             {t('endOfSeason.newSeason', { n: summary.season + 1 })}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mb-8">
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
             {t('endOfSeason.newScheduleReleased')}
           </p>
+          {/* Gaffer Phase 8 — Academy intake notification */}
+          <div className="max-w-md mx-auto mb-6 rounded border border-accent-500/30 bg-accent-500/5 p-4 text-left">
+            <p className="text-sm font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400 mb-1">
+              Academy Intake
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              New youth prospects have joined your academy. Check the Youth Academy tab to see this season's intake.
+            </p>
+          </div>
 
           <button
             onClick={() => {

@@ -615,6 +615,8 @@ fn make_player(
         leadership: noise(base, rng),
         aggression: noise(base, rng),
         teamwork: noise(base, rng),
+        stability: 50,
+        morale: 75,
         shot_stopping: biased(base, gk_off, rng),
         commanding: biased(base, gk_off, rng),
         playing_out: biased(base, pass_off / 2.0, rng),
