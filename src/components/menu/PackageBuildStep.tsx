@@ -124,7 +124,7 @@ function PackageCard({ pkg, isActive, onToggle, onUninstall }: PackageCardProps)
  tabIndex={0}
  onClick={(e) => { e.stopPropagation(); onUninstall(); }}
  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); onUninstall(); } }}
- className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 mt-0.5 p-0.5 rounded"
+ className="text-gray-400 hover:text-danger-500 transition-colors flex-shrink-0 mt-0.5 p-0.5 rounded"
  title={t("worldSelect.removePackage")}
  aria-label={t("worldSelect.removePackage")}
  >
@@ -284,8 +284,8 @@ export default function PackageBuildStep({
 
  {/* Patch-only error */}
  {hasPatchOnly && (
- <div className="rounded border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
- <p className="font-heading font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1">
+ <div className="rounded border border-accent-300 dark:border-accent-500/40 bg-accent-50 dark:bg-accent-500/10 p-3 text-xs">
+ <p className="font-heading font-bold uppercase tracking-wider text-accent-700 dark:text-accent-400 flex items-center gap-1">
  <AlertCircle className="w-3.5 h-3.5" />
  {t("packageBuild.patchOnlyError")}
  </p>
@@ -294,12 +294,12 @@ export default function PackageBuildStep({
 
  {/* Stack conflict warnings */}
  {stackConflictWarnings.length > 0 && (
- <div className="rounded border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
- <p className="font-heading font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1 flex items-center gap-1">
+ <div className="rounded border border-accent-300 dark:border-accent-500/40 bg-accent-50 dark:bg-accent-500/10 p-3 text-xs">
+ <p className="font-heading font-bold uppercase tracking-wider text-accent-700 dark:text-accent-400 mb-1 flex items-center gap-1">
  <AlertTriangle className="w-3.5 h-3.5" />
  {t("worldSelect.stackConflictWarnings", { count: stackConflictWarnings.length })}
  </p>
- <ul className="list-disc pl-4 space-y-0.5 text-amber-700 dark:text-amber-300">
+ <ul className="list-disc pl-4 space-y-0.5 text-accent-700 dark:text-accent-300">
  {stackConflictWarnings.map((c, i) => (
  <li key={i}>{t(c.code, { entityKind: c.entityKind, entityId: c.entityId, packages: c.packages.join(", ") })}</li>
  ))}
@@ -309,12 +309,12 @@ export default function PackageBuildStep({
 
  {/* Stack errors */}
  {(hasPackageErrors || hasStackErrors) && (
- <div className="rounded border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 p-3 text-xs">
- <p className="font-heading font-bold uppercase tracking-wider text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
+ <div className="rounded border border-danger-300 dark:border-danger-500/40 bg-danger-50 dark:bg-danger-500/10 p-3 text-xs">
+ <p className="font-heading font-bold uppercase tracking-wider text-danger-600 dark:text-danger-400 mb-1 flex items-center gap-1">
  <AlertCircle className="w-3.5 h-3.5" />
  {t("worldSelect.packageStackErrors")}
  </p>
- <ul className="list-disc pl-4 space-y-0.5 text-red-600 dark:text-red-300">
+ <ul className="list-disc pl-4 space-y-0.5 text-danger-600 dark:text-danger-300">
  {packageStackErrors?.map((issue, i) => (
  <li key={`issue-${i}`}>
  {issue.file ? `[${issue.file}] ` : ""}

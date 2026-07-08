@@ -13,10 +13,10 @@ function getAlertButtonClassName(severity: DashboardAlert["severity"]): string {
  "flex items-center gap-2 rounded border px-4 py-2 text-xs font-heading font-bold uppercase tracking-wider transition-all";
 
  if (severity === "warn") {
- return `${baseClassName} border-amber-500/20 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 dark:text-amber-400`;
+ return `${baseClassName} border-accent-500/20 bg-accent-500/10 text-accent-600 hover:bg-accent-500/20 dark:text-accent-400`;
  }
 
- return `${baseClassName} border-blue-500/20 bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 dark:text-blue-400`;
+ return `${baseClassName} border-primary-500/20 bg-primary-500/10 text-primary-600 hover:bg-primary-500/20 dark:text-primary-400`;
 }
 
 export default function DashboardAlerts({

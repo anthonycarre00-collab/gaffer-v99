@@ -105,14 +105,14 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  <div className="mt-1 space-y-1 text-xs">
  {snapshot.strongest_positive_link && (
  <div className="flex items-center gap-2">
- <span className="text-green-600 dark:text-success-400">★</span>
+ <span className="text-success-600 dark:text-success-400">★</span>
  <span className="text-gray-600 dark:text-gray-300">{t('meaning.closestAlly')}</span>
  <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_positive_link}</span>
  </div>
  )}
  {snapshot.strongest_negative_link && (
  <div className="flex items-center gap-2">
- <span className="text-red-600 dark:text-danger-400">⚠</span>
+ <span className="text-danger-600 dark:text-danger-400">⚠</span>
  <span className="text-gray-600 dark:text-gray-300">{t('meaning.tensionWith')}</span>
  <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_negative_link}</span>
  </div>
@@ -128,7 +128,7 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  )}
  {snapshot.clique_membership.length > 0 && (
  <div className="flex items-center gap-2">
- <span className="text-blue-600 dark:text-blue-400">●</span>
+ <span className="text-primary-600 dark:text-primary-400">●</span>
  <span className="text-gray-600 dark:text-gray-300">{t('meaning.clique')}</span>
  <span className="font-medium text-gray-900 dark:text-white">{snapshot.clique_membership.join(', ')}</span>
  </div>

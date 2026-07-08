@@ -153,7 +153,7 @@ export function PlayerForm({
  <button
  type="button"
  onClick={() => { updateField("photo", null); }}
- className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
+ className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition"
  >
  <X className="w-3.5 h-3.5" />
  </button>

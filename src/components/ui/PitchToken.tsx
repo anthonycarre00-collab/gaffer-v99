@@ -50,7 +50,7 @@ function fitRingClass(fitTone: PitchFitTone): string {
  case "adapted":
  return "ring-2 ring-accent-400";
  case "out":
- return "ring-2 ring-red-400";
+ return "ring-2 ring-danger-400";
  default:
  return "ring-1 ring-white/25";
  }

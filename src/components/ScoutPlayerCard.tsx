@@ -17,15 +17,15 @@ interface AttrRow {
 function confidenceColor(key: string): string {
  if (key.endsWith(".high")) return "text-success-500";
  if (key.endsWith(".moderate")) return "text-accent-500";
- return "text-red-500";
+ return "text-danger-500";
 }
 
 function ratingColor(key: string): string {
  if (key.endsWith(".excellent")) return "text-success-500";
  if (key.endsWith(".veryGood")) return "text-primary-500";
  if (key.endsWith(".good")) return "text-accent-500";
- if (key.endsWith(".average")) return "text-yellow-500";
- return "text-red-500";
+ if (key.endsWith(".average")) return "text-accent-500";
+ return "text-danger-500";
 }
 
 export default function ScoutPlayerCard({ report, onPlayerClick }: ScoutPlayerCardProps) {

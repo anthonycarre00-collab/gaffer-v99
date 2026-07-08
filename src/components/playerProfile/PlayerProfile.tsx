@@ -828,7 +828,7 @@ export default function PlayerProfile({
  />
 
  {contractActionError ? (
- <div className="lg:col-span-3 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+ <div className="lg:col-span-3 rounded border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700 dark:border-danger-900/50 dark:bg-danger-950/30 dark:text-danger-300">
  {contractActionError}
  </div>
  ) : null}
@@ -982,7 +982,7 @@ export default function PlayerProfile({
  </span>
  </div>
  {!terminationPreview.squad_safety.can_field_matchday_squad ? (
- <p className="mt-3 text-red-600 dark:text-red-300">
+ <p className="mt-3 text-danger-600 dark:text-danger-300">
  {t("playerProfile.terminationUnsafe")}
  </p>
  ) : null}
@@ -994,7 +994,7 @@ export default function PlayerProfile({
  )}
 
  {contractActionError ? (
- <p className="text-sm text-red-600 dark:text-red-300">
+ <p className="text-sm text-danger-600 dark:text-danger-300">
  {contractActionError}
  </p>
  ) : null}
@@ -1012,7 +1012,7 @@ export default function PlayerProfile({
  </Button>
  <Button
  variant="outline"
- className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+ className="text-danger-600 hover:text-danger-700 dark:text-danger-400 dark:hover:text-danger-300"
  disabled={
  contractActionSubmitting ||
  !terminationPreview?.squad_safety.can_field_matchday_squad

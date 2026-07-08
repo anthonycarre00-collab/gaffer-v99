@@ -168,7 +168,7 @@ export default function SimLab() {
  {/* Header */}
  <div className="border-b border-navy-700 px-6 py-3 flex items-center justify-between bg-navy-900">
  <div>
- <h1 className="text-lg font-bold text-blue-400">Simulation Lab</h1>
+ <h1 className="text-lg font-bold text-primary-400">Simulation Lab</h1>
  <p className="text-xs text-slate-500 mt-0.5">
  Batch match simulation &amp; engine analysis tool
  </p>
@@ -176,7 +176,7 @@ export default function SimLab() {
  <button
  onClick={() => { void run(); }}
  disabled={running}
- className="px-5 py-2 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm transition-colors"
+ className="px-5 py-2 rounded bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm transition-colors"
  >
  {running ? "Simulating…" : `Run ${cfg.games.toLocaleString()} games`}
  </button>
@@ -207,7 +207,7 @@ export default function SimLab() {
  className={inputCls}
  />
  {cfg.games > 10000 && (
- <p className="text-xs text-amber-400 mt-1">Large runs may take several seconds.</p>
+ <p className="text-xs text-accent-400 mt-1">Large runs may take several seconds.</p>
  )}
  <Label htmlFor="seed-input">Seed (blank = random)</Label>
  <input
@@ -309,7 +309,7 @@ export default function SimLab() {
  {/* Results area */}
  <main className="flex-1 overflow-y-auto p-6">
  {error && (
- <div className="mb-4 p-3 bg-red-900/40 border border-red-700 rounded text-red-300 text-sm">
+ <div className="mb-4 p-3 bg-danger-900/40 border border-danger-700 rounded text-danger-300 text-sm">
  {error}
  </div>
  )}
@@ -320,7 +320,7 @@ export default function SimLab() {
 
  {running && (
  <div className="flex items-center gap-3 text-slate-400">
- <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+ <div className="w-5 h-5 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
  Simulating {cfg.games.toLocaleString()} games…
  </div>
  )}
@@ -335,7 +335,7 @@ export default function SimLab() {
  onClick={() => setActiveTab(t)}
  className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
  activeTab === t
- ? "border-blue-400 text-blue-400"
+ ? "border-primary-400 text-primary-400"
  : "border-transparent text-slate-500 hover:text-slate-300"
  }`}
  >
@@ -373,7 +373,7 @@ function TeamConfig({
 }) {
  return (
  <div>
- <p className="text-xs font-semibold text-blue-400 mb-2">{side}</p>
+ <p className="text-xs font-semibold text-primary-400 mb-2">{side}</p>
  <Label htmlFor={`${prefix}-style`}>Style</Label>
  <select
  id={`${prefix}-style`}
@@ -436,7 +436,7 @@ function ConfigSlider({
  <div className="mb-3">
  <div className="flex justify-between items-center mb-1">
  <Label>{label}</Label>
- <span className={`text-xs font-mono ${isModified ? "text-yellow-400" : "text-slate-400"}`}>
+ <span className={`text-xs font-mono ${isModified ? "text-accent-400" : "text-slate-400"}`}>
  {value.toFixed(3).replace(/\.?0+$/, "")}
  </span>
  </div>
@@ -523,7 +523,7 @@ function OverviewTab({ r }: { r: SimBatchResults }) {
  <td className="py-1.5 text-right font-mono font-semibold">{v.toFixed(2)}</td>
  <td className="py-1.5 text-right text-slate-500 text-xs">{target}</td>
  <td className="py-1.5 text-right">
- <span className={`text-xs font-semibold ${ok ? "text-green-400" : "text-red-400"}`}>
+ <span className={`text-xs font-semibold ${ok ? "text-success-400" : "text-danger-400"}`}>
  {ok ? "✓" : "✗"}
  </span>
  </td>
@@ -567,7 +567,7 @@ function ShootingTab({ r }: { r: SimBatchResults }) {
  label="Goals vs xG"
  value={`${diff >= 0 ? "+" : ""}${diff.toFixed(2)}`}
  sub={diff >= 0 ? "Overperforming" : "Underperforming"}
- valueClass={diff >= 0 ? "text-green-400" : "text-yellow-400"}
+ valueClass={diff >= 0 ? "text-success-400" : "text-accent-400"}
  />
  </div>
  </Card>
@@ -677,7 +677,7 @@ function TimelineTab({ r }: { r: SimBatchResults }) {
  <span className="text-xs text-slate-500 w-12 text-right">{BUCKET_LABELS[i]}</span>
  <div className="flex-1 h-5 bg-navy-800 rounded overflow-hidden">
  <div
- className="h-full rounded bg-blue-500 transition-all"
+ className="h-full rounded bg-primary-500 transition-all"
  style={{ width: `${(frac / max) * 100}%` }}
  />
  </div>
@@ -881,8 +881,8 @@ function EmptyState() {
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
 const inputCls =
- "w-full bg-navy-800 border border-navy-600 rounded-md px-2.5 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500";
+ "w-full bg-navy-800 border border-navy-600 rounded-md px-2.5 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-primary-500";
 
 function inRange(value: number, lo: number, hi: number): string {
- return value >= lo && value <= hi ? "text-green-400" : "text-red-400";
+ return value >= lo && value <= hi ? "text-success-400" : "text-danger-400";
 }

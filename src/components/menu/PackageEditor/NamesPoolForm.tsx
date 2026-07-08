@@ -124,7 +124,7 @@ export function NamesPoolForm({ poolKey, pool, isNew, isBusy, takenKeys, onBack,
  placeholder="ENG"
  />
  {keyCollision && (
- <p className="text-xs text-red-500">{t("worldEditor.poolKeyTaken")}</p>
+ <p className="text-xs text-danger-500">{t("worldEditor.poolKeyTaken")}</p>
  )}
  </div>
  <NameChipList

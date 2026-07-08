@@ -98,7 +98,7 @@ export default function TransferCounterOfferModal({
  {blockingTitle ? (
  <div
  role="alert"
- className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-danger-500/10 dark:text-red-200"
+ className="mb-4 flex gap-2 rounded border border-danger-200 bg-danger-50 px-3 py-2 text-danger-700 dark:border-danger-500/30 dark:bg-danger-500/10 dark:text-danger-200"
  >
  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
  <div className="text-xs">

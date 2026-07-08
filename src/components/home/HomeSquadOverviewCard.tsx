@@ -62,7 +62,7 @@ export default function HomeSquadOverviewCard({
  </div>
 
  {exhaustedCount > 0 && (
- <div className="flex items-center gap-1.5 mt-1 text-amber-500 dark:text-amber-400">
+ <div className="flex items-center gap-1.5 mt-1 text-accent-500 dark:text-accent-400">
  <AlertTriangle className="w-3.5 h-3.5" />
  <span className="text-xs font-heading">
  {t("home.exhaustedPlayers", { count: exhaustedCount })}

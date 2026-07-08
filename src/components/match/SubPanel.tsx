@@ -39,16 +39,16 @@ const CompareBar = ({
  return (
  <div className="flex items-center gap-1.5 py-0.5 text-xs">
  <span className="w-7 text-right font-heading text-gray-500">{label}</span>
- <span className="w-5 text-right tabular-nums text-red-400">{valA}</span>
+ <span className="w-5 text-right tabular-nums text-danger-400">{valA}</span>
  <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-navy-600">
- <div className="h-full bg-red-500/60" style={{ width: `${valA}%` }} />
+ <div className="h-full bg-danger-500/60" style={{ width: `${valA}%` }} />
  </div>
  <div className="flex h-1.5 flex-1 justify-end overflow-hidden rounded-full bg-navy-600">
- <div className="h-full bg-green-500/60" style={{ width: `${valB}%` }} />
+ <div className="h-full bg-success-500/60" style={{ width: `${valB}%` }} />
  </div>
- <span className="w-5 tabular-nums text-green-400">{valB}</span>
+ <span className="w-5 tabular-nums text-success-400">{valB}</span>
  <span
- className={`w-6 text-right tabular-nums font-heading font-bold ${diff > 0 ? "text-green-400" : diff < 0 ? "text-red-400" : "text-gray-600"}`}
+ className={`w-6 text-right tabular-nums font-heading font-bold ${diff > 0 ? "text-success-400" : diff < 0 ? "text-danger-400" : "text-gray-600"}`}
  >
  {diff > 0 ? "+" : ""}
  {diff}
@@ -208,8 +208,8 @@ export function SubPanel({
  {subsMade >= snapshot.max_subs ? (
  <div className="flex flex-1 items-center justify-center p-12">
  <div className="flex flex-col items-center gap-3">
- <AlertTriangle className="h-8 w-8 text-yellow-500" />
- <p className="font-heading text-sm font-bold uppercase tracking-wider text-yellow-500">
+ <AlertTriangle className="h-8 w-8 text-accent-500" />
+ <p className="font-heading text-sm font-bold uppercase tracking-wider text-accent-500">
  {t("match.allSubsUsed")}
  </p>
  </div>
@@ -251,11 +251,11 @@ export function SubPanel({
  }
  className="flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2 py-0.5 font-heading text-[10px] font-bold transition-colors hover:border-primary-400 hover:bg-primary-50 dark:border-navy-600 dark:bg-navy-800 dark:hover:bg-navy-700"
  >
- <span className="text-red-400">
+ <span className="text-danger-400">
  {offPlayer.name.split(" ").pop()}
  </span>
  <span className="text-gray-400">→</span>
- <span className="text-green-400">
+ <span className="text-success-400">
  {onPlayer.name.split(" ").pop()}
  </span>
  </button>
@@ -307,7 +307,7 @@ export function SubPanel({
  {/* Left: formation pitch + on-field player list */}
  <div className="flex min-w-0 flex-1 flex-col border-r border-gray-200 dark:border-navy-700">
  <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-navy-700 dark:bg-navy-800/50">
- <p className="font-heading text-xs uppercase tracking-widest text-red-400">
+ <p className="font-heading text-xs uppercase tracking-widest text-danger-400">
  {selectedOff
  ? t("match.takingOff", { name: selectedPlayer?.name })
  : t("match.selectPlayerOff")}
@@ -374,22 +374,22 @@ export function SubPanel({
  aria-pressed={isSelected}
  className={`cursor-pointer text-sm transition-colors ${
  isSelected
- ? "bg-red-500/10"
+ ? "bg-danger-500/10"
  : "hover:bg-gray-100 dark:hover:bg-navy-700/50"
  }`}
  >
  <td className="py-2 pr-2">
  <div className="flex items-center gap-1.5">
  {isSelected && (
- <UserMinus className="h-3.5 w-3.5 shrink-0 text-red-400" />
+ <UserMinus className="h-3.5 w-3.5 shrink-0 text-danger-400" />
  )}
  {isSubOn && (
- <span className="text-[10px] text-green-400">
+ <span className="text-[10px] text-success-400">
  ▲
  </span>
  )}
  <span
- className={`truncate font-medium ${isSelected ? "text-red-400" : "text-gray-700 dark:text-gray-300"}`}
+ className={`truncate font-medium ${isSelected ? "text-danger-400" : "text-gray-700 dark:text-gray-300"}`}
  >
  {p.name}
  </span>
@@ -448,7 +448,7 @@ export function SubPanel({
  {/* Right: bench players (full column height) */}
  <div className="flex min-w-0 flex-1 flex-col">
  <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-navy-700 dark:bg-navy-800/50">
- <p className="font-heading text-xs uppercase tracking-widest text-green-400">
+ <p className="font-heading text-xs uppercase tracking-widest text-success-400">
  {selectedOff
  ? t("match.selectReplacement")
  : t("match.benchPlayers")}
@@ -498,15 +498,15 @@ export function SubPanel({
  className={`text-sm transition-colors ${
  selectedOff
  ? selectedBench === p.id
- ? "cursor-pointer bg-green-500/15 ring-1 ring-green-500/30"
- : "cursor-pointer hover:bg-green-500/10"
+ ? "cursor-pointer bg-success-500/15 ring-1 ring-success-500/30"
+ : "cursor-pointer hover:bg-success-500/10"
  : "opacity-60"
  }`}
  >
  <td className="py-2 pr-2">
  <div className="flex items-center gap-1.5">
  {selectedOff && (
- <UserPlus className="h-3.5 w-3.5 shrink-0 text-green-400/50" />
+ <UserPlus className="h-3.5 w-3.5 shrink-0 text-success-400/50" />
  )}
  <span className="truncate font-medium text-gray-700 dark:text-gray-300">
  {p.name}
@@ -515,7 +515,7 @@ export function SubPanel({
  </td>
  <td className="w-12 py-2 text-center">
  <span
- className={`font-heading text-xs ${!posMatch && selectedOff ? "text-yellow-400" : "text-gray-500 dark:text-gray-400"}`}
+ className={`font-heading text-xs ${!posMatch && selectedOff ? "text-accent-400" : "text-gray-500 dark:text-gray-400"}`}
  >
  {translatePositionAbbreviation(t, p.position)}
  {!posMatch && selectedOff && " !"}
@@ -597,11 +597,11 @@ export function SubPanel({
  <span className="w-5 text-right font-heading tabular-nums text-gray-600 dark:text-gray-500">
  {sub.minute}'
  </span>
- <span className="text-green-400">▲</span>
+ <span className="text-success-400">▲</span>
  <span className="truncate text-gray-700 dark:text-gray-300">
  {getPlayerName(snapshot, sub.player_on_id)}
  </span>
- <span className="text-red-400">▼</span>
+ <span className="text-danger-400">▼</span>
  <span className="truncate text-gray-500 dark:text-gray-400">
  {getPlayerName(snapshot, sub.player_off_id)}
  </span>
@@ -619,21 +619,21 @@ export function SubPanel({
  {/* Player names + position match + action buttons */}
  <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
  <div className="flex items-center gap-1.5">
- <UserMinus className="h-3.5 w-3.5 shrink-0 text-red-400" />
- <span className="max-w-[110px] truncate font-heading text-sm font-bold text-red-400">
+ <UserMinus className="h-3.5 w-3.5 shrink-0 text-danger-400" />
+ <span className="max-w-[110px] truncate font-heading text-sm font-bold text-danger-400">
  {selectedPlayer.name}
  </span>
  <span className="text-gray-400">→</span>
- <span className="max-w-[110px] truncate font-heading text-sm font-bold text-green-400">
+ <span className="max-w-[110px] truncate font-heading text-sm font-bold text-success-400">
  {comparedPlayer.name}
  </span>
- <UserPlus className="h-3.5 w-3.5 shrink-0 text-green-400" />
+ <UserPlus className="h-3.5 w-3.5 shrink-0 text-success-400" />
  </div>
  <span
  className={`font-heading text-[10px] font-bold uppercase tracking-wide ${
  comparedPlayer.position === selectedPlayer.position
- ? "text-green-400"
- : "text-yellow-400"
+ ? "text-success-400"
+ : "text-accent-400"
  }`}
  >
  {comparedPlayer.position === selectedPlayer.position
@@ -651,7 +651,7 @@ export function SubPanel({
  <button
  type="button"
  onClick={handleConfirmSubstitution}
- className="rounded bg-green-500 px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-green-400"
+ className="rounded bg-success-500 px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-success-400"
  >
  {t("match.confirmSubstitution")}
  </button>
@@ -693,8 +693,8 @@ export function SubPanel({
  </div>
  ) : selectedPlayer ? (
  <div className="flex items-center gap-2">
- <UserMinus className="h-3.5 w-3.5 text-red-400" />
- <span className="font-heading text-sm font-bold text-red-400">
+ <UserMinus className="h-3.5 w-3.5 text-danger-400" />
+ <span className="font-heading text-sm font-bold text-danger-400">
  {selectedPlayer.name}
  </span>
  <span className="text-gray-400">—</span>

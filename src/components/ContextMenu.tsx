@@ -110,7 +110,7 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400"
  >
  {item.icon && (
- <span className="h-4 w-4 flex-shrink-0 text-amber-500 dark:text-amber-400">
+ <span className="h-4 w-4 flex-shrink-0 text-accent-500 dark:text-accent-400">
  {item.icon}
  </span>
  )}
@@ -128,9 +128,9 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  item.disabled
  ? "text-gray-300 dark:text-gray-600 cursor-not-allowed"
  : item.danger
- ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+ ? "text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-900/20"
  : item.urgent
- ? "text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+ ? "text-accent-600 dark:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/20"
  : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-navy-700"
  }`}
  >

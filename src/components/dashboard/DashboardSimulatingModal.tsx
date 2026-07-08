@@ -39,7 +39,7 @@ function ResultBadge({ result }: { result: RecapMatch["userResult"] }): JSX.Elem
  const styles = {
  win: "bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300",
  draw: "bg-gray-100 text-gray-600 dark:bg-navy-700 dark:text-gray-400",
- loss: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+ loss: "bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-300",
  } as const;
  const labels = {
  win: t("common.won"),
@@ -124,14 +124,14 @@ function InboxCard({ text, category, idx }: { text: string; category?: string; i
  const icon = getCategoryIcon(category ?? "System");
  return (
  <div
- className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-amber-50/80 dark:bg-amber-900/15"
+ className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-accent-50/80 dark:bg-accent-900/15"
  style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
  >
- <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
+ <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-100 text-accent-600 dark:bg-accent-900/40 dark:text-accent-400">
  {icon}
  </div>
- <p className="min-w-0 flex-1 text-xs font-medium text-amber-800 dark:text-amber-300 line-clamp-2">{text}</p>
- <Square className="h-2 w-2 shrink-0 fill-current text-amber-500 dark:text-amber-400" />
+ <p className="min-w-0 flex-1 text-xs font-medium text-accent-800 dark:text-accent-300 line-clamp-2">{text}</p>
+ <Square className="h-2 w-2 shrink-0 fill-current text-accent-500 dark:text-accent-400" />
  </div>
  );
 }
@@ -343,14 +343,14 @@ export default function DashboardSimulatingModal({
  )}
 
  {stopReason.kind === "blocked" && (
- <div className="bg-amber-50 rounded px-4 py-3 dark:bg-amber-900/20">
+ <div className="bg-accent-50 rounded px-4 py-3 dark:bg-accent-900/20">
  <div className="flex items-center gap-2 mb-2">
- <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
- <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+ <AlertTriangle className="h-4 w-4 text-accent-600 dark:text-accent-400" />
+ <span className="text-sm font-semibold text-accent-800 dark:text-accent-300">
  {t("dashboard.digestBlocked")}
  </span>
  </div>
- <p className="text-xs text-amber-700 dark:text-amber-400 mb-3">
+ <p className="text-xs text-accent-700 dark:text-accent-400 mb-3">
  {t("dashboard.digestBlockedDesc")}
  </p>
  {stopReason.blockers.length > 0 && (
@@ -360,12 +360,12 @@ export default function DashboardSimulatingModal({
  key={blocker.id}
  type="button"
  onClick={() => { onDismiss?.(); onNavigate?.(blocker.tab); }}
- className="w-full rounded border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-left hover:bg-amber-500/10 transition-colors"
+ className="w-full rounded border border-accent-500/30 bg-accent-500/5 px-3 py-2 text-left hover:bg-accent-500/10 transition-colors"
  >
- <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
+ <p className="text-xs font-medium text-accent-700 dark:text-accent-300">
  {resolveBackendText(blocker.text_key, blocker.text, blocker.text_params)}
  </p>
- <p className="mt-0.5 text-[10px] font-heading uppercase tracking-widest text-amber-600/70 dark:text-amber-400/70">
+ <p className="mt-0.5 text-[10px] font-heading uppercase tracking-widest text-accent-600/70 dark:text-accent-400/70">
  {t("notifications.goTo")} {getBlockerTabLabel(t, blocker.tab)} →
  </p>
  </button>
@@ -376,7 +376,7 @@ export default function DashboardSimulatingModal({
  <button
  type="button"
  onClick={onContinueAfterBlocker}
- className="w-full rounded bg-amber-600 px-3 py-2 text-xs font-semibold text-white hover:bg-amber-700"
+ className="w-full rounded bg-accent-600 px-3 py-2 text-xs font-semibold text-white hover:bg-accent-700"
  >
  {t("dashboard.digestContinueAnyway")}
  </button>
@@ -392,8 +392,8 @@ export default function DashboardSimulatingModal({
  )}
 
  {stopReason.kind === "fired" && (
- <div className="bg-red-50 rounded px-4 py-3 dark:bg-red-900/20">
- <p className="text-sm font-semibold text-red-800 dark:text-red-300 mb-3">
+ <div className="bg-danger-50 rounded px-4 py-3 dark:bg-danger-900/20">
+ <p className="text-sm font-semibold text-danger-800 dark:text-danger-300 mb-3">
  {t("dashboard.digestFired")}
  </p>
  <button

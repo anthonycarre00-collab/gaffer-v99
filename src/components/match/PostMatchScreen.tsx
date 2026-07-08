@@ -263,9 +263,9 @@ export default function PostMatchScreen({
  </div>
  )}
  {resultType === "loss" && (
- <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-red-500/20 rounded-full">
- <TrendingDown className="w-4 h-4 text-red-400" />
- <span className="font-heading font-bold text-sm uppercase tracking-widest text-red-400">
+ <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-danger-500/20 rounded-full">
+ <TrendingDown className="w-4 h-4 text-danger-400" />
+ <span className="font-heading font-bold text-sm uppercase tracking-widest text-danger-400">
  {t("match.defeat")}
  </span>
  </div>
@@ -481,7 +481,7 @@ export default function PostMatchScreen({
  </button>
  )}
  {talkError && (
- <p className="text-sm text-red-500 mt-2">{talkError}</p>
+ <p className="text-sm text-danger-500 mt-2">{talkError}</p>
  )}
  </div>
  ) : (
@@ -531,9 +531,9 @@ export default function PostMatchScreen({
  <td
  className={`px-3 py-2 text-right font-mono font-bold tabular-nums ${
  r.delta > 0
- ? "text-green-500"
+ ? "text-success-500"
  : r.delta < 0
- ? "text-red-400"
+ ? "text-danger-400"
  : "text-gray-400"
  }`}
  >
@@ -545,10 +545,10 @@ export default function PostMatchScreen({
  <div
  className={`h-full rounded-full transition-all ${
  r.new_morale >= 70
- ? "bg-green-500"
+ ? "bg-success-500"
  : r.new_morale >= 40
- ? "bg-yellow-500"
- : "bg-red-500"
+ ? "bg-accent-500"
+ : "bg-danger-500"
  }`}
  style={{ width: `${r.new_morale}%` }}
  />
@@ -680,11 +680,11 @@ export default function PostMatchScreen({
  <span className="text-gray-600 dark:text-gray-500 tabular-nums w-6 text-right font-heading">
  {sub.minute}'
  </span>
- <span className="text-green-400">↑</span>
+ <span className="text-success-400">↑</span>
  <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
  {getPlayerName(snapshot, sub.player_on_id)}
  </span>
- <span className="text-red-400">↓</span>
+ <span className="text-danger-400">↓</span>
  <span className="text-gray-500 dark:text-gray-400 truncate">
  {getPlayerName(snapshot, sub.player_off_id)}
  </span>
@@ -760,13 +760,13 @@ export default function PostMatchScreen({
  <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
  {label}
  </span>
- <span className="font-mono font-bold text-indigo-400 tabular-nums">
+ <span className="font-mono font-bold text-primary-400 tabular-nums">
  <span className="font-normal text-gray-500">({awayPct}%)</span> {av}
  </span>
  </div>
  <div className="flex h-1 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden">
  <div className="h-full bg-primary-500" style={{ width: `${homeBarPct}%` }} />
- <div className="h-full bg-indigo-500" style={{ width: `${awayBarPct}%` }} />
+ <div className="h-full bg-primary-500" style={{ width: `${awayBarPct}%` }} />
  </div>
  </div>
  );

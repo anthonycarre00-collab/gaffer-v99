@@ -52,7 +52,7 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  type="button"
  aria-label={t("menu.delete")}
  onClick={() => setConfirmDeleteId(profile.id)}
- className="p-1.5 mr-2 rounded text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all shrink-0"
+ className="p-1.5 mr-2 rounded text-gray-300 dark:text-gray-600 hover:text-danger-500 dark:hover:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-500/10 transition-all shrink-0"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -62,7 +62,7 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  <button
  type="button"
  onClick={() => { onDelete(profile.id); setConfirmDeleteId(null); }}
- className="px-2.5 py-1 bg-red-500 hover:bg-red-600 text-white text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="px-2.5 py-1 bg-danger-500 hover:bg-danger-600 text-white text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t("menu.delete")}
  </button>

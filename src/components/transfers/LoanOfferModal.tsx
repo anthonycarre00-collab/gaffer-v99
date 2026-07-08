@@ -110,7 +110,7 @@ export function LoanOfferForm({
  {noticeTitle ? (
  <div
  role="status"
- className="mb-4 flex gap-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-500/30 dark:bg-accent-500/10 dark:text-amber-100"
+ className="mb-4 flex gap-2 rounded border border-accent-200 bg-accent-50 px-3 py-2 text-accent-800 dark:border-accent-500/30 dark:bg-accent-500/10 dark:text-accent-100"
  >
  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" />
  <div className="text-xs">
@@ -167,7 +167,7 @@ export function LoanOfferForm({
  })}
  </p>
  ) : (
- <p role="alert" className="text-xs text-red-600 dark:text-red-300 mb-3">
+ <p role="alert" className="text-xs text-danger-600 dark:text-danger-300 mb-3">
  {t("transfers.noLoanPeriodAvailable")}
  </p>
  )}
@@ -272,7 +272,7 @@ export function LoanOfferForm({
 
  {result ? (
  <div
- className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${result === "accepted" ? "text-success-500" : result === "counter_offer" ? "text-accent-500" : "text-red-600 dark:text-red-300"}`}
+ className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${result === "accepted" ? "text-success-500" : result === "counter_offer" ? "text-accent-500" : "text-danger-600 dark:text-danger-300"}`}
  >
  {result === "accepted"
  ? acceptedMessage ?? t(acceptedLabelKey)
@@ -285,7 +285,7 @@ export function LoanOfferForm({
  ) : null}
 
  {suggestedTerms ? (
- <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:border-amber-500/30 dark:bg-accent-500/10 dark:text-amber-200 mb-3">
+ <div className="rounded border border-accent-200 bg-accent-50 px-3 py-2 text-xs text-accent-700 dark:border-accent-500/30 dark:bg-accent-500/10 dark:text-accent-200 mb-3">
  <p className="font-heading font-bold uppercase tracking-wider">
  {t("transfers.loanCounterSuggestedTerms", {
  percent: suggestedTerms.wageContributionPct,
@@ -303,7 +303,7 @@ export function LoanOfferForm({
  ) : null}
 
  {error && !result ? (
- <p role="alert" className="text-xs text-red-600 dark:text-red-300 mb-3">
+ <p role="alert" className="text-xs text-danger-600 dark:text-danger-300 mb-3">
  {error}
  </p>
  ) : null}

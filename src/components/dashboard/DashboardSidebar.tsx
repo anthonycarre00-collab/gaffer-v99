@@ -317,7 +317,7 @@ export default function DashboardSidebar({
  onClick={onExitClick}
  title={collapsed ? t("dashboard.exitToMenu") : undefined}
  aria-label={t("dashboard.exitToMenu")}
- className={`w-full rounded p-3 text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400 ${collapsed
+ className={`w-full rounded p-3 text-gray-500 transition-colors hover:bg-danger-500/10 hover:text-danger-400 ${collapsed
  ? "flex items-center justify-center"
  : "flex items-center gap-3"
  }`}

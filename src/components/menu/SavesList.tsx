@@ -56,7 +56,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  <div className="flex gap-2">
  <button
  onClick={() => onDelete(save.id)}
- className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="flex-1 py-2 bg-danger-500 hover:bg-danger-600 text-white text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t('menu.delete')}
  </button>
@@ -88,7 +88,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  </button>
  <button
  onClick={(e) => { e.stopPropagation(); onConfirmDelete(save.id); }}
- className="p-1.5 rounded text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+ className="p-1.5 rounded text-gray-400 dark:text-gray-500 hover:text-danger-500 dark:hover:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-500/10 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
  title={t('menu.deleteSave')}
  >
  <Trash2 className="w-4 h-4" />

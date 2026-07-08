@@ -98,7 +98,7 @@ export function TransferBidForm({
  {blockingTitle ? (
  <div
  role="alert"
- className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-danger-500/10 dark:text-red-200"
+ className="mb-4 flex gap-2 rounded border border-danger-200 bg-danger-50 px-3 py-2 text-danger-700 dark:border-danger-500/30 dark:bg-danger-500/10 dark:text-danger-200"
  >
  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
  <div className="text-xs">
@@ -164,12 +164,12 @@ export function TransferBidForm({
  })}
  </p>
  {bidProjection.exceeds_transfer_budget ? (
- <p className="text-xs text-red-600 dark:text-red-300">
+ <p className="text-xs text-danger-600 dark:text-danger-300">
  {t("transfers.bidImpactOverTransferBudget")}
  </p>
  ) : null}
  {bidProjection.exceeds_finance ? (
- <p className="text-xs text-red-600 dark:text-red-300">
+ <p className="text-xs text-danger-600 dark:text-danger-300">
  {t("transfers.bidImpactOverBalance")}
  </p>
  ) : null}
@@ -186,7 +186,7 @@ export function TransferBidForm({
  <TransferNegotiationHistory offer={activeBidOffer} mode="outgoing" />
  {bidResult ? (
  <div
- className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${bidResult === "accepted" ? "text-success-500" : bidResult === "rejected" ? "text-red-600 dark:text-red-300" : "text-accent-500"}`}
+ className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${bidResult === "accepted" ? "text-success-500" : bidResult === "rejected" ? "text-danger-600 dark:text-danger-300" : "text-accent-500"}`}
  >
  {bidResult === "accepted"
  ? t("transfers.bidAccepted")

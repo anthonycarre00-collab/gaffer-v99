@@ -651,10 +651,10 @@ export default function SquadRosterView({
  const injurySeverity = player.injury
  ? getInjurySeverity(player.injury.days_remaining)
  : null;
- const injuryDotClass = injurySeverity === "major" ? "bg-red-500"
- : injurySeverity === "serious" ? "bg-orange-400"
- : injurySeverity === "moderate" ? "bg-amber-400"
- : injurySeverity === "minor" ? "bg-yellow-400"
+ const injuryDotClass = injurySeverity === "major" ? "bg-danger-500"
+ : injurySeverity === "serious" ? "bg-danger-400"
+ : injurySeverity === "moderate" ? "bg-accent-400"
+ : injurySeverity === "minor" ? "bg-accent-400"
  : null;
  const rowBorderClass = player.injury
  ? (injurySeverity === "major" || injurySeverity === "serious"
@@ -810,7 +810,7 @@ export default function SquadRosterView({
  </Badge>
  {wrongPos ? (
  <span
- className="text-amber-500"
+ className="text-accent-500"
  title={t("squad.outOfPositionTooltip")}
  >
  <AlertTriangle className="w-3.5 h-3.5" />
@@ -857,10 +857,10 @@ export default function SquadRosterView({
  <span
  className={
  tacticalFit === "out"
- ? "font-medium text-red-500 dark:text-red-400"
+ ? "font-medium text-danger-500 dark:text-danger-400"
  : tacticalFit === "adapted"
- ? "font-medium text-amber-500 dark:text-amber-400"
- : "font-medium text-emerald-600 dark:text-emerald-400"
+ ? "font-medium text-accent-500 dark:text-accent-400"
+ : "font-medium text-success-600 dark:text-success-400"
  }
  >
  {t("squad.slotLabel")}: {translatePositionAbbreviation(t, currentPos)}
@@ -920,7 +920,7 @@ export default function SquadRosterView({
  >
  <MoreVertical className="h-4 w-4" />
  {hasUrgentItems && (
- <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-400" />
+ <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent-400" />
  )}
  </button>
  </td>
@@ -951,7 +951,7 @@ export default function SquadRosterView({
  </Card>
 
  {contractActionError ? (
- <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+ <div className="rounded border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700 dark:border-danger-900/50 dark:bg-danger-950/30 dark:text-danger-300">
  {contractActionError}
  </div>
  ) : null}

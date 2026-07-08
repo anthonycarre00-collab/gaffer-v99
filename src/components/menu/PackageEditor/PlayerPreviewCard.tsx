@@ -9,8 +9,8 @@ function attrColor(val: number): string {
  if (val >= 80) return "bg-success-500";
  if (val >= 65) return "bg-primary-500";
  if (val >= 50) return "bg-accent-500";
- if (val >= 35) return "bg-yellow-500";
- return "bg-red-500";
+ if (val >= 35) return "bg-accent-500";
+ return "bg-danger-500";
 }
 
 function estimateAttributesFromOvr(overall: number, position: Position): PlayerAttributesDef {

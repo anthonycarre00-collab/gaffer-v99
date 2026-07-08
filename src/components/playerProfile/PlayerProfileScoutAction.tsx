@@ -47,7 +47,7 @@ export default function PlayerProfileScoutAction({
  : t("scouting.scoutBtn")}
  </button>
  {scoutError ? (
- <p className="text-xs text-red-400 mt-1">{scoutError}</p>
+ <p className="text-xs text-danger-400 mt-1">{scoutError}</p>
  ) : null}
  </>
  );

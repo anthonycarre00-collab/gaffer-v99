@@ -241,11 +241,11 @@ export default function HalfTimeBreak({
  style={{ width: `${snapshot.home_possession_pct}%` }}
  />
  <div
- className="h-full bg-indigo-500 transition-all"
+ className="h-full bg-primary-500 transition-all"
  style={{ width: `${snapshot.away_possession_pct}%` }}
  />
  </div>
- <span className="font-heading font-bold text-indigo-400 w-12">
+ <span className="font-heading font-bold text-primary-400 w-12">
  {snapshot.away_possession_pct.toFixed(0)}%
  </span>
  </div>
@@ -378,14 +378,14 @@ export default function HalfTimeBreak({
  {r.player_name}
  </span>
  <span
- className={`font-mono font-bold tabular-nums ${r.delta > 0 ? "text-green-400" : r.delta < 0 ? "text-red-400" : "text-gray-500 dark:text-gray-400"}`}
+ className={`font-mono font-bold tabular-nums ${r.delta > 0 ? "text-success-400" : r.delta < 0 ? "text-danger-400" : "text-gray-500 dark:text-gray-400"}`}
  >
  {r.delta > 0 ? "+" : ""}
  {r.delta}
  </span>
  <div className="w-12 h-1.5 bg-gray-300 dark:bg-navy-600 rounded-full overflow-hidden transition-colors duration-300">
  <div
- className={`h-full rounded-full ${r.new_morale >= 70 ? "bg-green-500" : r.new_morale >= 40 ? "bg-yellow-500" : "bg-red-500"}`}
+ className={`h-full rounded-full ${r.new_morale >= 70 ? "bg-success-500" : r.new_morale >= 40 ? "bg-accent-500" : "bg-danger-500"}`}
  style={{ width: `${r.new_morale}%` }}
  />
  </div>

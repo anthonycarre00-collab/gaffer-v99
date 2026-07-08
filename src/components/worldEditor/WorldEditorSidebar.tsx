@@ -129,9 +129,9 @@ export function WorldEditorSidebar({
  onClick={onShowIssues}
  className={`flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors ${
  showingIssues
- ? "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400"
+ ? "bg-danger-50 dark:bg-danger-500/10 text-danger-600 dark:text-danger-400"
  : issueCount > 0
- ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
+ ? "text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-500/10"
  : "text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-navy-700"
  }`}
  >

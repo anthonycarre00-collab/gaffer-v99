@@ -69,7 +69,7 @@ export function WorldEditorTopBar({
  </span>
  )}
  {isDirty && saveState === "idle" && (
- <span className="text-[10px] text-amber-500 dark:text-amber-400 font-medium flex-shrink-0">
+ <span className="text-[10px] text-accent-500 dark:text-accent-400 font-medium flex-shrink-0">
  ●
  </span>
  )}
@@ -123,18 +123,18 @@ export function WorldEditorTopBar({
  {saveState === "saving" ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
  ) : saveState === "saved" ? (
- <Save className="w-3.5 h-3.5 text-green-500" />
+ <Save className="w-3.5 h-3.5 text-success-500" />
  ) : saveState === "error" ? (
- <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+ <AlertCircle className="w-3.5 h-3.5 text-danger-500" />
  ) : (
  <Save className="w-3.5 h-3.5" />
  )}
  {saveState === "saving" ? (
  <span>{t("worldEditor.saving")}</span>
  ) : saveState === "saved" ? (
- <span className="text-green-600 dark:text-green-400">{t("worldEditor.saved")}</span>
+ <span className="text-success-600 dark:text-success-400">{t("worldEditor.saved")}</span>
  ) : saveState === "error" ? (
- <span className="text-red-500">{t("worldEditor.unsaved")}</span>
+ <span className="text-danger-500">{t("worldEditor.unsaved")}</span>
  ) : (
  <span>{t("worldEditor.save")}</span>
  )}
@@ -150,13 +150,13 @@ export function WorldEditorTopBar({
  {isBusy ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
  ) : issueCount > 0 ? (
- <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+ <AlertCircle className="w-3.5 h-3.5 text-danger-500" />
  ) : (
  <CheckCircle className="w-3.5 h-3.5" />
  )}
  {t("worldEditor.validate")}
  {issueCount > 0 && (
- <span className="ml-0.5 bg-red-500 text-white text-[10px] rounded-full px-1.5 py-0.5 leading-none">
+ <span className="ml-0.5 bg-danger-500 text-white text-[10px] rounded-full px-1.5 py-0.5 leading-none">
  {issueCount}
  </span>
  )}

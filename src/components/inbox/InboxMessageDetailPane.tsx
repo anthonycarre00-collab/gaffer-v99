@@ -165,7 +165,7 @@ export default function InboxMessageDetailPane({
  size="sm"
  onClick={onRequestDelete}
  icon={<Trash2 className="w-4 h-4" />}
- className="bg-danger-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500"
+ className="bg-danger-500 hover:bg-danger-600 active:bg-danger-700 focus:ring-danger-500"
  data-testid="inbox-delete-message"
  >
  {t("inbox.deleteMessage")}
@@ -558,7 +558,7 @@ function getProspectPotentialLabel(
  return { label: t("youthAcademy.potWorldClass"), color: "text-accent-400" };
  }
  if (potential >= 75) {
- return { label: t("youthAcademy.potExcellent"), color: "text-green-400" };
+ return { label: t("youthAcademy.potExcellent"), color: "text-success-400" };
  }
  if (potential >= 65) {
  return { label: t("youthAcademy.potPromising"), color: "text-primary-400" };

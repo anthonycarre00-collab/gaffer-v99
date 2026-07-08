@@ -53,7 +53,7 @@ function NationalityFieldFallback({
  type="button"
  disabled
  className={`w-full rounded border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${error
- ? "border-red-400 dark:border-red-500"
+ ? "border-danger-400 dark:border-danger-500"
  : "border-gray-300 dark:border-navy-600"
  }`}
  >
@@ -66,7 +66,7 @@ function NationalityFieldFallback({
  </div>
  </div>
  {error ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {error}
  </p>
@@ -130,7 +130,7 @@ export default function CreateManagerForm({
  <input
  maxLength={30}
  className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.firstName
- ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
+ ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
  : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
  }`}
  placeholder={t("createManager.placeholderFirst")}
@@ -141,7 +141,7 @@ export default function CreateManagerForm({
  }}
  />
  {formErrors.firstName ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {formErrors.firstName}
  </p>
@@ -155,7 +155,7 @@ export default function CreateManagerForm({
  <input
  maxLength={30}
  className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.lastName
- ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
+ ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
  : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
  }`}
  placeholder={t("createManager.placeholderLast")}
@@ -166,7 +166,7 @@ export default function CreateManagerForm({
  }}
  />
  {formErrors.lastName ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {formErrors.lastName}
  </p>
@@ -187,7 +187,7 @@ export default function CreateManagerForm({
  error={Boolean(dobError)}
  />
  {dobError ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3 shrink-0" />
  {dobError}
  </p>
@@ -209,7 +209,7 @@ export default function CreateManagerForm({
  pattern="[0-9]*"
  inputMode="numeric"
  className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.startYear
- ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
+ ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
  : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
  }`}
  value={formData.startYear}
@@ -219,7 +219,7 @@ export default function CreateManagerForm({
  }}
  />
  {formErrors.startYear ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {formErrors.startYear}
  </p>
@@ -236,7 +236,7 @@ export default function CreateManagerForm({
  fullWidth
  value={formData.startPhase}
  className={formErrors.startPhase
- ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
+ ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
  : ""
  }
  onChange={(event) => {
@@ -248,7 +248,7 @@ export default function CreateManagerForm({
  <option value="midSeason">{t("createManager.phaseMidSeason")}</option>
  </Select>
  {formErrors.startPhase ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {formErrors.startPhase}
  </p>

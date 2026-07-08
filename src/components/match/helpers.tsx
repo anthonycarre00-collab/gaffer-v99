@@ -36,7 +36,7 @@ export const EVENT_ICONS: Record<
  },
  PenaltyMiss: {
  icon: <CircleOff className="w-4 h-4" />,
- color: "text-red-400",
+ color: "text-danger-400",
  important: true,
  },
  ShootoutGoal: {
@@ -46,32 +46,32 @@ export const EVENT_ICONS: Record<
  },
  ShootoutMiss: {
  icon: <CircleOff className="w-4 h-4" />,
- color: "text-red-400",
+ color: "text-danger-400",
  important: true,
  },
  YellowCard: {
- icon: <Square className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />,
- color: "text-yellow-400",
+ icon: <Square className="w-3.5 h-3.5 fill-yellow-400 text-accent-400" />,
+ color: "text-accent-400",
  important: true,
  },
  RedCard: {
- icon: <Square className="w-3.5 h-3.5 fill-red-500 text-red-500" />,
- color: "text-red-500",
+ icon: <Square className="w-3.5 h-3.5 fill-red-500 text-danger-500" />,
+ color: "text-danger-500",
  important: true,
  },
  SecondYellow: {
- icon: <Square className="w-3.5 h-3.5 fill-red-500 text-red-500" />,
- color: "text-red-500",
+ icon: <Square className="w-3.5 h-3.5 fill-red-500 text-danger-500" />,
+ color: "text-danger-500",
  important: true,
  },
  Substitution: {
  icon: <ArrowLeftRight className="w-4 h-4" />,
- color: "text-blue-400",
+ color: "text-primary-400",
  important: true,
  },
  Injury: {
  icon: <Cross className="w-4 h-4" />,
- color: "text-red-400",
+ color: "text-danger-400",
  important: true,
  },
  KickOff: {
@@ -96,7 +96,7 @@ export const EVENT_ICONS: Record<
  },
  ShotSaved: {
  icon: <Hand className="w-4 h-4" />,
- color: "text-green-700 dark:text-green-400",
+ color: "text-success-700 dark:text-success-400",
  important: false,
  },
  ShotOffTarget: {
@@ -121,7 +121,7 @@ export const EVENT_ICONS: Record<
  },
  Foul: {
  icon: <AlertTriangle className="w-4 h-4" />,
- color: "text-yellow-700 dark:text-yellow-500",
+ color: "text-accent-700 dark:text-accent-500",
  important: false,
  },
  PenaltyAwarded: {

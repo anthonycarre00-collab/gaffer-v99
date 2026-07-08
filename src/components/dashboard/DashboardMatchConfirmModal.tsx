@@ -60,7 +60,7 @@ export default function DashboardMatchConfirmModal({
  {modeMeta.desc}
  </p>
  {matchMode === "delegate" && (
- <p className="mt-1 flex items-center gap-1 text-xs text-amber-500 dark:text-amber-400">
+ <p className="mt-1 flex items-center gap-1 text-xs text-accent-500 dark:text-accent-400">
  <AlertCircle className="h-3.5 w-3.5" />
  {t("continueMenu.delegateWarning")}
  </p>

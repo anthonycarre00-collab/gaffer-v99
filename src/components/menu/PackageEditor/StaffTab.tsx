@@ -6,9 +6,9 @@ import type { StaffDef, TeamDef } from "./types";
 
 const ROLE_COLOR: Record<string, string> = {
  AssistantManager: "bg-purple-600",
- Coach: "bg-blue-600",
- Scout: "bg-amber-600",
- Physio: "bg-green-600",
+ Coach: "bg-primary-600",
+ Scout: "bg-accent-600",
+ Physio: "bg-success-600",
 };
 
 const ROLE_ABBR: Record<string, string> = {

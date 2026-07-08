@@ -160,8 +160,8 @@ export default function JobOpportunitiesCard({
  <div
  className={`mb-3 rounded px-3 py-2 text-sm font-medium ${
  feedback.type === "success"
- ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
- : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+ ? "bg-success-50 text-success-700 dark:bg-success-950/30 dark:text-success-400"
+ : "bg-danger-50 text-danger-700 dark:bg-danger-950/30 dark:text-danger-400"
  }`}
  >
  {feedback.message}

@@ -33,7 +33,7 @@ export default function DashboardCloseConfirmModal({
  </button>
  <button
  onClick={onQuitWithoutSave}
- className="w-full rounded bg-red-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-red-600"
+ className="w-full rounded bg-danger-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-danger-600"
  >
  {t("closeConfirm.quitNoSave")}
  </button>

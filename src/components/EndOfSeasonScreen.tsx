@@ -132,9 +132,9 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  </div>
  </div>
  <div className="flex items-center justify-center gap-8 text-sm">
- <span className="text-green-500 font-heading font-bold">{userStanding?.won || 0}{t('common.won')}</span>
+ <span className="text-success-500 font-heading font-bold">{userStanding?.won || 0}{t('common.won')}</span>
  <span className="text-gray-500 font-heading font-bold">{userStanding?.drawn || 0}{t('common.drawn')}</span>
- <span className="text-red-500 font-heading font-bold">{userStanding?.lost || 0}{t('common.lost')}</span>
+ <span className="text-danger-500 font-heading font-bold">{userStanding?.lost || 0}{t('common.lost')}</span>
  <span className="text-gray-400">
  {userStanding?.goals_for || 0} {t('common.gf')} — {userStanding?.goals_against || 0} {t('common.ga')}
  </span>
@@ -159,7 +159,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <span className={`font-heading font-bold text-sm w-6 text-center ${idx === 0 ? "text-accent-500" : "text-gray-400"}`}>{idx + 1}</span>
  <span className={`flex-1 text-sm font-semibold ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}>{teamName}</span>
  <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums w-16 text-center">{entry.won}W {entry.drawn}D {entry.lost}L</span>
- <span className={`text-xs font-semibold tabular-nums w-8 text-center ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-red-500" : "text-gray-500"}`}>{gd > 0 ? `+${gd}` : gd}</span>
+ <span className={`text-xs font-semibold tabular-nums w-8 text-center ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}>{gd > 0 ? `+${gd}` : gd}</span>
  <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100 tabular-nums w-8 text-right">{entry.points}</span>
  </div>
  );

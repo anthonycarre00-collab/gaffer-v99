@@ -125,7 +125,7 @@ export default function CreateManagerNationalityField({
  : null;
  const Flag = resources?.CountryFlag;
  const triggerBorderClassName = error
- ? "border-red-400 dark:border-red-500"
+ ? "border-danger-400 dark:border-danger-500"
  : isOpen
  ? "border-primary-500 ring-2 ring-primary-500/20"
  : "border-gray-300 dark:border-navy-600";
@@ -255,7 +255,7 @@ export default function CreateManagerNationalityField({
  </div>
 
  {error ? (
- <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
+ <p className="mt-1 flex items-center gap-1 text-xs text-danger-500">
  <AlertCircle className="h-3 w-3" />
  {error}
  </p>

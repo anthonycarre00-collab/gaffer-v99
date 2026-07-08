@@ -93,20 +93,20 @@ const CATEGORY_ICONS: Record<string, ReactNode> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
  Welcome: "text-primary-500",
- LeagueInfo: "text-blue-500",
+ LeagueInfo: "text-primary-500",
  MatchPreview: "text-accent-500",
  MatchResult: "text-accent-600",
  Transfer: "text-purple-500",
  BoardDirective: "text-danger-500",
- PlayerMorale: "text-yellow-500",
- Injury: "text-red-400",
+ PlayerMorale: "text-accent-500",
+ Injury: "text-danger-400",
  Training: "text-success-500",
  Finance: "text-success-500",
- Contract: "text-indigo-500",
+ Contract: "text-primary-500",
  ScoutReport: "text-cyan-500",
- Media: "text-orange-500",
+ Media: "text-danger-500",
  System: "text-gray-400",
- JobOffer: "text-blue-500",
+ JobOffer: "text-primary-500",
 };
 
 export function getCategoryIcon(category: string): ReactNode {

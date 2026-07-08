@@ -271,9 +271,9 @@ export default function MatchLive({
  </span>
  <div className="flex-1 h-1.5 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden flex transition-colors duration-300">
  <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${snapshot.home_possession_pct}%` }} />
- <div className="h-full bg-indigo-500 transition-all duration-500" style={{ width: `${snapshot.away_possession_pct}%` }} />
+ <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${snapshot.away_possession_pct}%` }} />
  </div>
- <span className="font-heading font-bold text-indigo-400 w-12">
+ <span className="font-heading font-bold text-primary-400 w-12">
  {snapshot.away_possession_pct.toFixed(0)}%
  </span>
  </div>

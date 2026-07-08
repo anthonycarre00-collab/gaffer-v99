@@ -4,7 +4,7 @@ import JerseyIcon from "../../ui/JerseyIcon";
 import type { KitPattern, TeamDef } from "./types";
 
 const REP_TIERS = [
- { min: 850, label: "Elite", color: "text-amber-500" },
+ { min: 850, label: "Elite", color: "text-accent-500" },
  { min: 720, label: "Top", color: "text-primary-500" },
  { min: 550, label: "Mid", color: "text-success-500" },
  { min: 300, label: "Lower", color: "text-gray-500" },

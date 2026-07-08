@@ -793,7 +793,7 @@ export default function TeamSelection() {
  )}
  </div>
  {missingRegions.length > 0 && (
- <p className="mt-2 text-[11px] text-amber-600 dark:text-amber-400">
+ <p className="mt-2 text-[11px] text-accent-600 dark:text-accent-400">
  {t("teamSelect.requiresRegions", {
  regions: missingRegions
  .map((regionId) => buildRegionLabel(t, regionId))

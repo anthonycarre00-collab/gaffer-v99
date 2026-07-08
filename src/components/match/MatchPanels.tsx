@@ -50,7 +50,7 @@ export function EventFeed({
  <>
  <div className="flex items-center gap-2">
  <span
- className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-indigo-400"}`}
+ className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-primary-400"}`}
  >
  {commentary.headline}
  </span>
@@ -73,7 +73,7 @@ export function EventFeed({
  <>
  <div className="flex items-center gap-2">
  <span
- className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-indigo-400"}`}
+ className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-primary-400"}`}
  >
  {isHome ? snapshot.home_team.name : snapshot.away_team.name}
  </span>
@@ -179,7 +179,7 @@ export function MatchStats({ snapshot }: { snapshot: MatchSnapshot }) {
  <span className="text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider text-[10px]">
  {stat.label}
  </span>
- <span className="font-mono font-bold text-indigo-400 tabular-nums">
+ <span className="font-mono font-bold text-primary-400 tabular-nums">
  {stat.away}
  </span>
  </div>
@@ -189,7 +189,7 @@ export function MatchStats({ snapshot }: { snapshot: MatchSnapshot }) {
  style={{ width: `${pct}%` }}
  />
  <div
- className="h-full bg-indigo-500 transition-all duration-500"
+ className="h-full bg-primary-500 transition-all duration-500"
  style={{ width: `${100 - pct}%` }}
  />
  </div>
@@ -223,7 +223,7 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  return (
  <div className="flex-1">
  <h4
- className={`font-heading font-bold text-sm uppercase tracking-wider mb-3 ${side === "Home" ? "text-primary-400" : "text-indigo-400"}`}
+ className={`font-heading font-bold text-sm uppercase tracking-wider mb-3 ${side === "Home" ? "text-primary-400" : "text-primary-400"}`}
  >
  {team.name}{" "}
  <span className="text-gray-600 dark:text-gray-500 font-normal text-xs">
@@ -246,15 +246,15 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  p.condition >= 70
  ? "bg-primary-500"
  : p.condition >= 40
- ? "bg-yellow-500"
- : "bg-red-500";
+ ? "bg-accent-500"
+ : "bg-danger-500";
  return (
  <div
  key={p.id}
  className={`flex items-center gap-2 py-1 px-2 rounded text-xs ${isOff ? "opacity-40" : ""}`}
  >
  {isSubOn && (
- <span className="text-green-400 text-[10px]">▲</span>
+ <span className="text-success-400 text-[10px]">▲</span>
  )}
  <span
  className={`font-medium flex-1 truncate ${isOff ? "line-through text-gray-600 dark:text-gray-500" : "text-gray-700 dark:text-gray-300"}`}
@@ -262,12 +262,12 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  {p.name}
  </span>
  {yc > 0 && (
- <span className="w-3 h-4 rounded-sm bg-yellow-400 text-navy-900 text-[8px] flex items-center justify-center font-bold">
+ <span className="w-3 h-4 rounded-sm bg-accent-400 text-navy-900 text-[8px] flex items-center justify-center font-bold">
  {yc > 1 ? yc : ""}
  </span>
  )}
  {isOff && (
- <span className="w-3 h-4 rounded-sm bg-red-500" />
+ <span className="w-3 h-4 rounded-sm bg-danger-500" />
  )}
  <div className="w-14 flex items-center gap-1">
  <div className="flex-1 h-1.5 bg-gray-300 dark:bg-navy-600 rounded-full overflow-hidden transition-colors duration-300">
@@ -301,7 +301,7 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  className={`flex items-center gap-2 py-1 px-2 rounded text-xs ${wasSubbedOff ? "opacity-50" : ""}`}
  >
  {wasSubbedOff && (
- <span className="text-red-400 text-[10px]">▼</span>
+ <span className="text-danger-400 text-[10px]">▼</span>
  )}
  <span className="text-gray-600 dark:text-gray-400 font-medium flex-1 truncate">
  {p.name}
@@ -334,11 +334,11 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  <span className="text-gray-600 dark:text-gray-500 tabular-nums w-5 text-right font-heading">
  {sub.minute}'
  </span>
- <span className="text-green-400">▲</span>
+ <span className="text-success-400">▲</span>
  <span className="text-gray-700 dark:text-gray-300 truncate">
  {getPlayerName(snapshot, sub.player_on_id)}
  </span>
- <span className="text-red-400">▼</span>
+ <span className="text-danger-400">▼</span>
  <span className="text-gray-500 dark:text-gray-400 truncate">
  {getPlayerName(snapshot, sub.player_off_id)}
  </span>

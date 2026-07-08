@@ -52,7 +52,7 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  Tank: {
  icon: <Dumbbell className="w-3 h-3" />,
- color: "text-orange-400 bg-orange-500/10 ring-orange-500/30",
+ color: "text-danger-400 bg-danger-500/10 ring-danger-500/30",
  category: "physical",
  requirements: [
  { labelKey: "common.attributes.power", value: 85, operator: ">=" },
@@ -67,7 +67,7 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  Tireless: {
  icon: <Heart className="w-3 h-3" />,
- color: "text-green-400 bg-green-500/10 ring-green-500/30",
+ color: "text-success-400 bg-success-500/10 ring-success-500/30",
  category: "physical",
  requirements: [{ labelKey: "common.attributes.engine", value: 90, operator: ">=" }],
  },
@@ -82,19 +82,19 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  Sharpshooter: {
  icon: <Target className="w-3 h-3" />,
- color: "text-red-400 bg-red-500/10 ring-red-500/30",
+ color: "text-danger-400 bg-danger-500/10 ring-danger-500/30",
  category: "technical",
  requirements: [{ labelKey: "common.attributes.finishing", value: 85, operator: ">=" }],
  },
  Dribbler: {
  icon: <Sparkles className="w-3 h-3" />,
- color: "text-yellow-400 bg-yellow-500/10 ring-yellow-500/30",
+ color: "text-accent-400 bg-accent-500/10 ring-accent-500/30",
  category: "technical",
  requirements: [{ labelKey: "common.attributes.touch", value: 85, operator: ">=" }],
  },
  BallWinner: {
  icon: <Crosshair className="w-3 h-3" />,
- color: "text-amber-400 bg-amber-500/10 ring-amber-500/30",
+ color: "text-accent-400 bg-accent-500/10 ring-accent-500/30",
  category: "technical",
  requirements: [
  { labelKey: "common.attributes.defending", value: 80, operator: ">=" },
@@ -121,7 +121,7 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  CoolHead: {
  icon: <Brain className="w-3 h-3" />,
- color: "text-blue-400 bg-blue-500/10 ring-blue-500/30",
+ color: "text-primary-400 bg-primary-500/10 ring-primary-500/30",
  category: "mental",
  requirements: [
  { labelKey: "common.attributes.composure", value: 85, operator: ">=" },
@@ -130,13 +130,13 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  Visionary: {
  icon: <Eye className="w-3 h-3" />,
- color: "text-indigo-400 bg-indigo-500/10 ring-indigo-500/30",
+ color: "text-primary-400 bg-primary-500/10 ring-primary-500/30",
  category: "mental",
  requirements: [{ labelKey: "common.attributes.vision", value: 85, operator: ">=" }],
  },
  HotHead: {
  icon: <Flame className="w-3 h-3" />,
- color: "text-red-500 bg-red-500/10 ring-red-500/30",
+ color: "text-danger-500 bg-danger-500/10 ring-danger-500/30",
  category: "mental",
  requirements: [
  { labelKey: "common.50", value: 85, operator: ">=" },
@@ -145,7 +145,7 @@ const TRAIT_META: Record<string, TraitMeta> = {
  },
  TeamPlayer: {
  icon: <Users className="w-3 h-3" />,
- color: "text-emerald-400 bg-emerald-500/10 ring-emerald-500/30",
+ color: "text-success-400 bg-success-500/10 ring-success-500/30",
  category: "mental",
  requirements: [{ labelKey: "common.50", value: 85, operator: ">=" }],
  },

@@ -129,7 +129,7 @@ function getRoleMarkers(
  markers.push({
  key: "corner_taker",
  shortLabel: "CK",
- toneClassName: "border-orange-500 bg-orange-500 text-white",
+ toneClassName: "border-danger-500 bg-danger-500 text-white",
  });
  }
 
@@ -316,7 +316,7 @@ export default function TacticsPitch({
  <span className="rounded-full bg-accent-500/15 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-accent-300">
  {t("tactics.adaptedFit")}
  </span>
- <span className="rounded-full bg-red-500/15 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-red-300">
+ <span className="rounded-full bg-danger-500/15 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-danger-300">
  {t("squad.outOfPosition")}
  </span>
  <span className="rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-white/70">

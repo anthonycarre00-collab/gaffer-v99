@@ -67,11 +67,11 @@ export function MediaPulseCard() {
  </div>
  <div className="font-semibold text-gray-900 dark:text-white">
  {disagreement ? (
- <span className="text-amber-600 dark:text-amber-400">
+ <span className="text-accent-600 dark:text-accent-400">
  {t("meaning.media.disagreementActive")}
  </span>
  ) : (
- <span className="text-green-600 dark:text-green-400">
+ <span className="text-success-600 dark:text-success-400">
  {t("meaning.media.disagreementCalm")}
  </span>
  )}

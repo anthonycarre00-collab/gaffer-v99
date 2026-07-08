@@ -161,7 +161,7 @@ export default function PlayerProfileHeroCard({
  <QuickStat
  label={t("common.condition")}
  value={`${player.condition}%`}
- color={player.condition >= 70 ? "text-primary-400" : "text-red-400"}
+ color={player.condition >= 70 ? "text-primary-400" : "text-danger-400"}
  />
  <QuickStat
  label={t("common.morale")}
@@ -186,7 +186,7 @@ export default function PlayerProfileHeroCard({
  <MobileQuickStat
  label={t("common.condition")}
  value={`${player.condition}%`}
- color={player.condition >= 70 ? "text-primary-500" : "text-red-500"}
+ color={player.condition >= 70 ? "text-primary-500" : "text-danger-500"}
  />
  <MobileQuickStat
  label={t("common.morale")}

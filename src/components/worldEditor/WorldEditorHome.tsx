@@ -136,7 +136,7 @@ export function WorldEditorHome({
  </h2>
 
  {errorMsg && (
- <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded px-4 py-3">
+ <div className="mb-4 text-sm text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 border border-danger-200 dark:border-danger-500/30 rounded px-4 py-3">
  {errorMsg}
  </div>
  )}
@@ -243,7 +243,7 @@ export function WorldEditorHome({
  </div>
 
  {errorMsg && (
- <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded px-4 py-3">
+ <div className="text-sm text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 border border-danger-200 dark:border-danger-500/30 rounded px-4 py-3">
  {errorMsg}
  </div>
  )}
@@ -284,7 +284,7 @@ export function WorldEditorHome({
 
  <div className="flex flex-col gap-2">
  <p className="text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
- <Zap className="w-3.5 h-3.5 text-amber-500" />
+ <Zap className="w-3.5 h-3.5 text-accent-500" />
  {t("worldEditor.startFromExample")}
  </p>
  {SAMPLE_PACKAGES.map(
@@ -293,7 +293,7 @@ export function WorldEditorHome({
  key={sample.meta.id}
  onClick={() => openNewForm(sample)}
  disabled={isBusy}
- className="flex items-start gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-amber-50 dark:hover:bg-navy-700 text-gray-800 dark:text-gray-200 rounded transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-amber-400 dark:hover:border-amber-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
+ className="flex items-start gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-accent-50 dark:hover:bg-navy-700 text-gray-800 dark:text-gray-200 rounded transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
  >
  <div className="flex-1 min-w-0">
  <p className="font-heading font-bold uppercase tracking-wide text-sm truncate">

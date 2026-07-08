@@ -24,11 +24,11 @@ export default function PlayerProfileInjuryBanner({
  <Card accent="danger" className="mb-5">
  <CardBody>
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded bg-red-500/10 flex items-center justify-center">
- <AlertTriangle className="w-5 h-5 text-red-500" />
+ <div className="w-10 h-10 rounded bg-danger-500/10 flex items-center justify-center">
+ <AlertTriangle className="w-5 h-5 text-danger-500" />
  </div>
  <div>
- <p className="font-semibold text-sm text-red-600 dark:text-red-400">
+ <p className="font-semibold text-sm text-danger-600 dark:text-danger-400">
  {resolvePlayerInjuryName(injury.name, t)}
  </p>
  <p className="text-xs text-gray-500 dark:text-gray-400">

@@ -187,8 +187,8 @@ export default function PenaltyShootoutScreen({
  <span
  className={
  evt.event_type === "ShootoutGoal"
- ? "text-green-600 dark:text-green-400 font-semibold"
- : "text-red-500 dark:text-red-400"
+ ? "text-success-600 dark:text-success-400 font-semibold"
+ : "text-danger-500 dark:text-danger-400"
  }
  >
  {evt.event_type === "ShootoutGoal" ? "⚽" : "✗"}
@@ -281,8 +281,8 @@ export function KickRow({
  key={i}
  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${
  isGoal
- ? "bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400"
- : "bg-red-100 dark:bg-red-900/40 text-red-500 dark:text-red-400"
+ ? "bg-success-100 dark:bg-success-900/40 text-success-600 dark:text-success-400"
+ : "bg-danger-100 dark:bg-danger-900/40 text-danger-500 dark:text-danger-400"
  }`}
  >
  {isGoal ? "⚽" : "✗"}

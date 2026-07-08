@@ -129,7 +129,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  </div>
 
  {fetchError ? (
- <p role="alert" className="text-sm text-red-500">
+ <p role="alert" className="text-sm text-danger-500">
  {fetchError}
  </p>
  ) : null}

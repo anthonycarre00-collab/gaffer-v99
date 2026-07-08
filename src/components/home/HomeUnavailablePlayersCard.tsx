@@ -34,7 +34,7 @@ export default function HomeUnavailablePlayersCard({
  }
  >
  <div className="flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-red-500" />
+ <AlertTriangle className="w-4 h-4 text-danger-500" />
  {t("home.unavailablePlayers")}
  </div>
  </CardHeader>

@@ -263,7 +263,7 @@ export default function PlayerDealWorkspace({
  <p className="mx-auto mt-2 max-w-md text-sm text-gray-600 dark:text-gray-300">
  {selectedOption.description}
  </p>
- <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-red-600 dark:text-red-300">
+ <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-danger-600 dark:text-danger-300">
  {selectedOption.disabledReason}
  </p>
  </div>

@@ -53,14 +53,14 @@ interface HomeTabProps {
 
 const SCHEDULE_ICONS: Record<string, { icon: React.ReactNode; color: string }> =
 {
- Intense: { icon: <Flame className="w-3.5 h-3.5" />, color: "text-red-500" },
+ Intense: { icon: <Flame className="w-3.5 h-3.5" />, color: "text-danger-500" },
  Balanced: {
  icon: <Scale className="w-3.5 h-3.5" />,
  color: "text-primary-500",
  },
  Light: {
  icon: <Feather className="w-3.5 h-3.5" />,
- color: "text-blue-500",
+ color: "text-primary-500",
  },
 };
 
@@ -322,12 +322,12 @@ export default function HomeTab({
  {boardObjectives.map((obj) => (
  <div key={obj.id} className="flex items-center gap-3">
  {obj.met ? (
- <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+ <CheckCircle2 className="w-4 h-4 text-success-500 flex-shrink-0" />
  ) : (
  <Circle className="w-4 h-4 text-gray-300 dark:text-navy-600 flex-shrink-0" />
  )}
  <span
- className={`text-sm ${obj.met ? "text-green-600 dark:text-green-400 line-through" : "text-gray-700 dark:text-gray-300"}`}
+ className={`text-sm ${obj.met ? "text-success-600 dark:text-success-400 line-through" : "text-gray-700 dark:text-gray-300"}`}
  >
  {obj.description}
  </span>

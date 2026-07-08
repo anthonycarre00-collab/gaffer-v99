@@ -38,10 +38,10 @@ const ROLE_ICONS: Record<string, React.ReactNode> = {
  Physio: <Stethoscope className="w-4 h-4" />,
 };
 const ROLE_COLORS: Record<string, string> = {
- AssistantManager: "text-blue-500",
+ AssistantManager: "text-primary-500",
  Coach: "text-primary-500",
  Scout: "text-accent-500",
- Physio: "text-red-400",
+ Physio: "text-danger-400",
 };
 
 function bestAttr(s: StaffData): { key: string; value: number } {
@@ -371,7 +371,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <button
  disabled={isLoading}
  onClick={() => handleRelease(staff.id)}
- className={`p-2 rounded bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+ className={`p-2 rounded bg-danger-50 dark:bg-danger-500/10 text-danger-500 hover:bg-danger-100 dark:hover:bg-danger-500/20 transition-colors ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
  title={t("staff.releaseStaff")}
  >
  <UserMinus className="w-4 h-4" />

@@ -47,7 +47,7 @@ function getPotentialLabel(
  if (potential >= 85)
  return { label: t("youthAcademy.potWorldClass"), color: "text-accent-400" };
  if (potential >= 75)
- return { label: t("youthAcademy.potExcellent"), color: "text-green-400" };
+ return { label: t("youthAcademy.potExcellent"), color: "text-success-400" };
  if (potential >= 65)
  return { label: t("youthAcademy.potPromising"), color: "text-primary-400" };
  if (potential >= 55)
@@ -270,7 +270,7 @@ export default function YouthAcademyTab({
  <Card>
  <CardBody>
  <div className="text-center">
- <TrendingUp className="w-5 h-5 text-green-500 mx-auto mb-1" />
+ <TrendingUp className="w-5 h-5 text-success-500 mx-auto mb-1" />
  <p className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100">
  {avgPotential}
  </p>
@@ -557,10 +557,10 @@ export default function YouthAcademyTab({
  <td className="py-2.5 px-4 text-center">
  <span
  className={`text-xs font-mono font-bold tabular-nums ${player.condition >= 70
- ? "text-green-500"
+ ? "text-success-500"
  : player.condition >= 40
- ? "text-yellow-500"
- : "text-red-500"
+ ? "text-accent-500"
+ : "text-danger-500"
  }`}
  >
  {player.condition}%

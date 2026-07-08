@@ -117,13 +117,13 @@ export default function PlayerProfileRenewalModal({
  </div>
 
  {!isRenewalWageValid && renewalWage !== "" ? (
- <p className="text-sm text-red-500">
+ <p className="text-sm text-danger-500">
  {t("playerProfile.renewalInvalidWage")}
  </p>
  ) : null}
 
  {renewalViolatesSoftCap ? (
- <p className="text-sm text-red-500">
+ <p className="text-sm text-danger-500">
  {t("playerProfile.renewalBudgetWarning")}
  </p>
  ) : null}
@@ -191,7 +191,7 @@ export default function PlayerProfileRenewalModal({
  ) : null}
 
  {renewalCooledOff ? (
- <p className="text-sm text-amber-600 dark:text-amber-300">
+ <p className="text-sm text-accent-600 dark:text-accent-300">
  {t("playerProfile.renewalCooledOff")}
  </p>
  ) : null}

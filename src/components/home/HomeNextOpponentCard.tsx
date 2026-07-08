@@ -94,9 +94,9 @@ export default function HomeNextOpponentCard({
  key={`${nextOpponent.opponent.id}-${index}`}
  className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-heading font-bold text-white ${
  result === "W"
- ? "bg-green-500"
+ ? "bg-success-500"
  : result === "L"
- ? "bg-red-500"
+ ? "bg-danger-500"
  : "bg-gray-400"
  }`}
  >

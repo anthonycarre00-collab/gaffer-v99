@@ -213,7 +213,7 @@ export default function ScheduleTab({ gameState, onSelectTeam }: ScheduleTabProp
  </div>
 
  {fetchError && (
- <p role="alert" className="mb-4 text-sm text-red-500">
+ <p role="alert" className="mb-4 text-sm text-danger-500">
  {fetchError}
  </p>
  )}
@@ -762,7 +762,7 @@ function StandingsView({
  inPromotionZone
  ? "border-l-2 border-primary-500 text-primary-500"
  : inRelegationZone
- ? "border-l-2 border-red-500 text-red-500"
+ ? "border-l-2 border-danger-500 text-danger-500"
  : "text-gray-400 dark:text-gray-500"
  }`}
  data-testid={
@@ -794,7 +794,7 @@ function StandingsView({
  )}
  <td
  className={`px-4 py-3 text-center text-sm font-semibold tabular-nums ${
- gd > 0 ? "text-primary-500" : gd < 0 ? "text-red-500" : "text-gray-500 dark:text-gray-400"
+ gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500 dark:text-gray-400"
  }`}
  >
  {gd > 0 ? `+${gd}` : gd}
@@ -818,7 +818,7 @@ function StandingsView({
  )}
  {zones.relegationSlots > 0 && (
  <span className="flex items-center gap-1.5">
- <span className="h-2 w-2 rounded-full bg-red-500" />
+ <span className="h-2 w-2 rounded-full bg-danger-500" />
  {t("schedule.relegationZone")}
  </span>
  )}

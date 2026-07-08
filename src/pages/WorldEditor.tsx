@@ -643,13 +643,13 @@ export default function WorldEditor() {
  {(errorMsg || successMsg) && (
  <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
  {errorMsg && (
- <div className="flex items-center gap-2 rounded border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+ <div className="flex items-center gap-2 rounded border border-danger-300 dark:border-danger-500/40 bg-danger-50 dark:bg-danger-500/10 px-4 py-3 text-sm text-danger-700 dark:text-danger-300">
  <AlertCircle className="w-4 h-4 flex-shrink-0" />
  <span>{errorMsg}</span>
  </div>
  )}
  {successMsg && (
- <div className="flex items-center gap-2 rounded border border-green-300 dark:border-green-500/40 bg-green-50 dark:bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-300">
+ <div className="flex items-center gap-2 rounded border border-success-300 dark:border-success-500/40 bg-success-50 dark:bg-success-500/10 px-4 py-3 text-sm text-success-700 dark:text-success-300">
  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
  <span>{successMsg}</span>
  </div>

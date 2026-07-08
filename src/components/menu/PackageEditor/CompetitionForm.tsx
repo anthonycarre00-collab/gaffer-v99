@@ -366,7 +366,7 @@ export function CompetitionForm({
  <button
  type="button"
  onClick={() => removeExplicitTeam(teamId)}
- className="ml-2 flex-shrink-0 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+ className="ml-2 flex-shrink-0 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition-colors"
  aria-label={`Remove ${team?.name ?? teamId}`}
  >
  <X className="w-4 h-4" />
@@ -548,7 +548,7 @@ export function CompetitionForm({
  <button
  type="button"
  onClick={() => { updateField("logo", null); }}
- className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
+ className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition"
  >
  <X className="w-3.5 h-3.5" />
  </button>

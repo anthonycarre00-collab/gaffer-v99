@@ -41,8 +41,8 @@ export default function HomePlayerMomentumCard({
  {hotPlayers.length > 0 && (
  <div>
  <div className="flex items-center gap-1.5 mb-2">
- <TrendingUp className="w-3.5 h-3.5 text-green-500" />
- <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-green-500">
+ <TrendingUp className="w-3.5 h-3.5 text-success-500" />
+ <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-success-500">
  {t("home.inForm")}
  </span>
  </div>
@@ -50,7 +50,7 @@ export default function HomePlayerMomentumCard({
  {hotPlayers.map((player) => (
  <div
  key={player.id}
- className="flex items-center gap-2 px-2 py-1.5 rounded bg-green-500/5 dark:bg-green-500/10"
+ className="flex items-center gap-2 px-2 py-1.5 rounded bg-success-500/5 dark:bg-success-500/10"
  >
  <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
  <span className="text-xs font-medium text-gray-800 dark:text-gray-200 flex-1 truncate">
@@ -59,7 +59,7 @@ export default function HomePlayerMomentumCard({
  <Badge variant="success" size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-xs font-heading font-bold text-green-500 tabular-nums w-8 text-right">
+ <span className="text-xs font-heading font-bold text-success-500 tabular-nums w-8 text-right">
  {player.morale}
  </span>
  </div>
@@ -70,8 +70,8 @@ export default function HomePlayerMomentumCard({
  {coldPlayers.length > 0 && (
  <div>
  <div className="flex items-center gap-1.5 mb-2">
- <TrendingDown className="w-3.5 h-3.5 text-red-500" />
- <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-red-500">
+ <TrendingDown className="w-3.5 h-3.5 text-danger-500" />
+ <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-danger-500">
  {t("home.lowMorale")}
  </span>
  </div>
@@ -79,7 +79,7 @@ export default function HomePlayerMomentumCard({
  {coldPlayers.map((player) => (
  <div
  key={player.id}
- className="flex items-center gap-2 px-2 py-1.5 rounded bg-red-500/5 dark:bg-red-500/10"
+ className="flex items-center gap-2 px-2 py-1.5 rounded bg-danger-500/5 dark:bg-danger-500/10"
  >
  <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
  <span className="text-xs font-medium text-gray-800 dark:text-gray-200 flex-1 truncate">
@@ -88,7 +88,7 @@ export default function HomePlayerMomentumCard({
  <Badge variant="danger" size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-xs font-heading font-bold text-red-500 tabular-nums w-8 text-right">
+ <span className="text-xs font-heading font-bold text-danger-500 tabular-nums w-8 text-right">
  {player.morale}
  </span>
  </div>

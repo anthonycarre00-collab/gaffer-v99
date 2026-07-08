@@ -286,16 +286,16 @@ export function FormationPitch({
  <div
  className={`flex h-7 w-7 items-center justify-center rounded-full border-2 font-heading text-[9px] font-bold text-white transition-all ${
  isSelected
- ? "border-red-300 bg-red-500/80 ring-2 ring-red-500/50"
+ ? "border-danger-300 bg-danger-500/80 ring-2 ring-danger-500/50"
  : p.condition < 50
- ? "border-yellow-400/80 bg-yellow-600/70"
+ ? "border-accent-400/80 bg-accent-600/70"
  : "border-white/30 bg-navy-800/80"
  }`}
  >
  {isSubOn ? "▲" : initials}
  </div>
  <span
- className={`max-w-[44px] truncate text-center font-heading text-[8px] font-bold drop-shadow ${isSelected ? "text-red-300" : "text-white/80"}`}
+ className={`max-w-[44px] truncate text-center font-heading text-[8px] font-bold drop-shadow ${isSelected ? "text-danger-300" : "text-white/80"}`}
  >
  {p.name.split(" ").pop()}
  </span>

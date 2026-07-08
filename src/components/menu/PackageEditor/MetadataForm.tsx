@@ -197,7 +197,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  <button
  type="button"
  onClick={() => { set({ logo: null }); }}
- className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
+ className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -263,7 +263,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {meta.name || meta.id || "—"}
  </p>
  {meta.packageType && meta.packageType !== "database" && (
- <span className="text-[9px] font-heading uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 flex-shrink-0">
+ <span className="text-[9px] font-heading uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent-100 dark:bg-accent-900/40 text-accent-700 dark:text-accent-400 flex-shrink-0">
  {packageTypeLabels[meta.packageType] ?? meta.packageType}
  </span>
  )}
@@ -314,12 +314,12 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
  {licenseDetails.permissions.length > 0 && (
  <div className="flex flex-col gap-1">
- <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-green-600 dark:text-green-400">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-success-600 dark:text-success-400">
  {t("worldEditor.licensePermissions")}
  </p>
  {licenseDetails.permissions.map((p) => (
  <div key={p} className="flex items-center gap-1.5">
- <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-success-500 flex-shrink-0" />
  <span className="text-xs text-gray-700 dark:text-gray-300">{p}</span>
  </div>
  ))}
@@ -328,12 +328,12 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
  {licenseDetails.conditions.length > 0 && (
  <div className="flex flex-col gap-1">
- <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-amber-600 dark:text-amber-400">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-accent-600 dark:text-accent-400">
  {t("worldEditor.licenseConditions")}
  </p>
  {licenseDetails.conditions.map((c) => (
  <div key={c} className="flex items-center gap-1.5">
- <Info className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+ <Info className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" />
  <span className="text-xs text-gray-700 dark:text-gray-300">{c}</span>
  </div>
  ))}
@@ -342,12 +342,12 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
  {licenseDetails.limitations.length > 0 && (
  <div className="flex flex-col gap-1">
- <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-red-600 dark:text-red-400">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-[0.12em] text-danger-600 dark:text-danger-400">
  {t("worldEditor.licenseLimitations")}
  </p>
  {licenseDetails.limitations.map((l) => (
  <div key={l} className="flex items-center gap-1.5">
- <XCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />
+ <XCircle className="w-3.5 h-3.5 text-danger-500 flex-shrink-0" />
  <span className="text-xs text-gray-700 dark:text-gray-300">{l}</span>
  </div>
  ))}

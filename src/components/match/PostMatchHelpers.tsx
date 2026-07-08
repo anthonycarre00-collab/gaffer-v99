@@ -34,14 +34,14 @@ export function QuickStat({
  <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
  {label}
  </span>
- <span className="font-mono font-bold text-indigo-400 tabular-nums">
+ <span className="font-mono font-bold text-primary-400 tabular-nums">
  {away}
  </span>
  </div>
  <div className="flex h-1 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden transition-colors duration-300">
  <div className="h-full bg-primary-500" style={{ width: `${pct}%` }} />
  <div
- className="h-full bg-indigo-500"
+ className="h-full bg-primary-500"
  style={{ width: `${100 - pct}%` }}
  />
  </div>
@@ -70,7 +70,7 @@ export function renderScorers(
  <div className="mb-3 last:mb-0">
  <p
  className={`text-[10px] font-heading uppercase tracking-widest mb-1 ${
- side === "Home" ? "text-primary-400" : "text-indigo-400"
+ side === "Home" ? "text-primary-400" : "text-primary-400"
  }`}
  >
  {team.name}
@@ -202,12 +202,12 @@ export function PlayerRatingsPanel({
  p.rating >= 8
  ? "text-accent-700 dark:text-accent-400"
  : p.rating >= 7
- ? "text-green-700 dark:text-green-400"
+ ? "text-success-700 dark:text-success-400"
  : p.rating >= 6
  ? "text-gray-600 dark:text-gray-300"
  : p.rating >= 5
- ? "text-yellow-700 dark:text-yellow-400"
- : "text-red-400"
+ ? "text-accent-700 dark:text-accent-400"
+ : "text-danger-400"
  }`}
  >
  {p.rating.toFixed(1)}

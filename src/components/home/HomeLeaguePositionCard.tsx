@@ -103,7 +103,7 @@ export default function HomeLeaguePositionCard({
  </div>
  <div>
  <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">W</p>
- <p className="text-sm font-heading font-bold text-green-500">
+ <p className="text-sm font-heading font-bold text-success-500">
  {myStandingData.won}
  </p>
  </div>
@@ -115,7 +115,7 @@ export default function HomeLeaguePositionCard({
  </div>
  <div>
  <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">L</p>
- <p className="text-sm font-heading font-bold text-red-500">
+ <p className="text-sm font-heading font-bold text-danger-500">
  {myStandingData.lost}
  </p>
  </div>
@@ -128,9 +128,9 @@ export default function HomeLeaguePositionCard({
  key={`${result}-${index}`}
  className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-heading font-bold text-white ${
  result === "W"
- ? "bg-green-500"
+ ? "bg-success-500"
  : result === "L"
- ? "bg-red-500"
+ ? "bg-danger-500"
  : "bg-gray-400"
  }`}
  >
@@ -139,12 +139,12 @@ export default function HomeLeaguePositionCard({
  ))}
  </div>
  {winStreak && (
- <span className="text-[10px] font-heading font-bold text-green-500 uppercase tracking-wider">
+ <span className="text-[10px] font-heading font-bold text-success-500 uppercase tracking-wider">
  {t("home.winningStreak")}
  </span>
  )}
  {loseStreak && (
- <span className="text-[10px] font-heading font-bold text-red-500 uppercase tracking-wider">
+ <span className="text-[10px] font-heading font-bold text-danger-500 uppercase tracking-wider">
  {t("home.losingStreak")}
  </span>
  )}

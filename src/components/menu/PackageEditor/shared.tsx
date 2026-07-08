@@ -112,7 +112,7 @@ export function EntityRow({
  <div className="flex items-center gap-1 flex-shrink-0">
  <button
  onClick={handleConfirmDelete}
- className="p-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors"
+ className="p-1 rounded-md bg-danger-500 text-white hover:bg-danger-600 transition-colors"
  title={t("common.confirmDelete")}
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -136,7 +136,7 @@ export function EntityRow({
  </button>
  <button
  onClick={handleDeleteClick}
- className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+ className="text-gray-400 hover:text-danger-500 transition-colors flex-shrink-0"
  title={deleteLabel}
  >
  <Trash2 className="w-4 h-4" />

@@ -59,7 +59,7 @@ const TRAINING_FOCUS_ATTRS: Record<string, string[]> = {
 const INTENSITY_IDS = ["Low", "Medium", "High"] as const;
 
 const INTENSITY_COLORS: Record<string, string> = {
- Low: "text-blue-500",
+ Low: "text-primary-500",
  Medium: "text-accent-500",
  High: "text-danger-500",
 };
@@ -75,7 +75,7 @@ const SCHEDULE_ICONS: Record<string, ReactNode> = {
 const SCHEDULE_COLORS: Record<string, string> = {
  Intense: "text-danger-500",
  Balanced: "text-primary-500",
- Light: "text-blue-500",
+ Light: "text-primary-500",
 };
 
 const SCHEDULE_TRAINING_DAYS: Record<string, number[]> = {
@@ -175,10 +175,10 @@ export default function TrainingTab({
  {staffAdvice ? (
  <div
  className={`flex items-start gap-3 p-4 rounded border ${staffAdvice.level === "critical"
- ? "bg-red-50 dark:bg-danger-500/10 border-red-300 dark:border-red-500/40"
+ ? "bg-danger-50 dark:bg-danger-500/10 border-danger-300 dark:border-danger-500/40"
  : staffAdvice.level === "warn"
- ? "bg-amber-50 dark:bg-accent-500/10 border-amber-300 dark:border-amber-500/40"
- : "bg-blue-50 dark:bg-blue-500/10 border-blue-300 dark:border-blue-500/40"
+ ? "bg-accent-50 dark:bg-accent-500/10 border-accent-300 dark:border-accent-500/40"
+ : "bg-primary-50 dark:bg-primary-500/10 border-primary-300 dark:border-primary-500/40"
  }`}
  >
  {staffAdvice.level === "critical" ? (
@@ -186,15 +186,15 @@ export default function TrainingTab({
  ) : staffAdvice.level === "warn" ? (
  <AlertTriangle className="w-5 h-5 text-accent-500 flex-shrink-0 mt-0.5" />
  ) : (
- <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+ <Info className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" />
  )}
  <div>
  <p
  className={`text-xs font-heading font-bold uppercase tracking-wider mb-0.5 ${staffAdvice.level === "critical"
- ? "text-red-600 dark:text-red-400"
+ ? "text-danger-600 dark:text-danger-400"
  : staffAdvice.level === "warn"
- ? "text-amber-600 dark:text-amber-400"
- : "text-blue-600 dark:text-blue-400"
+ ? "text-accent-600 dark:text-accent-400"
+ : "text-primary-600 dark:text-primary-400"
  }`}
  >
  {staffAdvice.level === "critical"
@@ -281,13 +281,13 @@ export default function TrainingTab({
  {exhaustedCount > 0 || criticalCount > 0 ? (
  <div className="mt-1 pt-2 border-t border-gray-100 dark:border-navy-700">
  {criticalCount > 0 ? (
- <p className="text-xs text-danger-500 dark:text-red-400 flex items-center gap-1">
+ <p className="text-xs text-danger-500 dark:text-danger-400 flex items-center gap-1">
  <AlertTriangle className="w-3 h-3" />{" "}
  {t("training.criticalCondition", { count: criticalCount })}
  </p>
  ) : null}
  {exhaustedCount > 0 ? (
- <p className="text-xs text-accent-500 dark:text-amber-400 flex items-center gap-1 mt-0.5">
+ <p className="text-xs text-accent-500 dark:text-accent-400 flex items-center gap-1 mt-0.5">
  <AlertTriangle className="w-3 h-3" />{" "}
  {t("training.exhaustedPlayers", { count: exhaustedCount })}
  </p>
@@ -308,9 +308,9 @@ export default function TrainingTab({
  <div key={player.id} className="flex items-center px-4 py-2 gap-3">
  <span
  className={`text-sm font-medium flex-1 truncate ${player.condition < 25
- ? "text-red-600 dark:text-red-400"
+ ? "text-danger-600 dark:text-danger-400"
  : player.condition < 40
- ? "text-amber-600 dark:text-amber-400"
+ ? "text-accent-600 dark:text-accent-400"
  : "text-gray-800 dark:text-gray-200"
  }`}
  >

@@ -42,7 +42,7 @@ export function statColor(v: number): string {
 export function starterOvrColor(ovr: number): string {
  if (ovr >= 70) return "text-primary-600 dark:text-primary-400";
  if (ovr >= 50) return "text-gray-700 dark:text-gray-300";
- return "text-red-600 dark:text-red-400";
+ return "text-danger-600 dark:text-danger-400";
 }
 
 function hexToRgb(color: string): { red: number; green: number; blue: number } | null {
@@ -215,10 +215,10 @@ export default function PreMatchLineup({
  {translatePositionAbbreviation(t, pos)}
  </span>
  <span
- className={`flex items-center gap-1 text-sm font-mono font-bold tabular-nums ${ok ? "text-primary-700 dark:text-primary-400" : "text-amber-600 dark:text-amber-400"}`}
+ className={`flex items-center gap-1 text-sm font-mono font-bold tabular-nums ${ok ? "text-primary-700 dark:text-primary-400" : "text-accent-600 dark:text-accent-400"}`}
  >
  {actual}/{needed}
- {!ok && <AlertTriangle className="w-3 h-3 text-amber-600 dark:text-amber-400" />}
+ {!ok && <AlertTriangle className="w-3 h-3 text-accent-600 dark:text-accent-400" />}
  </span>
  </div>
  );
@@ -279,8 +279,8 @@ export default function PreMatchLineup({
  </p>
  {!balanced && (
  <span className="flex items-center gap-0.5">
- <AlertTriangle className="w-2.5 h-2.5 text-amber-400" />
- <span className="text-[9px] font-heading text-amber-400">
+ <AlertTriangle className="w-2.5 h-2.5 text-accent-400" />
+ <span className="text-[9px] font-heading text-accent-400">
  {players.length}/{needed}
  </span>
  </span>

@@ -64,7 +64,7 @@ function getSaveButtonClassName(saveFlash: boolean, isSaving: boolean): string {
  "flex items-center gap-1.5 rounded px-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider transition-all hover:cursor-pointer";
 
  if (saveFlash) {
- className = `${className} bg-green-500 text-white`;
+ className = `${className} bg-success-500 text-white`;
  } else {
  className = `${className} bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600`;
  }

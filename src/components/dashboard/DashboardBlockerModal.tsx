@@ -20,18 +20,18 @@ function getBlockerButtonClassName(severity: string): string {
  "w-full rounded border p-3 text-left transition-all hover:shadow-sm";
 
  if (severity === "warn") {
- return `${baseClassName} border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10`;
+ return `${baseClassName} border-accent-500/30 bg-accent-500/5 hover:bg-accent-500/10`;
  }
 
- return `${baseClassName} border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10`;
+ return `${baseClassName} border-primary-500/30 bg-primary-500/5 hover:bg-primary-500/10`;
 }
 
 function getBlockerTextClassName(severity: string): string {
  if (severity === "warn") {
- return "text-sm font-medium text-amber-600 dark:text-amber-400";
+ return "text-sm font-medium text-accent-600 dark:text-accent-400";
  }
 
- return "text-sm font-medium text-blue-600 dark:text-blue-400";
+ return "text-sm font-medium text-primary-600 dark:text-primary-400";
 }
 
 function getBlockerText(blocker: BlockerData): string {
@@ -49,8 +49,8 @@ export default function DashboardBlockerModal({
  return (
  <DashboardModalFrame maxWidthClassName="max-w-md">
  <div className="mb-4 flex items-center gap-3">
- <div className="flex h-10 w-10 items-center justify-center rounded bg-amber-500/20">
- <AlertCircle className="h-5 w-5 text-amber-500" />
+ <div className="flex h-10 w-10 items-center justify-center rounded bg-accent-500/20">
+ <AlertCircle className="h-5 w-5 text-accent-500" />
  </div>
  <div>
  <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
@@ -87,7 +87,7 @@ export default function DashboardBlockerModal({
  {onContinueAnyway && (
  <button
  onClick={onContinueAnyway}
- className="flex-1 rounded bg-amber-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-amber-600"
+ className="flex-1 rounded bg-accent-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-accent-600"
  >
  {t("notifications.continueAnyway")}
  </button>

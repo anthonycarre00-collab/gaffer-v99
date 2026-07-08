@@ -37,24 +37,24 @@ const CAT_ICONS: Record<string, React.ReactNode> = {
 const CAT_COLORS: Record<string, string> = {
  MatchReport: "text-primary-500",
  LeagueRoundup: "text-accent-500",
- StandingsUpdate: "text-blue-500",
+ StandingsUpdate: "text-primary-500",
  TransferRumour: "text-purple-500",
  TransferRoundup: "text-fuchsia-500",
  InjuryNews: "text-danger-500",
  SeasonPreview: "text-success-500",
  Editorial: "text-gray-500",
- ManagerialChange: "text-orange-500",
+ ManagerialChange: "text-danger-500",
 };
 const CAT_BG: Record<string, string> = {
  MatchReport: "bg-primary-500/10",
  LeagueRoundup: "bg-accent-500/10",
- StandingsUpdate: "bg-blue-500/10",
+ StandingsUpdate: "bg-primary-500/10",
  TransferRumour: "bg-purple-500/10",
  TransferRoundup: "bg-fuchsia-500/10",
  InjuryNews: "bg-danger-500/10",
  SeasonPreview: "bg-success-500/10",
  Editorial: "bg-gray-500/10",
- ManagerialChange: "bg-orange-500/10",
+ ManagerialChange: "bg-danger-500/10",
 };
 
 interface NewsTabProps {

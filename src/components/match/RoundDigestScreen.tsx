@@ -243,7 +243,7 @@ export default function RoundDigestScreen({
  resultType === "win"
  ? "bg-linear-to-r from-primary-50 to-white dark:from-primary-900/30 dark: border-primary-200 dark:border-primary-700/50"
  : resultType === "loss"
- ? "bg-linear-to-r from-red-50 to-white dark:from-red-900/20 dark: border-red-200 dark:border-red-700/50"
+ ? "bg-linear-to-r from-red-50 to-white dark:from-red-900/20 dark: border-danger-200 dark:border-danger-700/50"
  : "bg-white dark:bg-navy-800 border-gray-200 dark:border-navy-700"
  }`}
  >
@@ -261,9 +261,9 @@ export default function RoundDigestScreen({
  </div>
  )}
  {resultType === "loss" && (
- <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/10 rounded-full">
- <TrendingDown className="w-3.5 h-3.5 text-red-400" />
- <span className="font-heading font-bold text-xs uppercase tracking-widest text-red-400">
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-danger-500/10 rounded-full">
+ <TrendingDown className="w-3.5 h-3.5 text-danger-400" />
+ <span className="font-heading font-bold text-xs uppercase tracking-widest text-danger-400">
  {t("match.defeat")}
  </span>
  </div>
@@ -329,9 +329,9 @@ export default function RoundDigestScreen({
  {isLeagueFixture && userStanding && (
  <div className="mt-4 flex items-center justify-center gap-2">
  {positionChange > 0 ? (
- <ArrowUp className="w-4 h-4 text-green-500" />
+ <ArrowUp className="w-4 h-4 text-success-500" />
  ) : positionChange < 0 ? (
- <ArrowDown className="w-4 h-4 text-red-400" />
+ <ArrowDown className="w-4 h-4 text-danger-400" />
  ) : null}
  <p className="text-sm font-heading font-bold text-gray-600 dark:text-gray-400">
  #{userStanding.current_position} ·{" "}
@@ -432,9 +432,9 @@ export default function RoundDigestScreen({
  {entry.current_position}
  </span>
  {change > 0 ? (
- <ArrowUp className="w-3 h-3 text-green-500 shrink-0" />
+ <ArrowUp className="w-3 h-3 text-success-500 shrink-0" />
  ) : change < 0 ? (
- <ArrowDown className="w-3 h-3 text-red-400 shrink-0" />
+ <ArrowDown className="w-3 h-3 text-danger-400 shrink-0" />
  ) : (
  <span className="w-3 shrink-0" />
  )}
@@ -490,11 +490,11 @@ export default function RoundDigestScreen({
  {/* Notable Upset */}
  {isLeagueFixture && roundSummary?.notable_upset && (
  <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
- <div className="w-8 h-8 rounded bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center shrink-0">
- <Flame className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+ <div className="w-8 h-8 rounded bg-danger-100 dark:bg-danger-500/20 flex items-center justify-center shrink-0">
+ <Flame className="w-4 h-4 text-danger-500 dark:text-danger-400" />
  </div>
  <div>
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-0.5">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-danger-500 dark:text-danger-400 mb-0.5">
  {t("match.notableUpset")}
  </p>
  <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200">

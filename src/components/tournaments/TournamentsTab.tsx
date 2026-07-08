@@ -680,7 +680,7 @@ export default function TournamentsTab({
  {entry.lost}
  </td>
  <td
- className={`py-2 px-3 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-red-500" : "text-gray-500"}`}
+ className={`py-2 px-3 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}
  >
  {gd > 0 ? `+${gd}` : gd}
  </td>
@@ -876,7 +876,7 @@ export default function TournamentsTab({
  inPromotionZone
  ? "border-l-2 border-primary-500 text-primary-500"
  : inRelegationZone
- ? "border-l-2 border-red-500 text-red-500"
+ ? "border-l-2 border-danger-500 text-danger-500"
  : "text-gray-400"
  }`}
  data-testid={
@@ -913,7 +913,7 @@ export default function TournamentsTab({
  {entry.goals_against}
  </td>
  <td
- className={`py-3 px-4 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-red-500" : "text-gray-500"}`}
+ className={`py-3 px-4 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}
  >
  {gd > 0 ? `+${gd}` : gd}
  </td>
@@ -936,7 +936,7 @@ export default function TournamentsTab({
  )}
  {zones.relegationSlots > 0 && (
  <span className="flex items-center gap-1.5">
- <span className="h-2 w-2 rounded-full bg-red-500" />
+ <span className="h-2 w-2 rounded-full bg-danger-500" />
  {t("schedule.relegationZone")}
  </span>
  )}
@@ -972,7 +972,7 @@ export default function TournamentsTab({
  {view === "awards" && (
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
  {!seasonComplete && (
- <div className="md:col-span-2 lg:col-span-3 rounded border border-amber-300/50 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+ <div className="md:col-span-2 lg:col-span-3 rounded border border-accent-300/50 bg-accent-50 px-4 py-3 text-sm text-accent-700 dark:border-accent-500/30 dark:bg-accent-500/10 dark:text-accent-300">
  {t("tournaments.awards.currentLeaders")}
  </div>
  )}
@@ -1020,7 +1020,7 @@ export default function TournamentsTab({
  onSelectTeam={onSelectTeam}
  />
  <AwardCard
- icon={<Shield className="w-5 h-5 text-blue-500" />}
+ icon={<Shield className="w-5 h-5 text-primary-500" />}
  title={t("tournaments.awards.goldenGloveTitle")}
  subtitle={t("tournaments.awards.goldenGloveSubtitle")}
  entries={awards.clean_sheet_king}
@@ -1030,7 +1030,7 @@ export default function TournamentsTab({
  onSelectTeam={onSelectTeam}
  />
  <AwardCard
- icon={<Users className="w-5 h-5 text-green-500" />}
+ icon={<Users className="w-5 h-5 text-success-500" />}
  title={t("tournaments.awards.everPresentTitle")}
  subtitle={t("tournaments.awards.everPresentSubtitle")}
  entries={awards.most_appearances}
@@ -1040,7 +1040,7 @@ export default function TournamentsTab({
  onSelectTeam={onSelectTeam}
  />
  <AwardCard
- icon={<Star className="w-5 h-5 text-amber-500" />}
+ icon={<Star className="w-5 h-5 text-accent-500" />}
  title={t("tournaments.awards.youngPlayerTitle")}
  subtitle={t("tournaments.awards.youngPlayerSubtitle")}
  entries={awards.young_player}

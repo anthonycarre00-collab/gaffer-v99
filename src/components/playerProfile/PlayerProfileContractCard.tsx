@@ -160,7 +160,7 @@ export default function PlayerProfileContractCard({
  size="sm"
  variant="outline"
  icon={<Trash2 />}
- className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+ className="text-danger-600 hover:text-danger-700 dark:text-danger-400 dark:hover:text-danger-300"
  disabled={actionSubmitting || contractEnd === null}
  onClick={onOpenTermination}
  >

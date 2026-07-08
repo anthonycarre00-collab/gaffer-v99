@@ -56,7 +56,7 @@ export default function KitEditorCard({
  {t("squad.teamKit")}
  </p>
  {isLocked && (
- <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400" title={t("squad.kitLockedInSeason")}>
+ <div className="flex items-center gap-1 text-xs text-accent-600 dark:text-accent-400" title={t("squad.kitLockedInSeason")}>
  <Lock className="w-3 h-3" />
  <span className="font-heading font-semibold uppercase tracking-wider">{t("squad.kitPattern")}</span>
  </div>
@@ -118,13 +118,13 @@ export default function KitEditorCard({
  </div>
  )}
  {isLocked && (
- <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+ <p className="text-xs text-accent-600 dark:text-accent-400 flex items-center gap-1">
  <Lock className="w-3 h-3 shrink-0" />
  {t("squad.kitLockedInSeason")}
  </p>
  )}
  {error && (
- <p className="text-xs text-red-500 dark:text-red-400">{error}</p>
+ <p className="text-xs text-danger-500 dark:text-danger-400">{error}</p>
  )}
  </div>
  );

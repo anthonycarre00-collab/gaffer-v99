@@ -261,7 +261,7 @@ export default function PlayersListTab({
  </button>
  <button
  onClick={() => patchQuery({ status: "loan" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-blue-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-primary-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
  >
  {t("transfers.loan")}
  </button>
@@ -290,7 +290,7 @@ export default function PlayersListTab({
  {fetchError ? (
  <p
  role="alert"
- className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-red-500"
+ className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-danger-500"
  >
  {fetchError}
  </p>
@@ -299,7 +299,7 @@ export default function PlayersListTab({
  {scoutError ? (
  <p
  role="alert"
- className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-red-500"
+ className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-danger-500"
  >
  {scoutError}
  </p>

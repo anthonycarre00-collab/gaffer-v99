@@ -57,9 +57,9 @@ export default function HomeRecentResultsCard({
  <span
  className={`w-5 h-5 rounded flex items-center justify-center text-[9px] font-heading font-bold text-white flex-shrink-0 ${
  result.resultCode === "W"
- ? "bg-green-500"
+ ? "bg-success-500"
  : result.resultCode === "L"
- ? "bg-red-500"
+ ? "bg-danger-500"
  : "bg-gray-400"
  }`}
  >
