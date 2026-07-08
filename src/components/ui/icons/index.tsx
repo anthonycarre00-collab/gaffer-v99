@@ -317,3 +317,114 @@ export function TargetIcon({ size = 20, ...props }: IconProps) {
     </svg>
   );
 }
+
+// ===== Additional icons needed by sidebar =====
+
+export function UserCog({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <circle cx="10" cy="8" r="3" />
+      <path d="M4 20c0-3 3-5 6-5s6 2 6 5" />
+      <circle cx="18" cy="14" r="2" />
+      <line x1="18" y1="11" x2="18" y2="13" />
+      <line x1="18" y1="15" x2="18" y2="17" />
+    </svg>
+  );
+}
+
+export function Dumbbell({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12" />
+    </svg>
+  );
+}
+
+export function DollarSign({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <line x1="12" y1="3" x2="12" y2="21" />
+      <path d="M16 7c0-2-2-3-4-3s-4 1-4 3 2 3 4 3 4 1 4 3-2 3-4 3-4-1-4-3" />
+    </svg>
+  );
+}
+
+export function Eye({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+export function GraduationCap({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <path d="M2 9l10-5 10 5-10 5z" />
+      <path d="M6 11v5c0 1 3 3 6 3s6-2 6-3v-5" />
+    </svg>
+  );
+}
+
+export function Building2({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <rect x="4" y="4" width="16" height="18" rx="1" />
+      <line x1="8" y1="8" x2="10" y2="8" />
+      <line x1="14" y1="8" x2="16" y2="8" />
+      <line x1="8" y1="12" x2="10" y2="12" />
+      <line x1="14" y1="12" x2="16" y2="12" />
+      <line x1="8" y1="16" x2="10" y2="16" />
+      <line x1="14" y1="16" x2="16" y2="16" />
+    </svg>
+  );
+}
+
+export function LogOut({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16,17 21,12 16,7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
+export function PanelLeftClose({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="1" />
+      <line x1="9" y1="4" x2="9" y2="20" />
+      <polyline points="15,10 13,12 15,14" />
+    </svg>
+  );
+}
+
+export function PanelLeftOpen({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="1" />
+      <line x1="9" y1="4" x2="9" y2="20" />
+      <polyline points="13,10 15,12 13,14" />
+    </svg>
+  );
+}
+
+export function TrendingUp({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <polyline points="3,17 9,11 13,15 21,7" />
+      <polyline points="14,7 21,7 21,14" />
+    </svg>
+  );
+}
+
+export function User({ size = 20, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} {...props}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}

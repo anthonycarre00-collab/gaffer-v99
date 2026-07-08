@@ -1,30 +1,27 @@
 import { useTranslation } from "react-i18next";
 import type { JSX, ReactNode } from "react";
 import {
-  Users,
-  Calendar as CalendarIcon,
-  Mail,
-  Settings,
-  LayoutDashboard,
-  Medal,
-  Trophy,
-  TrendingUp,
-  Globe,
-  Crosshair,
+  HomeIcon,
+  UsersIcon,
+  MailIcon,
+  SettingsIcon,
+  CrosshairIcon,
   Dumbbell,
   DollarSign,
   Eye,
-  UsersRound,
-  UserCheck,
-  Building2,
+  TrophyIcon,
+  GlobeIcon,
+  ClipboardIcon,
   UserCog,
-  Newspaper,
+  Building2,
   LogOut,
   GraduationCap,
   PanelLeftClose,
   PanelLeftOpen,
+  StarIcon,
+  TrendingUp,
   User,
-} from "lucide-react";
+} from "../ui/icons";
 
 interface DashboardSidebarProps {
   activeTab: string;
@@ -117,13 +114,10 @@ export default function DashboardSidebar({
   isUnemployed,
 }: DashboardSidebarProps): JSX.Element {
   const { t } = useTranslation();
-  const appName = t("app.name");
-  const [appNamePrimary, ...appNameSecondaryParts] = appName.split(" ");
-  const appNameSecondary = appNameSecondaryParts.join(" ");
 
   const clubItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
-    { icon: <Users />, label: t("dashboard.squad"), tab: "Squad" },
-    { icon: <Crosshair />, label: t("dashboard.tactics"), tab: "Tactics" },
+    { icon: <UsersIcon />, label: t("dashboard.squad"), tab: "Squad" },
+    { icon: <CrosshairIcon />, label: t("dashboard.tactics"), tab: "Tactics" },
     { icon: <Dumbbell />, label: t("dashboard.training"), tab: "Training" },
     { icon: <UserCog />, label: t("dashboard.staff"), tab: "Staff" },
     { icon: <Eye />, label: t("dashboard.scouting"), tab: "Scouting" },
@@ -136,13 +130,13 @@ export default function DashboardSidebar({
     { icon: <TrendingUp />, label: t("dashboard.transfers"), tab: "Transfers" },
   ];
   const worldItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
-    { icon: <Globe />, label: t("transfers.centre"), tab: "TransferCentre" },
-    { icon: <Medal />, label: t("dashboard.hallOfFame"), tab: "HallOfFame" },
-    { icon: <UsersRound />, label: t("dashboard.players"), tab: "Players" },
-    { icon: <UserCheck />, label: t("dashboard.managers"), tab: "Managers" },
+    { icon: <GlobeIcon />, label: t("transfers.centre"), tab: "TransferCentre" },
+    { icon: <StarIcon />, label: t("dashboard.hallOfFame"), tab: "HallOfFame" },
+    { icon: <UsersIcon />, label: t("dashboard.players"), tab: "Players" },
+    { icon: <User />, label: t("dashboard.managers"), tab: "Managers" },
     { icon: <Building2 />, label: t("dashboard.teams"), tab: "Teams" },
     {
-      icon: <Trophy />,
+      icon: <TrophyIcon />,
       label: t("dashboard.tournaments"),
       tab: "Tournaments",
     },
@@ -156,7 +150,7 @@ export default function DashboardSidebar({
       className={`bg-navy-800 dark:bg-navy-800 border-r border-navy-700 text-white flex h-screen sticky top-0 shrink-0 flex-col transition-[width] duration-200 ${collapsed ? "w-20" : "w-64"
         }`}
     >
-      {/* Brand */}
+      {/* Brand — Gaffer logo */}
       <div
         className={`border-b border-navy-700 ${collapsed ? "px-3 py-4" : "p-5"}`}
       >
@@ -168,21 +162,16 @@ export default function DashboardSidebar({
           >
             <div className="w-8 h-8 flex items-center justify-center">
               <img
-                src="../../openfootball.svg"
-                alt={appName}
+                src="/gaffer-icon.svg"
+                alt="Gaffer"
                 className="w-8 h-8"
               />
             </div>
             {collapsed ? null : (
               <div>
-                <h1 className="text-sm font-heading font-semibold text-white uppercase tracking-wider">
-                  {appNamePrimary}
+                <h1 className="text-sm font-heading font-bold text-accent-400 uppercase tracking-wider">
+                  Gaffer
                 </h1>
-                {appNameSecondary ? (
-                  <h1 className="font-bold font-heading text-accent-400 uppercase tracking-wider">
-                    {appNameSecondary}
-                  </h1>
-                ) : null}
               </div>
             )}
           </div>
@@ -233,7 +222,7 @@ export default function DashboardSidebar({
           }`}
       >
         <NavItem
-          icon={<LayoutDashboard />}
+          icon={<HomeIcon />}
           label={t("dashboard.home")}
           badge={undefined}
           active={activeTab === "Home"}
@@ -241,7 +230,7 @@ export default function DashboardSidebar({
           onClick={() => onNavClick("Home")}
         />
         <NavItem
-          icon={<Mail />}
+          icon={<MailIcon />}
           label={t("dashboard.inbox")}
           badge={unreadMessagesCount > 0 ? unreadMessagesCount : undefined}
           active={activeTab === "Inbox"}
@@ -249,14 +238,14 @@ export default function DashboardSidebar({
           onClick={() => onNavClick("Inbox")}
         />
         <NavItem
-          icon={<Newspaper />}
+          icon={<ClipboardIcon />}
           label={t("dashboard.news")}
           active={activeTab === "News"}
           collapsed={collapsed}
           onClick={() => onNavClick("News")}
         />
         <NavItem
-          icon={<CalendarIcon />}
+          icon={<TrophyIcon />}
           label={t("dashboard.schedule")}
           badge={todayHasMatch ? "!" : undefined}
           active={activeTab === "Schedule"}
@@ -317,7 +306,7 @@ export default function DashboardSidebar({
               : "flex items-center gap-3"
             }`}
         >
-          <Settings className="w-5 h-5" />
+          <SettingsIcon className="w-5 h-5" />
           {collapsed ? null : (
             <span className="font-heading text-sm uppercase tracking-wider">
               {t("dashboard.settings")}

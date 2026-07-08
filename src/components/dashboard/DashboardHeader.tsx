@@ -1,12 +1,11 @@
 import {
-  ArrowLeft,
-  Calendar as CalendarIcon,
-  ChevronDown,
-  ChevronRight,
-  Loader2,
-  Save,
-  Search,
-} from "lucide-react";
+  ArrowLeftIcon,
+  ChevronRightIcon,
+  LoaderIcon,
+  SearchIcon,
+  SettingsIcon,
+  TrophyIcon,
+} from "../ui/icons";
 import type { JSX, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -96,10 +95,10 @@ function getSaveButtonLabel(
 
 function renderSaveButtonIcon(isSaving: boolean): JSX.Element {
   if (isSaving) {
-    return <Loader2 className="h-4 w-4 animate-spin" />;
+    return <LoaderIcon className="h-4 w-4 animate-spin" />;
   }
 
-  return <Save className="h-4 w-4" />;
+  return <SettingsIcon className="h-4 w-4" />;
 }
 
 function getContinueButtonClassName(
@@ -349,7 +348,7 @@ export default function DashboardHeader({
             className="-ml-2 rounded p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-white"
             title={t("common.back")}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeftIcon className="h-5 w-5" />
           </button>
         )}
         <div>
@@ -357,14 +356,14 @@ export default function DashboardHeader({
             {activeTabLabel}
           </h2>
           <p className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
-            <CalendarIcon className="h-3.5 w-3.5" />
+            <TrophyIcon className="h-3.5 w-3.5" />
             <span className="font-medium">{currentDate}</span>
           </p>
         </div>
       </div>
 
       <div className="relative mx-auto flex-1 px-10">
-        <Search className="absolute left-13 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+        <SearchIcon className="absolute left-13 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           placeholder={t("dashboard.searchPlaceholder")}
@@ -406,7 +405,7 @@ export default function DashboardHeader({
             className="bg-gray-600 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
           >
             <span>{isAdvancing ? t("dashboard.simulating") : t("dashboard.continue")}</span>
-            <ChevronRight className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`} />
+            <ChevronRightIcon className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`} />
           </button>
         ) : (
           <div className="relative">
@@ -427,7 +426,7 @@ export default function DashboardHeader({
                   seasonComplete,
                   currentModeMeta,
                 )}
-                <ChevronRight
+                <ChevronRightIcon
                   className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`}
                 />
               </button>
@@ -435,7 +434,7 @@ export default function DashboardHeader({
                 onClick={handleContinueMenuToggleClick}
                 className={getContinueDropdownButtonClassName(currentModeMeta)}
               >
-                <ChevronDown className="h-4 w-4" />
+                <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
 
