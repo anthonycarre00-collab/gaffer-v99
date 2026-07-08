@@ -282,9 +282,9 @@ function ViewButton({
   return (
     <button
       onClick={onClick}
-      className={`rounded-lg px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider transition-all ${
+      className={`rounded px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider transition-all ${
         active
-          ? "bg-primary-500 text-white shadow-md shadow-primary-500/20"
+          ? "bg-primary-500 text-white "
           : "border border-gray-200 bg-white text-gray-500 hover:text-gray-700 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-400 dark:hover:text-gray-200"
       }`}
     >
@@ -379,7 +379,7 @@ function CalendarView({
           {slice.past_groups.length > visiblePastCount && (
             <button
               onClick={onShowMorePast}
-              className="mx-auto mt-1 rounded-lg border border-gray-200 bg-white px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider text-gray-500 transition-all hover:text-gray-700 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-400 dark:hover:text-gray-200"
+              className="mx-auto mt-1 rounded border border-gray-200 bg-white px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider text-gray-500 transition-all hover:text-gray-700 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-400 dark:hover:text-gray-200"
             >
               {t("schedule.loadMore")}
             </button>
@@ -706,7 +706,7 @@ function StandingsView({
 
   return (
     <Card>
-      <div className="rounded-t-xl border-b border-gray-100 bg-gradient-to-r from-navy-700 to-navy-800 p-5 dark:border-navy-600">
+      <div className="rounded-t-xl border-b border-gray-100 bg-navy-700 p-5 dark:border-navy-600">
         <h3 className="flex items-center gap-2 font-heading text-lg font-bold uppercase tracking-wide text-white">
           <Trophy className="h-5 w-5 text-accent-400" />
           {(competition && competitionDisplayName(competition, t)) ||
@@ -836,7 +836,7 @@ function LoadingPlaceholder() {
       {[1, 2, 3].map((n) => (
         <div
           key={n}
-          className="h-32 rounded-xl bg-gray-100 dark:bg-navy-800 animate-pulse"
+          className="h-32 rounded-lg bg-gray-100 dark:bg-navy-800 animate-pulse"
         />
       ))}
     </div>

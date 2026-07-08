@@ -141,7 +141,7 @@ export default function TrainingGroupsCard({
               return (
                 <div
                   key={group.id}
-                  className="flex items-center gap-2 bg-gray-50 dark:bg-navy-700/50 border border-gray-200 dark:border-navy-600 rounded-lg px-3 py-1.5"
+                  className="flex items-center gap-2 bg-gray-50 dark:bg-navy-700/50 border border-gray-200 dark:border-navy-600 rounded px-3 py-1.5"
                 >
                   <div className="text-gray-400 dark:text-gray-500">
                     {trainingFocusIcons[group.focus] ? (
@@ -198,7 +198,7 @@ export default function TrainingGroupsCard({
             {t("training.groups.noGroups")}
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-navy-600">
+          <div className="overflow-x-auto rounded border border-gray-200 dark:border-navy-600">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="bg-gray-50 dark:bg-navy-700/50">

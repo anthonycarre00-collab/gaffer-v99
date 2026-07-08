@@ -1031,7 +1031,7 @@ export default function TransfersTab({
       {/* Budget header */}
       {myTeam && (
         <Card accent="primary" className="mb-5">
-          <div className="bg-gradient-to-r from-navy-700 to-navy-800 p-5 rounded-t-xl flex items-center gap-6">
+          <div className="bg-navy-700 p-5 rounded-t-xl flex items-center gap-6">
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-lg font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
@@ -1050,7 +1050,7 @@ export default function TransfersTab({
               </p>
             </div>
             <div className="hidden md:flex gap-4">
-              <div className="bg-white/5 rounded-xl px-4 py-2 text-center">
+              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("finances.transferBudget")}
                 </p>
@@ -1060,7 +1060,7 @@ export default function TransfersTab({
               </div>
               <div
                 data-testid="wage-budget-card"
-                className="bg-white/5 rounded-xl px-4 py-2 text-center"
+                className="bg-white/5 rounded-lg px-4 py-2 text-center"
               >
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("finances.wageBudget")}
@@ -1072,7 +1072,7 @@ export default function TransfersTab({
                   )}
                 </p>
               </div>
-              <div className="bg-white/5 rounded-xl px-4 py-2 text-center">
+              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("transfers.listed")}
                 </p>
@@ -1098,7 +1098,7 @@ export default function TransfersTab({
                 setAvailabilityFilter("all");
               }
             }}
-            className={`px-4 py-2 rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${
               view === tab.id
                 ? "bg-primary-700 text-white shadow-md shadow-primary-700/20"
                 : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600 hover:text-gray-700 dark:hover:text-gray-200"
@@ -1121,7 +1121,7 @@ export default function TransfersTab({
               setSearch(e.target.value);
               setMarketPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+            className="w-full pl-9 pr-3 py-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
           />
         </div>
         <div ref={positionFilterRef} className="flex gap-1.5">
@@ -1130,7 +1130,7 @@ export default function TransfersTab({
             onClick={() => handleSelectPositionGroup(null)}
             aria-pressed={specificPositions.length === 0}
             aria-label={t("transfers.allPositions")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+            className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
           >
             {t("common.all")}
           </button>
@@ -1166,7 +1166,7 @@ export default function TransfersTab({
                         })
                       : groupLabel
                   }
-                  className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+                  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
                 >
                   {t(`common.posAbbr.${pos}`)}
                   {isPartial && (
@@ -1184,7 +1184,7 @@ export default function TransfersTab({
                     aria-label={t("transfers.refinePositionGroup", {
                       group: groupLabel,
                     })}
-                    className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded-lg bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 shadow-lg"
+                    className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 shadow-lg"
                   >
                     <div className="flex flex-wrap gap-1.5">
                       {groupSpecifics.map((position) => {
@@ -1226,7 +1226,7 @@ export default function TransfersTab({
                   setAvailabilityFilter(filter.id);
                   setMarketPage(1);
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+                className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
               >
                 {filter.label} ({filter.count})
               </button>
@@ -1240,7 +1240,7 @@ export default function TransfersTab({
                 }}
                 aria-pressed={affordableOnly}
                 title={t("transfers.affordableOnlyHint")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+                className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
               >
                 {t("transfers.affordableOnly")}
               </button>
@@ -1746,7 +1746,7 @@ export default function TransfersTab({
                                 e.stopPropagation();
                                 openDealEntry(player);
                               }}
-                              className="flex items-center gap-1 px-3 py-1.5 bg-primary-500/10 hover:bg-primary-500/20 text-primary-500 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-colors"
+                              className="flex items-center gap-1 px-3 py-1.5 bg-primary-500/10 hover:bg-primary-500/20 text-primary-500 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors"
                             >
                               {getDealEntryIcon(player, "w-3 h-3")}
                               {getDealEntryLabel(player)}
@@ -1782,7 +1782,7 @@ export default function TransfersTab({
                     }
                     disabled={safeMarketPage === 1}
                     aria-label={t("scouting.previousPage")}
-                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
+                    className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -1798,7 +1798,7 @@ export default function TransfersTab({
                     }
                     disabled={safeMarketPage === marketTotalPages}
                     aria-label={t("scouting.nextPage")}
-                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
+                    className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -1931,7 +1931,7 @@ export default function TransfersTab({
             }
 
             return (
-              <div className="rounded-lg bg-gray-50 p-6 text-sm text-gray-600 dark:bg-navy-900/50 dark:text-gray-300">
+              <div className="rounded bg-gray-50 p-6 text-sm text-gray-600 dark:bg-navy-900/50 dark:text-gray-300">
                 {t("transfers.dealChooserHint")}
               </div>
             );

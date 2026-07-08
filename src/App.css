@@ -117,6 +117,16 @@
   }
 }
 
+/* ===== Gradient replacement utilities ===== */
+/* We replaced all bg-gradient-to-r from-X to-Y with bgc-X (matte background) */
+@layer utilities {
+  .bgc-primary-500 { background-color: var(--color-primary-500); }
+  .bgc-primary-600 { background-color: var(--color-primary-600); }
+  .bgc-accent-500 { background-color: var(--color-accent-500); }
+  .bgc-success-500 { background-color: var(--color-success-500); }
+  .bgc-danger-500 { background-color: var(--color-danger-500); }
+}
+
 /* ===== Utility classes ===== */
 @layer utilities {
   .font-heading {

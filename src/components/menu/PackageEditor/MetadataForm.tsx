@@ -179,9 +179,9 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
             <label className={labelClass}>{t("worldEditor.packageLogo")}</label>
             <div className="flex items-center gap-3">
               {logoDataUrl ? (
-                <img src={logoDataUrl} alt="" className="w-12 h-12 rounded-lg object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+                <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
               ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
                   <ImagePlus className="w-5 h-5 text-gray-300 dark:text-navy-500" />
                 </div>
               )}
@@ -189,7 +189,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
                 <button
                   type="button"
                   onClick={() => { void handlePickLogo(); }}
-                  className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
+                  className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
                 >
                   {t("worldEditor.chooseLogo")}
                 </button>
@@ -197,7 +197,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
                   <button
                     type="button"
                     onClick={() => { set({ logo: null }); }}
-                    className="px-2 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
+                    className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -249,11 +249,11 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
         {/* Package preview card */}
         <div className="flex flex-col gap-1.5">
           <p className={labelClass}>{t("worldEditor.licensePreview")}</p>
-          <div className="rounded-xl border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4 flex items-start gap-3">
+          <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4 flex items-start gap-3">
             {logoDataUrl ? (
-              <img src={logoDataUrl} alt="" className="w-9 h-9 rounded-lg object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+              <img src={logoDataUrl} alt="" className="w-9 h-9 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
             ) : (
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0">
                 <Globe className="w-5 h-5 text-white" />
               </div>
             )}
@@ -307,7 +307,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
         {/* License permissions card */}
         {licenseDetails && !useCustom && (
-          <div className="flex flex-col gap-2 rounded-xl border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4">
+          <div className="flex flex-col gap-2 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4">
             <p className="text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500">
               {SPDX_LICENSES.find((l) => l.id === meta.license)?.name}
             </p>

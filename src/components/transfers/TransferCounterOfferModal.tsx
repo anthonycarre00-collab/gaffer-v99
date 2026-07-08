@@ -70,7 +70,7 @@ export default function TransferCounterOfferModal({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-navy-800 rounded-xl shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
         onClick={(event) => event.stopPropagation()}
       >
         <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
@@ -98,7 +98,7 @@ export default function TransferCounterOfferModal({
         {blockingTitle ? (
           <div
             role="alert"
-            className="mb-4 flex gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
+            className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
           >
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <div className="text-xs">
@@ -127,7 +127,7 @@ export default function TransferCounterOfferModal({
           pattern="[0-9]*"
           value={counterAmount}
           onChange={(event) => onCounterAmountChange(event.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+          className="w-full px-3 py-2 rounded bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
         />
         {parsedCounterAmount !== null ? (
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
@@ -165,7 +165,7 @@ export default function TransferCounterOfferModal({
             disabled={
               submitDisabled || counterLoading || counterResult === "accepted"
             }
-            className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+            className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
           >
             {counterLoading
               ? t("transfers.submitting")
@@ -173,7 +173,7 @@ export default function TransferCounterOfferModal({
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded-lg font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
+            className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
           >
             {t("transfers.close")}
           </button>

@@ -94,7 +94,7 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
             <div
               ref={menuRef}
               role="menu"
-              className="fixed z-50 min-w-[180px] bg-white dark:bg-navy-800 rounded-lg shadow-xl border border-gray-200 dark:border-navy-600 py-1 animate-in fade-in duration-100"
+              className="fixed z-50 min-w-[180px] bg-white dark:bg-navy-800 rounded shadow-xl border border-gray-200 dark:border-navy-600 py-1 animate-in fade-in duration-100"
               style={{ left: pos.x, top: pos.y }}
               onClick={(e) => e.stopPropagation()}
             >

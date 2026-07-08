@@ -176,7 +176,7 @@ export default function SimLab() {
         <button
           onClick={() => { void run(); }}
           disabled={running}
-          className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm transition-colors"
+          className="px-5 py-2 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm transition-colors"
         >
           {running ? "Simulating…" : `Run ${cfg.games.toLocaleString()} games`}
         </button>
@@ -309,7 +309,7 @@ export default function SimLab() {
         {/* Results area */}
         <main className="flex-1 overflow-y-auto p-6">
           {error && (
-            <div className="mb-4 p-3 bg-red-900/40 border border-red-700 rounded-lg text-red-300 text-sm">
+            <div className="mb-4 p-3 bg-red-900/40 border border-red-700 rounded text-red-300 text-sm">
               {error}
             </div>
           )}
@@ -756,7 +756,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-navy-900 border border-navy-700 rounded-xl p-5">
+    <div className="bg-navy-900 border border-navy-700 rounded-lg p-5">
       <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">{title}</h3>
       {children}
     </div>
@@ -779,7 +779,7 @@ function StatCard({
   valueClass?: string;
 }) {
   return (
-    <div className="bg-navy-800 rounded-lg p-4">
+    <div className="bg-navy-800 rounded p-4">
       <p className="text-xs text-slate-500 mb-1">{label}</p>
       <p className={`text-2xl font-bold ${valueClass ?? "text-slate-100"}`}>{value}</p>
       {sub && <p className="text-xs text-slate-500 mt-1">{sub}</p>}

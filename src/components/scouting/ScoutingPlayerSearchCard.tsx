@@ -83,7 +83,7 @@ export default function ScoutingPlayerSearchCard({
               <button
                 key={position}
                 onClick={() => onPositionFilterChange(position)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-colors ${posFilter === position
+                className={`px-2.5 py-1 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors ${posFilter === position
                   ? "bg-primary-500 text-white"
                   : "bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600"
                   }`}
@@ -104,7 +104,7 @@ export default function ScoutingPlayerSearchCard({
             placeholder={t("scouting.searchPlaceholder")}
             value={searchQuery}
             onChange={(event) => onSearchQueryChange(event.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 rounded focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
           />
         </div>
 
@@ -183,7 +183,7 @@ export default function ScoutingPlayerSearchCard({
                   >
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
-                        <PlayerAvatar player={player} className="h-8 w-8 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
+                        <PlayerAvatar player={player} className="h-8 w-8 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
                         <div className="min-w-0">
                           <button
                             onClick={() => onSelectPlayer?.(player.id)}
@@ -240,7 +240,7 @@ export default function ScoutingPlayerSearchCard({
                         <button
                           disabled={sendingPlayerId === player.id}
                           onClick={() => onSendScout(player.id)}
-                          className="flex items-center gap-1 ml-auto px-2.5 py-1 rounded-lg bg-primary-500/10 text-primary-500 hover:bg-primary-500/20 transition-colors text-xs font-heading font-bold uppercase tracking-wider disabled:opacity-50"
+                          className="flex items-center gap-1 ml-auto px-2.5 py-1 rounded bg-primary-500/10 text-primary-500 hover:bg-primary-500/20 transition-colors text-xs font-heading font-bold uppercase tracking-wider disabled:opacity-50"
                         >
                           <ScanSearch className="w-3 h-3" />
                           {sendingPlayerId === player.id ? "..." : t("scouting.scoutBtn")}
@@ -279,7 +279,7 @@ export default function ScoutingPlayerSearchCard({
                 aria-label={t("scouting.previousPage")}
                 disabled={safePage === 0}
                 onClick={onPreviousPage}
-                className="p-1.5 rounded-lg bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -290,7 +290,7 @@ export default function ScoutingPlayerSearchCard({
                 aria-label={t("scouting.nextPage")}
                 disabled={safePage >= totalPages - 1}
                 onClick={onNextPage}
-                className="p-1.5 rounded-lg bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

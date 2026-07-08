@@ -124,7 +124,7 @@ export default function InboxMessageDetailPane({
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0 flex-1">
             <div
-              className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${getCategoryColor(selectedMessage.category)} bg-primary-500/10 dark:bg-primary-500/20`}
+              className={`w-10 h-10 rounded flex items-center justify-center shrink-0 ${getCategoryColor(selectedMessage.category)} bg-primary-500/10 dark:bg-primary-500/20`}
             >
               {getCategoryIcon(selectedMessage.category)}
             </div>
@@ -211,7 +211,7 @@ export default function InboxMessageDetailPane({
           {selectedMessage.category === "ScoutReport" &&
             !selectedMessage.context?.scout_report ? (
             <div className="mt-6 flex flex-col gap-3">
-              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/60">
+              <div className="flex flex-wrap items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/60">
                 <span className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   {t("scouting.youthTargetLabel")}
                 </span>
@@ -318,7 +318,7 @@ export default function InboxMessageDetailPane({
                           </div>
 
                           <div className="grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
+                            <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
                               <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                                 {t("youthAcademy.growth")}
                               </p>
@@ -348,7 +348,7 @@ export default function InboxMessageDetailPane({
                               </p>
                             </div>
 
-                            <div className="rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
+                            <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
                               <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                                 {t("playerProfile.contractInfo")}
                               </p>
@@ -417,7 +417,7 @@ export default function InboxMessageDetailPane({
           ) : null}
 
           {selectedMessage.context?.match_result ? (
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-navy-700 rounded-xl flex items-center justify-center gap-8 border border-gray-100 dark:border-navy-600">
+            <div className="mt-6 p-4 bg-gray-50 dark:bg-navy-700 rounded-lg flex items-center justify-center gap-8 border border-gray-100 dark:border-navy-600">
               <span className="font-heading font-bold text-sm text-gray-700 dark:text-gray-200">
                 {selectedMessage.context.match_result.home_team_name ||
                   selectedMessage.context.match_result.home_team_id}
@@ -434,7 +434,7 @@ export default function InboxMessageDetailPane({
           ) : null}
 
           {effectFeedback ? (
-            <div className="mt-4 p-3 bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-500/30 rounded-xl flex items-center gap-2 animate-pulse">
+            <div className="mt-4 p-3 bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-500/30 rounded-lg flex items-center gap-2 animate-pulse">
               <CheckCircle2 className="w-4 h-4 text-primary-500 shrink-0" />
               <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
                 {t("inbox.effectOutcomeLabel")}: {effectFeedback}
@@ -480,7 +480,7 @@ export default function InboxMessageDetailPane({
                               option.id,
                             )
                           }
-                          className="w-full text-left p-4 rounded-xl border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-500/5 transition-all group"
+                          className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-500/5 transition-all group"
                         >
                           <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                             {option.label}

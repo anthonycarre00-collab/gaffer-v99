@@ -169,7 +169,7 @@ export default function HalfTimeBreak({
           <div className="absolute right-0 top-0 flex items-center gap-3">
             <button
               onClick={onResume}
-              className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 rounded-xl font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="flex items-center gap-2 px-6 py-2.5 bgc-primary-500 hover:bg-primary-600 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Play className="w-4 h-4" />
               {t("match.resumeMatch")}
@@ -180,7 +180,7 @@ export default function HalfTimeBreak({
             <div className="flex items-center gap-3">
               <TeamLogo
                 team={homeFullTeam ?? makeTeamFallback(snapshot.home_team.name)}
-                className="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-bold overflow-hidden"
+                className="w-12 h-12 rounded-lg flex items-center justify-center font-heading font-bold overflow-hidden"
                 imageClassName="h-9 w-9 object-contain drop-shadow"
                 style={{
                   backgroundColor: homeTeamColor + "30",
@@ -218,7 +218,7 @@ export default function HalfTimeBreak({
               </p>
               <TeamLogo
                 team={awayFullTeam ?? makeTeamFallback(snapshot.away_team.name)}
-                className="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-bold overflow-hidden"
+                className="w-12 h-12 rounded-lg flex items-center justify-center font-heading font-bold overflow-hidden"
                 imageClassName="h-9 w-9 object-contain drop-shadow"
                 style={{
                   backgroundColor: awayTeamColor + "30",
@@ -258,7 +258,7 @@ export default function HalfTimeBreak({
         <div className="px-6 py-6 grid grid-cols-3 gap-6">
           {/* Left: First Half Summary */}
           <div className="flex flex-col gap-4">
-            <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+            <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
               <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
                 {t("match.firstHalfEvents")}
               </h3>
@@ -300,7 +300,7 @@ export default function HalfTimeBreak({
           {/* Center: Team Talk (user only) */}
           <div className="flex flex-col gap-4">
             {!isSpectator ? (
-              <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+              <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-4">
                   <MessageCircle className="w-4 h-4 text-accent-400" />
                   <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
@@ -318,7 +318,7 @@ export default function HalfTimeBreak({
                         <button
                           key={opt.id}
                           onClick={() => setSelectedTalk(opt.id)}
-                          className={`flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
+                          className={`flex items-center gap-3 p-3 rounded text-left transition-all ${
                             selectedTalk === opt.id
                               ? "bg-primary-500/20 ring-2 ring-primary-500/50"
                               : "bg-gray-100 hover:bg-gray-200 dark:bg-navy-700/50 dark:hover:bg-navy-700"
@@ -347,7 +347,7 @@ export default function HalfTimeBreak({
                     {selectedTalk && (
                       <button
                         onClick={handleDeliverTalk}
-                        className="w-full mt-3 py-2.5 bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-colors"
+                        className="w-full mt-3 py-2.5 bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors"
                       >
                         {t("match.deliverTeamTalk")}
                       </button>
@@ -400,7 +400,7 @@ export default function HalfTimeBreak({
                 )}
               </div>
             ) : (
-              <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex flex-col items-center justify-center py-8 transition-colors duration-300">
+              <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex flex-col items-center justify-center py-8 transition-colors duration-300">
                 <p className="text-xs font-heading uppercase tracking-widest text-gray-600 dark:text-gray-500 mb-1">
                   {t("match.spectatorMode")}
                 </p>
@@ -416,7 +416,7 @@ export default function HalfTimeBreak({
             {!isSpectator && (
               <>
                 {/* Formation */}
-                <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+                <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                   <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
                     {t("match.formation")}
                   </h3>
@@ -425,7 +425,7 @@ export default function HalfTimeBreak({
                       <button
                         key={f}
                         onClick={() => handleFormationChange(f)}
-                        className={`py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                        className={`py-2 rounded text-xs font-heading font-bold transition-all ${
                           userTeam.formation === f
                             ? "bg-primary-500/20 text-primary-400 ring-1 ring-primary-500/50"
                             : "bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -438,7 +438,7 @@ export default function HalfTimeBreak({
                 </div>
 
                 {/* Play Style */}
-                <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+                <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                   <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
                     {t("match.playStyle")}
                   </h3>
@@ -447,7 +447,7 @@ export default function HalfTimeBreak({
                       <button
                         key={style}
                         onClick={() => handlePlayStyleChange(style)}
-                        className={`flex items-center gap-1.5 py-2 px-3 rounded-lg text-xs font-heading font-bold transition-all ${
+                        className={`flex items-center gap-1.5 py-2 px-3 rounded text-xs font-heading font-bold transition-all ${
                           userTeam.play_style === style
                             ? "bg-primary-500/20 text-primary-400 ring-1 ring-primary-500/50"
                             : "bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -461,7 +461,7 @@ export default function HalfTimeBreak({
                 </div>
 
                 {/* Substitutions */}
-                <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+                <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                       {t("match.substitutions")}
@@ -476,7 +476,7 @@ export default function HalfTimeBreak({
 
                   <button
                     onClick={() => setShowSubPanel(true)}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded-lg text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
                   >
                     <RefreshCw className="w-4 h-4" />
                     {t("match.makeSubstitution")}

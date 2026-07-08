@@ -124,7 +124,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder={t("teams.searchPlaceholder")}
-          className="w-full rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 py-2.5 pl-10 pr-4 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+          className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 py-2.5 pl-10 pr-4 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
         />
       </div>
 
@@ -146,7 +146,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
               <button
                 type="button"
                 onClick={() => setExpandedRegions((set) => toggle(set, region.id))}
-                className="flex items-center gap-2 rounded-lg bg-gray-100 dark:bg-navy-800 px-3 py-2 text-left"
+                className="flex items-center gap-2 rounded bg-gray-100 dark:bg-navy-800 px-3 py-2 text-left"
               >
                 {regionOpen ? (
                   <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -172,7 +172,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
                         onClick={() =>
                           setExpandedLeagues((set) => toggle(set, leagueKey))
                         }
-                        className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-navy-700/40"
+                        className="flex items-center gap-2 rounded px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-navy-700/40"
                       >
                         {leagueOpen ? (
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
@@ -239,14 +239,14 @@ function TeamCardView({
     <Card
       className={`cursor-pointer hover:shadow-lg transition-all ${isUser ? "ring-2 ring-primary-500/30" : ""}`}
     >
-      <div onClick={() => onSelect(team.id)} className="overflow-hidden rounded-xl">
+      <div onClick={() => onSelect(team.id)} className="overflow-hidden rounded-lg">
         <div
           className="p-5 flex items-center gap-4"
           style={{ background: `linear-gradient(135deg, ${team.colors.primary}, ${team.colors.secondary}40)` }}
         >
           <TeamLogo
             team={team}
-            className="w-14 h-14 rounded-xl flex items-center justify-center font-heading font-bold text-xl text-white border-2 border-white/30 bg-white/15 overflow-hidden"
+            className="w-14 h-14 rounded-lg flex items-center justify-center font-heading font-bold text-xl text-white border-2 border-white/30 bg-white/15 overflow-hidden"
             imageClassName="h-12 w-12 object-contain drop-shadow"
             style={{ backgroundColor: team.colors.primary }}
           />
@@ -269,7 +269,7 @@ function TeamCardView({
             />
           </div>
           {leaguePos > 0 && (
-            <div className="bg-black/20 backdrop-blur rounded-lg px-3 py-1.5 text-center">
+            <div className="bg-black/20 backdrop-blur rounded px-3 py-1.5 text-center">
               <p className="text-xs text-white/60 font-heading uppercase tracking-wider">
                 {t("common.position")}
               </p>

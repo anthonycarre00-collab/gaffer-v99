@@ -54,7 +54,7 @@ export default function HomeOnboardingChecklistCard({
             <button
               key={step.id}
               onClick={() => onNavigate?.(step.tab)}
-              className={`flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
+              className={`flex items-center gap-3 p-3 rounded text-left transition-all ${
                 step.done
                   ? "bg-primary-50 dark:bg-primary-500/5 opacity-70"
                   : "bg-gray-50 dark:bg-navy-700/50 hover:bg-gray-100 dark:hover:bg-navy-700"

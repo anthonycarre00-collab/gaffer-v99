@@ -54,7 +54,7 @@ export function StatBox({
 }) {
   return (
     <div
-      className={`p-2.5 rounded-lg ${highlight ? "bg-primary-50 dark:bg-primary-500/10" : "bg-gray-50 dark:bg-navy-700"}`}
+      className={`p-2.5 rounded ${highlight ? "bg-primary-50 dark:bg-primary-500/10" : "bg-gray-50 dark:bg-navy-700"}`}
     >
       <p
         className={`font-heading font-bold text-lg tabular-nums ${highlight ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-100"}`}

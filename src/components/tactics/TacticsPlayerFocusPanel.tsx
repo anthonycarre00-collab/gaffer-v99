@@ -74,7 +74,7 @@ function PlayerSummary({
   const overallRating = getPlayerOvr(player);
 
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-4">
+    <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
@@ -185,7 +185,7 @@ function CompareAttributes({
           player={comparePlayer}
         />
       </div>
-      <div className="flex flex-col gap-3 rounded-xl border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-gray-600 dark:text-gray-300">
           {t("tactics.compareSelectionHint")}
         </p>
@@ -219,7 +219,7 @@ function CompareAttributes({
                   className="grid grid-cols-[minmax(0,1fr)_90px_minmax(0,1fr)] gap-2 items-center"
                 >
                   <div
-                    className={`rounded-lg px-2 py-2 ${leftWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
+                    className={`rounded px-2 py-2 ${leftWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
                   >
                     <div className="flex items-center justify-between gap-2 text-xs mb-1">
                       <span
@@ -239,7 +239,7 @@ function CompareAttributes({
                     {t(`common.attributes.${attr}`)}
                   </div>
                   <div
-                    className={`rounded-lg px-2 py-2 ${rightWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
+                    className={`rounded px-2 py-2 ${rightWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
                   >
                     <div className="flex items-center justify-between gap-2 text-xs mb-1">
                       <span
@@ -286,7 +286,7 @@ export default function TacticsPlayerFocusPanel({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              className="rounded p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -308,7 +308,7 @@ export default function TacticsPlayerFocusPanel({
                 label={t("tactics.selectedPlayer")}
                 player={selectedPlayer}
               />
-              <div className="rounded-xl border border-dashed border-gray-200 dark:border-navy-600 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+              <div className="rounded-lg border border-dashed border-gray-200 dark:border-navy-600 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                 {t("tactics.selectSecondPlayer")}
               </div>
               <SinglePlayerAttributes player={selectedPlayer} />

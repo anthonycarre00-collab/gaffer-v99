@@ -43,7 +43,7 @@ interface DealOption {
 function routeButtonClass(isSelected: boolean, isDisabled: boolean): string {
   if (isDisabled) {
     return [
-      "min-h-[88px] w-full rounded-lg bg-gray-50 px-3 py-3 text-left",
+      "min-h-[88px] w-full rounded bg-gray-50 px-3 py-3 text-left",
       "text-gray-500 opacity-80 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
       "transition-[box-shadow,background-color,color] duration-150",
       "dark:bg-navy-900/50 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]",
@@ -52,7 +52,7 @@ function routeButtonClass(isSelected: boolean, isDisabled: boolean): string {
 
   if (isSelected) {
     return [
-      "min-h-[88px] w-full rounded-lg bg-primary-50 px-3 py-3 text-left",
+      "min-h-[88px] w-full rounded bg-primary-50 px-3 py-3 text-left",
       "text-gray-900 shadow-[0_0_0_1px_rgba(16,185,129,0.35),0_2px_8px_rgba(16,185,129,0.12)]",
       "transition-[box-shadow,background-color,color] duration-150",
       "dark:bg-primary-900/50 dark:text-white dark:shadow-[0_0_0_1px_rgba(52,211,153,0.34)]",
@@ -60,7 +60,7 @@ function routeButtonClass(isSelected: boolean, isDisabled: boolean): string {
   }
 
   return [
-    "min-h-[88px] w-full rounded-lg bg-white px-3 py-3 text-left",
+    "min-h-[88px] w-full rounded bg-white px-3 py-3 text-left",
     "text-gray-700 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
     "transition-[box-shadow,background-color,color] duration-150 hover:bg-gray-50 hover:text-gray-950",
     "hover:shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.05)]",
@@ -154,7 +154,7 @@ export default function PlayerDealWorkspace({
             <button
               type="button"
               onClick={onClose}
-              className="-ml-2 flex shrink-0 items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-navy-700 dark:hover:text-white"
+              className="-ml-2 flex shrink-0 items-center gap-2 rounded px-2 py-2 text-sm text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-navy-700 dark:hover:text-white"
               aria-label={t("common.back")}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -165,7 +165,7 @@ export default function PlayerDealWorkspace({
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <PlayerAvatar
                 player={player}
-                className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100 text-sm font-heading font-bold text-gray-500 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] dark:bg-navy-700 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.1)]"
+                className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-100 text-sm font-heading font-bold text-gray-500 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] dark:bg-navy-700 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.1)]"
                 imageClassName="h-full w-full object-cover object-top"
               />
               <div className="min-w-0">
@@ -251,10 +251,10 @@ export default function PlayerDealWorkspace({
             })}
           </nav>
 
-          <section className="min-h-0 overflow-y-auto rounded-lg bg-white p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+          <section className="min-h-0 overflow-y-auto rounded bg-white p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
             {selectedOption.disabledReason ? (
-              <div className="flex min-h-[280px] flex-col justify-center rounded-lg bg-gray-50 p-6 text-center dark:bg-navy-900/50">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200 text-gray-500 dark:bg-navy-700 dark:text-gray-300">
+              <div className="flex min-h-[280px] flex-col justify-center rounded bg-gray-50 p-6 text-center dark:bg-navy-900/50">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded bg-gray-200 text-gray-500 dark:bg-navy-700 dark:text-gray-300">
                   {selectedOption.icon}
                 </div>
                 <p className="font-heading text-lg font-bold uppercase tracking-wide text-gray-900 dark:text-white">
@@ -273,7 +273,7 @@ export default function PlayerDealWorkspace({
           </section>
 
           <aside className="min-h-0 space-y-4 lg:overflow-y-auto">
-            <div className="rounded-lg bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+            <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
               <p className={factLabelClass()}>{t("common.ovr")}</p>
               <p className="mt-1 font-heading text-3xl font-bold tabular-nums text-primary-500">
                 {ovr}
@@ -295,7 +295,7 @@ export default function PlayerDealWorkspace({
             </div>
 
             {myTeam ? (
-              <div className="rounded-lg bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+              <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
                 <p className={factLabelClass()}>
                   {t("finances.transferBudget")}
                 </p>

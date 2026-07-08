@@ -135,7 +135,7 @@ export default function Settings() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(returnTo)}
-              className="p-2 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+              className="p-2 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -252,7 +252,7 @@ export default function Settings() {
           >
             <button
               onClick={toggleFullscreen}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-navy-600 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-navy-600 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
             >
               {isFullscreen ? (
                 <Minimize className="w-4 h-4" />
@@ -361,7 +361,7 @@ export default function Settings() {
           >
             <button
               onClick={handleExportWorld}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500/10 text-primary-600 dark:text-primary-400 hover:bg-primary-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded bg-primary-500/10 text-primary-600 dark:text-primary-400 hover:bg-primary-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
             >
               <Download className="w-4 h-4" />
               {t("settings.export")}
@@ -383,13 +383,13 @@ export default function Settings() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleClearSaves}
-                    className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-heading font-bold uppercase tracking-wider hover:bg-red-600 transition-colors"
+                    className="px-4 py-2 rounded bg-red-500 text-white text-sm font-heading font-bold uppercase tracking-wider hover:bg-red-600 transition-colors"
                   >
                     {t("common.confirm")}
                   </button>
                   <button
                     onClick={() => setConfirmClear(false)}
-                    className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-navy-600 text-gray-700 dark:text-gray-300 text-sm font-heading font-bold uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-500 transition-colors"
+                    className="px-4 py-2 rounded bg-gray-200 dark:bg-navy-600 text-gray-700 dark:text-gray-300 text-sm font-heading font-bold uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-500 transition-colors"
                   >
                     {t("common.cancel")}
                   </button>
@@ -401,7 +401,7 @@ export default function Settings() {
               ) : (
                 <button
                   onClick={() => setConfirmClear(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                   {t("settings.clear")}
@@ -515,7 +515,7 @@ function SegmentedControl({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex rounded-lg bg-gray-100 dark:bg-navy-700 p-0.5 border border-gray-200 dark:border-navy-600">
+    <div className="flex rounded bg-gray-100 dark:bg-navy-700 p-0.5 border border-gray-200 dark:border-navy-600">
       {options.map((opt) => (
         <button
           key={opt.value}

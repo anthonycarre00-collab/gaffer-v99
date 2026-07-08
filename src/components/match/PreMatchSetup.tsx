@@ -144,7 +144,7 @@ export default function PreMatchSetup({
     const displayPosition = slotPosition ?? player.position;
     return (
       <div
-        className={`flex w-24 flex-col items-center gap-0.5 rounded-xl px-1 py-1 ${
+        className={`flex w-24 flex-col items-center gap-0.5 rounded-lg px-1 py-1 ${
           isSelected ? "bg-accent-500/25 ring-2 ring-accent-300/70" : ""
         }`}
       >
@@ -204,7 +204,7 @@ export default function PreMatchSetup({
     const sp = storeById.get(player.id);
     const displayPosition = slotPosition ?? player.position;
     return (
-      <div className="flex w-24 flex-col items-center gap-0.5 rounded-xl px-1 py-1">
+      <div className="flex w-24 flex-col items-center gap-0.5 rounded-lg px-1 py-1">
         <PitchToken
           name={(sp?.match_name || player.name).toUpperCase()}
           positionAbbr={translatePositionAbbreviation(t, displayPosition)}
@@ -386,14 +386,14 @@ export default function PreMatchSetup({
   );
 
   const renderSetPieces = () => (
-    <div className="rounded-xl border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 p-4 shadow-sm transition-colors duration-300">
+    <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 p-4 shadow-sm transition-colors duration-300">
       <div className="flex items-center justify-between mb-2.5">
         <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
           {t("match.setPiecesCaptain")}
         </p>
         <button
           onClick={handleAutoSelectSetPieces}
-          className="flex items-center gap-1.5 rounded-lg border border-accent-200 dark:border-accent-500/20 bg-accent-50 hover:bg-accent-100 dark:bg-accent-500/10 dark:hover:bg-accent-500/20 px-3 py-1.5 font-heading font-bold text-[10px] uppercase tracking-wider text-accent-700 dark:text-accent-400 transition-colors"
+          className="flex items-center gap-1.5 rounded border border-accent-200 dark:border-accent-500/20 bg-accent-50 hover:bg-accent-100 dark:bg-accent-500/10 dark:hover:bg-accent-500/20 px-3 py-1.5 font-heading font-bold text-[10px] uppercase tracking-wider text-accent-700 dark:text-accent-400 transition-colors"
         >
           <Wand2 className="h-3 w-3" />
           {t("match.autoSelectTakers")}
@@ -499,7 +499,7 @@ export default function PreMatchSetup({
       {/* Right: set pieces + phase blueprint */}
       <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
         {renderSetPieces()}
-        <div className="rounded-xl border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 shadow-sm transition-colors duration-300">
+        <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 shadow-sm transition-colors duration-300">
           <div className="border-b border-gray-100 dark:border-navy-700 px-3 py-2.5">
             <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
               {t("tactics.phaseBlueprint")}
@@ -642,7 +642,7 @@ export default function PreMatchSetup({
           <div className="flex flex-1 items-center gap-4 min-w-0">
             <TeamLogo
               team={homeFullTeam ?? makeTeamFallback(homeTeam.name)}
-              className="h-14 w-14 shrink-0 rounded-xl flex items-center justify-center font-heading font-bold text-lg overflow-hidden"
+              className="h-14 w-14 shrink-0 rounded-lg flex items-center justify-center font-heading font-bold text-lg overflow-hidden"
               imageClassName="h-11 w-11 object-contain drop-shadow"
               style={{
                 backgroundColor: homeTeamColor + "30",
@@ -673,7 +673,7 @@ export default function PreMatchSetup({
             </div>
             <button
               onClick={onStart}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-3 font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all hover:from-primary-600 hover:to-primary-700 hover:scale-[1.02] active:scale-[0.98]"
+              className="flex items-center gap-2 rounded-lg bgc-primary-500 px-8 py-3 font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all hover:bg-primary-600 hover:scale-[1.02] active:scale-[0.98]"
             >
               {t("match.startMatch")}
               <ChevronRight className="h-4 w-4" />
@@ -684,7 +684,7 @@ export default function PreMatchSetup({
           <div className="flex flex-1 items-center gap-4 flex-row-reverse min-w-0">
             <TeamLogo
               team={awayFullTeam ?? makeTeamFallback(awayTeam.name)}
-              className="h-14 w-14 shrink-0 rounded-xl flex items-center justify-center font-heading font-bold text-lg overflow-hidden"
+              className="h-14 w-14 shrink-0 rounded-lg flex items-center justify-center font-heading font-bold text-lg overflow-hidden"
               imageClassName="h-11 w-11 object-contain drop-shadow"
               style={{
                 backgroundColor: awayTeamColor + "30",

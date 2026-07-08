@@ -297,7 +297,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
           <button
             disabled={safePage === 0}
             onClick={() => setPage((p) => Math.max(0, p - 1))}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -307,7 +307,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
           <button
             disabled={safePage >= totalPages - 1}
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -342,7 +342,7 @@ function HeroArticle({
     <button
       data-testid={`news-article-${article.id}`}
       onClick={onSelect}
-      className="w-full text-left bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group"
+      className="w-full text-left bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group"
     >
       <div className="p-6">
         <div className="flex items-center gap-2 mb-3">
@@ -364,11 +364,11 @@ function HeroArticle({
 
         {/* Match score badge */}
         {article.match_score && (
-          <div className="flex items-center gap-3 mb-3 p-3 bg-gray-50 dark:bg-navy-700/50 rounded-lg">
+          <div className="flex items-center gap-3 mb-3 p-3 bg-gray-50 dark:bg-navy-700/50 rounded">
             <span className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
               {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
             </span>
-            <span className="text-lg font-heading font-bold text-primary-500 bg-primary-500/10 px-3 py-1 rounded-lg">
+            <span className="text-lg font-heading font-bold text-primary-500 bg-primary-500/10 px-3 py-1 rounded">
               {article.match_score.home_goals} –{" "}
               {article.match_score.away_goals}
             </span>
@@ -439,7 +439,7 @@ function ArticleCard({
     <button
       data-testid={`news-article-${article.id}`}
       onClick={onSelect}
-      className="w-full text-left bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group flex flex-col"
+      className="w-full text-left bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group flex flex-col"
     >
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-center gap-2 mb-2">
@@ -524,7 +524,7 @@ function ArticleDetail({
         {t("news.backToNews")}
       </button>
 
-      <article className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
+      <article className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
         <div className="p-8">
           {/* Category + date */}
           <div className="flex items-center gap-3 mb-4">
@@ -547,13 +547,13 @@ function ArticleDetail({
 
           {/* Match score */}
           {article.match_score && (
-            <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-gray-50 dark:bg-navy-700/50 rounded-xl">
+            <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-gray-50 dark:bg-navy-700/50 rounded-lg">
               <div className="text-center">
                 <p className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
                   {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
                 </p>
               </div>
-              <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded-xl">
+              <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded-lg">
                 {article.match_score.home_goals} –{" "}
                 {article.match_score.away_goals}
               </div>

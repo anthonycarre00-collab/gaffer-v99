@@ -155,7 +155,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
                   const isUser = entry.team_id === userTeamId;
                   const gd = entry.goals_for - entry.goals_against;
                   return (
-                    <div key={entry.team_id} className={`flex items-center py-2.5 gap-3 ${isUser ? "bg-primary-50/50 dark:bg-primary-500/5 -mx-2 px-2 rounded-lg" : ""}`}>
+                    <div key={entry.team_id} className={`flex items-center py-2.5 gap-3 ${isUser ? "bg-primary-50/50 dark:bg-primary-500/5 -mx-2 px-2 rounded" : ""}`}>
                       <span className={`font-heading font-bold text-sm w-6 text-center ${idx === 0 ? "text-accent-500" : "text-gray-400"}`}>{idx + 1}</span>
                       <span className={`flex-1 text-sm font-semibold ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}>{teamName}</span>
                       <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums w-16 text-center">{entry.won}W {entry.drawn}D {entry.lost}L</span>
@@ -188,7 +188,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
             <button
               onClick={handleAdvance}
               disabled={loading}
-              className="px-8 py-4 bg-primary-500 text-white rounded-xl font-heading font-bold text-lg uppercase tracking-wider hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 disabled:opacity-50 flex items-center gap-3 mx-auto"
+              className="px-8 py-4 bg-primary-500 text-white rounded-lg font-heading font-bold text-lg uppercase tracking-wider hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 disabled:opacity-50 flex items-center gap-3 mx-auto"
             >
               {loading ? t('endOfSeason.processing') : t('endOfSeason.startNextSeason')}
               <ArrowRight className="w-5 h-5" />
@@ -228,7 +228,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
               // by calling onGameUpdate again with the current state
               if (gameState) onGameUpdate(gameState);
             }}
-            className="px-8 py-3 bg-primary-500 text-white rounded-xl font-heading font-bold uppercase tracking-wider hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20"
+            className="px-8 py-3 bg-primary-500 text-white rounded-lg font-heading font-bold uppercase tracking-wider hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20"
           >
             {t('endOfSeason.continueDashboard')}
           </button>

@@ -63,7 +63,7 @@ interface DashboardHeaderProps {
 
 function getSaveButtonClassName(saveFlash: boolean, isSaving: boolean): string {
   let className =
-    "flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider transition-all hover:cursor-pointer";
+    "flex items-center gap-1.5 rounded px-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider transition-all hover:cursor-pointer";
 
   if (saveFlash) {
     className = `${className} bg-green-500 text-white`;
@@ -107,7 +107,7 @@ function getContinueButtonClassName(
   isAdvancing: boolean,
   seasonComplete: boolean,
 ): string {
-  let className = `bg-linear-to-r ${modeMeta.buttonColorClass} flex items-center gap-2 rounded-l-lg pl-4 pr-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white shadow-md transition-all hover:cursor-pointer hover:brightness-110 hover:shadow-lg`;
+  let className = `${modeMeta.buttonColorClass} flex items-center gap-2 rounded-l-lg pl-4 pr-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110`;
 
   if (isAdvancing || seasonComplete) {
     className = `${className} cursor-wait opacity-70`;
@@ -119,7 +119,7 @@ function getContinueButtonClassName(
 function getContinueDropdownButtonClassName(
   modeMeta: DashboardMatchModeMeta,
 ): string {
-  return `bg-linear-to-r ${modeMeta.dropdownColorClass} rounded-r-lg border-l border-white/20 px-2 py-2.5 text-white transition-colors hover:brightness-110`;
+  return `${modeMeta.dropdownColorClass} rounded-r-lg border-l border-white/20 px-2 py-2.5 text-white transition-colors hover:brightness-110`;
 }
 
 function getModeOptionClassName(isActive: boolean): string {
@@ -346,7 +346,7 @@ export default function DashboardHeader({
         {hasProfileHistory && (
           <button
             onClick={onBack}
-            className="-ml-2 rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-white"
+            className="-ml-2 rounded p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-white"
             title={t("common.back")}
           >
             <ArrowLeft className="h-5 w-5" />
@@ -372,10 +372,10 @@ export default function DashboardHeader({
           onChange={(event) => onSearchQueryChange(event.target.value)}
           onFocus={onSearchFocus}
           onBlur={onSearchBlur}
-          className="w-full rounded-lg border border-gray-200 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-800 transition-all placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:border-navy-600 dark:bg-navy-700 dark:text-gray-200 dark:placeholder-gray-500"
+          className="w-full rounded border border-gray-200 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-800 transition-all placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:border-navy-600 dark:bg-navy-700 dark:text-gray-200 dark:placeholder-gray-500"
         />
         {showSearchResults && (
-          <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-700">
+          <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-700">
             {renderSearchResults({
               matchedPlayers,
               matchedTeams,
@@ -403,7 +403,7 @@ export default function DashboardHeader({
           <button
             onClick={handleContinueClick}
             disabled={isAdvancing}
-            className="bg-linear-to-r from-gray-600 to-gray-700 flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white shadow-md transition-all hover:cursor-pointer hover:brightness-110 hover:shadow-lg disabled:cursor-wait disabled:opacity-70"
+            className="bg-gray-600 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
           >
             <span>{isAdvancing ? t("dashboard.simulating") : t("dashboard.continue")}</span>
             <ChevronRight className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`} />
@@ -440,7 +440,7 @@ export default function DashboardHeader({
             </div>
 
             {showContinueMenu && (
-              <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded-lg border border-gray-200 bg-white py-1 shadow-xl dark:border-navy-600 dark:bg-navy-700">
+              <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-gray-200 bg-white py-1 shadow-xl dark:border-navy-600 dark:bg-navy-700">
                 {(["live", "spectator", "delegate"] as const).map((mode) => {
                   const isActive = matchMode === mode;
                   const optionMeta = modeMeta[mode];

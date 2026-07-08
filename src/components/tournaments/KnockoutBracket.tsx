@@ -58,7 +58,7 @@ function MatchSlot({
     return (
       <div
         data-testid={`tournaments-bracket-${fixtureId}`}
-        className="rounded-lg border border-dashed border-gray-200 dark:border-navy-600 p-2 text-xs text-gray-400 dark:text-gray-500 text-center italic"
+        className="rounded border border-dashed border-gray-200 dark:border-navy-600 p-2 text-xs text-gray-400 dark:text-gray-500 text-center italic"
       >
         {tbdLabel}
       </div>
@@ -110,7 +110,7 @@ function MatchSlot({
   return (
     <div
       data-testid={`tournaments-bracket-${fixtureId}`}
-      className={`rounded-lg border overflow-hidden ${
+      className={`rounded border overflow-hidden ${
         userInvolved
           ? "border-primary-400/50 dark:border-primary-500/40"
           : "border-gray-200 dark:border-navy-600"
@@ -152,7 +152,7 @@ export default function KnockoutBracket({
   const maxSlots = Math.max(...rounds.map((r) => r.fixture_ids.length + (r.bye_team_ids?.length ?? 0)));
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800">
+    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800">
       <div className="flex gap-0 min-w-max">
         {rounds.map((round, roundIdx) => {
           const roundFixtures = round.fixture_ids.map((id) => fixtureById.get(id));
@@ -201,7 +201,7 @@ export default function KnockoutBracket({
                 {byeTeams.length > 0 && (
                   <div
                     data-testid={`tournaments-byes-${round.id}`}
-                    className="rounded-lg border border-dashed border-gray-200 dark:border-navy-600 px-2 py-1.5 text-xs text-gray-500 dark:text-gray-400"
+                    className="rounded border border-dashed border-gray-200 dark:border-navy-600 px-2 py-1.5 text-xs text-gray-500 dark:text-gray-400"
                   >
                     <span className="font-heading font-semibold uppercase tracking-wide text-[10px] text-gray-400 dark:text-gray-500 mr-1.5">
                       {byeLabel}

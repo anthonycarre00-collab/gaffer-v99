@@ -175,7 +175,7 @@ export default function PenaltyShootoutScreen({
 
       {/* Event feed */}
       {shootoutEvents.length > 0 && (
-        <div className="w-full max-w-lg bg-white dark:bg-navy-800 rounded-xl p-4 mb-4 space-y-1">
+        <div className="w-full max-w-lg bg-white dark:bg-navy-800 rounded-lg p-4 mb-4 space-y-1">
           {shootoutEvents.slice(-8).map((evt, i) => (
             <div
               key={i}

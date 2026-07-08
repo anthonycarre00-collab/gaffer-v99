@@ -103,7 +103,7 @@ export function CountryCombobox({ label, value, onChange, placeholder }: Country
           onClick={(e) => {
             if (e.detail === 0) isOpen ? setIsOpen(false) : open();
           }}
-          className="w-full rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-left transition focus:outline-none focus:ring-2 focus:ring-primary-400 min-h-[38px]"
+          className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-left transition focus:outline-none focus:ring-2 focus:ring-primary-400 min-h-[38px]"
         >
           {selectedLabel ? (
             <span className="flex items-center gap-2 text-gray-900 dark:text-white">
@@ -119,7 +119,7 @@ export function CountryCombobox({ label, value, onChange, placeholder }: Country
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 shadow-xl">
+          <div className="absolute top-full left-0 right-0 z-50 mt-1 overflow-hidden rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 shadow-xl">
             {resources ? (
               <>
                 <div className="border-b border-gray-100 dark:border-navy-600 p-2">

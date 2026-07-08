@@ -129,7 +129,7 @@ export default function CreateManagerNationalityField({
         : isOpen
             ? "border-primary-500 ring-2 ring-primary-500/20"
             : "border-gray-300 dark:border-navy-600";
-    const triggerClassName = `w-full rounded-lg border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${triggerBorderClassName}`;
+    const triggerClassName = `w-full rounded border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${triggerBorderClassName}`;
 
     const toggleDropdown = () => {
         if (!isOpen && !resources) {
@@ -192,7 +192,7 @@ export default function CreateManagerNationalityField({
                 </button>
 
                 {isOpen ? (
-                    <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-700">
+                    <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-700">
                         {resources ? (
                             <>
                                 <div className="border-b border-gray-100 p-2 dark:border-navy-600">

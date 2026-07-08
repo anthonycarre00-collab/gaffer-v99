@@ -216,14 +216,14 @@ export default function PlayersListTab({
             placeholder={t("players.searchPlaceholder")}
             value={query.search ?? ""}
             onChange={(e) => patchQuery({ search: e.target.value || null })}
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+            className="w-full pl-9 pr-3 py-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
           />
         </div>
 
         <div className="flex gap-1.5">
           <button
             onClick={() => patchQuery({ position: null })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${!query.position
+            className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${!query.position
               ? "bg-primary-500 text-white shadow-sm"
               : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
               }`}
@@ -236,7 +236,7 @@ export default function PlayersListTab({
               onClick={() =>
                 patchQuery({ position: query.position === pos ? null : pos })
               }
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.position === pos
+              className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.position === pos
                 ? "bg-primary-500 text-white shadow-sm"
                 : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
                 }`}
@@ -249,19 +249,19 @@ export default function PlayersListTab({
         <div className="flex gap-1.5">
           <button
             onClick={() => patchQuery({ status: "all" })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+            className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
           >
             {t("common.all")}
           </button>
           <button
             onClick={() => patchQuery({ status: "transfer" })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+            className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
           >
             {t("transfers.transfer")}
           </button>
           <button
             onClick={() => patchQuery({ status: "loan" })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-blue-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+            className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-blue-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
           >
             {t("transfers.loan")}
           </button>
@@ -557,14 +557,14 @@ export default function PlayersListTab({
                 <button
                   onClick={() => patchQuery({ page: 1 })}
                   disabled={page === 1}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronsLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => patchQuery({ page: Math.max(1, page - 1) })}
                   disabled={page === 1}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -574,14 +574,14 @@ export default function PlayersListTab({
                 <button
                   onClick={() => patchQuery({ page: Math.min(totalPages, page + 1) })}
                   disabled={page === totalPages}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => patchQuery({ page: totalPages })}
                   disabled={page === totalPages}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronsRight className="w-4 h-4" />
                 </button>

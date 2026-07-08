@@ -781,7 +781,7 @@ export default function PlayerProfile({
       ) : null}
 
       {isOwnClub && onGameUpdate && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-navy-600 dark:bg-navy-800">
+        <div className="mb-4 flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 dark:border-navy-600 dark:bg-navy-800">
           <span className="shrink-0 text-sm font-medium text-gray-600 dark:text-gray-300">
             {t("tactics.playerRoleLabel")}
           </span>
@@ -827,7 +827,7 @@ export default function PlayerProfile({
         />
 
         {contractActionError ? (
-          <div className="lg:col-span-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+          <div className="lg:col-span-3 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
             {contractActionError}
           </div>
         ) : null}
@@ -941,7 +941,7 @@ export default function PlayerProfile({
             </div>
 
             {terminationPreview ? (
-              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm dark:border-navy-600 dark:bg-navy-700/60">
+              <div className="rounded border border-gray-200 bg-gray-50 p-4 text-sm dark:border-navy-600 dark:bg-navy-700/60">
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-gray-500 dark:text-gray-400">
                     {t("playerProfile.terminationSeverance")}

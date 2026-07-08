@@ -442,7 +442,7 @@ export default function SquadRosterView({
               value={playerSearch}
               onChange={(event) => setPlayerSearch(event.target.value)}
               placeholder={t("squad.filterPlayers")}
-              className="w-full rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+              className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
             />
           </div>
           <div>
@@ -502,7 +502,7 @@ export default function SquadRosterView({
               setStatusFilter("all");
             }}
             disabled={!hasActiveFilters}
-            className={`px-3 py-2 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${hasActiveFilters
+            className={`px-3 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${hasActiveFilters
               ? "bg-gray-100 dark:bg-navy-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-navy-600"
               : "bg-gray-100 dark:bg-navy-700 text-gray-400 cursor-not-allowed"
               }`}
@@ -941,7 +941,7 @@ export default function SquadRosterView({
       </Card>
 
       {contractActionError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+        <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
           {contractActionError}
         </div>
       ) : null}

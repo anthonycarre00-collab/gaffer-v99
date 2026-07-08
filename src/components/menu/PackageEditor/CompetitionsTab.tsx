@@ -21,12 +21,12 @@ function CompetitionBadge({ comp, projectDir }: { comp: CompetitionDef; projectD
       <img
         src={logoUrl}
         alt=""
-        className="w-8 h-8 rounded-lg object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0"
+        className="w-8 h-8 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0"
       />
     );
   }
   return (
-    <div className="w-8 h-8 rounded-lg flex-shrink-0 border border-gray-200 dark:border-navy-600 bg-gray-100 dark:bg-navy-600 flex items-center justify-center">
+    <div className="w-8 h-8 rounded flex-shrink-0 border border-gray-200 dark:border-navy-600 bg-gray-100 dark:bg-navy-600 flex items-center justify-center">
       <span className="text-[8px] font-heading font-bold text-gray-500 dark:text-gray-400 text-center leading-tight px-0.5">
         {comp.type.slice(0, 3).toUpperCase()}
       </span>

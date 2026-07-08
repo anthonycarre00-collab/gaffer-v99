@@ -10,7 +10,7 @@ interface DashboardAlertsProps {
 
 function getAlertButtonClassName(severity: DashboardAlert["severity"]): string {
   const baseClassName =
-    "flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-heading font-bold uppercase tracking-wider transition-all";
+    "flex items-center gap-2 rounded border px-4 py-2 text-xs font-heading font-bold uppercase tracking-wider transition-all";
 
   if (severity === "warn") {
     return `${baseClassName} border-amber-500/20 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 dark:text-amber-400`;

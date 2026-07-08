@@ -452,9 +452,9 @@ export default function TournamentsTab({
 
       {/* League header */}
       <Card accent="primary" className="mb-5">
-        <div className="bg-gradient-to-r from-navy-700 to-navy-800 p-6 rounded-t-xl">
+        <div className="bg-navy-700 p-6 rounded-t-xl">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-            <div className="w-14 h-14 rounded-xl bg-accent-500/20 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-lg bg-accent-500/20 flex items-center justify-center">
               <Trophy className="w-7 h-7 text-accent-400" />
             </div>
             <div className="flex-1">
@@ -484,7 +484,7 @@ export default function TournamentsTab({
               </Select>
             )}
             <div className="hidden md:flex gap-4">
-              <div className="bg-white/5 rounded-xl px-4 py-2 text-center">
+              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("tournaments.progress")}
                 </p>
@@ -492,7 +492,7 @@ export default function TournamentsTab({
                   {completedMatchdays}/{totalMatchdays}
                 </p>
               </div>
-              <div className="bg-white/5 rounded-xl px-4 py-2 text-center">
+              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("tournaments.matches")}
                 </p>
@@ -500,7 +500,7 @@ export default function TournamentsTab({
                   {completedMatches}
                 </p>
               </div>
-              <div className="bg-white/5 rounded-xl px-4 py-2 text-center">
+              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("tournaments.goals")}
                 </p>
@@ -530,8 +530,8 @@ export default function TournamentsTab({
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-4 py-2 rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-all ${view === v
-              ? "bg-primary-500 text-white shadow-md shadow-primary-500/20"
+            className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all ${view === v
+              ? "bg-primary-500 text-white "
               : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-navy-600"
               }`}
           >
@@ -810,7 +810,7 @@ export default function TournamentsTab({
           </Card>
         ) : (
           <Card>
-            <div className="p-5 border-b border-gray-100 dark:border-navy-600 bg-gradient-to-r from-navy-700 to-navy-800 rounded-t-xl">
+            <div className="p-5 border-b border-gray-100 dark:border-navy-600 bg-navy-700 rounded-t-xl">
               <h3 className="text-lg font-heading font-bold text-white flex items-center gap-2 uppercase tracking-wide">
                 <Trophy className="text-accent-400 w-5 h-5" />
                 {competitionDisplayName(league, t)} —{" "}
@@ -972,7 +972,7 @@ export default function TournamentsTab({
       {view === "awards" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {!seasonComplete && (
-            <div className="md:col-span-2 lg:col-span-3 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+            <div className="md:col-span-2 lg:col-span-3 rounded-lg border border-amber-300/50 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
               {t("tournaments.awards.currentLeaders")}
             </div>
           )}
@@ -1059,7 +1059,7 @@ export default function TournamentsTab({
               </p>
               <button
                 onClick={() => setAwardsRetryCount((count) => count + 1)}
-                className="px-4 py-2 rounded-lg font-heading font-bold text-sm uppercase tracking-wider bg-primary-500 text-white hover:bg-primary-600 transition-colors"
+                className="px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider bg-primary-500 text-white hover:bg-primary-600 transition-colors"
               >
                 {t("common.retry")}
               </button>

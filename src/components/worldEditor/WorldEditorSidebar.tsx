@@ -84,7 +84,7 @@ export function WorldEditorSidebar({
   ];
 
   const itemClass = (active: boolean) =>
-    `flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors text-left ${
+    `flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors text-left ${
       active
         ? "bg-primary-100 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 font-semibold"
         : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700 hover:text-gray-900 dark:hover:text-white"
@@ -127,7 +127,7 @@ export function WorldEditorSidebar({
       <div className="flex-shrink-0 px-2 pt-2 border-t border-gray-200 dark:border-navy-700">
         <button
           onClick={onShowIssues}
-          className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ${
+          className={`flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors ${
             showingIssues
               ? "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400"
               : issueCount > 0

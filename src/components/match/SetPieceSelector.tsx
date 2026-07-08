@@ -135,7 +135,7 @@ export default function SetPieceSelector({
     <div className="mb-4 last:mb-0">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-navy-700/50 dark:hover:bg-navy-700 transition-colors"
+        className="w-full flex items-center gap-3 p-3 rounded bg-gray-100 hover:bg-gray-200 dark:bg-navy-700/50 dark:hover:bg-navy-700 transition-colors"
       >
         {icon}
         <div className="flex-1 text-left">
@@ -168,7 +168,7 @@ export default function SetPieceSelector({
       </button>
 
       {expanded && (
-        <div className="mt-1 bg-white dark:bg-navy-700 rounded-lg border border-gray-200 dark:border-navy-600 p-2 flex flex-col gap-0.5 max-h-56 overflow-auto">
+        <div className="mt-1 bg-white dark:bg-navy-700 rounded border border-gray-200 dark:border-navy-600 p-2 flex flex-col gap-0.5 max-h-56 overflow-auto">
           {sortedPlayers.map((p) => {
             const isCurrent = p.id === currentId;
             return (

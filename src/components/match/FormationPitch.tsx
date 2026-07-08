@@ -150,7 +150,7 @@ export function FormationPitch({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-primary-500 to-primary-700 ${className ?? ""}`}
+      className={`relative overflow-hidden rounded-lg bg-gradient-to-b from-primary-500 to-primary-700 ${className ?? ""}`}
     >
       <svg
         className="absolute inset-0 h-full w-full"
@@ -312,7 +312,7 @@ export function FormationPitch({
               role="button"
               tabIndex={0}
               aria-label={p.name}
-              className={`${sharedClass} rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70`}
+              className={`${sharedClass} rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70`}
               style={sharedStyle}
               onClick={() => onPlayerClick(p.id)}
               onKeyDown={(e) => {

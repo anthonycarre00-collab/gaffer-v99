@@ -49,7 +49,7 @@ export default function HomeNextOpponentCard({
                   <div className="min-w-0 flex items-center gap-3">
                     <TeamLogo
                       team={nextOpponent.opponent}
-                      className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-xs font-heading font-bold text-gray-500 dark:text-gray-300"
+                      className="h-11 w-11 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-xs font-heading font-bold text-gray-500 dark:text-gray-300"
                       imageClassName="h-9 w-9 object-contain drop-shadow"
                     />
                     <div className="min-w-0">

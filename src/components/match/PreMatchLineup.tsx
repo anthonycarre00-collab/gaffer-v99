@@ -193,7 +193,7 @@ export default function PreMatchLineup({
     <div className="flex flex-col gap-4">
       {/* Formation setup: formation/play-style controls, slot-fit counts, and
           auto-select — stacked so nothing clips in the narrow sidebar. */}
-      <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
+      <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
         <span className="text-[10px] font-heading uppercase tracking-widest text-gray-700 dark:text-gray-500">
           {t("match.formationFit")}
         </span>
@@ -209,7 +209,7 @@ export default function PreMatchLineup({
               return (
                 <div
                   key={pos}
-                  className="flex flex-col items-center gap-0.5 rounded-lg bg-gray-50 py-1.5 dark:bg-navy-700/40"
+                  className="flex flex-col items-center gap-0.5 rounded bg-gray-50 py-1.5 dark:bg-navy-700/40"
                 >
                   <span className="text-[10px] font-heading uppercase tracking-widest text-gray-600 dark:text-gray-400">
                     {translatePositionAbbreviation(t, pos)}
@@ -228,7 +228,7 @@ export default function PreMatchLineup({
         <button
           onClick={onAutoSelect}
           disabled={isAutoSelecting}
-          className={`flex w-full items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all ${isAutoSelecting
+          className={`flex w-full items-center justify-center gap-2 px-4 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${isAutoSelecting
             ? "bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-400 cursor-wait"
             : "bg-accent-100 text-accent-700 hover:bg-accent-200 dark:bg-accent-500/20 dark:text-accent-300 dark:hover:bg-accent-500/30"
             }`}
@@ -240,7 +240,7 @@ export default function PreMatchLineup({
 
       {/* Starting XI */}
       {showStartingList && (
-      <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+      <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
               {t("match.startingXI")}
@@ -377,7 +377,7 @@ export default function PreMatchLineup({
       )}
 
         {/* Bench */}
-        <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+        <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
               {t("match.substitutes")}

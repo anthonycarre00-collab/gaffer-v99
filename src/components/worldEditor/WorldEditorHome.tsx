@@ -136,7 +136,7 @@ export function WorldEditorHome({
             </h2>
 
             {errorMsg && (
-              <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-xl px-4 py-3">
+              <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg px-4 py-3">
                 {errorMsg}
               </div>
             )}
@@ -152,7 +152,7 @@ export function WorldEditorHome({
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder={t("worldEditor.worldNamePlaceholder")}
                   autoFocus
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export function WorldEditorHome({
                   {t("worldEditor.worldId")}
                 </label>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 px-3 py-2 rounded-lg border border-gray-100 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-sm font-mono truncate">
+                  <div className="flex-1 px-3 py-2 rounded border border-gray-100 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-sm font-mono truncate">
                     {derivedSlug || "—"}
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export function WorldEditorHome({
                   type="text"
                   value={formAuthor}
                   onChange={(e) => setFormAuthor(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -190,7 +190,7 @@ export function WorldEditorHome({
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                  className="w-full px-3 py-2 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export function WorldEditorHome({
               <button
                 onClick={handleCreate}
                 disabled={isBusy || !derivedSlug}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bgc-primary-500 hover:bg-primary-600 text-white rounded-lg font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isBusy ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -243,7 +243,7 @@ export function WorldEditorHome({
           </div>
 
           {errorMsg && (
-            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-xl px-4 py-3">
+            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg px-4 py-3">
               {errorMsg}
             </div>
           )}
@@ -253,7 +253,7 @@ export function WorldEditorHome({
             <button
               onClick={() => openNewForm()}
               disabled={isBusy}
-              className="flex items-center gap-4 w-full p-5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex items-center gap-4 w-full p-5 bgc-primary-500 hover:bg-primary-600 text-white rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <Package className="w-7 h-7 flex-shrink-0" />
               <div className="text-left">
@@ -293,7 +293,7 @@ export function WorldEditorHome({
                     key={sample.meta.id}
                     onClick={() => openNewForm(sample)}
                     disabled={isBusy}
-                    className="flex items-start gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-amber-50 dark:hover:bg-navy-700 text-gray-800 dark:text-gray-200 rounded-xl transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-amber-400 dark:hover:border-amber-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
+                    className="flex items-start gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-amber-50 dark:hover:bg-navy-700 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-amber-400 dark:hover:border-amber-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="font-heading font-bold uppercase tracking-wide text-sm truncate">
@@ -322,7 +322,7 @@ export function WorldEditorHome({
                     key={proj.path}
                     onClick={() => onOpenRecent(proj.path)}
                     disabled={isBusy}
-                    className="flex items-center gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-gray-50 dark:hover:bg-navy-700 rounded-xl border border-gray-100 dark:border-navy-700 transition-colors text-left disabled:opacity-60"
+                    className="flex items-center gap-3 w-full px-4 py-3 bg-white dark:bg-navy-800 hover:bg-gray-50 dark:hover:bg-navy-700 rounded-lg border border-gray-100 dark:border-navy-700 transition-colors text-left disabled:opacity-60"
                   >
                     <Package2 className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -351,7 +351,7 @@ export function WorldEditorHome({
                 {installedPackages.map((pkg) => (
                   <div
                     key={pkg.id}
-                    className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-800 rounded-xl border border-gray-100 dark:border-navy-700"
+                    className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-800 rounded-lg border border-gray-100 dark:border-navy-700"
                   >
                     <Package2 className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                     <div className="flex-1 min-w-0">

@@ -296,7 +296,7 @@ export function Select({
   };
 
   const base =
-    "rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed";
+    "rounded border transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variants = {
     default:
@@ -393,7 +393,7 @@ export function Select({
       {isOpen ? createPortal(
         <div
           ref={menuRef}
-          className="fixed z-50 w-max overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-800"
+          className="fixed z-50 w-max overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-800"
         >
           <div
             id={listboxId}
@@ -411,7 +411,7 @@ export function Select({
                   role="option"
                   aria-selected={isSelected}
                   disabled={option.disabled}
-                  className={`${optionTextSize} flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition-colors ${isSelected ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400" : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-navy-700"} ${option.disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                  className={`${optionTextSize} flex w-full items-center justify-between rounded px-3 py-2 text-left transition-colors ${isSelected ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400" : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-navy-700"} ${option.disabled ? "cursor-not-allowed opacity-50" : ""}`}
                   onClick={(event) => {
                     event.stopPropagation();
                     if (!option.disabled) {

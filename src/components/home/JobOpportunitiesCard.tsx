@@ -158,7 +158,7 @@ export default function JobOpportunitiesCard({
       <CardBody>
         {feedback && (
           <div
-            className={`mb-3 rounded-lg px-3 py-2 text-sm font-medium ${
+            className={`mb-3 rounded px-3 py-2 text-sm font-medium ${
               feedback.type === "success"
                 ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
                 : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
@@ -183,7 +183,7 @@ export default function JobOpportunitiesCard({
               return (
                 <div
                   key={job.team_id}
-                  className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/50"
+                  className="flex items-center justify-between rounded border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/50"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
@@ -220,7 +220,7 @@ export default function JobOpportunitiesCard({
                   <button
                     onClick={() => handleApply(job)}
                     disabled={applyingTo !== null}
-                    className="ml-3 shrink-0 rounded-lg bg-primary-500 px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wider text-white transition-all hover:bg-primary-600 disabled:opacity-50"
+                    className="ml-3 shrink-0 rounded bg-primary-500 px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wider text-white transition-all hover:bg-primary-600 disabled:opacity-50"
                   >
                     {applyingTo === job.team_id
                       ? t("jobs.applicationSent")

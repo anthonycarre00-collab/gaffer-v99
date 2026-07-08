@@ -52,7 +52,7 @@ function NationalityFieldFallback({
                 <button
                     type="button"
                     disabled
-                    className={`w-full rounded-lg border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${error
+                    className={`w-full rounded border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${error
                         ? "border-red-400 dark:border-red-500"
                         : "border-gray-300 dark:border-navy-600"
                         }`}
@@ -99,7 +99,7 @@ export default function CreateManagerForm({
                 <button
                     type="button"
                     onClick={onClose}
-                    className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-600 dark:hover:text-white"
+                    className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-600 dark:hover:text-white"
                 >
                     <X className="h-5 w-5" />
                 </button>
@@ -129,7 +129,7 @@ export default function CreateManagerForm({
                     </label>
                     <input
                         maxLength={30}
-                        className={`w-full rounded-lg border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.firstName
+                        className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.firstName
                             ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
                             : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
                             }`}
@@ -154,7 +154,7 @@ export default function CreateManagerForm({
                     </label>
                     <input
                         maxLength={30}
-                        className={`w-full rounded-lg border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.lastName
+                        className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.lastName
                             ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
                             : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
                             }`}
@@ -208,7 +208,7 @@ export default function CreateManagerForm({
                         type="text"
                         pattern="[0-9]*"
                         inputMode="numeric"
-                        className={`w-full rounded-lg border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.startYear
+                        className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.startYear
                             ? "border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500"
                             : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
                             }`}

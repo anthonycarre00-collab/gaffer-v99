@@ -39,7 +39,7 @@ export function EventFeed({
           return (
             <div
               key={i}
-              className={`flex items-start gap-3 px-3 py-2 rounded-lg transition-colors ${display.important ? "bg-white dark:bg-navy-800/80 border border-gray-200 dark:border-navy-700 shadow-sm" : "opacity-60"}`}
+              className={`flex items-start gap-3 px-3 py-2 rounded transition-colors ${display.important ? "bg-white dark:bg-navy-800/80 border border-gray-200 dark:border-navy-700 shadow-sm" : "opacity-60"}`}
             >
               <span className="text-gray-600 dark:text-gray-500 tabular-nums font-heading text-sm w-8 text-right flex-shrink-0 pt-0.5">
                 {evt.minute}'

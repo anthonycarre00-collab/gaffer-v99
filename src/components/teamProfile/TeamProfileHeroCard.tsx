@@ -111,7 +111,7 @@ function QuickHeroStat({
   valueClassName?: string;
 }) {
   return (
-    <div className="bg-black/20 backdrop-blur rounded-xl px-5 py-3 text-center min-w-[100px]">
+    <div className="bg-black/20 backdrop-blur rounded-lg px-5 py-3 text-center min-w-[100px]">
       <p className="text-xs text-white/60 font-heading uppercase tracking-wider">
         {label}
       </p>

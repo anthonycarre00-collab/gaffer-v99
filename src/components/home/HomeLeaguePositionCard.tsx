@@ -74,7 +74,7 @@ export default function HomeLeaguePositionCard({
         ) : myStanding && myStandingData ? (
           <div className="flex flex-col items-center gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-xl bg-accent-500/10 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-lg bg-accent-500/10 flex items-center justify-center">
                 <span className="text-3xl font-heading font-bold text-accent-500">
                   {myStanding}
                 </span>

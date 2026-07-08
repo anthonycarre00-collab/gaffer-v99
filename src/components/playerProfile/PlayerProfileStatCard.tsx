@@ -18,7 +18,7 @@ export default function PlayerProfileStatCard({
     children: ReactNode;
 }) {
     return (
-        <div className="flex flex-col rounded-lg border border-gray-100 dark:border-navy-600 bg-gray-50/60 dark:bg-navy-800/40 p-4">
+        <div className="flex flex-col rounded border border-gray-100 dark:border-navy-600 bg-gray-50/60 dark:bg-navy-800/40 p-4">
             <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-gray-100 dark:border-navy-600">
                 <h4
                     className={`font-heading font-bold text-xs uppercase tracking-wider ${labelClassName}`}

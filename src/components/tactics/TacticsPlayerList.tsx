@@ -99,7 +99,7 @@ function PlayerRow({
     t,
   });
 
-  const rowClassName = `flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors ${
+  const rowClassName = `flex w-full items-center gap-2 rounded px-2 py-1.5 text-left transition-colors ${
     isSelected
       ? "bg-accent-500/15 ring-1 ring-accent-300/40"
       : isCompare
@@ -234,7 +234,7 @@ export default function TacticsPlayerList({
         positionFilter={positionFilter}
       />
 
-      <div className="rounded-xl border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
+      <div className="rounded-lg border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
         <div className="border-b border-gray-100 px-3 py-2 dark:border-navy-700">
           <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-gray-500 dark:text-gray-400">
             {t("preMatch.startingXI")} · {starters.length}
@@ -264,7 +264,7 @@ export default function TacticsPlayerList({
         </div>
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
+      <div className="rounded-lg border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
         <div className="border-b border-gray-100 px-3 py-2 dark:border-navy-700">
           <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-gray-500 dark:text-gray-400">
             {t("preMatch.substitutes")} · {bench.length}

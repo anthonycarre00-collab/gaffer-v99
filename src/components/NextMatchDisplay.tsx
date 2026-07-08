@@ -53,7 +53,7 @@ export default function NextMatchDisplay({
         : t("season.friendly");
 
   return (
-    <div className="flex items-center justify-between py-6 px-4 bg-gray-50 dark:bg-navy-800 rounded-lg border border-gray-100 dark:border-navy-600 transition-colors">
+    <div className="flex items-center justify-between py-6 px-4 bg-gray-50 dark:bg-navy-800 rounded border border-gray-100 dark:border-navy-600 transition-colors">
       <div className="text-center flex-1">
         {userTeam && (
           <TeamLogo

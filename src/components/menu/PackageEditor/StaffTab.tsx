@@ -62,7 +62,7 @@ export function StaffTab({ staff, teams, onAdd, onEdit, onDelete, selectedIndex,
               onChange={(e) => setQuery(e.target.value)}
               aria-label={t("worldEditor.searchStaff")}
               placeholder={t("worldEditor.searchStaff")}
-              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
             />
           </div>
         )

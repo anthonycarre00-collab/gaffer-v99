@@ -62,7 +62,7 @@ export default function HomeRecentMessagesCard({
                       }`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold text-sm ${message.read
+                      className={`w-9 h-9 rounded flex items-center justify-center flex-shrink-0 font-heading font-bold text-sm ${message.read
                           ? "bg-gray-100 dark:bg-navy-600 text-gray-400 dark:text-gray-500"
                           : "bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400"
                         }`}

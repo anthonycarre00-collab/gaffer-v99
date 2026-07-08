@@ -72,7 +72,7 @@ export default function PlayerProfileMovementHistoryCard({
                             return (
                                 <div
                                     key={`${entry.date}-${entry.kind}-${index}`}
-                                    className="rounded-lg border border-gray-100 bg-gray-50/60 p-3 text-sm dark:border-navy-600 dark:bg-navy-800/50"
+                                    className="rounded border border-gray-100 bg-gray-50/60 p-3 text-sm dark:border-navy-600 dark:bg-navy-800/50"
                                 >
                                     <div className="flex flex-wrap items-center gap-2">
                                         <Badge variant={MOVEMENT_BADGE_VARIANTS[entry.kind]}>

@@ -47,7 +47,7 @@ export default function PlayerProfileAttributesCard({
             <CardHeader
                 action={
                     isOwnClub ? (
-                        <div className="flex rounded-lg overflow-hidden border border-gray-200 dark:border-navy-600 text-[10px] font-heading font-bold uppercase tracking-wider">
+                        <div className="flex rounded overflow-hidden border border-gray-200 dark:border-navy-600 text-[10px] font-heading font-bold uppercase tracking-wider">
                             <button
                                 type="button"
                                 aria-pressed={view === "list"}

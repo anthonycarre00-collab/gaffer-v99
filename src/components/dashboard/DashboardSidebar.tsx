@@ -58,12 +58,12 @@ function NavItem({
   onClick,
 }: NavItemProps): JSX.Element {
   const buttonClassName = collapsed
-    ? `relative flex w-full items-center justify-center rounded-lg p-3 transition-all duration-200 ${active
-      ? "bg-linear-to-r from-primary-500 to-primary-600 text-white shadow-md shadow-primary-500/20"
+    ? `relative flex w-full items-center justify-center rounded p-3 transition-colors duration-150 ${active
+      ? "bg-primary-500 text-white"
       : "text-gray-400 hover:bg-white/5 hover:text-white"
     }`
-    : `relative flex w-full items-center justify-between rounded-lg p-3 transition-all duration-200 ${active
-      ? "bg-linear-to-r from-primary-500 to-primary-600 text-white shadow-md shadow-primary-500/20"
+    : `relative flex w-full items-center justify-between rounded p-3 transition-colors duration-150 ${active
+      ? "bg-primary-500 text-white"
       : "text-gray-400 hover:bg-white/5 hover:text-white"
     }`;
 
@@ -191,7 +191,7 @@ export default function DashboardSidebar({
             onClick={onToggleCollapse}
             title={toggleSidebarLabel}
             aria-label={toggleSidebarLabel}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="rounded p-2 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
           >
             {collapsed ? (
               <PanelLeftOpen className="h-5 w-5" />
@@ -204,7 +204,7 @@ export default function DashboardSidebar({
           onClick={() => onNavClick("Manager")}
           title={collapsed ? t("dashboard.manager") : undefined}
           aria-label={t("dashboard.manager")}
-          className={`hover:bg-white/5 mt-3 w-full rounded-lg transition-colors hover:cursor-pointer ${collapsed
+          className={`hover:bg-white/5 mt-3 w-full rounded transition-colors hover:cursor-pointer ${collapsed
               ? "flex justify-center px-0 py-2 text-gray-300"
               : "-mx-1 border-t border-navy-700 px-1 py-1 pt-3 text-left"
             }`}
@@ -312,7 +312,7 @@ export default function DashboardSidebar({
           onClick={onNavigateSettings}
           title={collapsed ? t("dashboard.settings") : undefined}
           aria-label={t("dashboard.settings")}
-          className={`w-full rounded-lg p-3 text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-300 ${collapsed
+          className={`w-full rounded p-3 text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-300 ${collapsed
               ? "flex items-center justify-center"
               : "flex items-center gap-3"
             }`}
@@ -328,7 +328,7 @@ export default function DashboardSidebar({
           onClick={onExitClick}
           title={collapsed ? t("dashboard.exitToMenu") : undefined}
           aria-label={t("dashboard.exitToMenu")}
-          className={`w-full rounded-lg p-3 text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400 ${collapsed
+          className={`w-full rounded p-3 text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400 ${collapsed
               ? "flex items-center justify-center"
               : "flex items-center gap-3"
             }`}

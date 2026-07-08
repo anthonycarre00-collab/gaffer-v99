@@ -434,7 +434,7 @@ export default function PressConference({
                     key={r.id}
                     onClick={() => handleAnswer(r.id)}
                     disabled={hasAnswered}
-                     className={`p-4 rounded-xl text-left transition-all ${
+                     className={`p-4 rounded-lg text-left transition-all ${
                        isSelected
                          ? "bg-primary-500/20 ring-2 ring-primary-500/50"
                        : hasAnswered
@@ -465,7 +465,7 @@ export default function PressConference({
               <div className="flex justify-end mt-6 ml-16">
                 <button
                   onClick={handleNext}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 rounded-xl font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bgc-primary-500 hover:bg-primary-600 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-white shadow-lg shadow-primary-500/20 transition-all"
                 >
                   {submitting
                     ? t("match.submitting")

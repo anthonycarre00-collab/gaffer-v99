@@ -224,7 +224,7 @@ export default function MatchLive({
                 </div>
                 <TeamLogo
                   team={homeFullTeam ?? makeTeamFallback(snapshot.home_team.name)}
-                  className="w-10 h-10 rounded-lg flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
+                  className="w-10 h-10 rounded flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
                   imageClassName="h-8 w-8 object-contain drop-shadow"
                   style={{ backgroundColor: homeTeamColor + "30", borderColor: homeTeamColor, borderWidth: 2 }}
                 />
@@ -244,7 +244,7 @@ export default function MatchLive({
               <div className="flex items-center gap-3">
                 <TeamLogo
                   team={awayFullTeam ?? makeTeamFallback(snapshot.away_team.name)}
-                  className="w-10 h-10 rounded-lg flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
+                  className="w-10 h-10 rounded flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
                   imageClassName="h-8 w-8 object-contain drop-shadow"
                   style={{ backgroundColor: awayTeamColor + "30", borderColor: awayTeamColor, borderWidth: 2 }}
                 />
@@ -335,7 +335,7 @@ export default function MatchLive({
                       onPreferredSpeedChange?.(s.id);
                     }
                   }}
-                  className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-lg text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-700"
+                  className={`flex-1 flex flex-col items-center gap-1 py-2 rounded text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-700"
                     }`}
                 >
                   {s.icon}
@@ -346,7 +346,7 @@ export default function MatchLive({
             {speed === "paused" && (
               <button
                 onClick={stepMatch}
-                className="w-full mt-2 flex items-center justify-center gap-2 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded-lg text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
+                className="w-full mt-2 flex items-center justify-center gap-2 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
                 {t('match.step1Min')}
@@ -360,7 +360,7 @@ export default function MatchLive({
               <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">{t('match.teamControls')}</h3>
               <button
                 onClick={() => setShowSubPanel(!showSubPanel)}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded-lg text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 {t('match.subs')} ({userSide === "Home" ? snapshot.home_subs_made : snapshot.away_subs_made}/{snapshot.max_subs})

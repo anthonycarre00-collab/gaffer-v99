@@ -27,7 +27,7 @@ export function EntityListShell({
     <div className="flex flex-col gap-2">
       <button
         onClick={onAdd}
-        className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-gray-300 dark:border-navy-500 rounded-xl text-sm text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+        className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-gray-300 dark:border-navy-500 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
       >
         <Plus className="w-4 h-4" />
         <span className="font-heading font-bold uppercase tracking-wider">{addLabel}</span>
@@ -92,7 +92,7 @@ export function EntityRow({
 
   return (
     <div
-      className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
+      className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
         isSelected
           ? "border-primary-400 dark:border-primary-500 bg-primary-50 dark:bg-primary-500/10"
           : "border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 hover:border-gray-300 dark:hover:border-navy-500"
@@ -175,7 +175,7 @@ export function EntityFormShell({
       <div className="flex items-center gap-2 mb-2">
         <button
           onClick={onBack}
-          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -189,7 +189,7 @@ export function EntityFormShell({
       <button
         onClick={onSave}
         disabled={isBusy || saveDisabled}
-        className="w-full py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-white rounded-lg font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
         {saveLabel}

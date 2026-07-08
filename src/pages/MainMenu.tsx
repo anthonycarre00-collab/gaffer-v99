@@ -726,7 +726,7 @@ export default function MainMenu() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => setMenuState("create")}
-                className="group flex items-center justify-between w-full p-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary-500/20"
+                className="group flex items-center justify-between w-full p-4 bgc-primary-500 hover:bg-primary-600 text-white rounded-lg transition-all duration-300 shadow-md "
               >
                 <div className="flex items-center gap-3">
                   <PlusCircle className="w-6 h-6" />
@@ -739,7 +739,7 @@ export default function MainMenu() {
 
               <button
                 onClick={handleOpenLoadMenu}
-                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-xl transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
+                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <FolderOpen className="w-6 h-6 text-accent-500 dark:text-accent-400" />
@@ -752,7 +752,7 @@ export default function MainMenu() {
 
               <button
                 onClick={() => navigate("/world-editor")}
-                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-xl transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
+                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <Package className="w-6 h-6 text-accent-500 dark:text-accent-400" />
@@ -765,7 +765,7 @@ export default function MainMenu() {
 
               <button
                 onClick={() => navigate("/settings", { state: { from: "/" } })}
-                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-xl transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-600 shadow-sm"
+                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-600 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <Settings className="w-6 h-6 text-gray-400 dark:text-gray-500" />
@@ -780,7 +780,7 @@ export default function MainMenu() {
                 onClick={() => {
                   void handleExitApp();
                 }}
-                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-800 dark:text-gray-200 rounded-xl transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-red-200 dark:hover:border-red-500/30 shadow-sm"
+                className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-red-200 dark:hover:border-red-500/30 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <Power className="w-6 h-6 text-red-500 dark:text-red-400" />
@@ -891,7 +891,7 @@ export default function MainMenu() {
           aria-label={t("menu.openDiscord")}
           title={t("menu.openDiscord")}
           onClick={() => { void openUrl(DISCORD_INVITE_URL); }}
-          className="p-1.5 rounded-lg text-gray-400 dark:text-gray-600 hover:text-[#5865F2] dark:hover:text-[#7289DA] hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+          className="p-1.5 rounded text-gray-400 dark:text-gray-600 hover:text-[#5865F2] dark:hover:text-[#7289DA] hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
         >
           <DiscordIcon className="w-5 h-5" />
         </button>
@@ -900,7 +900,7 @@ export default function MainMenu() {
           aria-label={t("menu.openGithub")}
           title={t("menu.openGithub")}
           onClick={() => { void openUrl(GITHUB_REPO_URL); }}
-          className="p-1.5 rounded-lg text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+          className="p-1.5 rounded text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
         >
           <GithubIcon className="w-5 h-5" />
         </button>

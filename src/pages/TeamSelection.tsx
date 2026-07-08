@@ -550,7 +550,7 @@ export default function TeamSelection() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("/")}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-gray-200"
+            className="rounded p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-gray-200"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -569,7 +569,7 @@ export default function TeamSelection() {
             <button
               onClick={handleConfirm}
               disabled={isConfirming}
-              className={`flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-2.5 font-heading text-sm font-bold uppercase tracking-wider text-white shadow-md transition-all hover:from-primary-600 hover:to-primary-700 hover:shadow-lg hover:shadow-primary-500/20 ${
+              className={`flex items-center gap-2 rounded bgc-primary-500 px-6 py-2.5 font-heading text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-600  ${
                 isConfirming ? "cursor-wait opacity-70" : ""
               }`}
             >
@@ -697,7 +697,7 @@ export default function TeamSelection() {
                           handleRegionToggle(region.id);
                         }
                       }}
-                      className={`flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+                      className={`flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
                     >
                       <span className="flex items-center gap-2">
                         <Globe className="h-4 w-4 text-primary-500" />
@@ -754,7 +754,7 @@ export default function TeamSelection() {
                           handleCompetitionToggle(competition);
                         }
                       }}
-                      className={`block rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+                      className={`block rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="flex min-w-0 items-center gap-2">
@@ -818,7 +818,7 @@ export default function TeamSelection() {
                 value={clubSearch}
                 onChange={(event) => setClubSearch(event.target.value)}
                 placeholder={t("teamSelect.searchClubs")}
-                className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200"
+                className="min-w-0 flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200"
               />
               <span className="shrink-0 text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {t("teamSelect.clubCount", { n: filteredTeams.length })}
@@ -846,7 +846,7 @@ export default function TeamSelection() {
                 <button
                   key={team.id}
                   onClick={() => setSelectedTeamId(team.id)}
-                  className={`rounded-xl text-left transition-all duration-200 ${
+                  className={`rounded-lg text-left transition-all duration-200 ${
                     isSelected
                       ? "scale-[1.01] ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-navy-900"
                       : "hover:scale-[1.01]"
@@ -856,15 +856,15 @@ export default function TeamSelection() {
                     <div
                       className={`rounded-t-xl p-4 ${
                         isSelected
-                          ? "bg-gradient-to-r from-primary-600 to-primary-700"
-                          : "bg-gradient-to-r from-navy-700 to-navy-800"
+                          ? "bgc-primary-600"
+                          : "bg-navy-700"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <TeamLogo
                             team={team}
-                            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg font-heading text-lg font-bold ${
+                            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded font-heading text-lg font-bold ${
                               isSelected ? "bg-white/20 text-white" : "bg-white/10 text-gray-300"
                             }`}
                           />
@@ -987,7 +987,7 @@ export default function TeamSelection() {
                       {selectedTeamXi.slice(0, 5).map((player) => (
                         <div
                           key={player.id}
-                          className="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2 dark:bg-navy-800"
+                          className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 dark:bg-navy-800"
                         >
                           <div>
                             <p className="font-semibold text-gray-900 dark:text-white">
@@ -1079,7 +1079,7 @@ function DetailTile({
   value: string;
 }) {
   return (
-    <div className="rounded-xl bg-gray-50 px-3 py-3 dark:bg-navy-800">
+    <div className="rounded-lg bg-gray-50 px-3 py-3 dark:bg-navy-800">
       <p className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
         {icon} {label}
       </p>

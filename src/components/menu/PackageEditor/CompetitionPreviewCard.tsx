@@ -31,7 +31,7 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
             className="w-14 h-14 object-contain drop-shadow-md"
           />
         ) : (
-          <div className="w-14 h-14 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
             <Trophy className="w-7 h-7 text-white/70" />
           </div>
         )}

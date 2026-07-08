@@ -93,7 +93,7 @@ export function FreeAgentContractForm({
           step="1000"
           value={wage}
           onChange={(event) => onWageChange(event.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+          className="w-full px-3 py-2 rounded bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
         />
 
         <label
@@ -110,11 +110,11 @@ export function FreeAgentContractForm({
           step="1"
           value={contractLength}
           onChange={(event) => onContractLengthChange(event.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+          className="w-full px-3 py-2 rounded bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
         />
 
         {projection ? (
-          <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-white/70 dark:bg-navy-900/40 p-3 mb-3 space-y-2">
+          <div className="rounded border border-gray-200 dark:border-navy-700 bg-white/70 dark:bg-navy-900/40 p-3 mb-3 space-y-2">
             <p className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               {t("playerProfile.renewalProjectionTitle")}
             </p>
@@ -173,7 +173,7 @@ export function FreeAgentContractForm({
           <button
             onClick={onSubmit}
             disabled={submitDisabled}
-            className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+            className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
           >
             {submitting
               ? t("transfers.submitting")
@@ -181,7 +181,7 @@ export function FreeAgentContractForm({
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded-lg font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
+            className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
           >
             {t("transfers.close")}
           </button>
@@ -201,7 +201,7 @@ export default function FreeAgentContractModal(
       onClick={props.onClose}
     >
       <div
-        className="bg-white dark:bg-navy-800 rounded-xl shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

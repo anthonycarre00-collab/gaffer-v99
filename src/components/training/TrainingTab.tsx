@@ -174,7 +174,7 @@ export default function TrainingTab({
       <div className="lg:col-span-2 flex flex-col gap-5">
         {staffAdvice ? (
           <div
-            className={`flex items-start gap-3 p-4 rounded-xl border-2 ${staffAdvice.level === "critical"
+            className={`flex items-start gap-3 p-4 rounded-lg border-2 ${staffAdvice.level === "critical"
                 ? "bg-red-50 dark:bg-red-500/10 border-red-300 dark:border-red-500/40"
                 : staffAdvice.level === "warn"
                   ? "bg-amber-50 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/40"

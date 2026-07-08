@@ -36,7 +36,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
         <button 
           type="button" 
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
         >
           <X className="w-5 h-5" />
         </button>
@@ -49,20 +49,20 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
           <div className="text-gray-500 dark:text-gray-400 text-center py-8">{t('menu.noSaves')}</div>
         ) : (
           saves.map(save => (
-            <div key={save.id} className="group relative flex flex-col gap-2 w-full p-4 bg-white dark:bg-navy-700 hover:bg-primary-50 dark:hover:bg-navy-600 text-left rounded-xl transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 shadow-sm">
+            <div key={save.id} className="group relative flex flex-col gap-2 w-full p-4 bg-white dark:bg-navy-700 hover:bg-primary-50 dark:hover:bg-navy-600 text-left rounded-lg transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 shadow-sm">
               {confirmDeleteId === save.id ? (
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-gray-700 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: t('menu.deleteConfirm', { name: save.name }) }} />
                   <div className="flex gap-2">
                     <button
                       onClick={() => onDelete(save.id)}
-                      className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-heading font-bold uppercase tracking-wider rounded-lg transition-colors"
+                      className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
                     >
                       {t('menu.delete')}
                     </button>
                     <button
                       onClick={() => onConfirmDelete(null)}
-                      className="flex-1 py-2 bg-gray-200 dark:bg-navy-600 hover:bg-gray-300 dark:hover:bg-navy-500 text-gray-700 dark:text-gray-300 text-sm font-heading font-bold uppercase tracking-wider rounded-lg transition-colors"
+                      className="flex-1 py-2 bg-gray-200 dark:bg-navy-600 hover:bg-gray-300 dark:hover:bg-navy-500 text-gray-700 dark:text-gray-300 text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
                     >
                       {t('menu.cancel')}
                     </button>
@@ -88,7 +88,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); onConfirmDelete(save.id); }}
-                    className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+                    className="p-1.5 rounded text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
                     title={t('menu.deleteSave')}
                   >
                     <Trash2 className="w-4 h-4" />

@@ -63,7 +63,7 @@ function PackageCard({ pkg, isActive, onToggle, onUninstall }: PackageCardProps)
     <button
       type="button"
       onClick={onToggle}
-      className={`flex items-start gap-3 w-full p-3 rounded-xl border transition-all duration-200 text-left ${
+      className={`flex items-start gap-3 w-full p-3 rounded-lg border transition-all duration-200 text-left ${
         isActive
           ? "bg-accent-50 dark:bg-accent-500/10 border-accent-400 dark:border-accent-500 ring-1 ring-accent-400/30"
           : "bg-white dark:bg-navy-700 border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-500"
@@ -193,7 +193,7 @@ export default function PackageBuildStep({
         <div className="flex items-center gap-2">
           <button
             onClick={onBack}
-            className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+            className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -204,7 +204,7 @@ export default function PackageBuildStep({
         <button
           type="button"
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
         >
           <X className="w-5 h-5" />
         </button>
@@ -274,7 +274,7 @@ export default function PackageBuildStep({
 
         {/* Random world fallback notice */}
         {!hasActiveDatabase && (
-          <div className="flex items-start gap-2.5 rounded-xl border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-700/60 p-3">
+          <div className="flex items-start gap-2.5 rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-700/60 p-3">
             <Shuffle className="w-4 h-4 text-accent-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {t("packageBuild.randomFallback")}
@@ -284,7 +284,7 @@ export default function PackageBuildStep({
 
         {/* Patch-only error */}
         {hasPatchOnly && (
-          <div className="rounded-xl border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
+          <div className="rounded-lg border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
             <p className="font-heading font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1">
               <AlertCircle className="w-3.5 h-3.5" />
               {t("packageBuild.patchOnlyError")}
@@ -294,7 +294,7 @@ export default function PackageBuildStep({
 
         {/* Stack conflict warnings */}
         {stackConflictWarnings.length > 0 && (
-          <div className="rounded-xl border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
+          <div className="rounded-lg border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3 text-xs">
             <p className="font-heading font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1 flex items-center gap-1">
               <AlertTriangle className="w-3.5 h-3.5" />
               {t("worldSelect.stackConflictWarnings", { count: stackConflictWarnings.length })}
@@ -309,7 +309,7 @@ export default function PackageBuildStep({
 
         {/* Stack errors */}
         {(hasPackageErrors || hasStackErrors) && (
-          <div className="rounded-xl border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 p-3 text-xs">
+          <div className="rounded-lg border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 p-3 text-xs">
             <p className="font-heading font-bold uppercase tracking-wider text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
               <AlertCircle className="w-3.5 h-3.5" />
               {t("worldSelect.packageStackErrors")}

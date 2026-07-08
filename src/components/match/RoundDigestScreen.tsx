@@ -218,14 +218,14 @@ export default function RoundDigestScreen({
             <button
               type="button"
               onClick={onFinish}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-navy-700 dark:hover:bg-navy-600 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-gray-700 dark:text-gray-300 transition-colors"
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-navy-700 dark:hover:bg-navy-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-gray-700 dark:text-gray-300 transition-colors"
             >
               {t("match.skip")}
             </button>
             <button
               type="button"
               onClick={onPressConference}
-              className="flex items-center gap-2 px-5 py-2 bg-linear-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-white shadow-md shadow-primary-500/20 transition-all"
+              className="flex items-center gap-2 px-5 py-2 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-white  transition-all"
             >
               {t("match.pressConference")}
               <ChevronRight className="w-4 h-4" />
@@ -285,7 +285,7 @@ export default function RoundDigestScreen({
                   team={
                     homeFullTeam ?? makeTeamFallback(snapshot.home_team.name)
                   }
-                  className="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-bold overflow-hidden"
+                  className="w-12 h-12 rounded-lg flex items-center justify-center font-heading font-bold overflow-hidden"
                   imageClassName="h-9 w-9 object-contain drop-shadow"
                   style={{
                     backgroundColor: homeTeamColor + "30",
@@ -314,7 +314,7 @@ export default function RoundDigestScreen({
                   team={
                     awayFullTeam ?? makeTeamFallback(snapshot.away_team.name)
                   }
-                  className="w-12 h-12 rounded-xl flex items-center justify-center font-heading font-bold overflow-hidden"
+                  className="w-12 h-12 rounded-lg flex items-center justify-center font-heading font-bold overflow-hidden"
                   imageClassName="h-9 w-9 object-contain drop-shadow"
                   style={{
                     backgroundColor: awayTeamColor + "30",
@@ -362,7 +362,7 @@ export default function RoundDigestScreen({
                     return (
                       <div
                         key={entry.fixture.id}
-                        className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm px-4 py-3 transition-colors duration-300"
+                        className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm px-4 py-3 transition-colors duration-300"
                       >
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-200 truncate">
@@ -410,7 +410,7 @@ export default function RoundDigestScreen({
             {isLeagueFixture && roundSummary && (
               <div className="flex flex-col gap-4">
                 {/* Standings */}
-                <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+                <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                   <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
                     {t("tournaments.leagueTable")}
                   </h3>
@@ -454,7 +454,7 @@ export default function RoundDigestScreen({
 
                 {/* Top Scorers */}
                 {roundSummary.top_scorer_delta.length > 0 && (
-                  <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+                  <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
                     <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
                       {t("tournaments.topScorers")}
                     </h3>
@@ -489,8 +489,8 @@ export default function RoundDigestScreen({
 
           {/* Notable Upset */}
           {isLeagueFixture && roundSummary?.notable_upset && (
-            <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
-              <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
+              <div className="w-8 h-8 rounded bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center shrink-0">
                 <Flame className="w-4 h-4 text-orange-500 dark:text-orange-400" />
               </div>
               <div>
@@ -538,14 +538,14 @@ export default function RoundDigestScreen({
                 ref={modalCloseRef}
                 type="button"
                 onClick={() => setSelectedOtherFixtureId(null)}
-                className="rounded-lg px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-navy-800 dark:hover:text-white transition-colors"
+                className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-navy-800 dark:hover:text-white transition-colors"
               >
                 {t("common.close")}
               </button>
             </div>
 
             <div className="grid gap-5 p-5 md:grid-cols-[1.15fr_0.85fr]">
-              <div className="rounded-xl border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
+              <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
                 <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   {t("match.matchEvents")}
                 </h4>
@@ -596,7 +596,7 @@ export default function RoundDigestScreen({
               </div>
 
               <div className="flex flex-col gap-4">
-                <div className="rounded-xl border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
+                <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
                   <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                     {t("match.quickStats")}
                   </h4>
@@ -632,7 +632,7 @@ export default function RoundDigestScreen({
                     away={selectedOtherFixtureReport.away_stats.yellow_cards}
                   />
                 </div>
-                <div className="rounded-xl border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
+                <div className="rounded-lg border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
                   <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                     {t("match.scorers")}
                   </h4>

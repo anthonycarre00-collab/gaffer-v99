@@ -22,8 +22,8 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
       {/* Profile card */}
       <Card accent="primary" className="md:col-span-3">
-        <div className="bg-gradient-to-r from-navy-700 to-navy-800 p-6 rounded-t-xl flex items-center gap-6">
-          <div className="w-20 h-20 rounded-xl bg-primary-500/20 flex items-center justify-center font-heading font-bold text-3xl text-primary-400 border-2 border-primary-500/30">
+        <div className="bg-navy-700 p-6 rounded-t-xl flex items-center gap-6">
+          <div className="w-20 h-20 rounded-lg bg-primary-500/20 flex items-center justify-center font-heading font-bold text-3xl text-primary-400 border-2 border-primary-500/30">
             {mgr.first_name.charAt(0)}{mgr.last_name.charAt(0)}
           </div>
           <div>
@@ -185,7 +185,7 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
 
 function StatBlock({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="text-center p-3 bg-gray-50 dark:bg-navy-700 rounded-lg">
+    <div className="text-center p-3 bg-gray-50 dark:bg-navy-700 rounded">
       <p className="font-heading font-bold text-xl text-gray-800 dark:text-gray-100 tabular-nums">{value}</p>
       <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider mt-0.5">{label}</p>
     </div>

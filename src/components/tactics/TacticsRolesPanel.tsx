@@ -99,7 +99,7 @@ export default function TacticsRolesPanel({
       <Card>
         <CardHeader>{t("tactics.teamRoles")}</CardHeader>
         <CardBody>
-          <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-800/70">
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-800/70">
             <p className="text-sm text-gray-600 dark:text-gray-300">
               {t("tactics.rolesHint")}
             </p>
@@ -108,7 +108,7 @@ export default function TacticsRolesPanel({
               onClick={() => {
                 void handleAutoSelectAssignments();
               }}
-              className="shrink-0 rounded-lg bg-primary-500 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-400"
+              className="shrink-0 rounded bg-primary-500 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-400"
             >
               <span className="flex items-center gap-2">
                 <Sparkles className="h-3.5 w-3.5" />

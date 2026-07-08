@@ -165,7 +165,7 @@ export function PlayerRatingsPanel({
   const motm = sorted[0];
 
   return (
-    <div className="bg-white dark:bg-navy-800 rounded-xl border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+    <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
       <div className="flex items-center gap-2 mb-3">
         <Star className="w-4 h-4 text-accent-700 dark:text-accent-400" />
         <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
@@ -177,8 +177,8 @@ export function PlayerRatingsPanel({
         />
       </div>
       {motm && side === (userSide || "Home") && (
-        <div className="flex items-center gap-3 mb-3 p-2 bg-accent-50 dark:bg-accent-500/10 rounded-lg border border-accent-200 dark:border-accent-500/20 transition-colors duration-300">
-          <div className="w-8 h-8 rounded-lg bg-accent-100 dark:bg-accent-500/20 flex items-center justify-center transition-colors duration-300">
+        <div className="flex items-center gap-3 mb-3 p-2 bg-accent-50 dark:bg-accent-500/10 rounded border border-accent-200 dark:border-accent-500/20 transition-colors duration-300">
+          <div className="w-8 h-8 rounded bg-accent-100 dark:bg-accent-500/20 flex items-center justify-center transition-colors duration-300">
             <span className="text-sm font-heading font-bold text-accent-700 dark:text-accent-400">
               {motm.rating.toFixed(1)}
             </span>

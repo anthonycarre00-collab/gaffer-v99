@@ -329,7 +329,7 @@ export default function YouthAcademyTab({
                 {eligibleSeniorPlayers.slice(0, 4).map((player) => (
                   <div
                     key={player.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/60 px-4 py-3"
+                    className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/60 px-4 py-3"
                   >
                     <div className="min-w-0 flex items-center gap-3">
                       <PlayerAvatar player={player} />

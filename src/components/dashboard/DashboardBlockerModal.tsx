@@ -17,7 +17,7 @@ interface DashboardBlockerModalProps {
 
 function getBlockerButtonClassName(severity: string): string {
   const baseClassName =
-    "w-full rounded-xl border p-3 text-left transition-all hover:shadow-sm";
+    "w-full rounded-lg border p-3 text-left transition-all hover:shadow-sm";
 
   if (severity === "warn") {
     return `${baseClassName} border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10`;
@@ -49,7 +49,7 @@ export default function DashboardBlockerModal({
   return (
     <DashboardModalFrame maxWidthClassName="max-w-md">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
           <AlertCircle className="h-5 w-5 text-amber-500" />
         </div>
         <div>
@@ -80,14 +80,14 @@ export default function DashboardBlockerModal({
       <div className="flex gap-3">
         <button
           onClick={onClose}
-          className="flex-1 rounded-lg bg-gray-100 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-gray-700 transition-colors hover:bg-gray-200 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600"
+          className="flex-1 rounded bg-gray-100 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-gray-700 transition-colors hover:bg-gray-200 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600"
         >
           {t("notifications.reviewIssues")}
         </button>
         {onContinueAnyway && (
           <button
             onClick={onContinueAnyway}
-            className="flex-1 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-amber-600"
+            className="flex-1 rounded bg-amber-500 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-amber-600"
           >
             {t("notifications.continueAnyway")}
           </button>

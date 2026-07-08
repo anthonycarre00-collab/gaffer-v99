@@ -218,7 +218,7 @@ function QuickStat({
     color: string;
 }) {
     return (
-        <div className="bg-white/5 rounded-xl px-5 py-3 text-center min-w-25">
+        <div className="bg-white/5 rounded-lg px-5 py-3 text-center min-w-25">
             <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                 {label}
             </p>

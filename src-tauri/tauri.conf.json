@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Openfoot Manager",
+  "productName": "Gaffer",
   "version": "0.3.0",
   "identifier": "com.sturdyrobot.openfootmanager",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Openfoot Manager v0.3.0-beta",
+        "title": "Gaffer",
         "width": 1280,
         "height": 800,
         "minWidth": 960,

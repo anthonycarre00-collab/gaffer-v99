@@ -72,7 +72,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
       <div className="flex items-center gap-2 mb-2">
         <button
           onClick={onBack}
-          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -110,9 +110,9 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
             <label className={labelClass}>{t("worldEditor.teamLogo")}</label>
             <div className="flex items-center gap-3">
               {logoDataUrl ? (
-                <img src={logoDataUrl} alt="" className="w-12 h-12 rounded-lg object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+                <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
               ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
                   <ImagePlus className="w-5 h-5 text-gray-300 dark:text-navy-500" />
                 </div>
               )}
@@ -120,7 +120,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                 <button
                   type="button"
                   onClick={() => { void handlePickLogo(); }}
-                  className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
+                  className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
                 >
                   {t("worldEditor.chooseLogo")}
                 </button>
@@ -128,7 +128,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                   <button
                     type="button"
                     onClick={() => { updateField("logo", null); }}
-                    className="px-2 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
+                    className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -172,7 +172,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                 onChange={(e) =>
                   updateField("colors", { ...editingTeam.colors, primary: e.target.value })
                 }
-                className="w-9 h-9 rounded-lg border border-gray-200 dark:border-navy-600 cursor-pointer p-0.5 bg-white dark:bg-navy-700 flex-shrink-0"
+                className="w-9 h-9 rounded border border-gray-200 dark:border-navy-600 cursor-pointer p-0.5 bg-white dark:bg-navy-700 flex-shrink-0"
               />
               <input
                 type="text"
@@ -180,7 +180,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                 onChange={(e) =>
                   updateField("colors", { ...editingTeam.colors, primary: e.target.value })
                 }
-                className="flex-1 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
+                className="flex-1 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
                 placeholder="#cc0000"
               />
             </div>
@@ -196,7 +196,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                 onChange={(e) =>
                   updateField("colors", { ...editingTeam.colors, secondary: e.target.value })
                 }
-                className="w-9 h-9 rounded-lg border border-gray-200 dark:border-navy-600 cursor-pointer p-0.5 bg-white dark:bg-navy-700 flex-shrink-0"
+                className="w-9 h-9 rounded border border-gray-200 dark:border-navy-600 cursor-pointer p-0.5 bg-white dark:bg-navy-700 flex-shrink-0"
               />
               <input
                 type="text"
@@ -204,7 +204,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                 onChange={(e) =>
                   updateField("colors", { ...editingTeam.colors, secondary: e.target.value })
                 }
-                className="flex-1 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
+                className="flex-1 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
                 placeholder="#ffffff"
               />
             </div>
@@ -223,7 +223,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
                   type="button"
                   onClick={() => updateField("kitPattern", pattern)}
                   title={pattern}
-                  className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-all ${
                     isSelected
                       ? "border-primary-400 dark:border-primary-500 bg-primary-50 dark:bg-primary-500/10"
                       : "border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-500"
@@ -293,7 +293,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
       <button
         onClick={onSave}
         disabled={isBusy || !editingTeam.id || !editingTeam.name || !editingTeam.city || !editingTeam.country}
-        className="w-full py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-white rounded-lg font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isBusy ? (
           <Loader2 className="w-4 h-4 animate-spin" />

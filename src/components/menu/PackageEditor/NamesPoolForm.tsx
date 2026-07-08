@@ -75,13 +75,13 @@ function NameChipList({ label, names, addPlaceholder, addLabel, onChange }: Name
             if (e.key === "Enter") { e.preventDefault(); add(); }
           }}
           placeholder={addPlaceholder}
-          className="flex-1 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
+          className="flex-1 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
         />
         <button
           type="button"
           onClick={add}
           disabled={!input.trim()}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition disabled:opacity-40"
+          className="flex items-center gap-1 px-3 py-2 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition disabled:opacity-40"
         >
           <Plus className="w-4 h-4" />
           {addLabel}

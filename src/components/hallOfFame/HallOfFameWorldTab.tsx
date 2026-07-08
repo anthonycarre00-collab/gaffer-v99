@@ -83,7 +83,7 @@ export default function HallOfFameWorldTab({
                       </div>
                     ) : null}
                   </div>
-                  <div className="rounded-xl bg-accent-100 p-3 text-accent-600 dark:bg-accent-900/40 dark:text-accent-300">
+                  <div className="rounded-lg bg-accent-100 p-3 text-accent-600 dark:bg-accent-900/40 dark:text-accent-300">
                     <Globe className="h-6 w-6" />
                   </div>
                 </CardBody>
@@ -145,7 +145,7 @@ export default function HallOfFameWorldTab({
                           </p>
                         ) : null}
                       </div>
-                      <div className="rounded-xl bg-primary-100 p-3 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+                      <div className="rounded-lg bg-primary-100 p-3 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
                         <Medal className="h-6 w-6" />
                       </div>
                     </div>
@@ -219,7 +219,7 @@ export default function HallOfFameWorldTab({
                   <div className="flex items-center gap-4">
                     <TeamLogo
                       team={champion.team}
-                      className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-accent-100 dark:bg-accent-900/40 flex items-center justify-center text-sm font-heading font-bold text-accent-700 dark:text-accent-300"
+                      className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-accent-100 dark:bg-accent-900/40 flex items-center justify-center text-sm font-heading font-bold text-accent-700 dark:text-accent-300"
                       imageClassName="h-11 w-11 object-contain drop-shadow"
                       fallback={<span>{champion.team.short_name.charAt(0)}</span>}
                     />
@@ -260,7 +260,7 @@ interface SummaryTileProps {
 
 function SummaryTile({ icon, label, value }: SummaryTileProps) {
   return (
-    <div className="rounded-xl bg-gray-50 p-3 dark:bg-navy-800/70">
+    <div className="rounded-lg bg-gray-50 p-3 dark:bg-navy-800/70">
       <div className="mb-2 flex items-center gap-2 text-gray-400 dark:text-gray-500">
         {icon}
         <span className="text-[11px] font-heading font-bold uppercase tracking-[0.18em]">
@@ -281,7 +281,7 @@ interface StatTileProps {
 
 function StatTile({ label, value }: StatTileProps) {
   return (
-    <div className="rounded-lg bg-gray-50 p-3 dark:bg-navy-800/70">
+    <div className="rounded bg-gray-50 p-3 dark:bg-navy-800/70">
       <p className="text-[11px] font-heading font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">
         {label}
       </p>

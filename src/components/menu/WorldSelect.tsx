@@ -137,7 +137,7 @@ export default function GenerationStep({
         <div className="flex items-center gap-2">
           <button
             onClick={onBack}
-            className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+            className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -148,7 +148,7 @@ export default function GenerationStep({
         <button
           type="button"
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-600"
+          className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
         >
           <X className="w-5 h-5" />
         </button>
@@ -157,7 +157,7 @@ export default function GenerationStep({
       <StepIndicator current={3} />
 
       {/* Summary card */}
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600 dark:border-navy-600 dark:bg-navy-700/60 dark:text-gray-200">
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600 dark:border-navy-600 dark:bg-navy-700/60 dark:text-gray-200">
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
             {t("worldSelect.summary.startYear")}
@@ -180,7 +180,7 @@ export default function GenerationStep({
 
       {/* Database packages — coverage summary */}
       {hasActiveDatabases && (
-        <div className="rounded-xl border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
+        <div className="rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
           <p className="font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 mb-2">
             {t("generation.coverage")}
           </p>
@@ -211,7 +211,7 @@ export default function GenerationStep({
 
       {/* History depth — only for random world */}
       {!hasActiveDatabases && (
-        <div className="rounded-xl border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
+        <div className="rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p
@@ -243,7 +243,7 @@ export default function GenerationStep({
                   role="radio"
                   aria-checked={selected}
                   onClick={() => onChangeHistoryDepthYears(value)}
-                  className={`rounded-xl border px-3 py-3 text-left transition-all ${
+                  className={`rounded-lg border px-3 py-3 text-left transition-all ${
                     selected
                       ? "border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-400/30 dark:border-primary-500 dark:bg-primary-500/10 dark:text-primary-300"
                       : "border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200 dark:hover:border-navy-500"

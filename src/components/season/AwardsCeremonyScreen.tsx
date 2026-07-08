@@ -141,7 +141,7 @@ export default function AwardsCeremonyScreen({
             <button
               type="button"
               onClick={onBack}
-              className="rounded-xl border border-gray-200 px-4 py-2 font-heading font-bold uppercase tracking-wider text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900 dark:border-navy-600 dark:text-gray-300 dark:hover:border-navy-500 dark:hover:text-white"
+              className="rounded-lg border border-gray-200 px-4 py-2 font-heading font-bold uppercase tracking-wider text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900 dark:border-navy-600 dark:text-gray-300 dark:hover:border-navy-500 dark:hover:text-white"
             >
               {t("awardsCeremony.back")}
             </button>
@@ -150,7 +150,7 @@ export default function AwardsCeremonyScreen({
             <button
               type="button"
               onClick={onContinue}
-              className="rounded-xl bg-primary-500 px-4 py-2 font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-600"
+              className="rounded-lg bg-primary-500 px-4 py-2 font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-600"
             >
               {t("awardsCeremony.continue")}
             </button>
@@ -271,7 +271,7 @@ function WinnerCard({
               </p>
             )}
           </div>
-          <div className="rounded-xl bg-gray-100 p-3 text-gray-700 dark:bg-navy-700 dark:text-gray-200">
+          <div className="rounded-lg bg-gray-100 p-3 text-gray-700 dark:bg-navy-700 dark:text-gray-200">
             {icon}
           </div>
         </div>
@@ -290,7 +290,7 @@ function WinnerCard({
               {teamName}
             </p>
           )}
-          <div className="rounded-lg bg-gray-50 p-3 dark:bg-navy-800/70">
+          <div className="rounded bg-gray-50 p-3 dark:bg-navy-800/70">
             <p className="text-[11px] font-heading font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">
               {valueLabel}
             </p>

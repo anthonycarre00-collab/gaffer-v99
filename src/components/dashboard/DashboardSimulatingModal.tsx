@@ -56,7 +56,7 @@ function ResultBadge({ result }: { result: RecapMatch["userResult"] }): JSX.Elem
 function MatchCard({ match, idx }: { match: RecapMatch; idx: number }): JSX.Element {
   return (
     <div
-      className="digest-event-item flex items-center gap-2.5 rounded-lg px-3 py-2 bg-primary-50/60 dark:bg-primary-900/10"
+      className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-primary-50/60 dark:bg-primary-900/10"
       style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
     >
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-900/40 dark:text-primary-400">
@@ -84,7 +84,7 @@ function TransferCard({ player, from, to, fee, involvesUser, idx }: {
   const feeLabel = fee > 0 ? formatVal(fee) : null;
   return (
     <div
-      className="digest-event-item flex items-center gap-2.5 rounded-lg px-3 py-2 bg-purple-50/60 dark:bg-purple-900/10"
+      className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-purple-50/60 dark:bg-purple-900/10"
       style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
     >
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400">
@@ -108,7 +108,7 @@ function TransferCard({ player, from, to, fee, involvesUser, idx }: {
 function NewsCard({ text, idx }: { text: string; idx: number }): JSX.Element {
   return (
     <div
-      className="digest-event-item flex items-center gap-2.5 rounded-lg px-3 py-2 bg-gray-50 dark:bg-navy-700/50"
+      className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-gray-50 dark:bg-navy-700/50"
       style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
     >
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-500 dark:bg-navy-600 dark:text-gray-400">
@@ -124,7 +124,7 @@ function InboxCard({ text, category, idx }: { text: string; category?: string; i
   const icon = getCategoryIcon(category ?? "System");
   return (
     <div
-      className="digest-event-item flex items-center gap-2.5 rounded-lg px-3 py-2 bg-amber-50/80 dark:bg-amber-900/15"
+      className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-amber-50/80 dark:bg-amber-900/15"
       style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
     >
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
@@ -271,7 +271,7 @@ export default function DashboardSimulatingModal({
               type="button"
               onClick={onStop}
               disabled={isDigestAborting}
-              className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+              className="flex items-center gap-1.5 rounded border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
             >
               {isDigestAborting ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -311,7 +311,7 @@ export default function DashboardSimulatingModal({
             <button
               type="button"
               onClick={onDismiss}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+              className="w-full rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
             >
               {t("common.close")}
             </button>
@@ -322,7 +322,7 @@ export default function DashboardSimulatingModal({
         {stopReason && (
           <div className="border-t border-gray-200 dark:border-navy-700 pt-4 shrink-0">
             {stopReason.kind === "match_day" && (
-              <div className="bg-primary-50 rounded-lg px-4 py-3 dark:bg-primary-900/20">
+              <div className="bg-primary-50 rounded px-4 py-3 dark:bg-primary-900/20">
                 <div className="flex items-center gap-2 mb-2">
                   <Swords className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                   <span className="text-sm font-semibold text-primary-800 dark:text-primary-300">
@@ -335,7 +335,7 @@ export default function DashboardSimulatingModal({
                 <button
                   type="button"
                   onClick={onDismiss}
-                  className="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+                  className="w-full rounded bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
                 >
                   {t("dashboard.digestReturnHome")}
                 </button>
@@ -343,7 +343,7 @@ export default function DashboardSimulatingModal({
             )}
 
             {stopReason.kind === "blocked" && (
-              <div className="bg-amber-50 rounded-lg px-4 py-3 dark:bg-amber-900/20">
+              <div className="bg-amber-50 rounded px-4 py-3 dark:bg-amber-900/20">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                   <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">
@@ -360,7 +360,7 @@ export default function DashboardSimulatingModal({
                         key={blocker.id}
                         type="button"
                         onClick={() => { onDismiss?.(); onNavigate?.(blocker.tab); }}
-                        className="w-full rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-left hover:bg-amber-500/10 transition-colors"
+                        className="w-full rounded border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-left hover:bg-amber-500/10 transition-colors"
                       >
                         <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
                           {resolveBackendText(blocker.text_key, blocker.text, blocker.text_params)}
@@ -376,14 +376,14 @@ export default function DashboardSimulatingModal({
                   <button
                     type="button"
                     onClick={onContinueAfterBlocker}
-                    className="w-full rounded-lg bg-amber-600 px-3 py-2 text-xs font-semibold text-white hover:bg-amber-700"
+                    className="w-full rounded bg-amber-600 px-3 py-2 text-xs font-semibold text-white hover:bg-amber-700"
                   >
                     {t("dashboard.digestContinueAnyway")}
                   </button>
                   <button
                     type="button"
                     onClick={onDismiss}
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+                    className="rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
                   >
                     {t("dashboard.digestClose")}
                   </button>
@@ -392,14 +392,14 @@ export default function DashboardSimulatingModal({
             )}
 
             {stopReason.kind === "fired" && (
-              <div className="bg-red-50 rounded-lg px-4 py-3 dark:bg-red-900/20">
+              <div className="bg-red-50 rounded px-4 py-3 dark:bg-red-900/20">
                 <p className="text-sm font-semibold text-red-800 dark:text-red-300 mb-3">
                   {t("dashboard.digestFired")}
                 </p>
                 <button
                   type="button"
                   onClick={onDismiss}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
                 >
                   {t("dashboard.digestClose")}
                 </button>
@@ -407,14 +407,14 @@ export default function DashboardSimulatingModal({
             )}
 
             {stopReason.kind === "stopped" && (
-              <div className="bg-gray-50 rounded-lg px-4 py-3 dark:bg-navy-700/60">
+              <div className="bg-gray-50 rounded px-4 py-3 dark:bg-navy-700/60">
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                   {t("dashboard.digestStopped")}
                 </p>
                 <button
                   type="button"
                   onClick={onDismiss}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
                 >
                   {t("dashboard.digestClose")}
                 </button>
@@ -422,14 +422,14 @@ export default function DashboardSimulatingModal({
             )}
 
             {stopReason.kind === "error" && (
-              <div className="bg-gray-50 rounded-lg px-4 py-3 dark:bg-navy-700/60">
+              <div className="bg-gray-50 rounded px-4 py-3 dark:bg-navy-700/60">
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                   {t("dashboard.digestError")}
                 </p>
                 <button
                   type="button"
                   onClick={onDismiss}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
                 >
                   {t("dashboard.digestClose")}
                 </button>
