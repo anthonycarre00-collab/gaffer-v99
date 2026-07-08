@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-/* Bundled fonts (offline, used weights and supported subsets only) */
+/* ============================================================================
+   GAFFER DESIGN SYSTEM — Pitch Green / Brass / Mahogany
+   Broadsheet × Dugout aesthetic. Not SaaS. Not FM. Gaffer's office.
+   ============================================================================ */
+
+/* Bundled fonts (offline) */
 @import "@fontsource/inter/latin-400.css";
 @import "@fontsource/inter/latin-500.css";
 @import "@fontsource/inter/latin-600.css";
@@ -13,70 +18,121 @@
 @import "@fontsource/barlow-condensed/latin-700.css";
 @import "@fontsource/barlow-condensed/latin-ext-600.css";
 @import "@fontsource/barlow-condensed/latin-ext-700.css";
+@import "@fontsource/source-serif-4/latin-400.css";
+@import "@fontsource/source-serif-4/latin-400-italic.css";
+@import "@fontsource/source-serif-4/latin-600.css";
+@import "@fontsource/source-serif-4/latin-ext-400.css";
+@import "@fontsource/source-serif-4/latin-ext-400-italic.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-600.css";
+@import "@fontsource/ibm-plex-mono/latin-ext-400.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Typography — CJK fallbacks (PingFang SC/Microsoft YaHei/Noto Sans CJK SC) kick in on Chinese characters via the font-family fallback chain */
+  /* ===== Typography ===== */
   --font-sans: "Inter", "Avenir", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
   --font-heading: "Barlow Condensed", "Inter", "Arial Narrow", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", "Consolas", "Courier New", monospace;
 
-  /* Primary: Emerald Green */
-  --color-primary-50: #ecfdf5;
-  --color-primary-100: #d1fae5;
-  --color-primary-200: #a7f3d0;
-  --color-primary-300: #6ee7b7;
-  --color-primary-400: #34d399;
-  --color-primary-500: #10b981;
-  --color-primary-600: #059669;
-  --color-primary-700: #047857;
-  --color-primary-800: #065f46;
-  --color-primary-900: #064e3b;
+  /* ===== Primary: Pitch Green ===== */
+  --color-primary-50: #e8f0ec;
+  --color-primary-100: #c5d9ce;
+  --color-primary-200: #9bb8a7;
+  --color-primary-300: #6e947f;
+  --color-primary-400: #4a7b5e;
+  --color-primary-500: #2d5a3d;  /* Pitch Green — the Gaffer green */
+  --color-primary-600: #244930;
+  --color-primary-700: #1d3a26;
+  --color-primary-800: #162c1d;
+  --color-primary-900: #0e1f13;
 
-  /* Accent: Gold */
-  --color-accent-50: #fffbeb;
-  --color-accent-100: #fef3c7;
-  --color-accent-200: #fde68a;
-  --color-accent-300: #fcd34d;
-  --color-accent-400: #ffd60a;
-  --color-accent-500: #eab308;
-  --color-accent-600: #b8960a;
-  --color-accent-700: #a16207;
-  --color-accent-800: #854d0e;
-  --color-accent-900: #713f12;
+  /* ===== Accent: Brass ===== */
+  --color-accent-50: #faf3e4;
+  --color-accent-100: #f0e0bc;
+  --color-accent-200: #e4c98e;
+  --color-accent-300: #d4af5e;
+  --color-accent-400: #c49e45;
+  --color-accent-500: #b8924a;  /* Brass — warm, old-school */
+  --color-accent-600: #9a7a3c;
+  --color-accent-700: #7c6230;
+  --color-accent-800: #5e4a24;
+  --color-accent-900: #40331a;
 
-  /* Success: Green */
-  --color-success-400: #06d6a0;
-  --color-success-500: #05a87d;
-  --color-success-600: #059669;
+  /* ===== Danger: Mahogany ===== */
+  --color-danger-50: #f5e6e2;
+  --color-danger-100: #e8c5bc;
+  --color-danger-200: #d49b8e;
+  --color-danger-300: #c06f5e;
+  --color-danger-400: #a64a37;
+  --color-danger-500: #7a2e1f;  /* Mahogany — injury, danger, red card */
+  --color-danger-600: #632519;
+  --color-danger-700: #4d1d14;
+  --color-danger-800: #36140f;
+  --color-danger-900: #200c08;
 
-  /* Navy (dark mode backgrounds) */
-  --color-navy-900: #0a1128;
-  --color-navy-800: #131b33;
-  --color-navy-700: #1a2340;
-  --color-navy-600: #243054;
+  /* ===== Success: Pitch Green (lighter shade) ===== */
+  --color-success-400: #4a7b5e;
+  --color-success-500: #2d5a3d;
+  --color-success-600: #244930;
+
+  /* ===== Neutrals: Chalk / Concrete / Ink ===== */
+  --color-chalk: #e8e4dc;        /* warm off-white for light backgrounds */
+  --color-cream: #f4e9c9;        /* floodlight cream — editorial highlight */
+  --color-concrete: #6b6660;     /* mid neutral — labels, secondary text */
+  --color-ink: #1a1a1a;          /* near-black for text in light mode */
+  --color-pitch-black: #0e1410;  /* dark mode background — green-tinged black */
+
+  /* ===== Dark mode navy (legacy compat — mapped to pitch-black tones) ===== */
+  --color-navy-900: #0e1410;     /* pitch-black */
+  --color-navy-800: #141b17;     /* slightly lighter */
+  --color-navy-700: #1d2620;     /* card backgrounds in dark */
+  --color-navy-600: #2a3530;     /* borders, dividers in dark */
 }
 
+/* ===== Base styles ===== */
 @layer base {
   body {
-    @apply bg-gray-100 text-navy-900 antialiased dark:bg-navy-900 dark:text-gray-100 transition-colors duration-300;
+    @apply antialiased transition-colors duration-300;
+    background-color: #f5f5f0;
+    color: #1a1a1a;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  .dark body {
+    background-color: var(--color-pitch-black);
+    color: #e8e4dc;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+
+  /* All numbers should use mono font */
+  .font-mono, [class*="font-mono"] {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
   }
 }
 
+/* ===== Utility classes ===== */
 @layer utilities {
   .font-heading {
     font-family: var(--font-heading);
   }
 
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scrollbar styling */
   .scrollbar-thin {
     scrollbar-width: thin;
   }
@@ -90,12 +146,64 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: var(--color-navy-600);
+    background-color: var(--color-concrete);
     border-radius: 9999px;
   }
+
+  /* Gaffer card — 1px hairline border, 4px corners, no shadow */
+  .gaffer-card {
+    border: 1px solid #d1ccc2;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+
+  .dark .gaffer-card {
+    border-color: var(--color-navy-600);
+    background: var(--color-navy-700);
+  }
+
+  /* Gaffer button — matte, no gradient, 4px corners */
+  .gaffer-btn {
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .gaffer-btn-primary {
+    background-color: var(--color-primary-500);
+    color: #ffffff;
+  }
+
+  .gaffer-btn-primary:hover {
+    background-color: var(--color-primary-600);
+  }
+
+  .gaffer-btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--color-concrete);
+    color: #1a1a1a;
+  }
+
+  .dark .gaffer-btn-secondary {
+    color: #e8e4dc;
+  }
+
+  .gaffer-btn-danger {
+    background-color: var(--color-danger-500);
+    color: #ffffff;
+  }
+
+  /* Position badge colors */
+  .pos-gk { background-color: var(--color-accent-500); color: #fff; }
+  .pos-def { background-color: var(--color-primary-500); color: #fff; }
+  .pos-mid { background-color: #3b5998; color: #fff; }
+  .pos-fwd { background-color: var(--color-danger-500); color: #fff; }
 }
 
-/* Dark mode: fix native select/option dropdown backgrounds on Linux */
+/* ===== Dark mode fixes ===== */
 .dark select {
   color-scheme: dark;
 }
@@ -105,7 +213,7 @@
   color: #e2e8f0;
 }
 
-/* Hide native spin buttons on number inputs — consistent look across platforms */
+/* Hide native spin buttons on number inputs */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -117,7 +225,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* Dark mode readability: boost low-contrast gray text on navy backgrounds */
+/* Dark mode readability */
 .dark .text-gray-500 {
   color: #8d99ae;
 }
@@ -126,7 +234,7 @@ input[type="number"] {
   color: #a0aec0;
 }
 
-/* High-contrast mode: further boost for accessibility */
+/* High-contrast mode */
 .high-contrast.dark .text-gray-500 {
   color: #b0bec5;
 }
@@ -138,18 +246,40 @@ input[type="number"] {
 .high-contrast.dark .text-gray-600 {
   color: #90a4ae;
 }
-/* Digest feed staggered reveal */
+
+/* ===== Animations ===== */
 @keyframes fade-slide-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
 .digest-event-item {
   opacity: 0;
   animation: fade-slide-in 220ms ease forwards;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .digest-event-item {
     opacity: 1;
     animation: none;
   }
+}
+
+/* ===== SquadPulse strip animation ===== */
+@keyframes pulse-fill {
+  from { width: 0%; }
+}
+
+.pulse-bar {
+  animation: pulse-fill 800ms ease-out;
+}
+
+/* ===== Tab transition ===== */
+@keyframes tab-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.tab-enter {
+  animation: tab-fade 150ms ease;
 }

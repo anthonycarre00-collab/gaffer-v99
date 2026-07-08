@@ -1,0 +1,22 @@
+<svg width="200" height="48" viewBox="0 0 200 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gaffer wordmark — Barlow Condensed style, brass on transparent -->
+  <!-- "GAFFER" in bold condensed uppercase with a subtle touchline boot emblem -->
+
+  <!-- Touchline boot emblem (left of wordmark) -->
+  <g transform="translate(4, 8)">
+    <!-- Boot outline -->
+    <path d="M2 28 L2 14 L8 8 L20 8 L24 14 L28 14 L28 20 L24 24 L24 28 Z"
+          fill="#b8924a" stroke="#b8924a" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Boot sole -->
+    <rect x="2" y="26" width="26" height="4" rx="1" fill="#7c6230"/>
+    <!-- Lace detail -->
+    <line x1="10" y1="12" x2="18" y2="12" stroke="#0e1410" stroke-width="1"/>
+    <line x1="10" y1="16" x2="18" y2="16" stroke="#0e1410" stroke-width="1"/>
+    <line x1="10" y1="20" x2="18" y2="20" stroke="#0e1410" stroke-width="1"/>
+  </g>
+
+  <!-- GAFFER text -->
+  <text x="40" y="36" font-family="'Barlow Condensed', 'Arial Narrow', sans-serif"
+        font-size="32" font-weight="700" letter-spacing="2"
+        fill="#b8924a">GAFFER</text>
+</svg>
