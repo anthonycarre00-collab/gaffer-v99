@@ -129,7 +129,7 @@ export default function InboxToolbar({
               onClick={onDeleteSelected}
               disabled={selectedMessageCount === 0}
               icon={<Trash2 className="w-4 h-4" />}
-              className="bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500"
+              className="bg-danger-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500"
               data-testid="inbox-delete-selected"
             >
               {t("inbox.deleteSelected")}
@@ -147,7 +147,7 @@ export default function InboxToolbar({
         ) : null}
         <button
           onClick={onClearOld}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600 hover:text-red-500 hover:border-red-300 transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600 hover:text-danger-500 hover:border-red-300 transition-all"
         >
           <Trash2 className="w-3.5 h-3.5" />
           {t("inbox.clearOld")}

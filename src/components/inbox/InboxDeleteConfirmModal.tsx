@@ -65,7 +65,7 @@ export default function InboxDeleteConfirmModal({
             size="sm"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500"
+            className="bg-danger-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-500"
             data-testid="inbox-confirm-delete"
           >
             {t("inbox.deleteAction")}

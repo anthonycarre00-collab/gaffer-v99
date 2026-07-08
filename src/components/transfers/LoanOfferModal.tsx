@@ -110,7 +110,7 @@ export function LoanOfferForm({
         {noticeTitle ? (
           <div
             role="status"
-            className="mb-4 flex gap-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
+            className="mb-4 flex gap-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-500/30 dark:bg-accent-500/10 dark:text-amber-100"
           >
             <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" />
             <div className="text-xs">
@@ -272,7 +272,7 @@ export function LoanOfferForm({
 
         {result ? (
           <div
-            className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${result === "accepted" ? "text-green-500" : result === "counter_offer" ? "text-amber-500" : "text-red-600 dark:text-red-300"}`}
+            className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${result === "accepted" ? "text-success-500" : result === "counter_offer" ? "text-accent-500" : "text-red-600 dark:text-red-300"}`}
           >
             {result === "accepted"
               ? acceptedMessage ?? t(acceptedLabelKey)
@@ -285,7 +285,7 @@ export function LoanOfferForm({
         ) : null}
 
         {suggestedTerms ? (
-          <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200 mb-3">
+          <div className="rounded border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:border-amber-500/30 dark:bg-accent-500/10 dark:text-amber-200 mb-3">
             <p className="font-heading font-bold uppercase tracking-wider">
               {t("transfers.loanCounterSuggestedTerms", {
                 percent: suggestedTerms.wageContributionPct,
@@ -340,7 +340,7 @@ export default function LoanOfferModal(props: LoanOfferModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="loan-offer-modal-title"
-        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-md"
+        className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-md"
         onClick={(event) => event.stopPropagation()}
       >
         <LoanOfferForm {...props} />

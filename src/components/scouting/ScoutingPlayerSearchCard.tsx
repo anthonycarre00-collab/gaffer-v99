@@ -111,7 +111,7 @@ export default function ScoutingPlayerSearchCard({
         {errorMessage ? (
           <p
             role="alert"
-            className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-red-500"
+            className="mb-3 text-xs font-heading font-bold uppercase tracking-wider text-danger-500"
           >
             {errorMessage}
           </p>

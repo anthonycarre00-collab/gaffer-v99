@@ -34,7 +34,7 @@ export default function InboxDelegatedRenewalReport({
 
   return (
     <div
-      className="mt-6 rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-700"
+      className="mt-6 rounded border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-700"
       data-testid="delegated-renewal-report"
     >
       <div className="space-y-2">

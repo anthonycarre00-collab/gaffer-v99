@@ -27,7 +27,7 @@ export default function ScoutingOverviewCards({
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-accent-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded bg-accent-500/10 flex items-center justify-center">
               <Eye className="w-5 h-5 text-accent-500" />
             </div>
             <div>
@@ -44,7 +44,7 @@ export default function ScoutingOverviewCards({
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded bg-primary-500/10 flex items-center justify-center">
               <Clock className="w-5 h-5 text-primary-500" />
             </div>
             <div>
@@ -61,8 +61,8 @@ export default function ScoutingOverviewCards({
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-green-500" />
+            <div className="w-10 h-10 rounded bg-success-500/10 flex items-center justify-center">
+              <User className="w-5 h-5 text-success-500" />
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider">

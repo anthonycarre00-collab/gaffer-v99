@@ -204,8 +204,8 @@ export default function MatchLive({
             <div className="flex items-center gap-2">
               {isRunning && (
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger-500" />
                 </span>
               )}
               <span className="text-xs font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
@@ -225,8 +225,8 @@ export default function MatchLive({
                 <TeamLogo
                   team={homeFullTeam ?? makeTeamFallback(snapshot.home_team.name)}
                   className="w-10 h-10 rounded flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
-                  imageClassName="h-8 w-8 object-contain drop-shadow"
-                  style={{ backgroundColor: homeTeamColor + "30", borderColor: homeTeamColor, borderWidth: 2 }}
+                  imageClassName="h-8 w-8 object-contain "
+                  style={{ backgroundColor: homeTeamColor + "30", borderColor: homeTeamColor, borderWidth: 1 }}
                 />
               </div>
 
@@ -245,8 +245,8 @@ export default function MatchLive({
                 <TeamLogo
                   team={awayFullTeam ?? makeTeamFallback(snapshot.away_team.name)}
                   className="w-10 h-10 rounded flex items-center justify-center font-heading font-bold text-sm overflow-hidden"
-                  imageClassName="h-8 w-8 object-contain drop-shadow"
-                  style={{ backgroundColor: awayTeamColor + "30", borderColor: awayTeamColor, borderWidth: 2 }}
+                  imageClassName="h-8 w-8 object-contain "
+                  style={{ backgroundColor: awayTeamColor + "30", borderColor: awayTeamColor, borderWidth: 1 }}
                 />
                 <div className="text-left">
                   <p className="font-heading font-bold text-sm uppercase tracking-wider text-gray-800 dark:text-gray-200">

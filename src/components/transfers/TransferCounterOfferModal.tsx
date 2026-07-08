@@ -70,7 +70,7 @@ export default function TransferCounterOfferModal({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+        className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
         onClick={(event) => event.stopPropagation()}
       >
         <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
@@ -98,7 +98,7 @@ export default function TransferCounterOfferModal({
         {blockingTitle ? (
           <div
             role="alert"
-            className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
+            className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-danger-500/10 dark:text-red-200"
           >
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <div className="text-xs">
@@ -145,7 +145,7 @@ export default function TransferCounterOfferModal({
         <TransferNegotiationHistory offer={activeCounterOffer} mode="incoming" />
         {counterResult ? (
           <div
-            className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${counterResult === "accepted" ? "text-green-500" : counterResult === "rejected" ? "text-red-500" : "text-amber-500"}`}
+            className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${counterResult === "accepted" ? "text-success-500" : counterResult === "rejected" ? "text-danger-500" : "text-accent-500"}`}
           >
             {counterResult === "accepted"
               ? t("transfers.counterAccepted")
@@ -155,7 +155,7 @@ export default function TransferCounterOfferModal({
           </div>
         ) : null}
         {counterError ? (
-          <div className="text-xs font-heading font-bold uppercase tracking-wider mb-3 text-red-500">
+          <div className="text-xs font-heading font-bold uppercase tracking-wider mb-3 text-danger-500">
             {counterError}
           </div>
         ) : null}

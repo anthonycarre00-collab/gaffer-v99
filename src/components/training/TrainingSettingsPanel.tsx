@@ -57,7 +57,7 @@ export default function TrainingSettingsPanel({
                 key={scheduleId}
                 disabled={isSaving}
                 onClick={() => onSetSchedule(scheduleId)}
-                className={`flex-1 p-3 rounded-lg text-left transition-all border-2 ${currentSchedule === scheduleId
+                className={`flex-1 p-3 rounded text-left transition-all border ${currentSchedule === scheduleId
                   ? "border-primary-500 bg-primary-50 dark:bg-primary-500/10 /10"
                   : "border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-500"
                   } ${isSaving ? "opacity-60 pointer-events-none" : ""}`}
@@ -100,7 +100,7 @@ export default function TrainingSettingsPanel({
                 key={focusId}
                 disabled={isSaving}
                 onClick={() => onSetTraining(focusId, currentIntensity)}
-                className={`p-4 rounded-lg text-left transition-all border-2 ${currentFocus === focusId
+                className={`p-4 rounded text-left transition-all border ${currentFocus === focusId
                   ? "border-primary-500 bg-primary-50 dark:bg-primary-500/10 /10"
                   : "border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-500"
                   } ${isSaving ? "opacity-60 pointer-events-none" : ""}`}
@@ -143,7 +143,7 @@ export default function TrainingSettingsPanel({
                   key={intensityId}
                   disabled={isSaving}
                   onClick={() => onSetTraining(currentFocus, intensityId)}
-                  className={`flex-1 p-3 rounded text-left transition-all border-2 ${currentIntensity === intensityId
+                  className={`flex-1 p-3 rounded text-left transition-all border ${currentIntensity === intensityId
                     ? "border-primary-500 bg-primary-50 dark:bg-primary-500/10"
                     : "border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-500"
                     } ${isSaving ? "opacity-60 pointer-events-none" : ""}`}

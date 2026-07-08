@@ -201,7 +201,7 @@ export default function FreeAgentContractModal(
       onClick={props.onClose}
     >
       <div
-        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+        className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

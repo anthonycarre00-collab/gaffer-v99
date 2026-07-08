@@ -98,7 +98,7 @@ export function TransferBidForm({
       {blockingTitle ? (
         <div
           role="alert"
-          className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
+          className="mb-4 flex gap-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-500/30 dark:bg-danger-500/10 dark:text-red-200"
         >
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           <div className="text-xs">
@@ -186,7 +186,7 @@ export function TransferBidForm({
       <TransferNegotiationHistory offer={activeBidOffer} mode="outgoing" />
       {bidResult ? (
         <div
-          className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${bidResult === "accepted" ? "text-green-500" : bidResult === "rejected" ? "text-red-600 dark:text-red-300" : "text-amber-500"}`}
+          className={`text-xs font-heading font-bold uppercase tracking-wider mb-3 ${bidResult === "accepted" ? "text-success-500" : bidResult === "rejected" ? "text-red-600 dark:text-red-300" : "text-accent-500"}`}
         >
           {bidResult === "accepted"
             ? t("transfers.bidAccepted")
@@ -231,7 +231,7 @@ export default function TransferBidModal(props: TransferBidModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="bg-white dark:bg-navy-800 rounded-lg shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+        className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
         onClick={(event) => event.stopPropagation()}
       >
         <TransferBidForm {...props} />

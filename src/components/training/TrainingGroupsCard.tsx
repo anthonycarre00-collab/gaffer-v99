@@ -182,7 +182,7 @@ export default function TrainingGroupsCard({
                   <button
                     onClick={() => removeGroup(group.id)}
                     disabled={isSaving}
-                    className="text-red-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                    className="text-red-400 hover:text-danger-500 transition-colors disabled:opacity-50"
                     title={t("training.groups.removeGroup")}
                   >
                     <Trash2 className="w-3 h-3" />

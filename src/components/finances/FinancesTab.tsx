@@ -669,7 +669,7 @@ export default function FinancesTab({
     {
       label: t("finances.clubBalance"),
       value: myTeam.finance,
-      color: myTeam.finance >= 0 ? "text-primary-500" : "text-red-500",
+      color: myTeam.finance >= 0 ? "text-primary-500" : "text-danger-500",
     },
     {
       label: t("finances.wageBudget"),
@@ -689,7 +689,7 @@ export default function FinancesTab({
     {
       label: t("finances.seasonExpenses"),
       value: myTeam.season_expenses,
-      color: "text-red-500",
+      color: "text-danger-500",
     },
   ];
 
@@ -703,7 +703,7 @@ export default function FinancesTab({
             {financeItems.map((item) => (
               <div
                 key={item.label}
-                className="bg-gray-50 dark:bg-navy-800 rounded-lg p-4 text-center"
+                className="bg-gray-50 dark:bg-navy-800 rounded p-4 text-center"
               >
                 <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                   {item.label}
@@ -713,7 +713,7 @@ export default function FinancesTab({
                 </p>
               </div>
             ))}
-            <div className="bg-gray-50 dark:bg-navy-800 rounded-lg p-4 text-center">
+            <div className="bg-gray-50 dark:bg-navy-800 rounded p-4 text-center">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                 {t("finances.squadValue")}
               </p>
@@ -745,7 +745,7 @@ export default function FinancesTab({
                   {t("finances.underBudget")}
                 </span>
               ) : (
-                <span className="text-red-500">{t("finances.overBudget")}</span>
+                <span className="text-danger-500">{t("finances.overBudget")}</span>
               )}
             </p>
           </div>
@@ -765,18 +765,18 @@ export default function FinancesTab({
         <CardHeader>{t("finances.cashFlow")}</CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
                 {t("finances.weeklyWageSpend")}
               </p>
-              <p className="font-heading font-bold text-xl text-red-500">
+              <p className="font-heading font-bold text-xl text-danger-500">
                 {formatWeeklyAmount(
                   formatSignedAmount(-totalWages),
                   weeklySuffix,
                 )}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
                 {t("finances.weeklySponsorIncome")}
               </p>
@@ -787,12 +787,12 @@ export default function FinancesTab({
                 )}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
                 {t("finances.projectedWeeklyNet")}
               </p>
               <p
-                className={`font-heading font-bold text-xl ${projectedWeeklyNet >= 0 ? "text-primary-500" : "text-red-500"}`}
+                className={`font-heading font-bold text-xl ${projectedWeeklyNet >= 0 ? "text-primary-500" : "text-danger-500"}`}
               >
                 {formatWeeklyAmount(
                   formatSignedAmount(projectedWeeklyNet),
@@ -800,7 +800,7 @@ export default function FinancesTab({
                 )}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
                 {t("finances.cashRunway")}
               </p>
@@ -820,7 +820,7 @@ export default function FinancesTab({
               />
             </div>
           )}
-          <div className="mt-4 rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+          <div className="mt-4 rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="space-y-1">
                 <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -845,7 +845,7 @@ export default function FinancesTab({
             </div>
             {boardSupportFeedback ? (
               <p
-                className={`text-sm ${boardSupportFeedback.tone === "error" ? "text-red-500" : "text-primary-500"}`}
+                className={`text-sm ${boardSupportFeedback.tone === "error" ? "text-danger-500" : "text-primary-500"}`}
               >
                 {boardSupportFeedback.text}
               </p>
@@ -863,7 +863,7 @@ export default function FinancesTab({
         <CardHeader>{t("finances.wagePressure")}</CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {t("finances.wagePressure")}
               </p>
@@ -882,7 +882,7 @@ export default function FinancesTab({
               />
             </div>
 
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="space-y-1">
                   <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -1005,7 +1005,7 @@ export default function FinancesTab({
         <CardHeader>{t("finances.sponsors")}</CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-2">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-2">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {t("finances.activeSponsor")}
               </p>
@@ -1032,7 +1032,7 @@ export default function FinancesTab({
               )}
             </div>
 
-            <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+            <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {t("finances.pendingSponsorOffers")}
               </p>
@@ -1071,7 +1071,7 @@ export default function FinancesTab({
                   <p
                     className={
                       sponsorPitchFeedback.tone === "error"
-                        ? "text-sm text-red-500"
+                        ? "text-sm text-danger-500"
                         : "text-sm text-primary-500"
                     }
                   >
@@ -1114,7 +1114,7 @@ export default function FinancesTab({
                   <p
                     className={
                       marketingCampaignFeedback.tone === "error"
-                        ? "text-sm text-red-500"
+                        ? "text-sm text-danger-500"
                         : "text-sm text-primary-500"
                     }
                   >
@@ -1218,7 +1218,7 @@ export default function FinancesTab({
               return (
                 <div
                   key={facility.id}
-                  className="rounded-lg border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 flex flex-col gap-4"
+                  className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 flex flex-col gap-4"
                 >
                   <div className="space-y-1">
                     <h3 className="font-heading font-bold text-base text-gray-900 dark:text-gray-100 uppercase tracking-wide">
@@ -1246,12 +1246,12 @@ export default function FinancesTab({
                       {t("finances.upgradeFacility")}
                     </Button>
                     {!canAffordUpgrade && !upgradeReason && (
-                      <p className="text-xs text-red-500">
+                      <p className="text-xs text-danger-500">
                         {t("finances.insufficientFunds")}
                       </p>
                     )}
                     {upgradeReason && (
-                      <p className="text-xs text-red-500">{upgradeReason}</p>
+                      <p className="text-xs text-danger-500">{upgradeReason}</p>
                     )}
                   </div>
                 </div>

@@ -61,7 +61,7 @@ const INTENSITY_IDS = ["Low", "Medium", "High"] as const;
 const INTENSITY_COLORS: Record<string, string> = {
   Low: "text-blue-500",
   Medium: "text-accent-500",
-  High: "text-red-500",
+  High: "text-danger-500",
 };
 
 const SCHEDULE_IDS = ["Intense", "Balanced", "Light"] as const;
@@ -73,7 +73,7 @@ const SCHEDULE_ICONS: Record<string, ReactNode> = {
 };
 
 const SCHEDULE_COLORS: Record<string, string> = {
-  Intense: "text-red-500",
+  Intense: "text-danger-500",
   Balanced: "text-primary-500",
   Light: "text-blue-500",
 };
@@ -174,17 +174,17 @@ export default function TrainingTab({
       <div className="lg:col-span-2 flex flex-col gap-5">
         {staffAdvice ? (
           <div
-            className={`flex items-start gap-3 p-4 rounded-lg border-2 ${staffAdvice.level === "critical"
-                ? "bg-red-50 dark:bg-red-500/10 border-red-300 dark:border-red-500/40"
+            className={`flex items-start gap-3 p-4 rounded border ${staffAdvice.level === "critical"
+                ? "bg-red-50 dark:bg-danger-500/10 border-red-300 dark:border-red-500/40"
                 : staffAdvice.level === "warn"
-                  ? "bg-amber-50 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/40"
+                  ? "bg-amber-50 dark:bg-accent-500/10 border-amber-300 dark:border-amber-500/40"
                   : "bg-blue-50 dark:bg-blue-500/10 border-blue-300 dark:border-blue-500/40"
               }`}
           >
             {staffAdvice.level === "critical" ? (
-              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-danger-500 flex-shrink-0 mt-0.5" />
             ) : staffAdvice.level === "warn" ? (
-              <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-accent-500 flex-shrink-0 mt-0.5" />
             ) : (
               <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
             )}
@@ -281,13 +281,13 @@ export default function TrainingTab({
               {exhaustedCount > 0 || criticalCount > 0 ? (
                 <div className="mt-1 pt-2 border-t border-gray-100 dark:border-navy-700">
                   {criticalCount > 0 ? (
-                    <p className="text-xs text-red-500 dark:text-red-400 flex items-center gap-1">
+                    <p className="text-xs text-danger-500 dark:text-red-400 flex items-center gap-1">
                       <AlertTriangle className="w-3 h-3" />{" "}
                       {t("training.criticalCondition", { count: criticalCount })}
                     </p>
                   ) : null}
                   {exhaustedCount > 0 ? (
-                    <p className="text-xs text-amber-500 dark:text-amber-400 flex items-center gap-1 mt-0.5">
+                    <p className="text-xs text-accent-500 dark:text-amber-400 flex items-center gap-1 mt-0.5">
                       <AlertTriangle className="w-3 h-3" />{" "}
                       {t("training.exhaustedPlayers", { count: exhaustedCount })}
                     </p>

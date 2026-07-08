@@ -1050,7 +1050,7 @@ export default function TransfersTab({
               </p>
             </div>
             <div className="hidden md:flex gap-4">
-              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
+              <div className="bg-white/5 rounded px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("finances.transferBudget")}
                 </p>
@@ -1060,7 +1060,7 @@ export default function TransfersTab({
               </div>
               <div
                 data-testid="wage-budget-card"
-                className="bg-white/5 rounded-lg px-4 py-2 text-center"
+                className="bg-white/5 rounded px-4 py-2 text-center"
               >
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("finances.wageBudget")}
@@ -1072,7 +1072,7 @@ export default function TransfersTab({
                   )}
                 </p>
               </div>
-              <div className="bg-white/5 rounded-lg px-4 py-2 text-center">
+              <div className="bg-white/5 rounded px-4 py-2 text-center">
                 <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
                   {t("transfers.listed")}
                 </p>
@@ -1256,7 +1256,7 @@ export default function TransfersTab({
       {scoutError && isScoutingView ? (
         <p
           role="alert"
-          className="mb-4 text-xs font-heading font-bold uppercase tracking-wider text-red-500"
+          className="mb-4 text-xs font-heading font-bold uppercase tracking-wider text-danger-500"
         >
           {scoutError}
         </p>
@@ -1264,7 +1264,7 @@ export default function TransfersTab({
       {listingError && view === "my_list" ? (
         <p
           role="alert"
-          className="mb-4 text-xs font-heading font-bold uppercase tracking-wider text-red-500"
+          className="mb-4 text-xs font-heading font-bold uppercase tracking-wider text-danger-500"
         >
           {listingError}
         </p>
@@ -1553,7 +1553,7 @@ export default function TransfersTab({
                                                   true,
                                                 );
                                               }}
-                                              className="p-1 rounded bg-green-500/20 hover:bg-green-500/30 text-green-500"
+                                              className="p-1 rounded bg-success-500/20 hover:bg-success-500/30 text-success-500"
                                               title={t("transfers.acceptOffer")}
                                             >
                                               <Check className="w-3 h-3" />
@@ -1568,7 +1568,7 @@ export default function TransfersTab({
                                                   false,
                                                 );
                                               }}
-                                              className="p-1 rounded bg-red-500/20 hover:bg-red-500/30 text-red-500"
+                                              className="p-1 rounded bg-danger-500/20 hover:bg-danger-500/30 text-danger-500"
                                               title={t("transfers.rejectOffer")}
                                             >
                                               <X className="w-3 h-3" />
@@ -1585,7 +1585,7 @@ export default function TransfersTab({
                                               aria-label={t(
                                                 "transfers.counterOffer",
                                               )}
-                                              className="flex items-center gap-1 px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-500 text-xs font-heading font-bold uppercase tracking-wider"
+                                              className="flex items-center gap-1 px-2 py-1 rounded bg-accent-500/20 hover:bg-accent-500/30 text-accent-500 text-xs font-heading font-bold uppercase tracking-wider"
                                               title={t(
                                                 "transfers.counterOffer",
                                               )}
@@ -1666,7 +1666,7 @@ export default function TransfersTab({
                                                     true,
                                                   );
                                                 }}
-                                                className="p-1 rounded bg-green-500/20 hover:bg-green-500/30 text-green-500"
+                                                className="p-1 rounded bg-success-500/20 hover:bg-success-500/30 text-success-500"
                                                 title={t(
                                                   "transfers.acceptLoanOffer",
                                                 )}
@@ -1683,7 +1683,7 @@ export default function TransfersTab({
                                                     false,
                                                   );
                                                 }}
-                                                className="p-1 rounded bg-red-500/20 hover:bg-red-500/30 text-red-500"
+                                                className="p-1 rounded bg-danger-500/20 hover:bg-danger-500/30 text-danger-500"
                                                 title={t(
                                                   "transfers.rejectLoanOffer",
                                                 )}
@@ -1702,7 +1702,7 @@ export default function TransfersTab({
                                                 aria-label={t(
                                                   "transfers.counterLoanOffer",
                                                 )}
-                                                className="flex items-center gap-1 px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-500 text-xs font-heading font-bold uppercase tracking-wider"
+                                                className="flex items-center gap-1 px-2 py-1 rounded bg-accent-500/20 hover:bg-accent-500/30 text-accent-500 text-xs font-heading font-bold uppercase tracking-wider"
                                                 title={t(
                                                   "transfers.counterLoanOffer",
                                                 )}

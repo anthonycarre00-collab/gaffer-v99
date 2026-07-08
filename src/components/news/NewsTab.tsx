@@ -40,8 +40,8 @@ const CAT_COLORS: Record<string, string> = {
   StandingsUpdate: "text-blue-500",
   TransferRumour: "text-purple-500",
   TransferRoundup: "text-fuchsia-500",
-  InjuryNews: "text-red-500",
-  SeasonPreview: "text-emerald-500",
+  InjuryNews: "text-danger-500",
+  SeasonPreview: "text-success-500",
   Editorial: "text-gray-500",
   ManagerialChange: "text-orange-500",
 };
@@ -51,8 +51,8 @@ const CAT_BG: Record<string, string> = {
   StandingsUpdate: "bg-blue-500/10",
   TransferRumour: "bg-purple-500/10",
   TransferRoundup: "bg-fuchsia-500/10",
-  InjuryNews: "bg-red-500/10",
-  SeasonPreview: "bg-emerald-500/10",
+  InjuryNews: "bg-danger-500/10",
+  SeasonPreview: "bg-success-500/10",
   Editorial: "bg-gray-500/10",
   ManagerialChange: "bg-orange-500/10",
 };
@@ -342,7 +342,7 @@ function HeroArticle({
     <button
       data-testid={`news-article-${article.id}`}
       onClick={onSelect}
-      className="w-full text-left bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group"
+      className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group"
     >
       <div className="p-6">
         <div className="flex items-center gap-2 mb-3">
@@ -439,7 +439,7 @@ function ArticleCard({
     <button
       data-testid={`news-article-${article.id}`}
       onClick={onSelect}
-      className="w-full text-left bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group flex flex-col"
+      className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:shadow-md dark:hover:border-navy-600 transition-all group flex flex-col"
     >
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-center gap-2 mb-2">
@@ -524,7 +524,7 @@ function ArticleDetail({
         {t("news.backToNews")}
       </button>
 
-      <article className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
+      <article className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
         <div className="p-8">
           {/* Category + date */}
           <div className="flex items-center gap-3 mb-4">
@@ -547,13 +547,13 @@ function ArticleDetail({
 
           {/* Match score */}
           {article.match_score && (
-            <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-gray-50 dark:bg-navy-700/50 rounded-lg">
+            <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-gray-50 dark:bg-navy-700/50 rounded">
               <div className="text-center">
                 <p className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
                   {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
                 </p>
               </div>
-              <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded-lg">
+              <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded">
                 {article.match_score.home_goals} –{" "}
                 {article.match_score.away_goals}
               </div>

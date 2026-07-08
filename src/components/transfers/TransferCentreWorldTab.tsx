@@ -133,7 +133,7 @@ function TransferRumoursSection({
             return (
               <div
                 key={rumour.id}
-                className="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
+                className="rounded border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -160,7 +160,7 @@ function TransferRumoursSection({
                       </button>
                     </div>
                   </div>
-                  <div className="rounded-lg bg-primary-100 p-3 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+                  <div className="rounded bg-primary-100 p-3 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
                     <TrendingUp className="h-6 w-6" />
                   </div>
                 </div>
@@ -223,7 +223,7 @@ function CompletedDealsSection({
             return (
               <div
                 key={`${deal.player_id}-${deal.date}`}
-                className="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
+                className="rounded border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -252,7 +252,7 @@ function CompletedDealsSection({
                       />
                     </div>
                   </div>
-                  <div className="rounded-lg bg-accent-100 p-3 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300">
+                  <div className="rounded bg-accent-100 p-3 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300">
                     <ArrowLeftRight className="h-6 w-6" />
                   </div>
                 </div>
