@@ -41,10 +41,10 @@ export function SquadPulseCard() {
   // Color the harmony bar by score: red < 40, amber 40-65, green > 65
   const harmonyColor =
     harmonyScore < 40
-      ? "bg-red-500"
+      ? "#7a2e1f"  // Mahogany
       : harmonyScore < 65
-        ? "bg-amber-500"
-        : "bg-green-500";
+        ? "#b8924a"  // Brass
+        : "#2d5a3d"; // Pitch Green
 
   // Pressure level accent
   const pressureAccent =
@@ -64,7 +64,7 @@ export function SquadPulseCard() {
             {tensionFlag && (
               <Badge variant="danger">{t("meaning.squadPulse.tensionFlag")}</Badge>
             )}
-            <span className="text-2xl font-bold font-heading text-gray-900 dark:text-white">
+            <span className="text-2xl font-bold font-mono text-gray-900 dark:text-white">
               {harmonyScore}
             </span>
           </div>
@@ -83,10 +83,10 @@ export function SquadPulseCard() {
               {t(`meaning.squadPulse.pressureLevel`)}: {pressureLevel}
             </span>
           </div>
-          <div className="w-full h-3 bg-gray-200 dark:bg-navy-600 rounded-full overflow-hidden">
+          <div className="w-full h-4 bg-gray-200 dark:bg-navy-600 rounded-sm overflow-hidden">
             <div
-              className={`h-full ${harmonyColor} transition-all duration-500`}
-              style={{ width: `${harmonyScore}%` }}
+              className="h-full pulse-bar transition-all duration-500"
+              style={{ width: `${harmonyScore}%`, backgroundColor: harmonyColor }}
             />
           </div>
         </div>
