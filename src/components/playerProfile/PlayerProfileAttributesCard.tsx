@@ -82,7 +82,7 @@ export default function PlayerProfileAttributesCard({
                                 headerRight={
                                     <span
                                         title={averageLabel}
-                                        className={`font-heading font-bold text-sm tabular-nums ${getAttributeColorClass(group.average)}`}
+                                        className={`font-mono font-bold text-sm tabular-nums ${getAttributeColorClass(group.average)}`}
                                     >
                                         {group.average}
                                     </span>
@@ -101,7 +101,7 @@ export default function PlayerProfileAttributesCard({
                                                 className="min-w-0"
                                             />
                                             <span
-                                                className={`font-heading font-bold text-xs text-right tabular-nums ${getAttributeColorClass(attr.value)}`}
+                                                className={`font-mono font-bold text-xs text-right tabular-nums ${getAttributeColorClass(attr.value)}`}
                                             >
                                                 {attr.value}
                                             </span>

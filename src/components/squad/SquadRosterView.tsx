@@ -916,7 +916,7 @@ export default function SquadRosterView({
                       </td>
                       <td className="py-2.5 px-4 text-right">
                         <span
-                          className={`font-heading font-bold text-sm ${ovr >= 80
+                          className={`font-mono font-bold text-sm ${ovr >= 80
                             ? "text-primary-500"
                             : ovr >= 55
                               ? "text-accent-600 dark:text-accent-400"

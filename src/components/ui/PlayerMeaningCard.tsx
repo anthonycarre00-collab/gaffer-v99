@@ -163,7 +163,7 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
             ))}
             <div className="border-t pt-2 flex justify-between">
               <span className="font-semibold">{t('common.overall') || 'Overall'}</span>
-              <span className="font-bold">{snapshot.spreadsheet_attributes.overall}</span>
+              <span className="font-bold font-mono">{snapshot.spreadsheet_attributes.overall}</span>
             </div>
           </div>
         )}
