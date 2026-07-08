@@ -3256,6 +3256,8 @@ competitions:
             },
             extra_translations: std::collections::HashMap::new(),
             build_notices: Vec::new(),
+            relationships: Vec::new(),
+            rivalries: Vec::new(),
         }
     }
 

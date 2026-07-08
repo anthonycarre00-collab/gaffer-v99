@@ -613,6 +613,8 @@ fn make_player(
         decisions: noise(base, rng),
         composure: noise(base, rng),
         leadership: noise(base, rng),
+        aggression: noise(base, rng),
+        teamwork: noise(base, rng),
         shot_stopping: biased(base, gk_off, rng),
         commanding: biased(base, gk_off, rng),
         playing_out: biased(base, pass_off / 2.0, rng),
