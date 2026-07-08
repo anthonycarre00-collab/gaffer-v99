@@ -344,6 +344,22 @@ input[type="number"] {
   background-blend-mode: overlay;
 }
 
+/* ===== Tactics board texture ===== */
+.tactics-board-bg {
+  background-image: url('../assets/texture-tactics-board.png');
+  background-size: 512px;
+  background-repeat: repeat;
+  background-blend-mode: soft-light;
+}
+
+/* ===== Pitch grass texture ===== */
+.pitch-grass-bg {
+  background-image: url('../assets/texture-pitch-grass.png');
+  background-size: 512px;
+  background-repeat: repeat;
+  background-blend-mode: soft-light;
+}
+
 /* ===== Pulse glow for live indicator ===== */
 @keyframes live-glow {
   0%, 100% { box-shadow: 0 0 4px var(--color-danger-500); }

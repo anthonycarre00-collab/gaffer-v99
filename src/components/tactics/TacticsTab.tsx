@@ -809,7 +809,7 @@ export default function TacticsTab({
  }
 
  return (
- <div className="flex w-full flex-col gap-5">
+ <div className="tactics-board-bg flex w-full flex-col gap-5">
  <div
  ref={dragPreviewRef}
  aria-hidden="true"

@@ -283,7 +283,7 @@ export default function MatchLive({
  >
 
  {/* Main Content */}
- <div className="flex-1 flex overflow-hidden">
+ <div className="pitch-grass-bg flex-1 flex overflow-hidden">
  {/* Left Panel: Event Feed + Stats */}
  <div className="flex-1 flex flex-col">
  <div className="flex bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 transition-colors duration-300">
