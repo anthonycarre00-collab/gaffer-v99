@@ -206,6 +206,10 @@ mod tests {
             active_competition_ids_json: "[]".to_string(),
             extra_translations_json: "{}".to_string(),
             package_lockfile_json: "[]".to_string(),
+            relationship_graph_json: None,
+            memory_store_json: None,
+            media_engine_json: None,
+            scouting_knowledge_json: None,
         };
 
         upsert_meta(db.conn(), &meta).unwrap();
@@ -252,6 +256,10 @@ mod tests {
             active_competition_ids_json: "[]".to_string(),
             extra_translations_json: "{}".to_string(),
             package_lockfile_json: "[]".to_string(),
+            relationship_graph_json: None,
+            memory_store_json: None,
+            media_engine_json: None,
+            scouting_knowledge_json: None,
         };
         upsert_meta(db.conn(), &meta1).unwrap();
 
@@ -275,6 +283,10 @@ mod tests {
             active_competition_ids_json: "[]".to_string(),
             extra_translations_json: "{}".to_string(),
             package_lockfile_json: "[]".to_string(),
+            relationship_graph_json: None,
+            memory_store_json: None,
+            media_engine_json: None,
+            scouting_knowledge_json: None,
         };
         upsert_meta(db.conn(), &meta2).unwrap();
 
@@ -311,6 +323,10 @@ mod tests {
             active_competition_ids_json: "[]".to_string(),
             extra_translations_json: "{}".to_string(),
             package_lockfile_json: "[]".to_string(),
+            relationship_graph_json: None,
+            memory_store_json: None,
+            media_engine_json: None,
+            scouting_knowledge_json: None,
         };
 
         let result = upsert_meta(&conn, &meta);
