@@ -644,8 +644,8 @@ fn update_post_match_morale(
     // Gaffer Phase 5 — Process media reactions
     let home_team_name = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.name.clone()).unwrap_or_default();
     let away_team_name = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.name.clone()).unwrap_or_default();
-    let _home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
-    let _away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
     let mut rng = rand::rng();
     // Gaffer Phase 5 — Process media reactions (pundits react, disagreement
     // probability rolls, match rating generated). Result stored in media_engine
@@ -659,8 +659,33 @@ fn update_post_match_morale(
         is_rivalry,
         &mut rng,
     );
-    // Reactions are now stored inside media_engine (pundit disagreements,
-    // match ratings) and will be read by InterpretationSurface.media_meaning()
+
+    // Gaffer Phase 5 — Generate weekly supplement (headline of the week, etc.)
+    // This feeds the MediaPulseCard's "Top Headline" field.
+    let home_sentiment = 0.5_f32; // Default neutral sentiment
+    let away_sentiment = 0.5_f32;
+    game.media_engine.generate_supplements(
+        &date,
+        &home_team_name,
+        &away_team_name,
+        &home_form,
+        &away_form,
+        is_rivalry,
+        home_sentiment,
+        away_sentiment,
+    );
+
+    // Gaffer Phase 5 — Update betting sentiment for both teams
+    // Winning team gets +sentiment boost, losing team gets -penalty
+    let (home_sent, away_sent) = if report.home_goals > report.away_goals {
+        (0.65_f32, 0.35_f32) // Home win
+    } else if report.away_goals > report.home_goals {
+        (0.35_f32, 0.65_f32) // Away win
+    } else {
+        (0.50_f32, 0.50_f32) // Draw
+    };
+    game.media_engine.update_betting_sentiment(home_team_id, home_sent, &date);
+    game.media_engine.update_betting_sentiment(away_team_id, away_sent, &date);
 }
 
 /// Gaffer Phase 2 — Update player relationships based on match outcome.
