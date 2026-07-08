@@ -625,7 +625,7 @@ export default function SquadRosterView({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
-              {filteredRoster.map((player) => {
+              {filteredRoster.map((player, rowIndex) => {
                 const inXI = xiIds.has(player.id);
                 const currentPos = getCurrentPosition(player, xiActivePosition);
                 const ovr = getPlayerOvr(player);
@@ -665,6 +665,16 @@ export default function SquadRosterView({
                     : contractRiskLevel === "warning"
                       ? "border-l-2 border-l-yellow-400"
                       : "";
+                const positionBorderClass = player.position === "Goalkeeper" || player.position === "Goalkeeper"
+                  ? "border-l-2 border-l-accent-500"
+                  : player.position === "Defender" || player.position === "RightBack" || player.position === "CentreBack" || player.position === "LeftBack"
+                    ? "border-l-2 border-l-primary-500"
+                    : player.position === "Midfielder" || player.position === "CentralMidfielder" || player.position === "AttackingMidfielder" || player.position === "DefensiveMidfielder"
+                      ? "border-l-2 border-l-blue-500"
+                      : "border-l-2 border-l-danger-500";
+
+                // Injury/contract borders override position borders
+                const finalBorderClass = rowBorderClass || positionBorderClass;
                 const hasUrgentItems = Boolean(player.injury) || contractRiskLevel !== "stable";
 
                 const contextItems = [
@@ -785,7 +795,7 @@ export default function SquadRosterView({
                   >
                     <tr
                       onClick={() => onSelectPlayer(player.id)}
-                      className={`hover:bg-gray-50 dark:hover:bg-navy-700/50 transition-colors group cursor-pointer ${rowBorderClass}`}
+                      className={`${rowIndex % 2 === 0 ? "bg-white dark:bg-navy-800" : "bg-gray-50 dark:bg-navy-700/30"} hover:bg-gray-100 dark:hover:bg-navy-700/50 transition-colors group cursor-pointer ${finalBorderClass}`}
                     >
                       <td className="py-2.5 px-4 tabular-nums text-sm font-medium text-gray-600 dark:text-gray-400">
                         {player.jersey_number ?? "—"}
