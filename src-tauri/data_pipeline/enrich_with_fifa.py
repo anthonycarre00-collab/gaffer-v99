@@ -55,12 +55,13 @@ def download_fifa_data():
     """Download FIFA23 Big 5 player data from Hugging Face.
     
     Downloads in chunks to handle the 5.6GB file reliably.
+    Uses chunked CSV parsing to avoid running out of memory.
     Shows progress so the user knows it's working.
     """
     import pandas as pd
     
     print("[1] Downloading FIFA23 data from Hugging Face...")
-    print("    (5.6GB file — downloading in chunks, this takes 5-15 minutes)")
+    print("    (5.6GB file — this takes 10-30 minutes depending on your internet)")
     print("    DO NOT close this window!")
     
     cols = ['short_name', 'long_name', 'fifa_version', 'fifa_update', 'overall', 'potential',
@@ -72,9 +73,9 @@ def download_fifa_data():
     local_file = Path(__file__).parent / 'input' / 'fifa23_raw.csv'
     local_file.parent.mkdir(parents=True, exist_ok=True)
     
-    # Download in chunks to disk (resumable, shows progress)
+    # Step 1: Download in chunks to disk (resumable, shows progress)
     if not local_file.exists() or local_file.stat().st_size < 1_000_000:
-        print(f"    Streaming to {local_file.name}...")
+        print(f"\n    Step 1a: Downloading to {local_file.name}...")
         r = requests.get(url, headers=HEADERS, stream=True, timeout=600)
         total_size = int(r.headers.get('content-length', 0))
         downloaded = 0
@@ -86,26 +87,56 @@ def download_fifa_data():
                     f.write(chunk)
                     downloaded += len(chunk)
                     chunk_count += 1
-                    if chunk_count % 50 == 0:  # print every 50MB
+                    if chunk_count % 100 == 0:  # print every 100MB
                         pct = (downloaded / total_size * 100) if total_size else 0
                         mb = downloaded / 1024 / 1024
-                        print(f"    {mb:.0f} MB / {total_size/1024/1024:.0f} MB ({pct:.0f}%)")
+                        total_mb = total_size / 1024 / 1024 if total_size else 0
+                        print(f"    {mb:.0f} MB / {total_mb:.0f} MB ({pct:.0f}%)")
         
         print(f"    Download complete: {downloaded / 1024 / 1024:.0f} MB")
     else:
-        print(f"    Already downloaded: {local_file.name} ({local_file.stat().st_size / 1024 / 1024:.0f} MB)")
+        print(f"\n    Step 1a: Already downloaded: {local_file.name} ({local_file.stat().st_size / 1024 / 1024:.0f} MB)")
     
-    # Read from local file (much faster, no network issues)
-    print("    Parsing CSV...")
-    df = pd.read_csv(local_file, usecols=cols, encoding='utf-8', low_memory=False)
-    print(f"    Total rows: {len(df):,}")
-    
-    # Filter to FIFA 23, latest update, Big 5 leagues
-    df = df[df['fifa_version'] == 23]
-    df = df.sort_values('fifa_update', ascending=False).drop_duplicates('short_name', keep='first')
+    # Step 2: Parse CSV in CHUNKS to avoid running out of memory
+    # The full 5.6GB file would need ~16GB RAM if loaded all at once.
+    # Chunked reading processes 100K rows at a time, filtering each chunk
+    # to only keep FIFA 23 + Big 5 league players. This uses <500MB RAM.
+    print(f"\n    Step 1b: Parsing CSV in chunks (memory-safe)...")
     big5 = ['Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1']
-    df = df[df['league_name'].isin(big5)]
-    print(f"    Big 5 players (FIFA 23, latest): {len(df)}")
+    filtered_chunks = []
+    total_rows = 0
+    kept_rows = 0
+    
+    # Read in chunks of 100,000 rows
+    chunk_reader = pd.read_csv(
+        local_file, usecols=cols, encoding='utf-8',
+        low_memory=False, chunksize=100000
+    )
+    
+    for chunk in chunk_reader:
+        total_rows += len(chunk)
+        # Filter: FIFA 23 only + Big 5 leagues only
+        chunk = chunk[chunk['fifa_version'] == 23]
+        chunk = chunk[chunk['league_name'].isin(big5)]
+        if len(chunk) > 0:
+            filtered_chunks.append(chunk)
+            kept_rows += len(chunk)
+        
+        if total_rows % 500000 == 0:
+            print(f"    Processed {total_rows:,} rows, kept {kept_rows:,} so far...")
+    
+    print(f"    Processed {total_rows:,} total rows, kept {kept_rows:,} Big 5 FIFA 23 rows")
+    
+    # Combine filtered chunks (much smaller now — only ~3000 rows)
+    if filtered_chunks:
+        df = pd.concat(filtered_chunks, ignore_index=True)
+    else:
+        print("    ERROR: No FIFA 23 Big 5 players found!")
+        return None
+    
+    # Keep only latest update per player
+    df = df.sort_values('fifa_update', ascending=False).drop_duplicates('short_name', keep='first')
+    print(f"    Unique players (latest update): {len(df)}")
     print(f"    Height coverage: {df['height_cm'].notna().sum()}/{len(df)}")
     print(f"    Weight coverage: {df['weight_kg'].notna().sum()}/{len(df)}")
     
