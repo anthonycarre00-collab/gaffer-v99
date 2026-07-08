@@ -1,11 +1,11 @@
 interface EntityListPanelProps {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }
 
 export function EntityListPanel({ children }: EntityListPanelProps) {
-  return (
-    <div className="h-full overflow-y-auto scrollbar-thin p-3">
-      {children}
-    </div>
-  );
+ return (
+ <div className="h-full overflow-y-auto scrollbar-thin p-3">
+ {children}
+ </div>
+ );
 }
