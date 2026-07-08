@@ -169,6 +169,20 @@ where
     // Weekly financial processing (wages, matchday income, warnings)
     crate::finances::process_weekly_finances(game);
 
+    // Gaffer weekly maintenance — runs on Mondays (weekday 0) alongside finances
+    let _weekday_for_gaffer = game.clock.current_date.weekday().num_days_from_monday();
+    if _weekday_for_gaffer == 0 {
+        // Narrative: decay old memories, check for resurfacing
+        game.memory_store.weekly_decay(&today);
+
+        // Media: shift pundit forms
+        let mut rng = rand::rng();
+        game.media_engine.weekly_update(&mut rng);
+
+        // Relationships: decay volatilities
+        game.relationship_graph.decay_all_volatilities();
+    }
+
     // Board objectives (generate if missing, update progress)
     board_objectives::generate_objectives(game);
     board_objectives::update_objective_progress(game);

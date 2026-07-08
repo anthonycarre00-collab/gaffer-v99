@@ -647,7 +647,10 @@ fn update_post_match_morale(
     let _home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
     let _away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
     let mut rng = rand::rng();
-    let _reactions = game.media_engine.process_match(
+    // Gaffer Phase 5 — Process media reactions (pundits react, disagreement
+    // probability rolls, match rating generated). Result stored in media_engine
+    // state — read by MediaPulseCard on the Home dashboard.
+    let _media_reactions = game.media_engine.process_match(
         &date,
         &home_team_name,
         &away_team_name,
@@ -656,6 +659,8 @@ fn update_post_match_morale(
         is_rivalry,
         &mut rng,
     );
+    // Reactions are now stored inside media_engine (pundit disagreements,
+    // match ratings) and will be read by InterpretationSurface.media_meaning()
 }
 
 /// Gaffer Phase 2 — Update player relationships based on match outcome.

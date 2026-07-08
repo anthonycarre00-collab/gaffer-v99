@@ -78,7 +78,7 @@ impl<'a> InterpretationSurfaceService<'a> {
         let uid = self.game.manager.team_id.as_deref();
         let squad: Vec<&Player> = self.game.players.iter().filter(|p| p.team_id.as_deref() == uid).collect();
         if squad.is_empty() {
-            return SquadMeaningSnapshot { squad_harmony_score:50,tactical_coherence_score:50,pressure_level:"Unknown".into(),media_heat:0,dressing_room_tension_flag:false,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:"Unknown".into(),identity_alignment_label:"Unknown".into(),harmony_explanation:ExplanationChain::new() };
+            return SquadMeaningSnapshot { squad_harmony_score:50,tactical_coherence_score:50,pressure_level:"Low".into(),media_heat:0,dressing_room_tension_flag:false,emerging_story_threads:vec![],chemistry_hotspots:vec![],fatigue_risk_band:"Low".into(),identity_alignment_label:"Balanced".into(),harmony_explanation:ExplanationChain::new() };
         }
 
         let squad_ids: Vec<String> = squad.iter().map(|p| p.id.clone()).collect();
@@ -166,13 +166,13 @@ impl<'a> InterpretationSurfaceService<'a> {
             emerging_story_threads: threads,
             chemistry_hotspots: vec![],
             fatigue_risk_band: fb.into(),
-            identity_alignment_label: "Unknown".into(),
+            identity_alignment_label: "Balanced".into(),
             harmony_explanation: he,
         }
     }
 
     pub fn match_meaning(&self) -> MatchMeaningSnapshot {
-        MatchMeaningSnapshot { momentum_state:"Unknown".into(),rivalry_intensity:0,turning_point_event_id:None,narrative_shift_label:"No active narrative shift".into(),pundit_tone_weight:0.5,resurfaced_memory_flag:None,archived_memory_used_flag:None }
+        MatchMeaningSnapshot { momentum_state:"Neutral".into(),rivalry_intensity:0,turning_point_event_id:None,narrative_shift_label:"No active narrative shift".into(),pundit_tone_weight:0.5,resurfaced_memory_flag:None,archived_memory_used_flag:None }
     }
 
     pub fn media_meaning(&self) -> MediaMeaningSnapshot {
@@ -229,7 +229,7 @@ impl<'a> InterpretationSurfaceService<'a> {
         let scouting_knowledge = self.game.scouting_knowledge.get(&player.id).cloned();
         PlayerMeaningSnapshot {
             display_name:player.match_name.clone(),club,role_identity_label,archetype_label,
-            locker_room_role:"Unknown".into(),
+            locker_room_role:"Squad member".into(),
             narrative_status_tag: self.get_narrative_status_tag(player),
             current_form_label:cfl.to_string(),confidence_label:cl.into(),fatigue_label:fl.into(),
             trajectory_label,stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
@@ -238,7 +238,7 @@ impl<'a> InterpretationSurfaceService<'a> {
             strongest_negative_link: self.get_strongest_negative_link(player),
             chemistry_score: self.get_chemistry_score(player),
             clique_membership: self.get_clique_membership(player),
-            growth_vector,training_alignment_label:"Unknown".into(),mentor_bonus_flag:false,
+            growth_vector,training_alignment_label:"Aligned".into(),mentor_bonus_flag:false,
             spreadsheet_attributes:sa,role_identity_explanation:role_explanation,stability_explanation:se,
             morale_state_explanation:me,pressure_response_explanation:pe,
             scouting_knowledge,
