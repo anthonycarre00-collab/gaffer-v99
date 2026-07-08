@@ -160,12 +160,8 @@ export default function DashboardSidebar({
  <div
  className={`flex items-center ${collapsed ? "justify-center" : "gap-2"}`}
  >
- <div className="w-8 h-8 flex items-center justify-center">
- <img
- src="../assets/gaffer-logo-pro.png"
- alt="Gaffer"
- className="w-8 h-8 rounded"
- />
+ <div className="w-8 h-8 flex items-center justify-center rounded bgc-accent-500">
+ <span className="font-heading font-bold text-white text-sm">G</span>
  </div>
  {collapsed ? null : (
  <div>

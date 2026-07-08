@@ -699,12 +699,7 @@ export default function MainMenu() {
  <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-navy-900 transition-colors duration-500 relative overflow-x-hidden">
  {/* Background — stadium at night */}
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
- <img
- src="../assets/stadium-night-bg.png"
- alt=""
- className="w-full h-full object-cover opacity-20"
- />
- <div className="absolute inset-0 " />
+ <div className="absolute inset-0 stadium-bg opacity-20" />
  </div>
 
  {/* Theme Toggle */}
@@ -717,11 +712,9 @@ export default function MainMenu() {
 
  <div className="bg-white dark:bg-navy-800 p-8 rounded-b-lg border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
  {/* Gaffer Logo — professional AI-generated */}
- <img
- src="../assets/gaffer-logo-pro.png"
- alt="Gaffer"
- className="mx-auto w-24 h-24 rounded"
- />
+ <div className="mx-auto w-24 h-24 rounded stadium-bg flex items-center justify-center">
+ <span className="font-heading text-3xl font-bold text-accent-500">G</span>
+ </div>
  <h1 className="text-center font-heading text-3xl font-bold uppercase tracking-wider text-accent-500 mt-3">
  Gaffer
  </h1>

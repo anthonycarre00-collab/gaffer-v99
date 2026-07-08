@@ -58,17 +58,22 @@ cargo --version
 
 echo.
 echo ================================================================
-echo STEP 3: Downloading the game code...
+echo STEP 3: Finding the game code...
 echo ================================================================
-if exist "gaffer" (
-    echo [OK] Code already downloaded. Updating...
-    cd gaffer
-    git pull
-) else (
-    echo Downloading from GitHub...
+set "PROJECT_DIR="
+if exist "package.json" set "PROJECT_DIR=."
+if exist "gaffer\package.json" set "PROJECT_DIR=gaffer"
+if exist "gaffer-main\package.json" set "PROJECT_DIR=gaffer-main"
+if exist "gaffer-main\gaffer-main\package.json" set "PROJECT_DIR=gaffer-main\gaffer-main"
+
+if "%PROJECT_DIR%"=="" (
+    echo No existing code found. Downloading from GitHub...
     git clone https://github.com/anthonycarre00-collab/gaffer.git
-    cd gaffer
+    set "PROJECT_DIR=gaffer"
 )
+
+echo [OK] Project found: %PROJECT_DIR%
+cd /d "%PROJECT_DIR%"
 
 echo.
 echo ================================================================
