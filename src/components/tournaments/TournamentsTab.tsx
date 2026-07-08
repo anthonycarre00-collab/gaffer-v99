@@ -1163,7 +1163,7 @@ function AwardCard({
                     </p>
                   </div>
                   <span
-                    className={`font-heading font-bold tabular-nums ${i === 0
+                    className={`font-mono font-bold tabular-nums ${i === 0
                       ? "text-lg text-accent-500"
                       : "text-sm text-gray-600 dark:text-gray-400"
                       }`}

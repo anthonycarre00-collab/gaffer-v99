@@ -24,6 +24,7 @@ import TransferBidModal from "../transfers/TransferBidModal";
 import { useFreeAgentContractFlow } from "../transfers/useFreeAgentContractFlow";
 import { useTransferBidFlow } from "../transfers/useTransferBidFlow";
 import PlayerProfileActionsMenu from "./PlayerProfileActionsMenu";
+import { HexAttributeCluster } from "./HexAttributeCluster";
 import {
   buildPlayerAdvancedStats,
   getPlayerAge,
@@ -846,6 +847,28 @@ export default function PlayerProfile({
 
         {/* Gaffer Phase 0.5-FE — Meaning snapshot card (third column) */}
         <PlayerMeaningCard playerId={player.id} />
+      </div>
+
+      {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}
+      <div className="mt-5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-5">
+        <HexAttributeCluster attributes={{
+          pace: player.attributes.pace, burst: player.attributes.burst,
+          engine: player.attributes.engine, power: player.attributes.power,
+          agility: player.attributes.agility,
+          passing: player.attributes.passing, distribution: player.attributes.distribution,
+          touch: player.attributes.touch, finishing: player.attributes.finishing,
+          defending: player.attributes.defending, aerial: player.attributes.aerial,
+          anticipation: player.attributes.anticipation, vision: player.attributes.vision,
+          decisions: player.attributes.decisions, composure: player.attributes.composure,
+          leadership: player.attributes.leadership,
+          shot_stopping: player.attributes.shot_stopping, commanding: player.attributes.commanding,
+          playing_out: player.attributes.playing_out,
+          body_avg: Math.round((player.attributes.pace + player.attributes.burst + player.attributes.engine + player.attributes.power + player.attributes.agility) / 5),
+          ball_avg: Math.round((player.attributes.passing + player.attributes.distribution + player.attributes.touch + player.attributes.finishing + player.attributes.defending + player.attributes.aerial) / 6),
+          head_avg: Math.round((player.attributes.anticipation + player.attributes.vision + player.attributes.decisions + player.attributes.composure + player.attributes.leadership) / 5),
+          gloves_avg: Math.round((player.attributes.shot_stopping + player.attributes.commanding + player.attributes.playing_out) / 3),
+          overall: player.ovr ?? 50,
+        }} />
       </div>
 
       {/* Full-width data cards, stacked for a uniform page */}

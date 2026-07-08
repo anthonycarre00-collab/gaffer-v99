@@ -28,13 +28,13 @@ export function QuickStat({
   return (
     <div className="mb-2 last:mb-0">
       <div className="flex justify-between text-xs mb-0.5">
-        <span className="font-heading font-bold text-primary-400 tabular-nums">
+        <span className="font-mono font-bold text-primary-400 tabular-nums">
           {home}
         </span>
         <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
           {label}
         </span>
-        <span className="font-heading font-bold text-indigo-400 tabular-nums">
+        <span className="font-mono font-bold text-indigo-400 tabular-nums">
           {away}
         </span>
       </div>
@@ -198,7 +198,7 @@ export function PlayerRatingsPanel({
             className="flex items-center gap-2 px-1 py-0.5 text-xs"
           >
             <span
-              className={`font-heading font-bold tabular-nums w-8 ${
+              className={`font-mono font-bold tabular-nums w-8 ${
                 p.rating >= 8
                   ? "text-accent-700 dark:text-accent-400"
                   : p.rating >= 7

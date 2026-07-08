@@ -520,7 +520,7 @@ export default function YouthAcademyTab({
                         </td>
                         <td className="py-2.5 px-4 text-center">
                           <span
-                            className={`text-sm font-heading font-bold tabular-nums ${potLabel.color}`}
+                            className={`text-sm font-mono font-bold tabular-nums ${potLabel.color}`}
                           >
                             {player.potential}
                           </span>
@@ -556,7 +556,7 @@ export default function YouthAcademyTab({
                         </td>
                         <td className="py-2.5 px-4 text-center">
                           <span
-                            className={`text-xs font-heading font-bold tabular-nums ${player.condition >= 70
+                            className={`text-xs font-mono font-bold tabular-nums ${player.condition >= 70
                               ? "text-green-500"
                               : player.condition >= 40
                                 ? "text-yellow-500"

@@ -591,7 +591,7 @@ function TacticsTableRow({
 
         <td className="px-4 py-3 align-top">
           <span
-            className={`text-base font-heading font-bold tabular-nums ${getOverallRatingClassName(
+            className={`text-base font-mono font-bold tabular-nums ${getOverallRatingClassName(
               overallRating,
             )}`}
           >

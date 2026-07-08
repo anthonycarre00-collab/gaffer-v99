@@ -89,7 +89,7 @@ export default function JerseyNumberInput({
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
         onKeyDown={handleKeyDown}
-        className="w-12 px-1.5 py-0.5 rounded text-sm font-heading font-bold tabular-nums text-center
+        className="w-12 px-1.5 py-0.5 rounded text-sm font-mono font-bold tabular-nums text-center
                    bg-gray-50 dark:bg-navy-700
                    border border-gray-300 dark:border-navy-500
                    text-gray-800 dark:text-gray-100

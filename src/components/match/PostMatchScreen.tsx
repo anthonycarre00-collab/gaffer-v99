@@ -529,7 +529,7 @@ export default function PostMatchScreen({
                                 {r.player_name}
                               </td>
                               <td
-                                className={`px-3 py-2 text-right font-heading font-bold tabular-nums ${
+                                className={`px-3 py-2 text-right font-mono font-bold tabular-nums ${
                                   r.delta > 0
                                     ? "text-green-500"
                                     : r.delta < 0
@@ -754,13 +754,13 @@ export default function PostMatchScreen({
                       return (
                         <div key={key} className="mb-1 last:mb-0">
                           <div className="flex justify-between text-xs mb-0.5">
-                            <span className="font-heading font-bold text-primary-400 tabular-nums">
+                            <span className="font-mono font-bold text-primary-400 tabular-nums">
                               {hv} <span className="font-normal text-gray-500">({homePct}%)</span>
                             </span>
                             <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
                               {label}
                             </span>
-                            <span className="font-heading font-bold text-indigo-400 tabular-nums">
+                            <span className="font-mono font-bold text-indigo-400 tabular-nums">
                               <span className="font-normal text-gray-500">({awayPct}%)</span> {av}
                             </span>
                           </div>

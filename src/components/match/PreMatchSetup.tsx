@@ -579,7 +579,7 @@ export default function PreMatchSetup({
                   </span>
                   <div className="flex items-center">
                     <span
-                      className={`text-[10px] font-heading font-bold tabular-nums w-7 text-center ${starterOvrColor(p.ovr)}`}
+                      className={`text-[10px] font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(p.ovr)}`}
                     >
                       {p.ovr}
                     </span>

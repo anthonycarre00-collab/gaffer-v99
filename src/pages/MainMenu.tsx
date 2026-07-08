@@ -709,15 +709,21 @@ export default function MainMenu() {
       {/* Main Card */}
       <div className="relative z-10 w-full max-w-md">
         {/* Top accent bar */}
-        <div className="h-1.5 bg-gradient-to-r from-primary-500 via-accent-400 to-primary-500 rounded-t-2xl" />
+        <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
-        <div className="bg-white dark:bg-navy-800 p-8 rounded-b-2xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
-          {/* Logo */}
+        <div className="bg-white dark:bg-navy-800 p-8 rounded-b-lg border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
+          {/* Gaffer Logo */}
           <img
-            src="/openfootlogo.svg"
-            alt={t("app.name")}
-            className="text-center w-full h-full object-cover"
+            src="/gaffer-icon.svg"
+            alt="Gaffer"
+            className="mx-auto w-16 h-16"
           />
+          <h1 className="text-center font-heading text-3xl font-bold uppercase tracking-wider text-accent-500 mt-3">
+            Gaffer
+          </h1>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-1">
+            The meaning-engine football manager
+          </p>
 
           <div className="border-t border-gray-200 dark:border-navy-600 my-8 transition-colors duration-500" />
 

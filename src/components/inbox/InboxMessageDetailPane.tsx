@@ -339,7 +339,7 @@ export default function InboxMessageDetailPane({
                                   }
                                   size="sm"
                                 />
-                                <span className="w-8 text-right text-xs font-heading font-bold tabular-nums text-gray-500 dark:text-gray-400">
+                                <span className="w-8 text-right text-xs font-mono font-bold tabular-nums text-gray-500 dark:text-gray-400">
                                   +{growthRoom}
                                 </span>
                               </div>

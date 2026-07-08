@@ -173,13 +173,13 @@ export function MatchStats({ snapshot }: { snapshot: MatchSnapshot }) {
         return (
           <div key={i}>
             <div className="flex justify-between text-xs mb-1">
-              <span className="font-heading font-bold text-primary-400 tabular-nums">
+              <span className="font-mono font-bold text-primary-400 tabular-nums">
                 {stat.home}
               </span>
               <span className="text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider text-[10px]">
                 {stat.label}
               </span>
-              <span className="font-heading font-bold text-indigo-400 tabular-nums">
+              <span className="font-mono font-bold text-indigo-400 tabular-nums">
                 {stat.away}
               </span>
             </div>

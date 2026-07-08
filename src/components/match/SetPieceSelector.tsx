@@ -194,7 +194,7 @@ export default function SetPieceSelector({
                   {getTranslatedPositionAbbreviation(p.position)}
                 </Badge>
                 <span
-                  className={`w-7 shrink-0 text-right text-xs font-heading font-bold tabular-nums ${getAttributeValueClassName(p.spStats.score)}`}
+                  className={`w-7 shrink-0 text-right text-xs font-mono font-bold tabular-nums ${getAttributeValueClassName(p.spStats.score)}`}
                 >
                   {p.spStats.score}
                 </span>

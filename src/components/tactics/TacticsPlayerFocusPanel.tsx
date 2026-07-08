@@ -143,7 +143,7 @@ function SinglePlayerAttributes({ player }: { player: PlayerData }) {
                     </div>
                   </div>
                   <span
-                    className={`text-sm font-heading font-bold tabular-nums ${valueTone(value)}`}
+                    className={`text-sm font-mono font-bold tabular-nums ${valueTone(value)}`}
                   >
                     {value}
                   </span>

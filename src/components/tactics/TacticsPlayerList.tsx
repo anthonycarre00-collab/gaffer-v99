@@ -122,7 +122,7 @@ function PlayerRow({
           >
             {position}
           </Badge>
-          <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-heading font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+          <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
             {player.jersey_number ?? "–"}
           </span>
           <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -163,7 +163,7 @@ function PlayerRow({
           <Badge variant="neutral" size="sm">
             {position}
           </Badge>
-          <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-heading font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+          <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
             {player.jersey_number ?? "–"}
           </span>
           <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900 dark:text-gray-100">
