@@ -592,7 +592,7 @@ impl<'a> NarrativeEngine<'a> {
     ) {
         let home_won = home_goals > away_goals;
         let away_won = away_goals > home_goals;
-        let is_draw = home_goals == away_goals;
+        let _is_draw = home_goals == away_goals;
         let goal_diff = (home_goals as i16 - away_goals as i16).unsigned_abs();
 
         // Team-level memories

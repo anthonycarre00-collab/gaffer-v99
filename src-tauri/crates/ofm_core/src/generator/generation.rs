@@ -221,7 +221,7 @@ pub(super) fn generate_random_player_from_def(
     let group = position.to_group_position();
     let is_gk = matches!(group, Position::Goalkeeper);
     let is_def = matches!(group, Position::Defender);
-    let is_fwd = matches!(group, Position::Forward);
+    let _is_fwd = matches!(group, Position::Forward);
 
     let attributes = PlayerAttributes {
         pace: rng.random_range(40..95),

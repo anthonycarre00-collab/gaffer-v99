@@ -1296,6 +1296,7 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
 /// Both checks are idempotent — if the ID already exists the entry is not duplicated.
 fn convert_retired_players_to_candidates(game: &mut Game) {
     // Snapshot eligible players (avoid holding borrows across mutations).
+    #[allow(dead_code)]
     struct RetiredSnapshot {
         player_id: String,
         first_name: String,

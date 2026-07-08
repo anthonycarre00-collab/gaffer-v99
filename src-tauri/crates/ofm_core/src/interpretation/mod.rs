@@ -1,5 +1,5 @@
 // Gaffer Phase 1 — Interpretation Surface
-use crate::game::{RevealTier, ScoutingKnowledge};
+use crate::game::ScoutingKnowledge;
 use crate::game::Game;
 use crate::training::development_trajectory;
 use domain::player::{MediaSensitivity, Player, PlayerTrait, Position, PressureResponse};
@@ -139,8 +139,8 @@ impl<'a> InterpretationSurfaceService<'a> {
 
         // Tension + density
         let tension = self.game.relationship_graph.has_tension(&squad_ids);
-        let density = positive_density as u8;
-        let conflict = conflict_severity as u8;
+        let _density = positive_density as u8;
+        let _conflict = conflict_severity as u8;
 
         // Active story threads
         let threads: Vec<String> = self.game.memory_store.active_threads()
@@ -321,6 +321,7 @@ impl<'a> InterpretationSurfaceService<'a> {
     }
 }
 
+#[allow(dead_code)]
 fn position_name(p:&Position)->&'static str { match p { Position::Goalkeeper=>"Goalkeeper", Position::Defender|Position::RightBack|Position::CenterBack|Position::LeftBack|Position::RightWingBack|Position::LeftWingBack=>"Defender", Position::Midfielder|Position::DefensiveMidfielder|Position::CentralMidfielder|Position::AttackingMidfielder|Position::RightMidfielder|Position::LeftMidfielder=>"Midfielder", Position::Forward|Position::RightWinger|Position::LeftWinger|Position::Striker=>"Forward" } }
 fn trait_label(t:&PlayerTrait)->&'static str { match t { PlayerTrait::Speedster=>"Speedster",PlayerTrait::Explosive=>"Explosive",PlayerTrait::Workhorse=>"Workhorse",PlayerTrait::Powerhouse=>"Powerhouse",PlayerTrait::Twisty=>"Twisty",PlayerTrait::Orchestrator=>"Orchestrator",PlayerTrait::Predator=>"Predator",PlayerTrait::VelvetTouch=>"Velvet Touch",PlayerTrait::BallWinner=>"Ball Winner",PlayerTrait::Rock=>"Rock",PlayerTrait::SetPieceSpecialist=>"Set Piece Specialist",PlayerTrait::Leader=>"Leader",PlayerTrait::CoolHead=>"Cool Head",PlayerTrait::Visionary=>"Visionary",PlayerTrait::SafeHands=>"Safe Hands",PlayerTrait::CatReflexes=>"Cat Reflexes",PlayerTrait::Commander=>"Commander",PlayerTrait::CompleteForward=>"Complete Forward",PlayerTrait::EngineRoom=>"Engine Room",PlayerTrait::Wonderkid=>"Wonderkid" } }
 fn morale_state_label(m:u8)->&'static str { match m.min(100) { 90..=100=>"Soaring",75..=89=>"Content",55..=74=>"Uneasy",35..=54=>"Deflated",_=>"Toxic" } }

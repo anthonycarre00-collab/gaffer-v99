@@ -2,7 +2,7 @@
 // Gaffer Phase 7 — Scouting knowledge commands.
 use std::sync::Arc;
 use log::info;
-use ofm_core::game::{RevealTier, ScoutingKnowledge};
+use ofm_core::game::ScoutingKnowledge;
 use ofm_core::interpretation::{InterpretationSurfaceService, MatchMeaningSnapshot, MediaMeaningSnapshot, PlayerMeaningSnapshot, SquadMeaningSnapshot};
 use ofm_core::state::StateManager;
 use tauri::State;

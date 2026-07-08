@@ -650,7 +650,7 @@ pub fn detect_cliques(
                 continue;
             }
             // Check if i and j have a strong enough edge
-            let edge = match graph.get(&squad_ids[i], &squad_ids[j]) {
+            let _edge = match graph.get(&squad_ids[i], &squad_ids[j]) {
                 Some(e) if e.strength >= 30 => e,
                 _ => continue,
             };
@@ -661,11 +661,11 @@ pub fn detect_cliques(
                     continue;
                 }
 
-                let edge_ik = match graph.get(&squad_ids[i], &squad_ids[k]) {
+                let _edge_ik = match graph.get(&squad_ids[i], &squad_ids[k]) {
                     Some(e) if e.strength >= 30 => e,
                     _ => continue,
                 };
-                let edge_jk = match graph.get(&squad_ids[j], &squad_ids[k]) {
+                let _edge_jk = match graph.get(&squad_ids[j], &squad_ids[k]) {
                     Some(e) if e.strength >= 30 => e,
                     _ => continue,
                 };

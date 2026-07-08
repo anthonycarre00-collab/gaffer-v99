@@ -12,7 +12,7 @@
 // refreshes the fuzzed values with the current scout's accuracy.
 
 use crate::game::{RevealTier, ScoutingKnowledge};
-use domain::player::{PersonalityProfile, Player, PlayerAttributes, Position};
+use domain::player::{Player, PlayerAttributes, Position};
 use rand::Rng;
 
 /// All 19 Gaffer attribute names, in canonical order.
@@ -294,7 +294,7 @@ pub fn get_or_create_knowledge<'a>(
 mod tests {
     use super::*;
     use crate::game::{RevealTier, ScoutingKnowledge};
-    use domain::player::{PersonalityProfile, Player, PlayerAttributes, Position};
+    use domain::player::{Player, PlayerAttributes, Position};
 
     fn make_test_player(ovr: u8, potential: u8, position: Position) -> Player {
         let attrs = PlayerAttributes {

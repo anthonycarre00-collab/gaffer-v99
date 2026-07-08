@@ -8,7 +8,7 @@ pub use progressive_reveal::{
 };
 
 use crate::game::{
-    Game, RevealTier, ScoutingAssignment, ScoutingKnowledge, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
+    Game, RevealTier, ScoutingAssignment, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
 };
 use domain::message::*;
 use domain::player::{Player, Position, SquadRole};

@@ -203,7 +203,26 @@ fn apply_generated_past_history(game: &mut Game, startup_options: &StartupOption
 
 fn load_world_data(world_source: Option<&str>) -> Result<ofm_core::generator::WorldData, String> {
     match world_source {
-        None | Some("random") => Ok(ofm_core::generator::generate_world_data(None)),
+        None | Some("random") => {
+            // Gaffer Phase 0.5: Try to load the bundled world database first.
+            // If it exists, use it (real players, real teams). Otherwise fall
+            // back to random procedural generation.
+            let bundled_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("databases")
+                .join("gaffer_world.json");
+            if bundled_path.exists() {
+                log::info!("[world] Loading bundled world database: {:?}", bundled_path);
+                ofm_core::generator::load_world_from_path(&bundled_path)
+                    .map_err(|e| {
+                        log::warn!("[world] Failed to load bundled world ({}), falling back to random", e);
+                        format!("be.error.worldReadFileFailed: {}", e)
+                    })
+                    .or_else(|_| Ok(ofm_core::generator::generate_world_data(None)))
+            } else {
+                log::info!("[world] No bundled world found, generating random world");
+                Ok(ofm_core::generator::generate_world_data(None))
+            }
+        }
         Some(source) => {
             let raw = source.strip_prefix("file:").unwrap_or(source);
             if std::path::Path::new(raw).is_dir() {

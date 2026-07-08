@@ -79,7 +79,7 @@ pub fn generate_replacement_regen(
     team_id: &str,
     team_reputation: u32,
     team_country: &str,
-    season: u32,
+    _season: u32,
     rng: &mut impl Rng,
 ) -> Player {
     // Use the existing youth academy generator, then customize for Phase 8.
@@ -146,7 +146,7 @@ pub fn generate_academy_intake_regens(
     team_id: &str,
     team_reputation: u32,
     team_country: &str,
-    season: u32,
+    _season: u32,
     rng: &mut impl Rng,
 ) -> Vec<Player> {
     use rand::RngExt;
@@ -374,7 +374,7 @@ pub fn generate_season_regens(game: &mut Game, season: u32) {
         .collect();
 
     let mut new_regens = Vec::new();
-    for (retired_id, team_id, position, _nationality, reputation, country) in &retirements {
+    for (retired_id, team_id, _position, _nationality, reputation, country) in &retirements {
         // Find the retiring player to pass to the generator
         let retiring = game
             .players

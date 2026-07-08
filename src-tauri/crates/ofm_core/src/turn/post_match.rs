@@ -587,7 +587,7 @@ fn update_post_match_morale(
                 };
                 // Apply personality shift (need to find the player's season_shifts or create one)
                 // For now, apply directly — Phase 3 will add proper season tracking
-                let (o, c, e, a, n) = event.event_type.deltas();
+                let (_o, c, _e, _a, n) = event.event_type.deltas();
                 player.personality.neuroticism = (player.personality.neuroticism as i16 + n as i16).clamp(0, 100) as u8;
                 player.personality.conscientiousness = (player.personality.conscientiousness as i16 + c as i16).clamp(0, 100) as u8;
             }
@@ -630,7 +630,7 @@ fn update_post_match_morale(
         .map(|e| e.rivalry_flag)
         .unwrap_or(false);
 
-    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let _date = game.clock.current_date.format("%Y-%m-%d").to_string();
     let mut engine = crate::narrative::NarrativeEngine::new(&mut game.memory_store, &date);
     engine.process_match_result(
         home_team_id,
@@ -644,8 +644,8 @@ fn update_post_match_morale(
     // Gaffer Phase 5 — Process media reactions
     let home_team_name = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.name.clone()).unwrap_or_default();
     let away_team_name = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.name.clone()).unwrap_or_default();
-    let home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
-    let away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let _home_form = game.teams.iter().find(|t| t.id == home_team_id).map(|t| t.form.clone()).unwrap_or_default();
+    let _away_form = game.teams.iter().find(|t| t.id == away_team_id).map(|t| t.form.clone()).unwrap_or_default();
     let mut rng = rand::rng();
     let _reactions = game.media_engine.process_match(
         &date,
