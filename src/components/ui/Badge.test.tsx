@@ -17,7 +17,7 @@ describe("Badge", () => {
   it("applies the correct variant classes", () => {
     render(<Badge variant="danger">RED</Badge>);
     const el = screen.getByText("RED");
-    expect(el.className).toContain("bg-red-100");
+    expect(el.className).toContain("bg-danger-100");
   });
 
   it("applies sm size by default", () => {

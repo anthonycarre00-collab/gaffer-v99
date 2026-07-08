@@ -697,7 +697,7 @@ export default function TeamSelection() {
                           handleRegionToggle(region.id);
                         }
                       }}
-                      className={`flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+                      className={`flex items-center justify-between rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
                     >
                       <span className="flex items-center gap-2">
                         <Globe className="h-4 w-4 text-primary-500" />
@@ -754,7 +754,7 @@ export default function TeamSelection() {
                           handleCompetitionToggle(competition);
                         }
                       }}
-                      className={`block rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+                      className={`block rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="flex min-w-0 items-center gap-2">
@@ -846,7 +846,7 @@ export default function TeamSelection() {
                 <button
                   key={team.id}
                   onClick={() => setSelectedTeamId(team.id)}
-                  className={`rounded-lg text-left transition-all duration-200 ${
+                  className={`rounded text-left transition-all duration-200 ${
                     isSelected
                       ? "scale-[1.01] ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-navy-900"
                       : "hover:scale-[1.01]"
@@ -987,7 +987,7 @@ export default function TeamSelection() {
                       {selectedTeamXi.slice(0, 5).map((player) => (
                         <div
                           key={player.id}
-                          className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 dark:bg-navy-800"
+                          className="flex items-center justify-between rounded bg-gray-50 px-3 py-2 dark:bg-navy-800"
                         >
                           <div>
                             <p className="font-semibold text-gray-900 dark:text-white">
@@ -1079,7 +1079,7 @@ function DetailTile({
   value: string;
 }) {
   return (
-    <div className="rounded-lg bg-gray-50 px-3 py-3 dark:bg-navy-800">
+    <div className="rounded bg-gray-50 px-3 py-3 dark:bg-navy-800">
       <p className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
         {icon} {label}
       </p>

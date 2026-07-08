@@ -383,7 +383,7 @@ export default function Settings() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleClearSaves}
-                    className="px-4 py-2 rounded bg-red-500 text-white text-sm font-heading font-bold uppercase tracking-wider hover:bg-red-600 transition-colors"
+                    className="px-4 py-2 rounded bg-danger-500 text-white text-sm font-heading font-bold uppercase tracking-wider hover:bg-danger-600 transition-colors"
                   >
                     {t("common.confirm")}
                   </button>
@@ -401,7 +401,7 @@ export default function Settings() {
               ) : (
                 <button
                   onClick={() => setConfirmClear(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded bg-danger-500/10 text-danger-500 hover:bg-danger-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                   {t("settings.clear")}
@@ -471,7 +471,7 @@ function SettingRow({
     <div className="flex items-center justify-between gap-4">
       <div className="flex-1 min-w-0">
         <p
-          className={`text-sm font-medium ${danger ? "text-red-500" : "text-gray-800 dark:text-gray-200"}`}
+          className={`text-sm font-medium ${danger ? "text-danger-500" : "text-gray-800 dark:text-gray-200"}`}
         >
           {label}
         </p>

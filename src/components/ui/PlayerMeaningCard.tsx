@@ -96,14 +96,14 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
           <div className="mt-1 space-y-1 text-xs">
             {snapshot.strongest_positive_link && (
               <div className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400">★</span>
+                <span className="text-green-600 dark:text-success-400">★</span>
                 <span className="text-gray-600 dark:text-gray-300">{t('meaning.closestAlly')}</span>
                 <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_positive_link}</span>
               </div>
             )}
             {snapshot.strongest_negative_link && (
               <div className="flex items-center gap-2">
-                <span className="text-red-600 dark:text-red-400">⚠</span>
+                <span className="text-red-600 dark:text-danger-400">⚠</span>
                 <span className="text-gray-600 dark:text-gray-300">{t('meaning.tensionWith')}</span>
                 <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_negative_link}</span>
               </div>

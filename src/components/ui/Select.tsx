@@ -393,7 +393,7 @@ export function Select({
       {isOpen ? createPortal(
         <div
           ref={menuRef}
-          className="fixed z-50 w-max overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-800"
+          className="fixed z-50 w-max overflow-hidden rounded border border-gray-200 bg-white shadow-xl dark:border-navy-600 dark:bg-navy-800"
         >
           <div
             id={listboxId}

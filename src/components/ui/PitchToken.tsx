@@ -67,7 +67,7 @@ function conditionFillClass(condition: number, fitTone: PitchFitTone): string {
   if (capped >= 90) return "bg-success-400";
   if (capped >= 75) return "bg-primary-300";
   if (capped >= 60) return "bg-accent-300";
-  return "bg-red-400";
+  return "bg-danger-400";
 }
 
 /**

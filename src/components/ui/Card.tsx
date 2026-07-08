@@ -8,20 +8,21 @@ interface CardProps {
 
 export function Card({ children, className = "", accent = "none" }: CardProps) {
   const accentBorder = {
-    primary: "border-t-4 border-t-primary-500",
-    accent: "border-t-4 border-t-accent-400",
-    success: "border-t-4 border-t-success-400",
-    danger: "border-t-4 border-t-red-500",
-    none: "border border-gray-200 dark:border-navy-600",
+    primary: "border-t-2 border-t-primary-500",
+    accent: "border-t-2 border-t-accent-500",
+    success: "border-t-2 border-t-success-500",
+    danger: "border-t-2 border-t-danger-500",
+    none: "",
   }[accent];
 
   return (
     <div
       className={`
         bg-white dark:bg-navy-700
-        ${accent === "none" ? accentBorder : `border ${accentBorder} border-gray-200 dark:border-navy-600`}
-        rounded-lg shadow-sm dark:shadow-md
-        transition-colors duration-300
+        border border-gray-200 dark:border-navy-600
+        ${accentBorder}
+        rounded
+        transition-colors duration-150
         ${className}
       `}
     >

@@ -11,8 +11,8 @@ export function Badge({ children, variant = "neutral", size = "sm", className = 
   const variants = {
     primary: "bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300",
     accent: "bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300",
-    success: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
-    danger: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
+    success: "bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-400",
+    danger: "bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-400",
     neutral: "bg-gray-100 text-gray-600 dark:bg-navy-600 dark:text-gray-400",
   };
 

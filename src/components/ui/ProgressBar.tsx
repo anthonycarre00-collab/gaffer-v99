@@ -23,7 +23,7 @@ export function ProgressBar({
     primary: "bg-primary-500",
     accent: "bg-accent-400",
     success: "bg-success-400",
-    danger: "bg-red-500",
+    danger: "bg-danger-500",
     muted: "bg-gray-300 dark:bg-navy-500",
   };
 
