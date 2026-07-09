@@ -193,8 +193,10 @@ export function getMessageRowClassName(
  isSelected: boolean,
  isRead: boolean,
 ): string {
+ // Added transition-transform + hover scale for the modern messaging feel —
+ // rows subtly lift on hover, like WhatsApp/iMessage.
  const baseClassName =
- "flex gap-3 px-4 py-3 cursor-pointer transition-colors border-b border-gray-100 dark:border-navy-600/50";
+ "flex gap-3 px-4 py-3 cursor-pointer transition-all duration-150 border-b border-gray-100 dark:border-navy-600/50 hover:translate-x-0.5";
 
  if (isSelected) {
  return `${baseClassName} bg-primary-50 dark:bg-primary-500/10 border-l-2 border-l-primary-500`;

@@ -1796,17 +1796,17 @@
     "renewalProjectionRunway": "Cash runway {{before}} → {{after}}"
   },
   "teamProfile": {
-    "clubInfo": "Club Information",
-    "stadium": "Stadium",
+    "clubInfo": "Club Info",
+    "stadium": "The Ground",
     "capacity": "Capacity",
     "leaguePos": "League Pos",
     "leagueStanding": "League Standing",
-    "squadOverview": "Squad Overview",
+    "squadOverview": "The Squad",
     "squadSize": "Squad Size",
     "seasonHistory": "Season History",
-    "balance": "Balance",
+    "balance": "In the Bank",
     "totalWages": "Total Wages",
-    "managerLabel": "Manager:",
+    "managerLabel": "Gaffer:",
     "advancedStats": "Team Stats",
     "matchesPlayed": "Matches",
     "possession": "Possession",
@@ -1820,7 +1820,7 @@
     "perMatch": "Per Match",
     "passAccuracy": "Pass Accuracy",
     "recentMatches": "Recent Matches",
-    "teamStyle": "Team Style"
+    "teamStyle": "Style of Play"
   },
   "settings": {
     "title": "Settings",
