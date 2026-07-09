@@ -18,6 +18,19 @@ use uuid::Uuid;
 const TRANSFER_NEGOTIATION_STALE_DAYS: i64 = 14;
 const MAX_COMPLETED_AI_TRANSFERS_PER_DAY: usize = 2;
 const AWARD_LEADERBOARD_INTEREST_BONUS: i32 = 25;
+
+/// Reputation-scaled AI transfer cap per day. Elite clubs (reputation ≥ 800)
+/// are more aggressive — they're the ones who actually strengthen in real
+/// life, and the player needs formidable opponents who can out-bid them.
+/// Lower-division clubs stay frugal — they're shopping smart, not big.
+fn max_ai_transfers_for_reputation(reputation: u32) -> usize {
+    match reputation {
+        r if r >= 800 => 4, // Elite — top division's big boys
+        r if r >= 600 => 3, // Top-half — solid top-tier clubs
+        r if r >= 400 => 2, // Mid-tier — default
+        _ => 1,             // Lower divisions — shopping smart
+    }
+}
 /// Only one new club may open talks for a given user player on a single day,
 /// so stars draw steady interest over the window instead of a same-day flood.
 const MAX_NEW_INCOMING_OFFERS_PER_USER_PLAYER_PER_DAY: usize = 1;
@@ -998,7 +1011,7 @@ pub fn evaluate_transfer_market(game: &mut Game) {
                 {
                     return false;
                 }
-            } else if completed_ai_transfers >= MAX_COMPLETED_AI_TRANSFERS_PER_DAY {
+            } else if completed_ai_transfers >= max_ai_transfers_for_reputation(buyer_team.reputation) {
                 return false;
             }
             // Clubs only chase players that fit their stature and a position they
@@ -1033,7 +1046,9 @@ pub fn evaluate_transfer_market(game: &mut Game) {
             continue;
         }
 
-        if candidate.score <= 60 || completed_ai_transfers >= MAX_COMPLETED_AI_TRANSFERS_PER_DAY {
+        if candidate.score <= 60
+            || completed_ai_transfers >= max_ai_transfers_for_reputation(buyer_team.reputation)
+        {
             continue;
         }
 

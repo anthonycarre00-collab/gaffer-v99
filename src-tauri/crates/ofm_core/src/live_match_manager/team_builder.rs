@@ -213,13 +213,40 @@ fn auto_select_starting_xi<'a>(
 /// Maps a club's reputation to a 0.0–1.0 management-quality score. Generated club
 /// reputations span roughly 300 (lower divisions) to 900 (elite). Quality drives
 /// how proactively the AI rotates for player freshness.
+///
+/// Gaffer tuning: top-tier clubs (reputation ≥ 700) get a small bump above
+/// the linear mapping — they're the ones with the squads, physios, and
+/// analytics to actually manage freshness properly. Lower-tier clubs stay
+/// closer to the linear curve, riding their best XI harder.
 fn management_quality(reputation: u32) -> f64 {
-    (((reputation as f64) - 300.0) / 600.0).clamp(0.0, 1.0)
+    let base = (((reputation as f64) - 300.0) / 600.0).clamp(0.0, 1.0);
+    // Elite bonus: top-tier clubs get up to +0.10 added, scaling in
+    // linearly from reputation 700 → 900. Below 700: no bonus.
+    let elite_bonus = if reputation >= 900 {
+        0.10
+    } else if reputation >= 700 {
+        0.10 * ((reputation - 700) as f64 / 200.0)
+    } else {
+        0.0
+    };
+    (base + elite_bonus).clamp(0.0, 1.0)
 }
 
 /// Maps a manager's overall rating (≈30–95) to a 0.0–1.0 management-quality score.
+///
+/// Gaffer tuning: managers rated 80+ get a bump — these are the elite bosses
+/// the player needs as formidable opponents. A world-class gaffer (rating 90)
+/// rotates like a 0.95-quality club, not a 0.85.
 fn management_quality_from_rating(rating: u8) -> f64 {
-    ((f64::from(rating) - 30.0) / 65.0).clamp(0.0, 1.0)
+    let base = ((f64::from(rating) - 30.0) / 65.0).clamp(0.0, 1.0);
+    let elite_bonus = if rating >= 90 {
+        0.10
+    } else if rating >= 80 {
+        0.05
+    } else {
+        0.0
+    };
+    (base + elite_bonus).clamp(0.0, 1.0)
 }
 
 /// Resolves the AI management quality for a team: the linked manager's rating when

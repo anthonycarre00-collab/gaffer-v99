@@ -590,17 +590,17 @@
       "calfStrain": "Calf strain"
     },
     "scoutRatings": {
-      "excellent": "Excellent",
-      "veryGood": "Very Good",
-      "good": "Good",
-      "average": "Average",
-      "belowAverage": "Below Average"
+      "excellent": "Different class",
+      "veryGood": "Proper player",
+      "good": "Useful",
+      "average": "Steady",
+      "belowAverage": "Limited"
     },
     "scoutPotential": {
-      "worldClass": "World class potential",
-      "strong": "Strong development potential",
-      "moderate": "Moderate potential for growth",
-      "unclear": "Potential unclear — further scouting recommended"
+      "worldClass": "Could go all the way — top, top potential",
+      "strong": "Real upside — could develop into something special",
+      "moderate": "Some room to grow, but the ceiling's not enormous",
+      "unclear": "Hard to read — get the scout back for another look"
     },
     "scoutConfidence": {
       "high": "High",
@@ -940,64 +940,64 @@
     }
   },
   "training": {
-    "weeklySchedule": "Weekly Schedule",
-    "trainingFocus": "Training Focus",
-    "intensity": "Intensity",
+    "weeklySchedule": "The Week's Plan",
+    "trainingFocus": "What We're Working On",
+    "intensity": "How Hard We're Going",
     "squadFitness": "Squad Fitness",
-    "playerFitness": "Player Fitness",
+    "playerFitness": "Lads' Fitness",
     "avgCondition": "Avg Condition",
     "avgMorale": "Avg Morale",
-    "train": "Train",
-    "rest": "Rest",
-    "todayIs": "Today is <strong>{{day}}</strong> — {{type}}.",
-    "aTrainingDay": "a training day",
-    "aRestDay": "a rest day",
-    "currentlyTraining": "Currently training: <strong>{{attrs}}</strong> at <strong>{{intensity}}</strong> intensity.",
-    "recoveryNote": "Players will focus on rest and condition recovery on all days.",
+    "train": "Put a Shift In",
+    "rest": "Recovery",
+    "todayIs": "Today's <strong>{{day}}</strong> — {{type}}.",
+    "aTrainingDay": "a training day, boots on",
+    "aRestDay": "a rest day, feet up",
+    "currentlyTraining": "Working on: <strong>{{attrs}}</strong>, <strong>{{intensity}}</strong> intensity.",
+    "recoveryNote": "The lads will be on the bikes and in the pool all week — proper recovery, no sharp movements.",
     "effectiveFocus": "Focus",
-    "trainingAppliedNote": "Training is applied on scheduled training days when you advance time. Rest days provide full recovery.",
-    "criticalCondition": "{{count}} player(s) in critical condition (<25%)",
-    "exhaustedPlayers": "{{count}} player(s) exhausted (<40%)",
-    "staffAlert": "Staff Alert",
-    "staffWarning": "Staff Warning",
-    "staffSuggestion": "Staff Suggestion",
+    "trainingAppliedNote": "Training takes effect on scheduled days when you advance time. Rest days = full recovery, players come back fresh.",
+    "criticalCondition": "{{count}} lad(s) in critical condition (<25%) — get the physio on",
+    "exhaustedPlayers": "{{count}} lad(s) running on empty (<40%)",
+    "staffAlert": "Physio's Flagging You",
+    "staffWarning": "Assistant's Worried",
+    "staffSuggestion": "Assistant's Two Pence",
     "staffAdvice": {
-      "critical": "Fitness crisis! {{criticalCount}} player(s) in critical condition. {{scheduleAdvice}}",
-      "warn": "Squad is tired (avg {{avgCondition}}%, {{exhaustedCount}} below 40%). {{scheduleAdvice}}",
-      "ok": "Squad fitness is high. You could switch to Balanced or Intense for more development.",
+      "critical": "Gaffer, we've got a crisis on our hands — {{criticalCount}} lads are running on fumes. {{scheduleAdvice}}",
+      "warn": "The lads are looking leggy (avg {{avgCondition}}%, {{exhaustedCount}} below 40%). {{scheduleAdvice}}",
+      "ok": "Squad's flying — buzzing, in fact. You could push them harder with Balanced or Intense if you want them sharper.",
       "scheduleAdvice": {
-        "criticalIntense": "Switch to a Balanced or Light schedule immediately.",
-        "criticalBalanced": "Consider a Light schedule or Recovery focus.",
-        "criticalLight": "Set focus to Recovery until fitness improves.",
-        "warnIntense": "A Balanced schedule would give more recovery time.",
-        "warnBalanced": "A Light schedule could help the squad bounce back.",
-        "warnLight": "Recovery focus would maximise fitness recovery."
+        "criticalIntense": "Pull them back to Balanced or Light right now, before someone pops a hamstring.",
+        "criticalBalanced": "Get them on Light, or stick the focus on Recovery for a few days.",
+        "criticalLight": "Focus on Recovery until the legs come back — results can wait.",
+        "warnIntense": "Drop to Balanced — give them a breather before matchday.",
+        "warnBalanced": "Light schedule for a few days, let them bounce back.",
+        "warnLight": "Switch focus to Recovery — squeeze every bit of fitness back into them."
       }
     },
     "focuses": {
       "Physical": {
         "label": "Physical",
-        "desc": "Build fitness & power"
+        "desc": "Beasting — build the engine and the power"
       },
       "Technical": {
         "label": "Technical",
-        "desc": "Sharpen ball skills"
+        "desc": "Ball work — sharpen the touch and the technique"
       },
       "Tactical": {
         "label": "Tactical",
-        "desc": "Improve game IQ"
+        "desc": "Shape work — patterns, positioning, the plan"
       },
       "Defending": {
         "label": "Defending",
-        "desc": "Solidify the backline"
+        "desc": "Solid at the back — shape, pressing, the dirty work"
       },
       "Attacking": {
         "label": "Attacking",
-        "desc": "Increase goal threat"
+        "desc": "Going forward — patterns, finishing, the sharp stuff"
       },
       "Recovery": {
         "label": "Recovery",
-        "desc": "Rest day — max recovery"
+        "desc": "Easy day — ice baths, light jog, put the kettle on"
       }
     },
     "intensities": {
