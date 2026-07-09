@@ -257,7 +257,7 @@ fn ensure_portrait_file(
     let started = Instant::now();
     let seed = portrait_seed(request);
     let sources = portrait_sources()?;
-    let source = select_source(sources, seed);
+    let source = select_source_for_player(sources, seed, request.nationality.as_deref());
     let recipe = build_recipe(seed, source.id);
     let cache_key = cache_key(seed, source.id);
     fs::create_dir_all(cache_dir)
@@ -368,6 +368,153 @@ fn load_sources() -> Result<Vec<PortraitSource>, String> {
 fn select_source(sources: &'static [PortraitSource], seed: u64) -> &'static PortraitSource {
     let mut state = seed ^ 0x7283_7f41_2bcb_901du64;
     &sources[(next_u64(&mut state) as usize) % sources.len()]
+}
+
+/// Map a nationality code (ISO-3166 alpha-2 or FIFA variant like "GB-ENG")
+/// to the list of source IDs that are plausibly appropriate for players
+/// from that nation. Returns None when we have no specific mapping —
+/// the caller should fall back to the full pool.
+///
+/// This is what makes player pictures actually match nationality. Without
+/// it, a Brazilian player could end up with an East Asian source face,
+/// which looked jarringly wrong.
+fn nationality_source_pool(nationality: Option<&str>) -> Option<&'static [&'static str]> {
+    let nat = nationality?.trim().to_uppercase();
+    // Strip FIFA-style subnational suffixes ("GB-ENG" → "GB") for the
+    // first lookup, but keep the original around for the few cases where
+    // the subnational matters (e.g. "GB-WLS" might prefer different mix).
+    let base = nat.split('-').next().unwrap_or(&nat);
+
+    // Latin American countries — predominantly latin-american + indigenous
+    // + mediterranean (lots of Italian/Spanish heritage in South America).
+    const LATIN_AMERICAN: &[&str] = &[
+        "chroma-07-latin-american",
+        "chroma-11-indigenous-andean",
+        "chroma-01-mediterranean",
+        "chroma-09-caribbean",
+    ];
+    if matches!(
+        base,
+        "BR" | "AR" | "UY" | "CO" | "EC" | "PE" | "CL" | "PY" | "BO" | "VE" | "MX" | "CR" | "PA" | "DO" | "HN" | "GT" | "SV" | "NI"
+    ) {
+        return Some(LATIN_AMERICAN);
+    }
+
+    // West African — Nigeria, Ghana, Senegal, Ivory Coast, Cameroon, etc.
+    const WEST_AFRICAN: &[&str] = &["chroma-02-west-african", "chroma-09-caribbean"];
+    if matches!(
+        base,
+        "NG" | "GH" | "SN" | "CI" | "CM" | "ML" | "BF" | "GN" | "SL" | "LR" | "TG" | "BJ" | "NE" | "CG" | "CD" | "GA" | "GQ" | "TD"
+    ) {
+        return Some(WEST_AFRICAN);
+    }
+
+    // North African — Egypt, Morocco, Algeria, Tunisia — mix of west-african
+    // and middle-eastern and mediterranean.
+    const NORTH_AFRICAN: &[&str] = &[
+        "chroma-08-middle-eastern",
+        "chroma-01-mediterranean",
+        "chroma-02-west-african",
+    ];
+    if matches!(base, "EG" | "MA" | "DZ" | "TN" | "LY" | "SD" | "EH") {
+        return Some(NORTH_AFRICAN);
+    }
+
+    // Southern African — similar to West African for our purposes.
+    if matches!(base, "ZA" | "ZW" | "ZM" | "BW" | "NA" | "MZ" | "AO" | "MW") {
+        return Some(WEST_AFRICAN);
+    }
+
+    // Mediterranean Europe — Italy, Spain, Portugal, Greece, France (south).
+    const MEDITERRANEAN: &[&str] = &["chroma-01-mediterranean", "chroma-04-west-european-bald"];
+    if matches!(base, "IT" | "ES" | "PT" | "GR" | "MT" | "CY" | "AD" | "SM" | "VA") {
+        return Some(MEDITERRANEAN);
+    }
+
+    // Northern/Western Europe — England, Scotland, Wales, Ireland, Germany,
+    // Netherlands, Scandinavia, etc.
+    const NORTHERN_EUROPEAN: &[&str] = &["chroma-04-west-european-bald", "chroma-01-mediterranean"];
+    if matches!(
+        base,
+        "GB" | "IE" | "DE" | "NL" | "BE" | "AT" | "CH" | "LU" | "NO" | "SE" | "DK" | "FI" | "IS" | "EE" | "LV" | "LT" | "PL" | "CZ" | "SK" | "HU" | "RO" | "BG" | "HR" | "SI" | "RS" | "BA" | "AL" | "MK" | "ME" | "RU" | "UA" | "BY"
+    ) {
+        return Some(NORTHERN_EUROPEAN);
+    }
+
+    // East Asian — Japan, China, Korea.
+    const EAST_ASIAN: &[&str] = &["chroma-05-east-asian"];
+    if matches!(base, "JP" | "CN" | "KR" | "KP" | "TW" | "HK" | "MO") {
+        return Some(EAST_ASIAN);
+    }
+
+    // South Asian — India, Pakistan, Bangladesh, Sri Lanka.
+    const SOUTH_ASIAN: &[&str] = &["chroma-06-south-asian", "chroma-08-middle-eastern"];
+    if matches!(base, "IN" | "PK" | "BD" | "LK" | "NP" | "BT" | "MV") {
+        return Some(SOUTH_ASIAN);
+    }
+
+    // Southeast Asian — Thailand, Vietnam, Indonesia, Philippines, Malaysia.
+    const SOUTHEAST_ASIAN: &[&str] = &["chroma-10-southeast-asian", "chroma-05-east-asian"];
+    if matches!(base, "TH" | "VN" | "ID" | "PH" | "MY" | "SG" | "KH" | "LA" | "MM" | "BN" | "TL") {
+        return Some(SOUTHEAST_ASIAN);
+    }
+
+    // Middle Eastern — Saudi, UAE, Iran, Iraq, etc.
+    const MIDDLE_EASTERN: &[&str] = &["chroma-08-middle-eastern", "chroma-06-south-asian"];
+    if matches!(base, "SA" | "AE" | "IR" | "IQ" | "SY" | "JO" | "LB" | "PS" | "IL" | "YE" | "OM" | "QA" | "KW" | "BH" | "AF") {
+        return Some(MIDDLE_EASTERN);
+    }
+
+    // Caribbean — Jamaica, Trinidad, etc.
+    const CARIBBEAN: &[&str] = &["chroma-09-caribbean", "chroma-02-west-african"];
+    if matches!(base, "JM" | "TT" | "BB" | "BS" | "CU" | "HT" | "PR" | "KY" | "AG" | "DM" | "GD" | "LC" | "VC" | "KN") {
+        return Some(CARIBBEAN);
+    }
+
+    // Polynesian / Pacific Islands.
+    const POLYNESIAN: &[&str] = &["chroma-12-polynesian"];
+    if matches!(base, "NZ" | "FJ" | "WS" | "TO" | "PG" | "SB" | "VU" | "NU" | "CK" | "TV") {
+        return Some(POLYNESIAN);
+    }
+
+    // United States / Canada / Australia — melting pots, use the full pool.
+    None
+}
+
+/// Pick a portrait source that matches the player's nationality when we
+/// have a sensible mapping. Falls back to the full pool for unknown or
+/// melting-pot nations (US, CA, AU).
+fn select_source_for_player(
+    sources: &'static [PortraitSource],
+    seed: u64,
+    nationality: Option<&str>,
+) -> &'static PortraitSource {
+    let pool_ids = nationality_source_pool(nationality);
+    // Build the list of indices that match the pool. If no mapping, all
+    // sources are eligible.
+    let eligible_indices: Vec<usize> = match pool_ids {
+        Some(ids) => sources
+            .iter()
+            .enumerate()
+            .filter_map(|(i, s)| {
+                if ids.iter().any(|id| *id == s.id) {
+                    Some(i)
+                } else {
+                    None
+                }
+            })
+            .collect(),
+        None => (0..sources.len()).collect(),
+    };
+    let final_pool: Vec<usize> = if eligible_indices.is_empty() {
+        (0..sources.len()).collect()
+    } else {
+        eligible_indices
+    };
+    let mut state = seed ^ 0x7283_7f41_2bcb_901du64;
+    let idx_in_pool = (next_u64(&mut state) as usize) % final_pool.len();
+    let source_idx = final_pool[idx_in_pool];
+    &sources[source_idx]
 }
 
 fn build_recipe(seed: u64, source_id: &str) -> Recipe {
