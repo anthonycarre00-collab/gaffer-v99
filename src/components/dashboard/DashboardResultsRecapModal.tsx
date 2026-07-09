@@ -201,15 +201,25 @@ export default function DashboardResultsRecapModal({
 /**
  * Auto-dismisses the recap modal after 7 seconds so the player can keep
  * playing without an obligatory click. They can still click Continue if they
- * want it gone sooner. Mounted inside the modal so the timer resets each
- * time the modal opens.
+ * want it gone sooner, or hit Escape. Mounted inside the modal so the timer
+ * resets each time the modal opens.
  */
 function RecapAutoDismiss({ onClose }: { onClose: () => void }): null {
  useEffect(() => {
  const timer = window.setTimeout(() => {
  onClose();
  }, 7000);
- return () => window.clearTimeout(timer);
+ // Escape key also dismisses — keyboard accessibility.
+ const onKey = (e: KeyboardEvent) => {
+ if (e.key === "Escape") {
+ onClose();
+ }
+ };
+ window.addEventListener("keydown", onKey);
+ return () => {
+ window.clearTimeout(timer);
+ window.removeEventListener("keydown", onKey);
+ };
  }, [onClose]);
  return null;
 }

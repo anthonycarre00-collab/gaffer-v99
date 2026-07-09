@@ -75,10 +75,18 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  window.addEventListener("click", close);
  }, 0);
  window.addEventListener("scroll", close, true);
+ // Escape key closes the menu — standard keyboard accessibility.
+ const onKey = (e: KeyboardEvent) => {
+ if (e.key === "Escape") {
+ setVisible(false);
+ }
+ };
+ window.addEventListener("keydown", onKey);
  return () => {
  window.clearTimeout(timer);
  window.removeEventListener("click", close);
  window.removeEventListener("scroll", close, true);
+ window.removeEventListener("keydown", onKey);
  };
  }, [visible]);
 
