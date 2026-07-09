@@ -8,6 +8,7 @@ import {
  PlayerSelectionOptions,
 } from "../../store/gameStore";
 import { Card, CardHeader, CardBody, Badge, ProgressBar, Button, Checkbox } from "../ui";
+import { useSortableTable, SortableHeader } from "../ui/SortableTable";
 import { User } from "lucide-react";
 import {
  formatExactMoney,
@@ -261,6 +262,23 @@ export default function FinancesTab({
  } | null>(null);
 
  const roster = gameState.players.filter((p) => p.team_id === myTeam.id);
+
+ // Sortable payroll table — show top earners, but allow sorting by any column.
+ const payrollRows = roster.map((p) => ({
+ id: p.id,
+ name: p.full_name || p.match_name,
+ position: p.position,
+ wage: p.wage,
+ marketValue: p.market_value,
+ contractEnd: p.contract_end ?? "",
+ }));
+ const {
+ sortKey: payrollSortKey,
+ sortDir: payrollSortDir,
+ toggleSort: togglePayrollSort,
+ sortedRows: sortedPayrollRows,
+ } = useSortableTable(payrollRows, { initialKey: "wage", initialDir: "desc" });
+ const topPayrollRows = sortedPayrollRows.slice(0, 10);
  const financePlayers = gameState.players.filter(
  (player) =>
  player.team_id === myTeam.id ||
@@ -1269,28 +1287,17 @@ export default function FinancesTab({
  <table className="w-full text-left border-collapse">
  <thead>
  <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.player")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.position")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("finances.wagePerWeek")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("finances.marketValue")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.contract")}
- </th>
+ <SortableHeader label={t("common.player")} columnKey="name" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
+ <SortableHeader label={t("common.position")} columnKey="position" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
+ <SortableHeader label={t("finances.wagePerWeek")} columnKey="wage" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} numeric />
+ <SortableHeader label={t("finances.marketValue")} columnKey="marketValue" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} numeric />
+ <SortableHeader label={t("common.contract")} columnKey="contractEnd" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
  </tr>
  </thead>
  <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
- {[...roster]
- .sort((a, b) => b.wage - a.wage)
- .slice(0, 10)
- .map((p) => {
+ {topPayrollRows.map((row) => {
+ const p = roster.find((rp) => rp.id === row.id);
+ if (!p) return null;
  const contextItems = onSelectPlayer
  ? [
  {
@@ -1301,7 +1308,7 @@ export default function FinancesTab({
  ]
  : [];
 
- const row = (
+ const tableRow = (
  <tr
  key={p.id}
  onClick={() => onSelectPlayer?.(p.id)}
@@ -1336,12 +1343,12 @@ export default function FinancesTab({
  );
 
  if (!onSelectPlayer) {
- return row;
+ return tableRow;
  }
 
  return (
  <ContextMenu items={contextItems} key={p.id}>
- {row}
+ {tableRow}
  </ContextMenu>
  );
  })}

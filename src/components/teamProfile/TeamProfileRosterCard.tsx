@@ -9,6 +9,7 @@ import type { PlayerData } from "../../store/gameStore";
 import ContextMenu from "../ContextMenu";
 import { buildViewProfileMenuItem } from "../playerActions/playerContextMenuItems";
 import { Badge, Card, CardBody, CardHeader, CountryFlag, PlayerAvatar, ProgressBar } from "../ui";
+import { useSortableTable, SortableHeader } from "../ui/SortableTable";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import type { TeamProfileTranslate } from "./TeamProfile.types";
 
@@ -27,6 +28,25 @@ export default function TeamProfileRosterCard({
  t,
  onSelectPlayer,
 }: TeamProfileRosterCardProps) {
+ // Sortable roster table.
+ const sortableRows = roster.map((player) => ({
+ id: player.id,
+ player,
+ position: player.natural_position || player.position,
+ name: player.full_name || player.match_name,
+ age: calcAge(player.date_of_birth),
+ nationality: player.nationality ?? "",
+ value: player.market_value,
+ condition: player.condition,
+ ovr: getPlayerOvr(player),
+ }));
+ const {
+ sortKey,
+ sortDir,
+ toggleSort,
+ sortedRows,
+ } = useSortableTable(sortableRows, { initialKey: "ovr", initialDir: "desc" });
+
  return (
  <Card className="lg:col-span-3">
  <CardHeader>
@@ -37,33 +57,21 @@ export default function TeamProfileRosterCard({
  <table className="w-full text-left border-collapse">
  <thead>
  <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.position")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.name")}
- </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.age")}
- </th>
+ <SortableHeader label={t("common.position")} columnKey="position" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
+ <SortableHeader label={t("common.name")} columnKey="name" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
+ <SortableHeader label={t("common.age")} columnKey="age" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
  <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
  {t("common.nationality")}
  </th>
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.value")}
- </th>
+ <SortableHeader label={t("common.value")} columnKey="value" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
  {isOwnTeam && (
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.condition")}
- </th>
+ <SortableHeader label={t("common.condition")} columnKey="condition" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
  )}
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.ovr")}
- </th>
+ <SortableHeader label={t("common.ovr")} columnKey="ovr" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
  </tr>
  </thead>
  <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
- {roster.map((player) => {
+ {sortedRows.map(({ player }) => {
  const ovr = getPlayerOvr(player);
  const age = calcAge(player.date_of_birth);
  const contextItems = onSelectPlayer

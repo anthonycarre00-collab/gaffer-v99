@@ -7,6 +7,7 @@ import {
  TransferOfferData,
 } from "../../store/gameStore";
 import { Card, CardBody, Badge, CountryFlag, PlayerAvatar } from "../ui";
+import { useSortableTable, SortableHeader } from "../ui/SortableTable";
 import ContextMenu from "../ContextMenu";
 import {
  Search,
@@ -781,18 +782,41 @@ export default function TransfersTab({
  specificPositions,
  ],
  );
+
+ // Sortable market table — derive sortable rows from the filtered list.
+ // Sort applies BEFORE pagination so the page boundary is consistent.
+ const sortableMarketRows = useMemo(
+ () =>
+ filteredList.map((player) => ({
+ player,
+ position: player.natural_position || player.position,
+ name: player.full_name || player.match_name,
+ age: calcAge(player.date_of_birth),
+ team: player.team_id ?? "",
+ value: player.market_value,
+ wage: player.wage,
+ ovr: getPlayerOvr(player),
+ })),
+ [filteredList],
+ );
+ const {
+ sortKey: marketSortKey,
+ sortDir: marketSortDir,
+ toggleSort: toggleMarketSort,
+ sortedRows: sortedMarketRows,
+ } = useSortableTable(sortableMarketRows, { initialKey: "ovr", initialDir: "desc" });
+
  const marketTotalPages = Math.max(
  1,
- Math.ceil(filteredList.length / TRANSFER_MARKET_PAGE_SIZE),
+ Math.ceil(sortedMarketRows.length / TRANSFER_MARKET_PAGE_SIZE),
  );
  const safeMarketPage = Math.min(marketPage, marketTotalPages);
  const marketPageStart = (safeMarketPage - 1) * TRANSFER_MARKET_PAGE_SIZE;
  const visibleList = isPlayersView
- ? filteredList.slice(
- marketPageStart,
- marketPageStart + TRANSFER_MARKET_PAGE_SIZE,
- )
- : filteredList;
+ ? sortedMarketRows
+ .slice(marketPageStart, marketPageStart + TRANSFER_MARKET_PAGE_SIZE)
+ .map((r) => r.player)
+ : sortedMarketRows.map((r) => r.player);
  const showMarketPagination =
  isPlayersView && filteredList.length > TRANSFER_MARKET_PAGE_SIZE;
  const marketRangeFrom = filteredList.length === 0 ? 0 : marketPageStart + 1;
@@ -1307,27 +1331,15 @@ export default function TransfersTab({
  <table className="w-full text-left border-collapse">
  <thead>
  <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.position")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.player")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.age")}
- </th>
+ <SortableHeader label={t("common.position")} columnKey="position" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} />
+ <SortableHeader label={t("common.player")} columnKey="name" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} />
+ <SortableHeader label={t("common.age")} columnKey="age" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
  <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
  {t("common.team")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.value")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.wage")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
- {t("common.ovr")}
- </th>
+ <SortableHeader label={t("common.value")} columnKey="value" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
+ <SortableHeader label={t("common.wage")} columnKey="wage" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
+ <SortableHeader label={t("common.ovr")} columnKey="ovr" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
  <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
  {t("common.status")}
  </th>
