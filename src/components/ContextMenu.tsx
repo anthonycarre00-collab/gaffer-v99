@@ -67,10 +67,16 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
 
  useEffect(() => {
  if (!visible) return;
+ // Defer attaching the click-close listener by one tick so the click
+ // that OPENED the menu doesn't immediately propagate to window and
+ // close it again (this was the bug where Actions button "did nothing").
  const close = () => setVisible(false);
+ const timer = window.setTimeout(() => {
  window.addEventListener("click", close);
+ }, 0);
  window.addEventListener("scroll", close, true);
  return () => {
+ window.clearTimeout(timer);
  window.removeEventListener("click", close);
  window.removeEventListener("scroll", close, true);
  };

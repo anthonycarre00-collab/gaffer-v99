@@ -19,6 +19,7 @@ import {
 import ContextMenu from "../ContextMenu";
 import { competitionDisplayName } from "../../lib/competitionName";
 import { Card, CardHeader, CardBody, Badge, Select } from "../ui";
+import { useSortableTable, SortableHeader } from "../ui/SortableTable";
 import {
  Trophy,
  Calendar,
@@ -224,6 +225,29 @@ export default function TournamentsTab({
  }
 
  const standings = [...league.standings].sort(byTablePosition);
+
+ // Sortable standings — applies when user clicks a column header.
+ const sortableRows = standings.map((entry) => ({
+ team_id: entry.team_id,
+ played: entry.played,
+ won: entry.won,
+ drawn: entry.drawn,
+ lost: entry.lost,
+ goals_for: entry.goals_for,
+ goals_against: entry.goals_against,
+ goal_diff: entry.goals_for - entry.goals_against,
+ points: entry.points,
+ }));
+ const {
+ sortKey: standingsSortKey,
+ sortDir: standingsSortDir,
+ toggleSort: toggleStandingsSort,
+ sortedRows: sortedStandingsRows,
+ } = useSortableTable(sortableRows, { initialKey: "points", initialDir: "desc" });
+ // Map back to full entries (preserving zones logic).
+ const sortedStandings = sortedStandingsRows
+ .map((row) => standings.find((s) => s.team_id === row.team_id))
+ .filter((s): s is NonNullable<typeof s> => s != null);
 
  const isKnockout = isKnockoutCompetition(league);
  const knockoutRounds = league.knockout_rounds ?? [];
@@ -827,40 +851,24 @@ export default function TournamentsTab({
  <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
  {t("common.team")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.played")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.won")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.drawn")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.lost")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.gf")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.ga")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.gd")}
- </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
- {t("common.pts")}
- </th>
+ <SortableHeader label={t("common.played")} columnKey="played" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.won")} columnKey="won" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.drawn")} columnKey="drawn" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.lost")} columnKey="lost" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.gf")} columnKey="goals_for" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.ga")} columnKey="goals_against" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.gd")} columnKey="goal_diff" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
+ <SortableHeader label={t("common.pts")} columnKey="points" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
  </tr>
  </thead>
  <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
- {standings.map((entry, idx) => {
+ {sortedStandings.map((entry, idx) => {
  const isUser = entry.team_id === userTeamId;
  const gd = entry.goals_for - entry.goals_against;
  const inPromotionZone = idx < zones.promotionSlots;
  const inRelegationZone =
  zones.relegationSlots > 0 &&
- idx >= standings.length - zones.relegationSlots;
+ idx >= sortedStandings.length - zones.relegationSlots;
  return (
  <ContextMenu
  items={buildStandingMenuItems(entry.team_id)}

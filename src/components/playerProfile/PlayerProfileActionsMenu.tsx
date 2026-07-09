@@ -223,9 +223,11 @@ export default function PlayerProfileActionsMenu({
  return (
  <ContextMenu ref={menuRef} items={items}>
  <Button
+ type="button"
  size="sm"
  variant="outline"
  onClick={(event) => {
+ event.stopPropagation();
  const rect = event.currentTarget.getBoundingClientRect();
  menuRef.current?.open(rect.left, rect.bottom + 4);
  }}

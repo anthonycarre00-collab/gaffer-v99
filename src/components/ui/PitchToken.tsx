@@ -115,7 +115,7 @@ export function PitchToken({
  </div>
  <PlayerAvatar
  player={avatar ?? { full_name: name, match_name: name }}
- className={`h-11 w-11 overflow-hidden rounded-full ${fitRingClass(fitTone)}`}
+ className={`h-14 w-14 overflow-hidden rounded-full ${fitRingClass(fitTone)}`}
  />
  <div className="absolute -bottom-1 -right-1.5 z-10">
  <span className="rounded-full bg-gray-900 px-2 py-0.5 text-xs font-heading font-bold leading-4 text-white ring-1 ring-white/30">
@@ -138,7 +138,7 @@ export function PitchToken({
  </span>
  ) : null}
 
- <div className="max-w-full truncate text-xs font-heading font-bold uppercase tracking-[0.12em] text-white drop-shadow-sm">
+ <div className="max-w-full truncate text-[11px] sm:text-xs font-heading font-bold uppercase tracking-[0.12em] text-white drop-shadow-sm">
  {name}
  </div>
 

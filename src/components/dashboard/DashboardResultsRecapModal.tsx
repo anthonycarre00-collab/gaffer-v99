@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatMatchDate } from "../../lib/helpers";
@@ -90,6 +91,9 @@ export default function DashboardResultsRecapModal({
 
  return (
  <DashboardModalFrame maxWidthClassName="max-w-lg">
+ {/* Auto-dismiss after 7s so the recap doesn't permanently interrupt the
+ player — they can still click Continue if they want it gone sooner. */}
+ <RecapAutoDismiss onClose={onClose} />
  <div className="flex flex-col gap-4">
  <div className="flex flex-col gap-0.5">
  <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
@@ -192,4 +196,20 @@ export default function DashboardResultsRecapModal({
  </div>
  </DashboardModalFrame>
  );
+}
+
+/**
+ * Auto-dismisses the recap modal after 7 seconds so the player can keep
+ * playing without an obligatory click. They can still click Continue if they
+ * want it gone sooner. Mounted inside the modal so the timer resets each
+ * time the modal opens.
+ */
+function RecapAutoDismiss({ onClose }: { onClose: () => void }): null {
+ useEffect(() => {
+ const timer = window.setTimeout(() => {
+ onClose();
+ }, 7000);
+ return () => window.clearTimeout(timer);
+ }, [onClose]);
+ return null;
 }

@@ -16,3 +16,5 @@ export { PitchToken } from "./PitchToken";
 export type { PitchFitTone, PitchTokenMarker, PitchTokenProps } from "./PitchToken";
 
 export { PlayerMeaningCard } from "./PlayerMeaningCard";
+export { useSortableTable, SortableHeader } from "./SortableTable";
+export type { SortDir, UseSortableTableResult } from "./SortableTable";
