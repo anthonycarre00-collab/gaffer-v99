@@ -153,7 +153,9 @@
     "searchPlayers": "Players",
     "scouting": "Scouting Network",
     "youthAcademy": "Academy",
-    "saveGame": "Save game",
+    "saveGame": "Save",
+    "saveAs": "Save As",
+    "saveAsHint": "Save a copy under a new name — keeps the original save intact.",
     "saving": "Saving...",
     "saved": "Saved!",
     "collapseSidebar": "Collapse sidebar",
@@ -2199,6 +2201,7 @@
     "noGoals": "Nobody found the net.",
     "matchComplete": "Match complete.",
     "addressPress": "Face the press or head back to the dressing room.",
+    "punditLabel": "Co-Commentator:",
     "skip": "Skip",
     "pressConference": {
       "praiseTeam": {

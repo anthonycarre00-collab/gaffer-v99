@@ -97,7 +97,7 @@ export function EventFeed({
  className={`mt-1 text-[11px] italic border-l-2 pl-2 py-0.5 rounded-sm ${punditToneClass(pundit.tone)}`}
  >
  <span className="font-heading not-italic uppercase tracking-wider opacity-70 mr-1">
- Pundit:
+ {t("match.punditLabel", { defaultValue: "Pundit:" })}
  </span>
  {pundit.line}
  </p>
