@@ -1919,6 +1919,29 @@ pub async fn save_game(
     sm.save_game_with_stats(&game, &stats_state, &save_id)
 }
 
+/// Save the current game state under a NEW save slot. The previous save
+/// remains intact — this is the "Save As" operation. The new save becomes
+/// the active session, so subsequent auto-saves go to the new slot.
+#[tauri::command]
+pub async fn save_game_as(
+    state: State<'_, Arc<StateManager>>,
+    sm_state: State<'_, Arc<SaveManagerState>>,
+    save_name: String,
+) -> Result<String, String> {
+    info!("[cmd] save_game_as name={}", save_name);
+    let game = state
+        .get_game(|g: &Game| g.clone())
+        .ok_or("be.error.noActiveGameSession".to_string())?;
+
+    let mut sm = map_save_manager_lock_error(sm_state.0.lock())?;
+    let stats_state = require_active_stats_state(&state)?;
+    let new_save_id = create_new_save(&mut sm, &game, &stats_state, &save_name)?;
+    // Switch the active session to the new save. The old save is preserved
+    // on disk — the player can load it from the main menu later.
+    state.set_save_id(new_save_id.clone());
+    Ok(new_save_id)
+}
+
 /// Save the current game and clear the active session so the player returns to the main menu.
 #[tauri::command]
 pub async fn exit_to_menu(

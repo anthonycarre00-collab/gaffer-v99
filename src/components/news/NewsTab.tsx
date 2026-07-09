@@ -22,6 +22,7 @@ import { Select } from "../ui";
 import { fetchNewsFeed, type NewsFeed } from "../../services/newsService";
 import { isNewsArticleVisible } from "../../utils/newsVisibility";
 import { formatMatchDate as fmtMatchDate } from "../../lib/helpers";
+import { spinHeadline, spinClassName } from "../../lib/newsSpinner";
 
 const CAT_ICONS: Record<string, React.ReactNode> = {
  MatchReport: <Newspaper className="w-4 h-4" />,
@@ -358,8 +359,8 @@ function HeroArticle({
  </span>
  </div>
 
- <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white leading-tight mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
- {article.headline}
+ <h2 className={`text-xl font-heading font-bold leading-tight mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors ${spinClassName(spinHeadline(article.headline, article.category, article.id).spin)}`}>
+ {spinHeadline(article.headline, article.category, article.id).headline}
  </h2>
 
  {/* Match score badge */}
@@ -451,8 +452,8 @@ function ArticleCard({
  </span>
  </div>
 
- <h3 className="text-sm font-heading font-bold text-gray-900 dark:text-white leading-snug mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
- {article.headline}
+ <h3 className={`text-sm font-heading font-bold leading-snug mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors ${spinClassName(spinHeadline(article.headline, article.category, article.id).spin)}`}>
+ {spinHeadline(article.headline, article.category, article.id).headline}
  </h3>
 
  {article.match_score && (
@@ -541,8 +542,8 @@ function ArticleDetail({
  </div>
 
  {/* Headline */}
- <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white leading-tight mb-4">
- {article.headline}
+ <h1 className={`text-2xl font-heading font-bold leading-tight mb-4 ${spinClassName(spinHeadline(article.headline, article.category, article.id).spin)}`}>
+ {spinHeadline(article.headline, article.category, article.id).headline}
  </h1>
 
  {/* Match score */}

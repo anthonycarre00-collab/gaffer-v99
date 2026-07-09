@@ -246,6 +246,7 @@ pub fn run() {
             mark_all_messages_read,
             clear_old_messages,
             save_game,
+            save_game_as,
             auto_select_set_pieces,
             toggle_transfer_list,
             toggle_loan_list,

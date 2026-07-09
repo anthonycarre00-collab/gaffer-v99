@@ -43,6 +43,8 @@ interface DashboardHeaderProps {
  onBack: () => void;
  onContinue: () => void;
  onSave: () => void;
+ /** Optional "Save As" handler — when provided, shows a Save As button next to Save. */
+ onSaveAs?: () => void;
  onSearchBlur: () => void;
  onSearchFocus: () => void;
  onSearchQueryChange: (query: string) => void;
@@ -286,6 +288,7 @@ export default function DashboardHeader({
  onBack,
  onContinue,
  onSave,
+ onSaveAs,
  onSearchBlur,
  onSearchFocus,
  onSearchQueryChange,
@@ -396,6 +399,16 @@ export default function DashboardHeader({
  {renderSaveButtonIcon(isSaving)}
  {getSaveButtonLabel(t, saveFlash, isSaving)}
  </button>
+ {onSaveAs ? (
+ <button
+ onClick={onSaveAs}
+ disabled={isSaving}
+ className="inline-flex items-center gap-1.5 rounded border border-gray-300 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200 transition-colors hover:border-accent-400 hover:text-accent-600 dark:hover:border-accent-500 dark:hover:text-accent-300 disabled:opacity-50"
+ title={t("dashboard.saveAsHint", { defaultValue: "Save a copy under a new name — keeps the original save intact." })}
+ >
+ {t("dashboard.saveAs", { defaultValue: "Save As" })}
+ </button>
+ ) : null}
  {isUnemployed ? (
  <button
  onClick={handleContinueClick}

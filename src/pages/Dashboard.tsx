@@ -308,6 +308,36 @@ export default function Dashboard(): JSX.Element {
  }
  }, [markClean]);
 
+ /**
+  * Save As — prompt for a name, create a new save slot, switch to it.
+  * The previous save remains intact on disk. Uses Tauri's dialog ask()
+  * for the name input rather than a custom modal — simpler and matches
+  * the platform's native feel.
+  */
+ const handleSaveAs = useCallback(async () => {
+ // Use a simple prompt — Tauri's ask() is yes/no, so we use the
+ // browser's window.prompt as a cross-platform fallback. Tauri
+ // supports this via the underlying webview.
+ const defaultName = `Save ${new Date().toLocaleDateString()}`;
+ const name = window.prompt(
+ "Save a copy under a new name:",
+ defaultName,
+ );
+ if (!name?.trim()) return;
+ setIsSaving(true);
+ try {
+ await invoke<string>("save_game_as", { saveName: name.trim() });
+ markClean();
+ setSaveFlash(true);
+ setTimeout(() => setSaveFlash(false), 2000);
+ } catch (err) {
+ console.error("Failed to save as:", err);
+ alert(`Failed to save: ${err}`);
+ } finally {
+ setIsSaving(false);
+ }
+ }, [markClean]);
+
  // Intercept window close to warn about unsaved changes
  const [showCloseConfirm, setShowCloseConfirm] = useState(false);
  const isClosingRef = useRef(false);
@@ -562,6 +592,7 @@ export default function Dashboard(): JSX.Element {
  onBack={handleBack}
  onContinue={handleContinue}
  onSave={handleSave}
+ onSaveAs={handleSaveAs}
  onSearchBlur={handleSearchBlur}
  onSearchFocus={handleSearchFocus}
  onSearchQueryChange={handleSearchQueryChange}
