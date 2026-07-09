@@ -70,12 +70,16 @@ describe("PlayerProfile.attributes", () => {
             "common.attrGroups.technical",
             "common.attrGroups.mental",
         ]);
-        expect(groups[0]?.attrs).toHaveLength(4);
-        expect(groups[0]?.average).toBe(62);
-        expect(groups[1]?.attrs).toHaveLength(5);
-        expect(groups[1]?.average).toBe(66);
-        expect(groups[2]?.attrs).toHaveLength(7);
-        expect(groups[2]?.average).toBe(72);
+        // Physical: pace, burst, engine, power, agility (5 attrs)
+        expect(groups[0]?.attrs).toHaveLength(5);
+        expect(groups[0]?.average).toBe(59);
+        // Technical: passing, distribution, touch, finishing, defending, aerial (6 attrs)
+        expect(groups[1]?.attrs).toHaveLength(6);
+        expect(groups[1]?.average).toBe(65);
+        // Mental (The Head): anticipation, vision, decisions, composure,
+        // edge, team_ethic, leadership, stability, morale (9 attrs)
+        expect(groups[2]?.attrs).toHaveLength(9);
+        expect(groups[2]?.average).toBe(65);
     });
 
     it("adds the goalkeeper-specific group for goalkeepers", () => {
@@ -87,12 +91,48 @@ describe("PlayerProfile.attributes", () => {
         expect(groups).toHaveLength(4);
         expect(groups[3]).toMatchObject({
             label: "common.attrGroups.goalkeeper",
-            average: 77,
         });
+        // GK group: shot_stopping, commanding, playing_out (3 attrs, no
+        // more duplicate shot_stopping).
         expect(groups[3]?.attrs.map((attr) => attr.name)).toEqual([
             "common.attributes.shot_stopping",
-            "common.attributes.shot_stopping",
-            "common.attributes.aerial",
+            "common.attributes.commanding",
+            "common.attributes.playing_out",
         ]);
+        // Average = (76 + 50 + 50) / 3 = 58.67 → 59
+        expect(groups[3]?.average).toBe(59);
+    });
+
+    it("uses stability_modifier + morale from the player for the hidden attributes", () => {
+        const groups = buildPlayerAttributeGroups(
+            createPlayer({ stability_modifier: 88, morale: 30 }),
+            (key) => key,
+        );
+        const mental = groups[2]?.attrs ?? [];
+        const stability = mental.find((a) => a.name === "common.attributes.stability");
+        const morale = mental.find((a) => a.name === "common.attributes.morale");
+        expect(stability?.value).toBe(88);
+        expect(morale?.value).toBe(30);
+    });
+
+    it("uses personality.neuroticism + agreeableness for Edge + Team Ethic", () => {
+        const groups = buildPlayerAttributeGroups(
+            createPlayer({
+                personality: {
+                    openness: 50,
+                    conscientiousness: 50,
+                    extraversion: 50,
+                    agreeableness: 80,
+                    neuroticism: 25,
+                    confidence: 60,
+                },
+            }),
+            (key) => key,
+        );
+        const mental = groups[2]?.attrs ?? [];
+        const edge = mental.find((a) => a.name === "common.attributes.edge");
+        const teamEthic = mental.find((a) => a.name === "common.attributes.team_ethic");
+        expect(edge?.value).toBe(25);
+        expect(teamEthic?.value).toBe(80);
     });
 });

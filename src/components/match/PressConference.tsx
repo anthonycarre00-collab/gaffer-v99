@@ -5,7 +5,7 @@ import type { TFunction } from "i18next";
 import { GameStateData } from "../../store/gameStore";
 import { MatchSnapshot } from "./types";
 import { Badge, ThemeToggle } from "../ui";
-import { ChevronRight, Mic, MessageSquare } from "lucide-react";
+import { ChevronRight, Mic, MessageSquare, UserCheck } from "lucide-react";
 
 interface PressConferenceProps {
  snapshot: MatchSnapshot;
@@ -366,6 +366,76 @@ export default function PressConference({
  }
  };
 
+ /**
+  * Delegate the press conference to the assistant manager — picks the
+  * most boring/safe responses for every question and submits. Slight
+  * morale cost compared to doing it yourself, but saves the manager
+  * from sitting through the same questions every week.
+  */
+ const handleDelegate = async () => {
+ setSubmitting(true);
+ try {
+ // Pick the most "safe" response for each question — prefer
+ // "humble" / "balanced" / "deflect" tones when available, otherwise
+ // fall back to the first response.
+ const safeTonePriority = ["humble", "balanced", "deflect", "neutral", "stay_humble"];
+ const payloads: AnswerPayload[] = questions.map((q) => {
+ const sorted = [...q.responses].sort((a, b) => {
+ const ai = safeTonePriority.indexOf(a.id.toLowerCase());
+ const bi = safeTonePriority.indexOf(b.id.toLowerCase());
+ return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+ });
+ const resp = sorted[0];
+ return {
+ question_id: q.id,
+ response_id: resp?.id || "",
+ response_tone: resp?.tone || "",
+ response_text: resp?.text || "",
+ response_text_key: resp?.textKey || "",
+ response_text_params: resp?.textParams,
+ question_text: q.question,
+ player_id: (q as PlayerFocusQuestion).playerId || "",
+ };
+ });
+
+ const userTeamName =
+ userSide === "Home" ? snapshot.home_team.name : snapshot.away_team.name;
+ const userTeamId =
+ userSide === "Home" ? snapshot.home_team.id : snapshot.away_team.id;
+ const resultStr = `${snapshot.home_team.name} ${snapshot.home_score} - ${snapshot.away_score} ${snapshot.away_team.name}`;
+ const prerenderedHeadline =
+ t("match.pressReport.headlinePostMatch", { team: userTeamName, result: resultStr });
+ const prerenderedBody = t("match.pressReport.bodyNone", {
+ team: userTeamName,
+ result: resultStr,
+ });
+
+ const result = await invoke<{ game: GameStateData; morale_delta: number }>(
+ "submit_press_conference",
+ {
+ answers: payloads,
+ homeTeam: snapshot.home_team.name,
+ awayTeam: snapshot.away_team.name,
+ homeScore: snapshot.home_score,
+ awayScore: snapshot.away_score,
+ userTeamName,
+ userTeamId,
+ prerenderedBody,
+ prerenderedHeadline,
+ },
+ );
+
+ if (result.game && onGameUpdate) {
+ onGameUpdate(result.game);
+ }
+ } catch (err) {
+ console.error("Failed to delegate press conference:", err);
+ } finally {
+ setSubmitting(false);
+ onFinish();
+ }
+ };
+
  const userTeamName =
  userSide === "Home" ? snapshot.home_team.name : snapshot.away_team.name;
 
@@ -480,12 +550,22 @@ export default function PressConference({
  )}
  </div>
 
- {/* Skip button */}
+ {/* Footer — delegate to assistant, or skip without answering */}
  <footer className="bg-white dark:bg-navy-800 border-t border-gray-200 dark:border-navy-700 px-6 py-3 transition-colors duration-300">
- <div className="max-w-3xl mx-auto flex justify-end">
+ <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 flex-wrap">
+ <button
+ onClick={handleDelegate}
+ disabled={submitting}
+ className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 transition-colors disabled:opacity-50"
+ title={t("match.delegateHint", { defaultValue: "Your assistant will give safe, boring answers — the press will be polite." })}
+ >
+ <UserCheck className="w-4 h-4" />
+ {t("match.delegateToAssistant", { defaultValue: "Delegate to Assistant" })}
+ </button>
  <button
  onClick={onFinish}
- className="text-xs font-heading uppercase tracking-wider text-gray-600 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+ disabled={submitting}
+ className="text-xs font-heading uppercase tracking-wider text-gray-600 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300 transition-colors disabled:opacity-50"
  >
  {t("match.skipConference")}
  </button>

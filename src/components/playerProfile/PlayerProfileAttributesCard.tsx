@@ -2,10 +2,32 @@ import { Fragment, useState } from "react";
 import { Shield } from "lucide-react";
 import { getAttributeColorClass } from "./PlayerProfile.helpers";
 import { getAttributeColors } from "../../lib/playerAttributeDisplay";
+import { interpretAttribute, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
 import type { PlayerAttributeGroup } from "./PlayerProfile.attributes";
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
 import { PlayerAttributeRadarChart } from "./PlayerAttributeRadarChart";
 import PlayerProfileStatCard from "./PlayerProfileStatCard";
+
+/**
+ * Map a translated attribute name back to its canonical key so we can look
+ * up the interpretation tier. Returns null for unknown attributes.
+ *
+ * Build a reverse lookup table on first call — much faster than scanning
+ * on every render. Cached at module scope.
+ */
+const NAME_TO_KEY_CACHE: Record<string, AttributeKey | null> = {};
+function buildNameToKeyMap(): void {
+ if (Object.keys(NAME_TO_KEY_CACHE).length > 0) return;
+ for (const key of Object.keys(ATTRIBUTE_SPECS) as AttributeKey[]) {
+ const spec = ATTRIBUTE_SPECS[key];
+ // Map by display label (case-insensitive)
+ NAME_TO_KEY_CACHE[spec.label.toLowerCase()] = key;
+ }
+}
+function mapNameToAttrKey(name: string): AttributeKey | null {
+ buildNameToKeyMap();
+ return NAME_TO_KEY_CACHE[name.toLowerCase()] ?? null;
+}
 
 // Deterministic placeholder bar width (20-79%) for hidden attributes, derived
 // from the attribute name. Stable across renders, unlike Math.random().
@@ -88,25 +110,50 @@ export default function PlayerProfileAttributesCard({
  </span>
  }
  >
- <div className="grid grid-cols-[auto_1fr_1.75rem] items-center gap-x-3 gap-y-2.5">
- {group.attrs.map((attr) => (
- <Fragment key={attr.name}>
- <span className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
+ {/* Each attribute is now a vertical stack: name + tier label on top,
+ description in the middle (Gaffer voice), thin bar at bottom. */}
+ <div className="flex flex-col gap-2.5">
+ {group.attrs.map((attr) => {
+ // Look up the description. Falls back to undefined if the
+ // attribute name doesn't match a known key (rare).
+ const attrKey = mapNameToAttrKey(attr.name);
+ const tier = attrKey
+ ? interpretAttribute(attrKey, attr.value)
+ : null;
+ return (
+ <div key={attr.name} className="flex flex-col gap-0.5">
+ <div className="flex items-baseline justify-between gap-2">
+ <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 whitespace-nowrap">
  {attr.name}
  </span>
+ {tier ? (
+ <span
+ className={`text-xs font-bold tabular-nums ${getAttributeColorClass(attr.value)}`}
+ >
+ {tier.short}
+ </span>
+ ) : (
+ <span
+ className={`font-mono font-bold text-xs text-right tabular-nums ${getAttributeColorClass(attr.value)}`}
+ >
+ {attr.value}
+ </span>
+ )}
+ </div>
+ {tier ? (
+ <p className="text-[11px] leading-tight text-gray-700 dark:text-gray-300 italic">
+ {tier.description}
+ </p>
+ ) : null}
  <ProgressBar
  value={attr.value}
  variant={getAttributeColors(attr.value).barVariant}
  size="sm"
  className="min-w-0"
  />
- <span
- className={`font-mono font-bold text-xs text-right tabular-nums ${getAttributeColorClass(attr.value)}`}
- >
- {attr.value}
- </span>
- </Fragment>
- ))}
+ </div>
+ );
+ })}
  </div>
  </PlayerProfileStatCard>
  ))}

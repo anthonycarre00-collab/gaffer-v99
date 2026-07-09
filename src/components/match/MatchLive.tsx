@@ -307,7 +307,7 @@ export default function MatchLive({
  </div>
 
  <div className="flex-1 overflow-auto p-4">
- {activePanel === "events" && <EventFeed events={importantEvents} snapshot={snapshot} feedRef={eventFeedRef} playerJerseyMap={playerJerseyMap} />}
+ {activePanel === "events" && <EventFeed events={importantEvents} snapshot={snapshot} feedRef={eventFeedRef} playerJerseyMap={playerJerseyMap} userSide={userSide ?? undefined} />}
  {activePanel === "stats" && <MatchStats snapshot={snapshot} />}
  {activePanel === "lineups" && <Lineups snapshot={snapshot} />}
  </div>

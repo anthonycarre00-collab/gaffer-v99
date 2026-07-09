@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { MatchSnapshot, MatchEvent, EnginePlayerData } from "./types";
 import { getEventDisplay, getEventTypeLabel, getPlayerName } from "./helpers";
 import { getCommentary } from "./commentary";
+import { getPunditLine } from "./punditry";
 import { Badge } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 
@@ -10,11 +11,14 @@ export function EventFeed({
  snapshot,
  feedRef,
  playerJerseyMap,
+ userSide,
 }: {
  events: MatchEvent[];
  snapshot: MatchSnapshot;
  feedRef: React.RefObject<HTMLDivElement | null>;
  playerJerseyMap?: Map<string, number>;
+ /** Which side the user is on — drives the pundit's tone. */
+ userSide?: "Home" | "Away";
 }) {
  function displayName(playerId: string | null): string {
  const name = getPlayerName(snapshot, playerId);
@@ -23,6 +27,21 @@ export function EventFeed({
  return jersey != null ? `${name} (#${jersey})` : name;
  }
  const { t } = useTranslation();
+ // Pundit tone → tailwind class
+ const punditToneClass = (tone: "positive" | "neutral" | "negative" | "amazed" | "furious"): string => {
+ switch (tone) {
+ case "amazed":
+ return "text-accent-600 dark:text-accent-400 border-accent-300 dark:border-accent-700 bg-accent-50 dark:bg-accent-950/30";
+ case "positive":
+ return "text-primary-600 dark:text-primary-400 border-primary-300 dark:border-primary-700 bg-primary-50 dark:bg-primary-950/30";
+ case "negative":
+ return "text-gray-700 dark:text-gray-300 border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/40";
+ case "furious":
+ return "text-danger-600 dark:text-danger-400 border-danger-300 dark:border-danger-700 bg-danger-50 dark:bg-danger-950/30";
+ default:
+ return "text-gray-600 dark:text-gray-400 border-gray-200 dark:border-navy-700";
+ }
+ };
  return (
  <div ref={feedRef} className="flex flex-col gap-1">
  {events.length === 0 ? (
@@ -36,6 +55,10 @@ export function EventFeed({
  const display = getEventDisplay(evt);
  const isHome = evt.side === "Home";
  const commentary = getCommentary(evt, snapshot, t);
+ // Pundit reaction — driven by whether the event is for/against
+ // the user's team.
+ const isUserEvent = userSide ? evt.side === userSide : false;
+ const pundit = getPunditLine(evt, snapshot, isUserEvent);
  return (
  <div
  key={i}
@@ -68,6 +91,17 @@ export function EventFeed({
  })}
  </p>
  )}
+ {/* Pundit reaction — second voice, like a co-commentator. */}
+ {pundit ? (
+ <p
+ className={`mt-1 text-[11px] italic border-l-2 pl-2 py-0.5 rounded-sm ${punditToneClass(pundit.tone)}`}
+ >
+ <span className="font-heading not-italic uppercase tracking-wider opacity-70 mr-1">
+ Pundit:
+ </span>
+ {pundit.line}
+ </p>
+ ) : null}
  </>
  ) : (
  <>

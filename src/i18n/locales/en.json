@@ -561,11 +561,17 @@
       "finishing": "Finishing",
       "defending": "Defending",
       "aerial": "Aerial",
-      "anticipation": "Anticipation",
+      "anticipation": "Reading",
       "vision": "Vision",
       "decisions": "Decisions",
       "composure": "Composure",
-      "leadership": "Leadership",
+      "leadership": "Captaincy",
+      "aggression": "Edge",
+      "teamwork": "Team Ethic",
+      "edge": "Edge",
+      "team_ethic": "Team Ethic",
+      "stability": "Stability",
+      "morale": "Morale",
       "shot_stopping": "Shot Stopping",
       "commanding": "Commanding",
       "playing_out": "Playing Out"
@@ -2224,6 +2230,10 @@
     "skipConference": "Skip Conference →",
     "submitting": "Submitting...",
     "leaveConference": "Leave Conference",
+    "delegateToAssistant": "Let the Assistant Deal With It",
+    "delegateHint": "Your assistant will give the press safe, boring answers. Less drama, less morale boost — but you can crack on with the football.",
+    "pressJournalistName_default": "The Press Pack",
+    "pressOutlet_default": "Local Rag",
     "nextQuestion": "Next Question",
     "pressReport": {
       "headlineManagerQuote": "{{team}} Manager: {{quote}}",
@@ -2464,7 +2474,40 @@
         "The net bulges! {{scorer}} with a poacher's finish!",
         "GOAL! {{scorer}} deserves that — been knocking on the door all game!",
         "What a finish! {{scorer}} bends it into the top corner — unstoppable!",
-        "GOAL! {{scorer}} reacts first — predatory instinct!"
+        "GOAL! {{scorer}} reacts first — predatory instinct!",
+        "He's done it! {{scorer}} breaks the deadlock — the gaffer's off his bench!",
+        "GOAL! {{scorer}} hammers it home — the keeper didn't stand a chance!",
+        "Top-drawer finish! {{scorer}} wraps his foot around that and bends it home!",
+        "GOAL! {{scorer}} keeps his head when everyone else is losing theirs!",
+        "The crowd goes absolutely mental! {{scorer}} has sent them into dreamland!"
+      ],
+      "goalOpener": [
+        "That's the breakthrough! {{scorer}} opens the scoring — huge goal!",
+        "GOAL! {{scorer}} finally breaks the deadlock — what a time to do it!",
+        "The first goal goes in! {{scorer}} — that could be the winner on a night like this!",
+        "GOAL! {{scorer}} has given them the lead and the place is bouncing!",
+        "Opener! {{scorer}} — you sensed it was coming, the pressure told."
+      ],
+      "goalEqualiser": [
+        "EQUALISER! {{scorer}} drags them level — game on!",
+        "GOAL! {{scorer}} has pulled them back — the momentum has swung!",
+        "Back on level terms! {{scorer}} — the gaffer's half-time team talk is paying off!",
+        "GOAL! {{scorer}} restores parity — what a response!",
+        "We're all square! {{scorer}} keeps his head — that's a massive goal!"
+      ],
+      "goalHattrick": [
+        "HAT-TRICK! {{scorer}} has got three! Take a bow, son — that's a match ball!",
+        "Three for {{scorer}}! He's taking the match ball home tonight!",
+        "HAT-TRICK HERO! {{scorer}} completes his treble — the fans are chanting his name!",
+        "GOAL! That's three for {{scorer}} — he's absolutely unplayable today!",
+        "Hat-trick! {{scorer}} — the gaffer's going to have to dig him out a special bonus!"
+      ],
+      "goalBrace": [
+        "Second of the night for {{scorer}} — he's running the show!",
+        "BRACE! {{scorer}} has his second — they can't handle him!",
+        "Two for {{scorer}} — the man is on fire!",
+        "GOAL! {{scorer}} has his double — that should be game, set, match!",
+        "{{scorer}} again! Two goals — he's dragged his team forward by the shirt collar!"
       ],
       "goalConceded": [
         "Oh no. They've scored. {{scorer}} punishes a defensive lapse.",
