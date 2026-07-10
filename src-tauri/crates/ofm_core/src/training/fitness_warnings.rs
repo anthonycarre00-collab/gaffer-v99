@@ -144,8 +144,9 @@ pub fn check_squad_fitness_warnings(game: &mut Game) {
         return;
     }
 
-    // Warning: average condition below 50 or many exhausted players
-    if avg_condition < 50.0 || exhausted_count >= 4 {
+    // V99.1: Raised thresholds so fewer annoying popups appear.
+    // Was: avg < 50 or exhausted >= 4. Now: avg < 40 or exhausted >= 6.
+    if avg_condition < 40.0 || exhausted_count >= 6 {
         let mut msg = InboxMessage::new(msg_id, String::new(), String::new(), sender_name, date)
             .with_category(MessageCategory::Training)
             .with_priority(MessagePriority::High)

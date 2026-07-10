@@ -236,11 +236,11 @@ fn train_player(
 
     // Recovery amount: rest days get boosted recovery (like Recovery focus)
     let recovery_base: f64 = if !is_training_day {
-        7.0 * plan.bonus.physio_mult * plan.medical_facility_mult
+        9.0 * plan.bonus.physio_mult * plan.medical_facility_mult
     } else {
         match &player_focus {
-            TrainingFocus::Recovery => 9.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
-            _ => 3.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
+            TrainingFocus::Recovery => 12.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
+            _ => 5.0 * plan.bonus.physio_mult * plan.medical_facility_mult,
         }
     };
 
