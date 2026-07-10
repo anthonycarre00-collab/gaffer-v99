@@ -378,10 +378,9 @@ export default function HalfTimeBreak({
  {r.player_name}
  </span>
  <span
- className={`font-mono font-mono font-bold tabular-nums ${r.delta > 0 ? "text-success-400" : r.delta < 0 ? "text-danger-400" : "text-gray-500 dark:text-gray-400"}`}
+ className={`font-heading font-bold text-xs ${r.delta > 0 ? "text-success-400" : r.delta < 0 ? "text-danger-400" : "text-gray-500 dark:text-gray-400"}`}
  >
- {r.delta > 0 ? "+" : ""}
- {r.delta}
+ {r.delta > 2 ? "Lifted" : r.delta > 0 ? "Boosted" : r.delta < -2 ? "Deflated" : r.delta < 0 ? "Dented" : "No change"}
  </span>
  <div className="w-12 h-1.5 bg-gray-300 dark:bg-navy-600 rounded-full overflow-hidden transition-colors duration-300">
  <div

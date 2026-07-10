@@ -12,15 +12,17 @@ echo   1. Run the game (dev mode - fast, for testing)
 echo   2. Build the installer (release mode - produces .exe)
 echo   3. Check if Node.js and Rust are installed
 echo   4. Install dependencies (npm install)
-echo   5. Exit
+echo   5. Clear build cache (if builds are stuck/slow)
+echo   6. Exit
 echo.
-set /p choice="Enter your choice (1-5): "
+set /p choice="Enter your choice (1-6): "
 
 if "%choice%"=="1" goto run
 if "%choice%"=="2" goto build
 if "%choice%"=="3" goto check
 if "%choice%"=="4" goto install
-if "%choice%"=="5" exit
+if "%choice%"=="5" goto clearcache
+if "%choice%"=="6" exit
 goto invalid
 
 :run
@@ -34,6 +36,9 @@ echo - First run takes 5-15 minutes (compiles all Rust code)
 echo - Subsequent runs are much faster (1-3 minutes)
 echo - The game window will open automatically when ready
 echo - Close the game window or press Ctrl+C in this terminal to stop
+echo.
+echo TIP: If the build is slow, make sure no other heavy programs
+echo are running. The Rust compiler uses all CPU cores.
 echo.
 echo Press any key to start...
 pause >nul
@@ -60,7 +65,8 @@ if %errorlevel% neq 0 (
 echo Checking for project files...
 if not exist "package.json" (
     echo [FAILED] package.json not found.
-    echo Make sure you're running this from the gaffer-main folder.
+    echo Make sure you're running this from the gaffer-v99-main folder.
+    echo If you downloaded a ZIP, extract it first.
     pause
     exit /b 1
 )
@@ -84,6 +90,10 @@ echo.
 echo The game window will open when the build is ready.
 echo DO NOT close this window while the game is running.
 echo.
+echo If this is your first build, it will take several minutes.
+echo Watch for "Compiling" messages — when they stop, the game
+echo window will appear.
+echo.
 call npm run tauri dev
 
 echo.
@@ -104,6 +114,9 @@ echo   src-tauri\target\release\bundle\
 echo.
 echo WARNING: This takes 15-30 minutes on most machines.
 echo The first build is the slowest. Subsequent builds are faster.
+echo.
+echo TIP: The release build uses thin LTO (faster build, slightly
+echo larger binary). This is optimal for development.
 echo.
 echo Press any key to start the build...
 pause >nul
@@ -130,7 +143,7 @@ if %errorlevel% neq 0 (
 echo Checking for project files...
 if not exist "package.json" (
     echo [FAILED] package.json not found.
-    echo Make sure you're running this from the gaffer-main folder.
+    echo Make sure you're running this from the gaffer-v99-main folder.
     pause
     exit /b 1
 )
@@ -162,6 +175,10 @@ if %errorlevel% neq 0 (
     echo BUILD FAILED
     echo ================================================================
     echo Check the error messages above.
+    echo Common fixes:
+    echo   - Make sure you have the latest Rust (rustup update)
+    echo   - Make sure you have the latest Node.js (v18+)
+    echo   - Try clearing the cache (option 5) and rebuilding
     pause
     exit /b 1
 )
@@ -215,13 +232,19 @@ if exist "package.json" (
     echo [OK] package.json found.
 ) else (
     echo [MISSING] package.json not found.
-    echo   Make sure you're running this from the gaffer-main folder.
+    echo   Make sure you're running this from the gaffer-v99-main folder.
 )
 
 if exist "node_modules" (
     echo [OK] node_modules found — dependencies installed.
 ) else (
     echo [MISSING] node_modules not found — run option 4 to install dependencies.
+)
+
+if exist "src-tauri\target" (
+    echo [OK] Build cache found — subsequent builds will be faster.
+) else (
+    echo [INFO] No build cache yet — first build will be slower.
 )
 
 echo.
@@ -260,9 +283,39 @@ echo ================================================================
 pause
 goto menu
 
+:clearcache
+echo.
+echo ================================================================
+echo CLEARING BUILD CACHE
+echo ================================================================
+echo.
+echo This deletes the Rust build cache (target/ directory).
+echo Use this if:
+echo   - Builds are stuck or hanging
+echo   - You get strange compile errors
+echo   - You want a completely fresh build
+echo.
+echo WARNING: After clearing, the next build will take the full
+echo 5-15 minutes again (same as first build).
+echo.
+set /p confirm="Are you sure? (Y/N): "
+if /i not "%confirm%"=="Y" goto menu
+
+if exist "src-tauri\target" (
+    echo Deleting src-tauri\target...
+    rmdir /S /Q "src-tauri\target"
+    echo [OK] Build cache cleared.
+) else (
+    echo [INFO] No build cache found — nothing to clear.
+)
+
+echo.
+pause
+goto menu
+
 :invalid
 echo.
-echo Invalid choice. Please enter a number from 1 to 5.
+echo Invalid choice. Please enter a number from 1 to 6.
 pause
 goto menu
 

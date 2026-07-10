@@ -44,7 +44,7 @@ import {
  getUnreadMessagesCount,
 } from "../components/dashboard/dashboardHelpers";
 import { useAdvanceTime } from "../hooks/useAdvanceTime";
-import { Cpu, Eye, Gamepad2 } from "lucide-react";
+import { Cpu, Eye, Flag } from "lucide-react";
 import {
  formatDateFull,
  getPrimaryCompetition,
@@ -342,7 +342,9 @@ export default function Dashboard(): JSX.Element {
  }
  }, [markClean]);
 
- // Intercept window close to warn about unsaved changes
+ // V99.1: Auto-save on close — if auto_save setting is ON, save silently
+ // without prompting. Only prompt if auto_save is OFF and there are
+ // unsaved changes.
  const [showCloseConfirm, setShowCloseConfirm] = useState(false);
  const isClosingRef = useRef(false);
  useEffect(() => {
@@ -350,14 +352,28 @@ export default function Dashboard(): JSX.Element {
  const unlisten = appWindow.onCloseRequested(async (event) => {
  if (isClosingRef.current) return;
  if (isDirty) {
+ if (settings.auto_save) {
+ // Auto-save is ON — save silently, don't prompt
+ event.preventDefault();
+ try {
+ await invoke("save_game");
+ markClean();
+ } catch (err) {
+ console.error("Auto-save on close failed:", err);
+ }
+ isClosingRef.current = true;
+ await appWindow.destroy();
+ } else {
+ // Auto-save is OFF — prompt the user
  event.preventDefault();
  setShowCloseConfirm(true);
+ }
  }
  });
  return () => {
  unlisten.then((fn) => fn());
  };
- }, [isDirty]);
+ }, [isDirty, settings.auto_save, markClean]);
 
  const handleCloseQuit = async (save: boolean) => {
  isClosingRef.current = true;
@@ -376,7 +392,7 @@ export default function Dashboard(): JSX.Element {
  const MODE_META: Record<MatchModeType, DashboardMatchModeMeta> = {
  live: {
  label: t("continueMenu.goToField"),
- icon: <Gamepad2 className="w-4 h-4" />,
+ icon: <Flag className="w-4 h-4" />,
  desc: t("continueMenu.goToFieldDesc"),
  buttonColorClass: " ",
  dropdownColorClass: " ",
@@ -504,6 +520,9 @@ export default function Dashboard(): JSX.Element {
  );
  const unreadMessagesCount = sessionState?.unread_messages_count ?? getUnreadMessagesCount(gameState);
  const myTeamName = getManagerTeamName(gameState);
+ // V99.1: Extract team primary color for sidebar theming
+ const myTeam = gameState?.teams?.find((t) => t.id === gameState?.manager?.team_id);
+ const myTeamColor = myTeam?.colors?.primary || undefined;
  const searchResults = getDashboardSearchResults(gameState, searchQuery);
  const dashboardAlerts = getDashboardAlerts(gameState, hasMatchToday, t);
  const hasProfileHistory = hasDashboardProfileHistory(profileNavigation);
@@ -539,6 +558,7 @@ export default function Dashboard(): JSX.Element {
  todayHasMatch={hasMatchToday}
  managerName={managerName}
  teamName={myTeamName}
+ teamColor={myTeamColor}
  onNavigateSettings={handleNavigateSettings}
  isUnemployed={isUnemployed ?? false}
  onExitClick={() => {

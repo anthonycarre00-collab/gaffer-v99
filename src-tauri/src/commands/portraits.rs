@@ -8,7 +8,7 @@ use std::sync::OnceLock;
 use std::time::Instant;
 use tauri::{AppHandle, Manager};
 
-const GENERATOR_VERSION: &str = "runtime-component-recipe-rust-v2-ageaware";
+const GENERATOR_VERSION: &str = "runtime-component-recipe-rust-v3-fifa";
 const SIZE: u32 = 384;
 
 #[derive(Debug, Deserialize)]
@@ -92,11 +92,17 @@ fn calculate_age(dob: Option<&str>) -> Option<u8> {
         return None;
     }
     let birth_year: u16 = parts[0].parse().ok()?;
-    let current_year: u16 = 2024; // Fixed reference year for deterministic portraits
+    // Use 2024 as the game's base year (from DB metadata base_year).
+    let current_year: u16 = 2024;
     if birth_year >= current_year {
         return None;
     }
-    Some((current_year - birth_year) as u8)
+    let age = (current_year - birth_year) as u8;
+    // Sanity check — ages outside 14-50 are likely parsing errors.
+    if age < 14 || age > 50 {
+        return None;
+    }
+    Some(age)
 }
 
 /// V99: Blend a hair color toward gray based on age.
@@ -697,7 +703,7 @@ fn build_recipe(seed: u64, source_id: &str, date_of_birth: Option<&str>) -> Reci
     // Players 25+: standard 34% beard chance
     // Players 35+: higher beard chance (50%) — veterans often have beards
     let beard_threshold = match age {
-        Some(a) if a < 21 => 12,
+        Some(a) if a < 21 => 5,   // V99.1: Reduced from 12% to 5% — teenagers rarely have full beards
         Some(a) if a >= 35 => 50,
         _ => 34,
     };

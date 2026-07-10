@@ -64,8 +64,8 @@ export function SquadPulseCard() {
  {tensionFlag && (
  <Badge variant="danger">{t("meaning.squadPulse.tensionFlag")}</Badge>
  )}
- <span className="text-2xl font-bold font-mono text-gray-900 dark:text-white">
- {harmonyScore}
+ <span className="text-sm font-bold font-heading text-gray-900 dark:text-white">
+ {harmonyScore >= 75 ? "Buzzing" : harmonyScore >= 55 ? "Steady" : harmonyScore >= 35 ? "Restless" : "Toxic"}
  </span>
  </div>
  }
@@ -97,16 +97,16 @@ export function SquadPulseCard() {
  <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
  {t("meaning.squadPulse.tacticalCoherence")}
  </div>
- <div className="font-mono font-semibold text-gray-900 dark:text-white">
- {tacticalCoherence}
+ <div className="font-heading font-semibold text-gray-900 dark:text-white">
+ {tacticalCoherence >= 70 ? "In Sync" : tacticalCoherence >= 40 ? "Gelling" : "All Over the Shop"}
  </div>
  </div>
  <div>
  <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
  {t("meaning.squadPulse.mediaHeat")}
  </div>
- <div className="font-mono font-semibold text-gray-900 dark:text-white">
- {mediaHeat}
+ <div className="font-heading font-semibold text-gray-900 dark:text-white">
+ {mediaHeat >= 70 ? "Front Page News" : mediaHeat >= 30 ? "Under the Radar" : "Quiet"}
  </div>
  </div>
  <div>

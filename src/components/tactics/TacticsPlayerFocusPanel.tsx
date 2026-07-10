@@ -3,6 +3,7 @@ import type { PlayerData } from "../../store/gameStore";
 import { Badge, Button, Card, CountryFlag } from "../ui";
 import { Eye, GitCompareArrows, X } from "lucide-react";
 import { calcAge, getPlayerOvr, positionBadgeVariant } from "../../lib/helpers";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import { normalisePosition, translatePositionLabel } from "../squad/SquadTab.helpers";
 
 const ATTRIBUTE_GROUPS: {
@@ -100,8 +101,11 @@ function PlayerSummary({
  <div className="text-sm font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
  {t("common.ovr")}
  </div>
- <div className="text-3xl font-heading font-bold text-primary-500 dark:text-primary-400">
- {overallRating}
+ <div
+ className={`text-xl font-heading font-bold ${interpretOvr(overallRating, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(overallRating, player.natural_position || player.position).description}
+ >
+ {shortOvrLabel(overallRating, player.natural_position || player.position)}
  </div>
  </div>
  </div>
