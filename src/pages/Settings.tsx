@@ -338,6 +338,22 @@ export default function Settings() {
  onChange={(v) => handleUpdate({ continue_to_next_event: v })}
  />
  </SettingRow>
+
+ {/* V99: Inbox frequency — controls how many non-urgent messages appear */}
+ <SettingRow
+ label={t("settings.inboxFrequency", { defaultValue: "Inbox Frequency" })}
+ description={t("settings.inboxFrequencyDesc", { defaultValue: "How many messages you want landing on your desk." })}
+ >
+ <Select
+ value={settings.inbox_frequency}
+ onChange={(e) => handleUpdate({ inbox_frequency: e.target.value as AppSettings["inbox_frequency"] })}
+ className="min-w-48"
+ >
+ <option value="all">{t("settings.inboxFreqAll", { defaultValue: "Everything" })}</option>
+ <option value="important">{t("settings.inboxFreqImportant", { defaultValue: "Important Only" })}</option>
+ <option value="critical">{t("settings.inboxFreqCritical", { defaultValue: "Critical Only" })}</option>
+ </Select>
+ </SettingRow>
  </Section>
 
  {/* ─── Saves & Data ─── */}

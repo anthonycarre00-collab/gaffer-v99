@@ -13,6 +13,8 @@ export interface AppSettings {
   continue_to_next_event: boolean;
   ui_scale: "small" | "normal" | "large" | "xlarge";
   high_contrast: boolean;
+  /** V99: Inbox message frequency — how many non-urgent messages to show. */
+  inbox_frequency: "all" | "important" | "critical";
 }
 
 export interface CurrencyDefinition {
@@ -39,6 +41,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   continue_to_next_event: false,
   ui_scale: "normal",
   high_contrast: false,
+  inbox_frequency: "all",
 };
 
 const DEFAULT_CURRENCY: CurrencyDefinition = {

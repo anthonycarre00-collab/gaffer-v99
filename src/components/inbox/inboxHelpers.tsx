@@ -137,16 +137,27 @@ export function getFilterButtonClassName(
 export function getFilteredMessages(
  messages: MessageData[],
  categoryFilter: string | null,
+ inboxFrequency: "all" | "important" | "critical" = "all",
 ): MessageData[] {
+ let filtered = messages;
+
+ // V99: Apply inbox frequency filter first
+ if (inboxFrequency === "critical") {
+ filtered = filtered.filter((m) => m.priority === "high");
+ } else if (inboxFrequency === "important") {
+ filtered = filtered.filter((m) => m.priority === "high" || m.priority === "normal");
+ }
+ // "all" = no filter
+
  if (categoryFilter === UNREAD_FILTER) {
- return messages.filter((message) => !message.read);
+ return filtered.filter((message) => !message.read);
  }
 
  if (categoryFilter) {
- return messages.filter((message) => message.category === categoryFilter);
+ return filtered.filter((message) => message.category === categoryFilter);
  }
 
- return messages;
+ return filtered;
 }
 
 function getMessageDateValue(date: string): number {

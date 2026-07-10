@@ -223,23 +223,36 @@ pub(super) fn generate_random_player_from_def(
     let is_def = matches!(group, Position::Defender);
     let is_fwd = matches!(group, Position::Forward);
 
+    // V99: Young players (under 21) have lower attribute ceilings — they're
+    // still developing. A 17-year-old shouldn't have 95 finishing.
+    // Age 17-20: max 75 for most attrs, max 80 for physical (pace, burst, agility)
+    // Age 21-23: max 85
+    // Age 24+: full range (40-95)
+    let is_youth = age < 21;
+    let is_young_adult = age >= 21 && age <= 23;
+    let max_attr = if is_youth { 75 } else if is_young_adult { 85 } else { 95 };
+    let max_physical = if is_youth { 80 } else if is_young_adult { 88 } else { 95 };
+    let max_key = if is_youth { 70 } else if is_young_adult { 82 } else { 95 }; // finishing, defending, etc.
+    let min_mental = if is_youth { 30 } else { 40 }; // young players have lower mental
+    let max_mental = if is_youth { 65 } else if is_young_adult { 75 } else { 95 };
+
     let attributes = PlayerAttributes {
-        pace: rng.random_range(40..95),
-        burst: rng.random_range(40..95),
-        engine: rng.random_range(40..95),
-        power: rng.random_range(40..95),
-        agility: rng.random_range(40..95),
-        passing: rng.random_range(40..95),
-        distribution: rng.random_range(40..95),
-        touch: if is_gk { rng.random_range(20..50) } else { rng.random_range(40..95) },
-        finishing: if is_gk { rng.random_range(20..50) } else if is_fwd { rng.random_range(50..95) } else { rng.random_range(35..80) },
-        defending: if is_gk { rng.random_range(25..55) } else if is_def { rng.random_range(55..95) } else { rng.random_range(40..95) },
+        pace: rng.random_range(40..max_physical),
+        burst: rng.random_range(40..max_physical),
+        engine: rng.random_range(40..max_attr),
+        power: rng.random_range(40..max_attr),
+        agility: rng.random_range(40..max_physical),
+        passing: rng.random_range(40..max_attr),
+        distribution: rng.random_range(40..max_attr),
+        touch: if is_gk { rng.random_range(20..50) } else { rng.random_range(40..max_attr) },
+        finishing: if is_gk { rng.random_range(20..50) } else if is_fwd { rng.random_range(50..max_key) } else { rng.random_range(35..(max_key.min(80))) },
+        defending: if is_gk { rng.random_range(25..55) } else if is_def { rng.random_range(55..max_key) } else { rng.random_range(40..(max_key.min(85))) },
         aerial: if is_gk { rng.random_range(50..95) } else if is_def { rng.random_range(45..90) } else { rng.random_range(30..75) },
-        anticipation: rng.random_range(40..95),
-        vision: rng.random_range(40..95),
-        decisions: rng.random_range(40..95),
-        composure: rng.random_range(40..95),
-        leadership: rng.random_range(30..90),
+        anticipation: rng.random_range(min_mental..max_mental),
+        vision: rng.random_range(min_mental..max_mental),
+        decisions: rng.random_range(min_mental..max_mental),
+        composure: rng.random_range(min_mental..max_mental),
+        leadership: rng.random_range(30..(if is_youth { 60 } else { 90 })),
         shot_stopping: if is_gk { rng.random_range(50..95) } else { rng.random_range(10..35) },
         commanding: if is_gk { rng.random_range(50..95) } else { rng.random_range(15..40) },
         playing_out: if is_gk { rng.random_range(35..85) } else { rng.random_range(20..50) },

@@ -8,7 +8,6 @@ import DashboardExitConfirmModal from "./DashboardExitConfirmModal";
 import DashboardExitSavingModal from "./DashboardExitSavingModal";
 import { type DashboardMatchModeMeta } from "./DashboardHeader";
 import DashboardMatchConfirmModal from "./DashboardMatchConfirmModal";
-import DashboardResultsRecapModal from "./DashboardResultsRecapModal";
 import DashboardSimulatingModal from "./DashboardSimulatingModal";
 import type { AdvanceRecap } from "./advanceRecap";
 
@@ -89,10 +88,50 @@ export default function DashboardOverlays({
  />
  ) : null}
 
+ {/* V99: Recap now shows as a non-blocking toast panel at bottom-right
+     instead of a full-screen modal that interrupts the player.
+     Auto-dismisses after 7s. Can also be dismissed by clicking. */}
  {!isAdvancing && recapResults ? (
- <DashboardResultsRecapModal recap={recapResults} onClose={onCloseRecap} />
+ <div className="fixed bottom-6 right-6 z-50 max-w-md max-h-[60vh] overflow-y-auto rounded-lg bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 shadow-xl animate-in slide-in-from-bottom-2 duration-200">
+ <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-navy-600">
+ <h3 className="text-sm font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ {recapResults.advancedTo ? `We're at ${new Date(recapResults.advancedTo).toLocaleDateString()}` : "What Just Happened"}
+ </h3>
+ <button
+ onClick={onCloseRecap}
+ className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors text-xs"
+ >
+ ✕
+ </button>
+ </div>
+ <div className="p-4 max-h-[40vh] overflow-y-auto">
+ {recapResults.matches.length > 0 ? (
+ <div className="space-y-1">
+ {recapResults.matches.slice(0, 8).map((match, i) => (
+ <div key={i} className="flex items-center justify-between text-xs py-1">
+ <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
+ {match.home_team} {match.home_goals}-{match.away_goals} {match.away_team}
+ </span>
+ </div>
+ ))}
+ {recapResults.matches.length > 8 && (
+ <p className="text-[10px] text-gray-400 mt-1">+ {recapResults.matches.length - 8} more</p>
+ )}
+ </div>
+ ) : (
+ <p className="text-xs text-gray-500 dark:text-gray-400 italic">Quiet one — nothing to report.</p>
+ )}
+ {recapResults.hasEvents && (
+ <button
+ onClick={onCloseRecap}
+ className="mt-3 w-full text-center text-xs font-heading uppercase tracking-wider text-primary-500 hover:text-primary-600 transition-colors py-1"
+ >
+ Crack On →
+ </button>
+ )}
+ </div>
+ </div>
  ) : null}
-
  {isExitingToMenu ? <DashboardExitSavingModal /> : null}
 
  {showExitConfirm ? (
