@@ -11,7 +11,7 @@ import {
  Monitor,
  Moon,
  Sun,
- Gamepad2,
+ Sliders,
  Save,
  Zap,
  Trash2,
@@ -269,7 +269,7 @@ export default function Settings() {
  {/* ─── Gameplay ─── */}
  <Section
  title={t("settings.gameplay")}
- icon={<Gamepad2 className="w-5 h-5" />}
+ icon={<Sliders className="w-5 h-5" />}
  >
  <SettingRow
  label={t("settings.defaultMatchMode")}

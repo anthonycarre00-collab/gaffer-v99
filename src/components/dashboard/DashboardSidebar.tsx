@@ -35,6 +35,8 @@ interface DashboardSidebarProps {
  onNavigateSettings: () => void;
  onExitClick: () => void;
  isUnemployed: boolean;
+ /** V99.1: Team primary color for sidebar accent theming */
+ teamColor?: string;
 }
 
 interface NavItemProps {
@@ -112,6 +114,7 @@ export default function DashboardSidebar({
  onNavigateSettings,
  onExitClick,
  isUnemployed,
+ teamColor,
 }: DashboardSidebarProps): JSX.Element {
  const { t } = useTranslation();
 
@@ -150,7 +153,11 @@ export default function DashboardSidebar({
  className={`leather-texture bg-navy-800 dark:bg-navy-800 border-r border-navy-700 text-white flex h-screen sticky top-0 shrink-0 flex-col transition-[width] duration-200 ${collapsed ? "w-20" : "w-64"
  }`}
  >
- {/* Brand — Gaffer logo */}
+ {/* V99.1: Team color accent bar at the very top of the sidebar */}
+ {teamColor && (
+ <div className="h-1.5 w-full" style={{ backgroundColor: teamColor }} />
+ )}
+ {/* Brand — Gaffer crest */}
  <div
  className={`border-b border-navy-700 ${collapsed ? "px-3 py-4" : "p-5"}`}
  >
@@ -160,9 +167,15 @@ export default function DashboardSidebar({
  <div
  className={`flex items-center ${collapsed ? "justify-center" : "gap-2"}`}
  >
- <div className="w-8 h-8 flex items-center justify-center rounded bgc-accent-500">
- <span className="font-heading font-bold text-white text-sm">G</span>
- </div>
+ {/* V99.1: Mini crest SVG instead of plain "G" letter */}
+ <svg width="28" height="32" viewBox="0 0 120 138" className="shrink-0">
+ <path d="M60 4 L108 20 L108 58 Q108 96 60 134 Q12 96 12 58 L12 20 Z" fill="#c9972e" stroke="#5a3d12" strokeWidth="2" />
+ <path d="M60 10 L102 24 L102 56 Q102 88 60 126 Q18 88 18 56 L18 24 Z" fill="#0d3b25" />
+ <text x="60" y="48" textAnchor="middle" fontFamily="Georgia, serif" fontSize="32" fontWeight="bold" fill="#e8c25a">G</text>
+ <circle cx="48" cy="90" r="2" fill="#e8c25a" />
+ <circle cx="60" cy="92" r="2.5" fill="#e8c25a" />
+ <circle cx="72" cy="90" r="2" fill="#e8c25a" />
+ </svg>
  {collapsed ? null : (
  <div>
  <h1 className="text-sm font-heading font-bold text-accent-400 uppercase tracking-wider">
@@ -205,7 +218,7 @@ export default function DashboardSidebar({
  {managerName}
  </p>
  {teamName && (
- <p className="text-xs text-primary-400 mt-0.5">{teamName}</p>
+ <p className="text-xs mt-0.5" style={{ color: teamColor || "#5cb389" }}>{teamName}</p>
  )}
  </>
  )}

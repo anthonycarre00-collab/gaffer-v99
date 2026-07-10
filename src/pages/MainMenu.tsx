@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGameStore, GameStateData } from "../store/gameStore";
 import { ThemeToggle } from "../components/ui/ThemeToggle";
-import { GafferCrest, GafferTagline } from "../components/brand/GafferCrest";
+import { GafferCrest } from "../components/brand/GafferCrest";
 import type {
  CareerStartPhase,
  CreateManagerFormData,
@@ -712,9 +712,9 @@ export default function MainMenu() {
  <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
  <div className="bg-white dark:bg-navy-800 p-8 rounded-b-lg border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
- {/* Gaffer Crest — proper football association-style badge */}
- <GafferCrest size={96} className="mx-auto" />
- <GafferTagline className="mb-2" />
+ {/* Gaffer Crest — professional football association-style badge */}
+ <GafferCrest size={96} className="mx-auto" withTagline />
+ <div className="mb-2" />
 
  <div className="border-t border-gray-200 dark:border-navy-600 my-8 transition-colors duration-500" />
 

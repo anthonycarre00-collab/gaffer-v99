@@ -44,7 +44,7 @@ import {
  getUnreadMessagesCount,
 } from "../components/dashboard/dashboardHelpers";
 import { useAdvanceTime } from "../hooks/useAdvanceTime";
-import { Cpu, Eye, Gamepad2 } from "lucide-react";
+import { Cpu, Eye, Flag } from "lucide-react";
 import {
  formatDateFull,
  getPrimaryCompetition,
@@ -392,7 +392,7 @@ export default function Dashboard(): JSX.Element {
  const MODE_META: Record<MatchModeType, DashboardMatchModeMeta> = {
  live: {
  label: t("continueMenu.goToField"),
- icon: <Gamepad2 className="w-4 h-4" />,
+ icon: <Flag className="w-4 h-4" />,
  desc: t("continueMenu.goToFieldDesc"),
  buttonColorClass: " ",
  dropdownColorClass: " ",
@@ -520,6 +520,9 @@ export default function Dashboard(): JSX.Element {
  );
  const unreadMessagesCount = sessionState?.unread_messages_count ?? getUnreadMessagesCount(gameState);
  const myTeamName = getManagerTeamName(gameState);
+ // V99.1: Extract team primary color for sidebar theming
+ const myTeam = gameState?.teams?.find((t) => t.id === gameState?.manager?.team_id);
+ const myTeamColor = myTeam?.colors?.primary || undefined;
  const searchResults = getDashboardSearchResults(gameState, searchQuery);
  const dashboardAlerts = getDashboardAlerts(gameState, hasMatchToday, t);
  const hasProfileHistory = hasDashboardProfileHistory(profileNavigation);
@@ -555,6 +558,7 @@ export default function Dashboard(): JSX.Element {
  todayHasMatch={hasMatchToday}
  managerName={managerName}
  teamName={myTeamName}
+ teamColor={myTeamColor}
  onNavigateSettings={handleNavigateSettings}
  isUnemployed={isUnemployed ?? false}
  onExitClick={() => {
