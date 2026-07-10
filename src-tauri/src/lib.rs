@@ -277,6 +277,8 @@ pub fn run() {
             finish_live_match,
             generate_player_portrait,
             prewarm_player_portraits,
+            get_community_face,
+            list_face_packs,
             delete_save,
             skip_to_match_day,
             advance_to_next_event,

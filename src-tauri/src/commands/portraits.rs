@@ -211,6 +211,97 @@ fn portrait_cache_dir(app: &AppHandle) -> Result<PathBuf, String> {
         .join(GENERATOR_VERSION))
 }
 
+/// V99: Community Face Pack Support.
+///
+/// Checks for community-provided face images in the app data directory.
+/// Players can drop PNG files named `<player_id>.png` into:
+///   `<app_data_dir>/face-packs/<pack_name>/`
+///
+/// The system checks ALL packs in alphabetical order — the first match wins.
+/// If no community face is found, returns None and the caller falls back
+/// to the procedural portrait generator.
+///
+/// This is the "modding hook" the user requested — simple, no UI needed,
+/// just drop files in a folder.
+fn check_community_face_pack(app: &AppHandle, player_id: &str) -> Option<PathBuf> {
+    let data_dir = app.path().app_data_dir().ok()?;
+    let face_packs_dir = data_dir.join("face-packs");
+
+    if !face_packs_dir.exists() {
+        return None;
+    }
+
+    // Scan all subdirectories (pack names) in alphabetical order.
+    let mut pack_dirs: Vec<PathBuf> = std::fs::read_dir(&face_packs_dir)
+        .ok()?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.file_type().ok().map(|ft| ft.is_dir()).unwrap_or(false))
+        .map(|entry| entry.path())
+        .collect();
+    pack_dirs.sort();
+
+    for pack_dir in &pack_dirs {
+        // Check for <player_id>.png
+        let face_path = pack_dir.join(format!("{}.png", player_id));
+        if face_path.exists() {
+            log::info!(
+                "[portraits] Community face pack hit: player_id={} pack={}",
+                player_id,
+                pack_dir.display()
+            );
+            return Some(face_path);
+        }
+    }
+
+    None
+}
+
+/// V99: Tauri command to check if a community face pack image exists for a player.
+/// Returns the file path if found, None otherwise. The frontend can use this
+/// to display the community image instead of the generated portrait.
+#[tauri::command]
+pub async fn get_community_face(
+    app: AppHandle,
+    player_id: String,
+) -> Result<Option<String>, String> {
+    let path = tauri::async_runtime::spawn_blocking(move || {
+        check_community_face_pack(&app, &player_id)
+    })
+    .await
+    .map_err(|e| format!("join error: {e}"))?;
+
+    Ok(path.map(|p| p.to_string_lossy().to_string()))
+}
+
+/// V99: Tauri command to list all installed community face packs.
+/// Returns the pack directory names. Useful for a future pre-game editor UI.
+#[tauri::command]
+pub async fn list_face_packs(app: AppHandle) -> Result<Vec<String>, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("failed to resolve app data dir: {e}"))?;
+    let face_packs_dir = data_dir.join("face-packs");
+
+    if !face_packs_dir.exists() {
+        return Ok(Vec::new());
+    }
+
+    let packs: Vec<String> = std::fs::read_dir(&face_packs_dir)
+        .map_err(|e| format!("failed to read face-packs dir: {e}"))?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.file_type().ok().map(|ft| ft.is_dir()).unwrap_or(false))
+        .filter_map(|entry| {
+            entry
+                .file_name()
+                .to_str()
+                .map(|s| s.to_string())
+        })
+        .collect();
+
+    Ok(packs)
+}
+
 fn prewarm_player_portraits_to_dir(
     cache_dir: &Path,
     requests: &[PlayerPortraitRequest],

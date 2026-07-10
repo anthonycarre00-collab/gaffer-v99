@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { invoke, convertFileSrc } from "@tauri-apps/api/core";
 import { resolveLocalMediaPath } from "../../lib/mediaAssets";
 import {
  canGenerateRuntimePlayerPortraits,
@@ -131,10 +132,15 @@ export function PlayerAvatar({
  />
  );
 
+ // V99: Check for community face pack image first.
+ // This is a synchronous check that caches the result — if a community
+ // face exists, it's used instead of the procedural portrait.
+ const communityFaceSrc = useCommunityFace(player.id ?? null);
+
  return (
  <div className={className}>
  <AssetImage
- src={resolveLocalMediaPath(player.media?.face)}
+ src={communityFaceSrc ?? resolveLocalMediaPath(player.media?.face)}
  alt={player.full_name}
  className={imageClassName}
  fallback={
@@ -151,4 +157,51 @@ export function PlayerAvatar({
  />
  </div>
  );
+}
+
+/**
+ * V99: Community Face Pack hook.
+ *
+ * Checks for a community-provided face image via the get_community_face
+ * Tauri command. Returns the file path if found, null otherwise.
+ * Result is cached per player ID so we don't check the filesystem every render.
+ */
+const communityFaceCache = new Map<string, string | null>();
+
+function useCommunityFace(playerId: string | null | undefined): string | null {
+ const [faceSrc, setFaceSrc] = useState<string | null>(null);
+
+ useEffect(() => {
+ if (!playerId) {
+ setFaceSrc(null);
+ return;
+ }
+
+ // Check cache first.
+ if (communityFaceCache.has(playerId)) {
+ setFaceSrc(communityFaceCache.get(playerId) ?? null);
+ return;
+ }
+
+ // Check Tauri for community face pack.
+ let cancelled = false;
+ invoke<string | null>("get_community_face", { playerId })
+ .then((path) => {
+ if (cancelled) return;
+ const src = path ? convertFileSrc(path) : null;
+ communityFaceCache.set(playerId, src);
+ setFaceSrc(src);
+ })
+ .catch(() => {
+ if (cancelled) return;
+ communityFaceCache.set(playerId, null);
+ setFaceSrc(null);
+ });
+
+ return () => {
+ cancelled = true;
+ };
+ }, [playerId]);
+
+ return faceSrc;
 }
