@@ -8,7 +8,7 @@ use std::sync::OnceLock;
 use std::time::Instant;
 use tauri::{AppHandle, Manager};
 
-const GENERATOR_VERSION: &str = "runtime-component-recipe-rust-v1";
+const GENERATOR_VERSION: &str = "runtime-component-recipe-rust-v2-ageaware";
 const SIZE: u32 = 384;
 
 #[derive(Debug, Deserialize)]
@@ -81,6 +81,60 @@ struct Recipe {
     shirt_strength: f32,
     hair_strength: f32,
     beard_strength: f32,
+}
+
+/// V99: Calculate age from a date-of-birth string (YYYY-MM-DD).
+/// Returns None if the date can't be parsed.
+fn calculate_age(dob: Option<&str>) -> Option<u8> {
+    let dob_str = dob?;
+    let parts: Vec<&str> = dob_str.split('-').collect();
+    if parts.len() < 1 {
+        return None;
+    }
+    let birth_year: u16 = parts[0].parse().ok()?;
+    let current_year: u16 = 2024; // Fixed reference year for deterministic portraits
+    if birth_year >= current_year {
+        return None;
+    }
+    Some((current_year - birth_year) as u8)
+}
+
+/// V99: Blend a hair color toward gray based on age.
+/// Players 30+ have a chance of graying hair; 35+ more so.
+fn age_adjusted_hair(base_hair: [u8; 3], age: Option<u8>, rng_val: u64) -> [u8; 3] {
+    let age = match age {
+        Some(a) => a,
+        None => return base_hair,
+    };
+
+    // Gray hair probabilities:
+    // Under 30: 0% (never gray)
+    // 30-34: 15% chance of slight graying
+    // 35-39: 30% chance
+    // 40+: 50% chance
+    let gray_chance = if age >= 40 {
+        0.50
+    } else if age >= 35 {
+        0.30
+    } else if age >= 30 {
+        0.15
+    } else {
+        return base_hair;
+    };
+
+    let roll = (rng_val % 1000) as f64 / 10.0;
+    if roll >= gray_chance * 100.0 {
+        return base_hair;
+    }
+
+    // Blend toward gray — more gray for older players
+    let gray_factor = if age >= 40 { 0.7 } else if age >= 35 { 0.5 } else { 0.3 };
+    let gray_val = 184u8; // matches the existing "gray" hair color [184, 181, 172]
+    [
+        (base_hair[0] as f32 * (1.0 - gray_factor) + gray_val as f32 * gray_factor) as u8,
+        (base_hair[1] as f32 * (1.0 - gray_factor) + gray_val as f32 * gray_factor) as u8,
+        (base_hair[2] as f32 * (1.0 - gray_factor) + gray_val as f32 * gray_factor) as u8,
+    ]
 }
 
 #[derive(Clone, Copy)]
@@ -349,7 +403,7 @@ fn ensure_portrait_file(
     let seed = portrait_seed(request);
     let sources = portrait_sources()?;
     let source = select_source_for_player(sources, seed, request.nationality.as_deref());
-    let recipe = build_recipe(seed, source.id);
+    let recipe = build_recipe(seed, source.id, request.date_of_birth.as_deref());
     let cache_key = cache_key(seed, source.id);
     fs::create_dir_all(cache_dir)
         .map_err(|error| format!("failed to create portrait cache: {error}"))?;
@@ -608,7 +662,9 @@ fn select_source_for_player(
     &sources[source_idx]
 }
 
-fn build_recipe(seed: u64, source_id: &str) -> Recipe {
+/// V99: Build a portrait recipe. Now accepts the player's date of birth
+/// for age-aware adjustments (graying hair, beard probability).
+fn build_recipe(seed: u64, source_id: &str, date_of_birth: Option<&str>) -> Recipe {
     let mut state = stable_hash_bytes(format!("{seed}:{source_id}:{GENERATOR_VERSION}").as_bytes());
     const SHIRTS: &[[u8; 3]] = &[
         [196, 39, 44],
@@ -629,9 +685,26 @@ fn build_recipe(seed: u64, source_id: &str) -> Recipe {
         [184, 181, 172],
     ];
 
+    // V99: Calculate age for age-aware portrait adjustments.
+    let age = calculate_age(date_of_birth);
+
+    // Pick base hair color, then apply age adjustment (graying for 30+).
+    let base_hair = HAIR[(next_u64(&mut state) as usize) % HAIR.len()];
+    let hair_rgb = age_adjusted_hair(base_hair, age, next_u64(&mut state));
+
+    // V99: Age-adjusted beard probability.
+    // Young players (under 21): lower beard chance (12% vs 34%)
+    // Players 25+: standard 34% beard chance
+    // Players 35+: higher beard chance (50%) — veterans often have beards
+    let beard_threshold = match age {
+        Some(a) if a < 21 => 12,
+        Some(a) if a >= 35 => 50,
+        _ => 34,
+    };
+
     Recipe {
         shirt_rgb: SHIRTS[(next_u64(&mut state) as usize) % SHIRTS.len()],
-        hair_rgb: HAIR[(next_u64(&mut state) as usize) % HAIR.len()],
+        hair_rgb,
         skin_warmth: rand_range(&mut state, -0.065, 0.070),
         exposure: rand_range(&mut state, -0.070, 0.075),
         contrast: rand_range(&mut state, 0.92, 1.12),
@@ -641,7 +714,7 @@ fn build_recipe(seed: u64, source_id: &str) -> Recipe {
         shift_x: rand_range(&mut state, -7.5, 7.5),
         shirt_strength: rand_range(&mut state, 0.56, 0.84),
         hair_strength: rand_range(&mut state, 0.30, 0.86),
-        beard_strength: if next_u64(&mut state) % 100 < 34 {
+        beard_strength: if next_u64(&mut state) % 100 < beard_threshold {
             rand_range(&mut state, 0.12, 0.52)
         } else {
             0.0
@@ -950,7 +1023,7 @@ mod tests {
     fn renders_transparent_webp_bytes() {
         let sources = portrait_sources().expect("portrait sources should load");
         let source = &sources[0];
-        let recipe = build_recipe(42, source.id);
+        let recipe = build_recipe(42, source.id, None);
         let portrait = render_recipe(&source.image, &recipe);
         let bytes = encode_webp(&portrait, 88.0).expect("portrait should encode as webp");
 
