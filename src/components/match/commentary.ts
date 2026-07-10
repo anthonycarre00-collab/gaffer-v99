@@ -12,6 +12,7 @@ import { getPlayerName } from "./helpers";
 
 /** Event types that get the full headline + prose treatment. */
 const COMMENTARY_EVENTS = new Set([
+  // Goals & shots
   "Goal",
   "PenaltyGoal",
   "PenaltyMiss",
@@ -19,16 +20,34 @@ const COMMENTARY_EVENTS = new Set([
   "ShotSaved",
   "ShotOffTarget",
   "ShotBlocked",
+  // Discipline
   "Foul",
   "YellowCard",
   "RedCard",
   "SecondYellow",
+  // Match flow
   "Injury",
   "Substitution",
   "KickOff",
   "HalfTime",
   "SecondHalfStart",
   "FullTime",
+  // Build-up & defending (previously silenced — the "no events beside goals" bug)
+  "PassCompleted",
+  "PassIntercepted",
+  "Dribble",
+  "DribbleTackled",
+  "Cross",
+  "Tackle",
+  "Interception",
+  "Clearance",
+  // Set pieces
+  "Corner",
+  "FreeKick",
+  "GoalKick",
+  // Penalty shootout
+  "ShootoutGoal",
+  "ShootoutMiss",
 ]);
 
 export interface Commentary {
@@ -132,11 +151,28 @@ function pickLine(
   // Try the refined variant first, then fall back to the base key.
   const candidates = variant ? [`${baseKey}.${variant}`, baseKey] : [baseKey];
   for (const key of candidates) {
-    const lines = t(`${key}.lines`, { returnObjects: true }) as
+    // The i18n structure can be either:
+    //   match.commentary.goal: ["line1", "line2", ...]   (array form)
+    //   match.commentary.goal: { lines: {...}, headline: "..." }  (object form)
+    // Try both — first the object form (.lines), then the array form (direct).
+    const linesObj = t(`${key}.lines`, { returnObjects: true }) as
       | Record<string, string>
-      | string;
-    if (!lines || typeof lines !== "object") continue;
-    const values = Object.values(lines);
+      | string[];
+    const linesArr = t(`${key}`, { returnObjects: true }) as
+      | string[]
+      | Record<string, string>;
+
+    let values: string[] = [];
+    if (Array.isArray(linesObj)) {
+      values = linesObj;
+    } else if (linesObj && typeof linesObj === "object") {
+      values = Object.values(linesObj);
+    } else if (Array.isArray(linesArr)) {
+      values = linesArr;
+    } else if (linesArr && typeof linesArr === "object") {
+      values = Object.values(linesArr);
+    }
+
     if (values.length === 0) continue;
     const template = values[hash % values.length];
     if (typeof template !== "string") continue;

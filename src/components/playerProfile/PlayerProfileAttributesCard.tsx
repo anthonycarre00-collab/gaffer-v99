@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Shield } from "lucide-react";
 import { getAttributeColorClass } from "./PlayerProfile.helpers";
 import { getAttributeColors } from "../../lib/playerAttributeDisplay";
-import { interpretAttribute, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
+import { interpretAttributeForPosition, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
 import type { PlayerAttributeGroup } from "./PlayerProfile.attributes";
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
 import { PlayerAttributeRadarChart } from "./PlayerAttributeRadarChart";
@@ -43,6 +43,8 @@ interface PlayerProfileAttributesCardProps {
  attrGroups: PlayerAttributeGroup[];
  isOwnClub: boolean;
  isGk?: boolean;
+ /** Player's position — drives position-dependent attribute descriptions. */
+ position?: string;
  title: string;
  averageLabel: string;
  hiddenTitle: string;
@@ -55,6 +57,7 @@ export default function PlayerProfileAttributesCard({
  attrGroups,
  isOwnClub,
  isGk = false,
+ position,
  title,
  averageLabel,
  hiddenTitle,
@@ -118,7 +121,7 @@ export default function PlayerProfileAttributesCard({
  // attribute name doesn't match a known key (rare).
  const attrKey = mapNameToAttrKey(attr.name);
  const tier = attrKey
- ? interpretAttribute(attrKey, attr.value)
+ ? interpretAttributeForPosition(attrKey, attr.value, position)
  : null;
  return (
  <div key={attr.name} className="flex flex-col gap-0.5">

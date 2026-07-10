@@ -837,6 +837,7 @@ export default function PlayerProfile({
  attrGroups={attrGroups}
  isOwnClub={isManagerSquadProfile}
  isGk={primaryPosition === "Goalkeeper"}
+ position={primaryPosition}
  title={t("playerProfile.attributes")}
  averageLabel={t("common.average")}
  hiddenTitle={t("playerProfile.attributesHidden")}

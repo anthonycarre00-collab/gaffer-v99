@@ -8,6 +8,7 @@ import {
 } from "../../store/gameStore";
 import { Card, CardBody, Badge, CountryFlag, PlayerAvatar } from "../ui";
 import { useSortableTable, SortableHeader } from "../ui/SortableTable";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import ContextMenu from "../ContextMenu";
 import {
  Search,
@@ -1496,9 +1497,10 @@ export default function TransfersTab({
  </td>
  <td className="py-2.5 px-4">
  <span
- className={`font-heading font-bold text-base tabular-nums ${ovr >= 75 ? "text-primary-500" : ovr >= 55 ? "text-accent-500" : "text-gray-400"}`}
+ className={`font-heading font-bold text-xs ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
- {ovr}
+ {shortOvrLabel(ovr, player.natural_position || player.position)}
  </span>
  </td>
  <td className="py-2.5 px-4">

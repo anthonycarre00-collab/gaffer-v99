@@ -38,10 +38,13 @@ afterAll(async () => {
 });
 
 describe("getCommentary", () => {
-  it("returns null for non-key events", () => {
+  it("returns null for events with no commentary template (e.g. pure structural events)", () => {
+    // Pick an event type that genuinely has no commentary template.
+    // PassCompleted now HAS commentary (added in v99 Phase 1), so use a
+    // truly unknown event type instead.
     const evt: MatchEvent = {
       minute: 5,
-      event_type: "PassCompleted",
+      event_type: "UnknownEvent" as never,
       side: "Home",
       zone: "Midfield",
       player_id: "p1",
@@ -57,6 +60,36 @@ describe("getCommentary", () => {
     expect(result!.headline.length).toBeGreaterThan(0);
     expect(result!.line.length).toBeGreaterThan(0);
     expect(result!.line).toContain("Haaland");
+  });
+
+  it("produces commentary for a tackle (v99 Phase 1 — previously silenced)", () => {
+    const evt: MatchEvent = {
+      minute: 15,
+      event_type: "Tackle",
+      side: "Home",
+      zone: "Midfield",
+      player_id: "p1",
+      secondary_player_id: null,
+    };
+    const result = getCommentary(evt, snapshot([evt]), i18n.t.bind(i18n));
+    expect(result).not.toBeNull();
+    expect(result!.line.length).toBeGreaterThan(0);
+    expect(result!.line).toContain("Haaland");
+  });
+
+  it("produces commentary for a corner (v99 Phase 1 — previously silenced)", () => {
+    const evt: MatchEvent = {
+      minute: 20,
+      event_type: "Corner",
+      side: "Home",
+      zone: "AwayBox",
+      player_id: null,
+      secondary_player_id: null,
+    };
+    const result = getCommentary(evt, snapshot([evt]), i18n.t.bind(i18n));
+    expect(result).not.toBeNull();
+    expect(result!.line.length).toBeGreaterThan(0);
+    expect(result!.line).toContain("Home FC");
   });
 
   it("is deterministic — same event yields the same line", () => {

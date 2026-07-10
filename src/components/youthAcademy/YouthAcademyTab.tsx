@@ -32,6 +32,7 @@ import type { DashboardNavigateContext } from "../dashboard/dashboardProfileNavi
 import type { PlayerSquadRole } from "../../store/types";
 import { calculateAvailableScouts } from "../scouting/ScoutingTab.helpers";
 import ScoutingYouthRecruitmentCard from "../scouting/ScoutingYouthRecruitmentCard";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 
 interface YouthAcademyTabProps {
  gameState: GameStateData | null;
@@ -514,8 +515,11 @@ export default function YouthAcademyTab({
  </span>
  </td>
  <td className="py-2.5 px-4 text-center">
- <span className="text-sm font-heading font-bold text-gray-800 dark:text-gray-100 tabular-nums">
- {player.ovr}
+ <span
+ className={`text-xs font-heading font-bold ${interpretOvr(player.ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(player.ovr, player.natural_position || player.position).description}
+ >
+ {shortOvrLabel(player.ovr, player.natural_position || player.position)}
  </span>
  </td>
  <td className="py-2.5 px-4 text-center">

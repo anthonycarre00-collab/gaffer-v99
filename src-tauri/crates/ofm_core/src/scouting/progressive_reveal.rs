@@ -287,6 +287,94 @@ pub fn get_or_create_knowledge<'a>(
         .or_insert_with(|| ScoutingKnowledge::new(player_id))
 }
 
+/// Auto-reveal scouting knowledge for players the manager should already
+/// know about — famous players (high reputation) and players in the same
+/// league as the manager's club.
+///
+/// Rules:
+/// - High-reputation players (rep >= 800): auto-reveal to Surface tier.
+///   These are the marquee names everyone knows — Haaland, Mbappé, etc.
+///   The manager doesn't need to scout them to know they're quality.
+/// - Same-league players (any team in the manager's active competitions):
+///   auto-reveal to Detailed tier. The manager sees these lads play every
+///   week — they're not strangers.
+/// - Everyone else: must be scouted manually.
+///
+/// Only upgrades the tier — never downgrades. If the manager has already
+/// scouted a player to Complete, we don't drop them back to Detailed.
+///
+/// Call this on game load + after any transfer/loan that moves a player
+/// into or out of the manager's league scope.
+pub fn auto_reveal_for_known_players(game: &mut crate::game::Game) {
+    let user_team_id = match &game.manager.team_id {
+        Some(id) => id.clone(),
+        None => return,
+    };
+
+    // Use the game's active_team_ids() — this returns the set of teams
+    // in the same active competitions as the user's team. If it returns
+    // None, no scope is configured and we should treat ALL teams as
+    // in-scope (same league).
+    let active_team_ids = game.active_team_ids();
+    let same_league_team_ids: std::collections::HashSet<String> = match &active_team_ids {
+        Some(ids) => ids.clone(),
+        None => game.teams.iter().map(|t| t.id.clone()).collect(),
+    };
+
+    // Build a lookup of team reputation.
+    let team_reputation: std::collections::HashMap<String, u32> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.reputation))
+        .collect();
+
+    // Iterate players and auto-reveal as appropriate.
+    for player in &game.players {
+        // Skip the manager's own players — they're always fully known.
+        if player.team_id.as_deref() == Some(&user_team_id) {
+            continue;
+        }
+
+        let player_team_id = match &player.team_id {
+            Some(id) => id.clone(),
+            None => continue,
+        };
+
+        let is_same_league = same_league_team_ids.contains(&player_team_id);
+        let is_high_rep = team_reputation
+            .get(&player_team_id)
+            .map(|&rep| rep >= 800)
+            .unwrap_or(false);
+
+        // Determine the auto-reveal tier for this player.
+        let auto_tier = if is_same_league {
+            Some(crate::game::RevealTier::Detailed)
+        } else if is_high_rep {
+            Some(crate::game::RevealTier::Surface)
+        } else {
+            None
+        };
+
+        if let Some(target_tier) = auto_tier {
+            let knowledge = get_or_create_knowledge(&mut game.scouting_knowledge, &player.id);
+            // Only upgrade, never downgrade.
+            if tier_rank(knowledge.reveal_tier) < tier_rank(target_tier) {
+                knowledge.reveal_tier = target_tier;
+            }
+        }
+    }
+}
+
+/// Convert a RevealTier to a numeric rank for comparison.
+/// Higher = more revealed.
+fn tier_rank(tier: crate::game::RevealTier) -> u8 {
+    match tier {
+        crate::game::RevealTier::Surface => 1,
+        crate::game::RevealTier::Detailed => 2,
+        crate::game::RevealTier::Complete => 3,
+    }
+}
+
 // ============================================================================
 // TESTS
 // ============================================================================

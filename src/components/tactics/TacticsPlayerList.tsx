@@ -4,6 +4,7 @@ import type { PlayerData, TeamMatchRolesData } from "../../store/gameStore";
 import type { DragState, SquadSection } from "../squad/SquadTab.helpers";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { getPlayerOvr } from "../../lib/helpers";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import { Badge, InjuryBadge } from "../ui";
 import ContextMenu from "../ContextMenu";
 import { buildTacticsPlayerContextMenuItems } from "./TacticsContextMenu.helpers";
@@ -129,15 +130,10 @@ function PlayerRow({
  {player.match_name || player.full_name}
  </span>
  <span
- className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold ${
- ovr >= 80
- ? "bg-primary-500 text-white"
- : ovr >= 60
- ? "bg-accent-500/20 text-accent-600 dark:text-accent-400"
- : "bg-gray-100 text-gray-500 dark:bg-navy-700 dark:text-gray-400"
- }`}
+ className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-gray-100 dark:bg-navy-700 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
- {ovr}
+ {shortOvrLabel(ovr, player.natural_position || player.position)}
  </span>
  </button>
  </ContextMenu>
@@ -173,13 +169,10 @@ function PlayerRow({
  <InjuryBadge injury={player.injury} />
  ) : (
  <span
- className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold ${
- ovr >= 80
- ? "bg-primary-500 text-white"
- : "bg-gray-100 text-gray-500 dark:bg-navy-700 dark:text-gray-400"
- }`}
+ className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-gray-100 dark:bg-navy-700 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
- {ovr}
+ {shortOvrLabel(ovr, player.natural_position || player.position)}
  </span>
  )}
  </button>

@@ -43,6 +43,7 @@ import FreeAgentContractModal from "../transfers/FreeAgentContractModal";
 import TransferBidModal from "../transfers/TransferBidModal";
 import { useFreeAgentContractFlow } from "../transfers/useFreeAgentContractFlow";
 import { useTransferBidFlow } from "../transfers/useTransferBidFlow";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 
 interface PlayersListTabProps {
  gameState: GameStateData;
@@ -500,14 +501,10 @@ export default function PlayersListTab({
  </td>
  <td className="py-2.5 px-4">
  <span
- className={`font-heading font-bold text-base tabular-nums ${ovr >= 75
- ? "text-primary-500"
- : ovr >= 55
- ? "text-accent-500"
- : "text-gray-400"
- }`}
+ className={`font-heading font-bold text-xs ${interpretOvr(ovr, summary.natural_position || summary.position).colorClass}`}
+ title={interpretOvr(ovr, summary.natural_position || summary.position).description}
  >
- {ovr}
+ {shortOvrLabel(ovr, summary.natural_position || summary.position)}
  </span>
  </td>
  <td className="py-2.5 px-4">

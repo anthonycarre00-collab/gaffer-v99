@@ -13,6 +13,7 @@ import type {
 import PlayerProfileScoutAction from "./PlayerProfileScoutAction";
 import { TraitList } from "../TraitBadge";
 import { Badge, Card, CountryFlag, JerseyIcon, PlayerAvatar } from "../ui";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import type { TeamData } from "../../store/types";
 
 type TranslateFn = (
@@ -69,13 +70,8 @@ export default function PlayerProfileHeroCard({
  <div className="flex items-start gap-6">
  <PlayerAvatar
  player={player}
- className={`w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-4xl border-2 overflow-hidden ${ovr >= 75
- ? "bg-primary-500/20 text-primary-400 border-primary-500/30"
- : ovr >= 55
- ? "bg-accent-500/20 text-accent-400 border-accent-500/30"
- : "bg-gray-500/20 text-gray-400 border-gray-500/30"
- }`}
- fallback={<span>{ovr}</span>}
+ className={`w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-lg border-2 overflow-hidden ${interpretOvr(ovr, player.natural_position || player.position).colorClass} bg-gray-500/10 border-current/30`}
+ fallback={<span className="text-center px-1 leading-tight">{shortOvrLabel(ovr, player.natural_position || player.position)}</span>}
  />
  {player.jersey_number != null && team != null && (
  <JerseyIcon

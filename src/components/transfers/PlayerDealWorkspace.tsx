@@ -14,6 +14,7 @@ import {
 } from "../../lib/helpers";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { Badge, CountryFlag, PlayerAvatar } from "../ui";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 
 export type DealKind = "transfer" | "loan" | "contract";
 
@@ -275,8 +276,14 @@ export default function PlayerDealWorkspace({
  <aside className="min-h-0 space-y-4 lg:overflow-y-auto">
  <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>{t("common.ovr")}</p>
- <p className="mt-1 font-heading text-3xl font-mono font-bold tabular-nums text-primary-500">
- {ovr}
+ <p
+ className={`mt-1 font-heading text-2xl font-bold ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(ovr, player.natural_position || player.position).description}
+ >
+ {shortOvrLabel(ovr, player.natural_position || player.position)}
+ </p>
+ <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 italic">
+ {interpretOvr(ovr, player.natural_position || player.position).description}
  </p>
  <div className="mt-4 grid grid-cols-2 gap-3">
  <div>

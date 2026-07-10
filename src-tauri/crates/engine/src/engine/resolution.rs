@@ -193,7 +193,7 @@ fn resolve_attacking_third<R: Rng>(
         * morale_modifier(attacker.morale)
         * stability_pressure_modifier(attacker.stability, pressure);
     let def_rating = (defender.defending as f64
-        + defender.defending as f64
+        + defender.power as f64
         + defender.anticipation as f64
         + defender.aerial as f64)
         / 4.0
@@ -327,7 +327,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let gk_stability_mod = stability_pressure_modifier(goalkeeper.stability, pressure);
     let gk_morale_mod = morale_modifier(goalkeeper.morale);
     let gk_rating =
-        (goalkeeper.shot_stopping as f64 + goalkeeper.shot_stopping as f64 + goalkeeper.anticipation as f64)
+        (goalkeeper.shot_stopping as f64 + goalkeeper.commanding as f64 + goalkeeper.anticipation as f64)
             / 3.0
             * trait_bonus(&goalkeeper, TraitContext::Goalkeeping)
             * def_cond

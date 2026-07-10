@@ -300,6 +300,207 @@ export function getPunditLine(
  return { line: lines[hash % lines.length], tone: "neutral" };
  }
 
+ case "Tackle": {
+ if (isUserEvent) {
+ const lines = [
+ `Proper tackle that — sets the tone for the lads.`,
+ `The gaffer loves a tackle like that. Wins the ball back, gets the crowd up.`,
+ `${player} putting a shift in. That's what the gaffer asks for.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `That's a proper tackle — they're not getting anything easy today.`,
+ `${player} reads it brilliantly — that's why he's in the team.`,
+ `Big defensive moment. ${player} with the tackle that breaks it up.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "Interception": {
+ const lines = [
+ `Reading the danger — ${player} cuts it out. Smart.`,
+ `Vital interception. ${player} was alive to that.`,
+ `Proper defending — reads the pass and steps in.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "neutral" };
+ }
+
+ case "PassCompleted": {
+ // Passes are frequent — only show pundit reaction occasionally (1 in 4)
+ if (hash % 4 !== 0) return null;
+ const lines = [
+ `Good ball — keeps the move alive.`,
+ `Patient buildup — the gaffer will be happy with that.`,
+ `${player} finding his man. The shape's holding.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "neutral" };
+ }
+
+ case "PassIntercepted": {
+ if (isUserEvent) {
+ const lines = [
+ `Cut out — that's sloppy from us.`,
+ `Reads it and nicks it. We've given that away cheaply.`,
+ `${player} tries the pass but it's cut out. Pressure off for them.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+ const lines = [
+ `Great anticipation — picks the pass off.`,
+ `Sniffs out the danger. That's proper defending.`,
+ `Reading the game well — cuts the move out.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+
+ case "Dribble": {
+ if (isUserEvent) {
+ const lines = [
+ `Lovely feet! ${player} beats his man.`,
+ `That's why the gaffer picks him — magic feet.`,
+ `${player} with a sudden burst — the crowd's on their feet.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `He's gone past him — dangerous.`,
+ `${player} beats his man — we need to deal with this.`,
+ `Trickery from ${player} — that's a real threat.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "DribbleTackled": {
+ if (isUserEvent) {
+ const lines = [
+ `He's lost it! ${player} tries one too many.`,
+ `Robbed of the ball — sloppy from ${player}.`,
+ `${player} dispossessed — that was a risky dribble.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+ const lines = [
+ `Wins it cleanly off him — proper defending.`,
+ `Reads the dribble and wins the ball — class.`,
+ `The tackle comes in — that's why he's in the team.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+
+ case "Cross": {
+ if (isUserEvent) {
+ const lines = [
+ `Whips it in — looking for the head in the middle.`,
+ `Dangerous delivery from ${player}.`,
+ `The big lads are up — proper cross that.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `Dangerous ball in — we need to deal with this.`,
+ `${player} arcs it in — that's begging to be attacked.`,
+ `Into the mixer — the gaffer won't be happy with that.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "Clearance": {
+ if (isUserEvent) {
+ const lines = [
+ `Gets rid of it — relief for the defence.`,
+ `${player} hacks it clear — sometimes simple is best.`,
+ `Big clearance — the danger's gone for now.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "neutral" };
+ }
+ const lines = [
+ `They've cleared it — pressure's off for them.`,
+ `${player} smashes it away — we'll have to build again.`,
+ `Headed clear — the chance is gone.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "neutral" };
+ }
+
+ case "Corner": {
+ if (isUserEvent) {
+ const lines = [
+ `Corner to us — chance to put them under pressure.`,
+ `The big lads go forward — real opportunity here.`,
+ `Ref points to the corner flag. Let's make this count.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `Corner to them — we need to defend this properly.`,
+ `They've won a corner — the gaffer will want focus.`,
+ `Dangerous moment. Set piece to deal with.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "FreeKick": {
+ if (isUserEvent) {
+ const lines = [
+ `Free kick to us — in a dangerous position.`,
+ `${player} stands over it — this is a real chance.`,
+ `Set piece won — the gaffer will have a routine for this.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `Free kick against us — dangerous spot.`,
+ `${player} to take — the wall needs to be spot on.`,
+ `Conceded a free kick — silly foul to give away.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "GoalKick": {
+ // Goal kicks are frequent and not very dramatic — only react 1 in 5
+ if (hash % 5 !== 0) return null;
+ const lines = [
+ `Goal kick — back to square one for the attack.`,
+ `Playing out from the back — the gaffer's way.`,
+ `Long ball — direct approach.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "neutral" };
+ }
+
+ case "ShootoutGoal": {
+ if (isUserEvent) {
+ const lines = [
+ `SCORED! ${player} — ice in the veins!`,
+ `That's why he takes them — cool as you like from ${player}.`,
+ `${player} sends the keeper the wrong way — huge goal!`,
+ ];
+ return { line: lines[hash % lines.length], tone: "amazed" };
+ }
+ const lines = [
+ `${player} scores — the keeper had no chance.`,
+ `Penalty converted — pressure's back on us.`,
+ `${player} slots it home — that's class under pressure.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "furious" };
+ }
+
+ case "ShootoutMiss": {
+ if (isUserEvent) {
+ const lines = [
+ `MISSED! ${player} — the gaffer can't watch!`,
+ `Saved! That's a huge moment — and it's gone against us!`,
+ `${player} drags it wide — the gaffer's holding his head!`,
+ ];
+ return { line: lines[hash % lines.length], tone: "furious" };
+ }
+ const lines = [
+ `Missed! That's a massive let-off for us!`,
+ `Saved! The keeper guesses right — huge moment!`,
+ `${player} skied it — we're still in this!`,
+ ];
+ return { line: lines[hash % lines.length], tone: "amazed" };
+ }
+
  default:
  return null;
  }

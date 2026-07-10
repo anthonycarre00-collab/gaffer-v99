@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { GameStateData, StaffData, useGameStore } from "../../store/gameStore";
 import { getStaff, type StaffSlice } from "../../services/staffService";
 import { Card, CardBody, Badge, CountryFlag, ProgressBar } from "../ui";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import {
  UserCog,
  Search,
@@ -279,7 +280,9 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  }
  size="sm"
  >
- {ovr} OVR
+ <span title={interpretOvr(ovr).description}>
+ {shortOvrLabel(ovr)}
+ </span>
  </Badge>
  </div>
  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

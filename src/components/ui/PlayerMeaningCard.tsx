@@ -3,6 +3,7 @@ import { usePlayerMeaning } from '../../store/meaningStore';
 import { Card } from './Card';
 import { Badge } from './Badge';
 import { ProgressBar } from './ProgressBar';
+import { shortOvrLabel, interpretOvr } from '../../lib/ovrInterpretation';
 import { useTranslation } from 'react-i18next';
 
 export function PlayerMeaningCard({ playerId }: { playerId: string | null | undefined }) {
@@ -172,7 +173,12 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  ))}
  <div className="border-t pt-2 flex justify-between">
  <span className="font-semibold">{t('common.overall') || 'Overall'}</span>
- <span className="font-bold font-mono">{snapshot.spreadsheet_attributes.overall}</span>
+ <span
+ className={`font-bold ${interpretOvr(snapshot.spreadsheet_attributes.overall).colorClass}`}
+ title={interpretOvr(snapshot.spreadsheet_attributes.overall).description}
+ >
+ {shortOvrLabel(snapshot.spreadsheet_attributes.overall)}
+ </span>
  </div>
  </div>
  )}

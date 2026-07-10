@@ -455,6 +455,29 @@ pub(crate) fn morale_modifier(morale: u8) -> f64 {
     }
 }
 
+/// Returns a leadership modifier (1.00–1.02) based on the captain's leadership
+/// attribute. The captain's leadership gives a tiny team-wide boost to composure
+/// under pressure — represents the skipper's voice organising the lads.
+///
+/// Only applied when `is_pressure_situation` is true (last 10 minutes, big
+/// matches, etc) — leadership matters most when the chips are down.
+pub(crate) fn leadership_modifier(captain_leadership: u8, is_pressure_situation: bool) -> f64 {
+    if !is_pressure_situation {
+        return 1.0;
+    }
+    // 0→1.00, 50→1.005, 100→1.02 — deliberately tiny so it doesn't dominate.
+    1.0 + (captain_leadership as f64 / 5000.0)
+}
+
+/// Returns a burst modifier (0.97–1.03) based on player burst attribute.
+/// Burst represents explosive acceleration over the first 5 yards — separate
+/// from `pace` (top speed). Applied to dribbling and 1v1 situations where
+/// a quick first step beats the defender.
+pub(crate) fn burst_modifier(burst: u8) -> f64 {
+    // 50→1.00 (neutral), 100→1.03, 0→0.97
+    1.0 + (burst as f64 - 50.0) / 1666.0
+}
+
 #[cfg(test)]
 mod phase_modifier_tests {
     use super::*;

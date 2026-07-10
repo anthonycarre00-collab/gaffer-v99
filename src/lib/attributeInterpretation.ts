@@ -64,26 +64,26 @@ export const ATTRIBUTE_SPECS: Record<AttributeKey, AttrSpec> = {
  label: "Pace",
  group: "body",
  tiers: [
- { min: 85, short: "Electric", description: "Electric — leaves fullbacks eating turf." },
- { min: 75, short: "Rapid", description: "Rapid over the first five yards and keeps it going." },
- { min: 65, short: "Handy", description: "Handy in a footrace, will win his share." },
- { min: 55, short: "Steady", description: "Steady enough, won't embarrass himself." },
- { min: 45, short: "Pedestrian", description: "Pedestrian — needs the ball played to feet." },
- { min: 30, short: "Slow", description: "Slow off the mark. Caught from behind too often." },
- { min: 0, short: "Lead-footed", description: "Lead-footed. The kind of pace that gets strikers mocked." },
+ { min: 85, short: "Electric", description: "Electric top speed — leaves fullbacks eating turf in a footrace." },
+ { min: 75, short: "Rapid", description: "Rapid — quick over 30 yards, will win most chases." },
+ { min: 65, short: "Handy", description: "Handy in a sprint, will win his share." },
+ { min: 55, short: "Steady", description: "Steady enough, won't embarrass himself in a chase." },
+ { min: 45, short: "Pedestrian", description: "Pedestrian — top speed is nothing special." },
+ { min: 30, short: "Slow", description: "Slow — caught from behind too often." },
+ { min: 0, short: "Lead-footed", description: "Lead-footed — the kind of pace that gets strikers mocked." },
  ],
  },
  burst: {
  label: "Burst",
  group: "body",
  tiers: [
- { min: 85, short: "Explosive", description: "Explosive first step — defenders can't react in time." },
- { min: 75, short: "Sharp", description: "Sharp acceleration, beats his man off the mark." },
- { min: 65, short: "Lively", description: "Lively off the mark, gives him half a yard." },
- { min: 55, short: "Decent", description: "Decent burst, no slouch but no threat either." },
- { min: 45, short: "Sluggish", description: "Sluggish to get going. Needs a head start." },
- { min: 30, short: "Laboured", description: "Laboured. The first five yards take forever." },
- { min: 0, short: "Stationary", description: "Stationary. Like watching a van try to overtake on a hill." },
+ { min: 85, short: "Explosive", description: "Explosive first step — beats his man in the first 5 yards, before top speed matters." },
+ { min: 75, short: "Sharp", description: "Sharp acceleration — gets half a yard instantly." },
+ { min: 65, short: "Lively", description: "Lively off the mark — quick first step." },
+ { min: 55, short: "Decent", description: "Decent burst — no slouch but no threat either." },
+ { min: 45, short: "Sluggish", description: "Sluggish off the mark — needs a head start." },
+ { min: 30, short: "Laboured", description: "Laboured — the first 5 yards take forever." },
+ { min: 0, short: "Stationary", description: "Stationary — like a van trying to overtake on a hill." },
  ],
  },
  engine: {
@@ -392,6 +392,84 @@ export function interpretAttribute(key: AttributeKey, value: number): AttrTier {
  if (value >= tier.min) return tier;
  }
  return spec.tiers[spec.tiers.length - 1];
+}
+
+/**
+ * Position-dependent attribute overrides.
+ *
+ * Some attributes don't apply to certain positions — a GK's finishing is
+ * irrelevant, a striker's shot stopping is meaningless. For those
+ * combinations, we return "Not their role" instead of a tier description.
+ *
+ * For other attributes, the description may vary by position — e.g. a
+ * CB's "pace" is described differently than a winger's "pace" because
+ * the same number means different things in context.
+ */
+const POSITION_ATTRIBUTE_OVERRIDES: Record<string, Partial<Record<AttributeKey, { short: string; description: string }>>> = {
+ Goalkeeper: {
+ finishing: { short: "N/A", description: "Not his job — he's there to stop them, not score them." },
+ defending: { short: "N/A", description: "Not his role — that's what the back four's for." },
+ aerial: { short: "Claiming", description: "Comes for crosses and claims the ball under pressure." },
+ pace: { short: "Off the Line", description: "How quick he is off his line to sweep up." },
+ burst: { short: "Reactions", description: "First-step reactions to shots — getting down quickly." },
+ },
+ Defender: {
+ // Defenders' finishing is a nice-to-have but not critical
+ finishing: { short: "For Set Pieces", description: "Useful at set pieces — not relied upon in open play." },
+ },
+ Midfielder: {
+ // Midfielders' aerial is mainly for defensive headers
+ aerial: { short: "Aerial Duels", description: "Wins his share of headers in midfield battles." },
+ },
+ Forward: {
+ // Forwards' defending is press-and-harass, not block-and-tackle
+ defending: { short: "Pressing", description: "Pressing from the front — harries defenders into mistakes." },
+ shot_stopping: { short: "N/A", description: "Not his job — he's at the other end." },
+ commanding: { short: "N/A", description: "Not his role." },
+ playing_out: { short: "N/A", description: "Not his role." },
+ },
+};
+
+/**
+ * Interpret an attribute for a SPECIFIC player position.
+ *
+ * This is the position-aware version of `interpretAttribute()` — it
+ * returns "Not their role" for irrelevant attribute/position combinations
+ * (e.g. a GK's finishing), and returns position-specific descriptions
+ * for attributes that mean different things in different positions
+ * (e.g. a CB's pace vs a winger's pace).
+ *
+ * Falls back to the standard interpretation when no position override
+ * exists.
+ */
+export function interpretAttributeForPosition(
+ key: AttributeKey,
+ value: number,
+ position?: string | null,
+): AttrTier {
+ // Check for position-specific override.
+ const posKey = normalisePositionKey(position);
+ const override = POSITION_ATTRIBUTE_OVERRIDES[posKey]?.[key];
+ if (override) {
+ return {
+ min: 0,
+ short: override.short,
+ description: override.description,
+ };
+ }
+ // Standard interpretation.
+ return interpretAttribute(key, value);
+}
+
+/** Normalise a position string to a key in POSITION_ATTRIBUTE_OVERRIDES. */
+function normalisePositionKey(position?: string | null): string {
+ if (!position) return "";
+ const p = position.toLowerCase().trim();
+ if (p.includes("gk") || p.includes("goal")) return "Goalkeeper";
+ if (p.includes("def") || p.includes("back") || p.includes("centre half")) return "Defender";
+ if (p.includes("mid") || p.includes("centre")) return "Midfielder";
+ if (p.includes("fwd") || p.includes("forward") || p.includes("str") || p.includes("wing")) return "Forward";
+ return "";
 }
 
 /**

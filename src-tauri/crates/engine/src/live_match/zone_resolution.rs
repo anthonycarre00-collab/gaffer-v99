@@ -171,7 +171,7 @@ impl LiveMatchState {
             + attacker.composure as f64)
             / 4.0;
         let def_raw = (defender.defending as f64
-            + defender.defending as f64
+            + defender.power as f64
             + defender.anticipation as f64
             + defender.aerial as f64)
             / 4.0;
@@ -322,7 +322,7 @@ impl LiveMatchState {
         let shoot_rating = self.condition_adjusted_skill(&shooter.id, shoot_raw)
             * trait_bonus(&shooter, TraitContext::Shooting);
         let gk_raw = (goalkeeper.shot_stopping as f64
-            + goalkeeper.shot_stopping as f64
+            + goalkeeper.commanding as f64
             + goalkeeper.anticipation as f64)
             / 3.0;
         let gk_rating = self.condition_adjusted_skill(&goalkeeper.id, gk_raw)

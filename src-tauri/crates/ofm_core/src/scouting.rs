@@ -1,4 +1,4 @@
-mod progressive_reveal;
+pub mod progressive_reveal;
 pub use progressive_reveal::{
     ALL_ATTRIBUTE_NAMES, key_attributes_for_position, fuzz_noise_range, fuzz_attribute,
     get_attribute, ovr_band_label, potential_band_label,

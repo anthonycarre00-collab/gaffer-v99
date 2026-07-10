@@ -1875,6 +1875,9 @@ pub async fn load_game(
     let stats_state = sm.load_stats_state(&save_id)?;
     ofm_core::ai_hiring::seed_ai_managers(&mut game);
     ofm_core::season_context::refresh_game_context(&mut game);
+    // Auto-reveal scouting knowledge for famous players + same-league players.
+    // The manager should already know about Haaland and the lads they face every week.
+    ofm_core::scouting::progressive_reveal::auto_reveal_for_known_players(&mut game);
 
     let mgr_name = format!("{} {}", game.manager.first_name, game.manager.last_name);
 

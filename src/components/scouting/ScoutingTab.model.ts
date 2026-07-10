@@ -3,7 +3,7 @@ import type {
   ScoutingAssignment,
   TeamData,
 } from "../../store/gameStore";
-import { getPlayerOvr, getTeamName } from "../../lib/helpers";
+import { getTeamName } from "../../lib/helpers";
 import { normalisePosition } from "../squad/SquadTab.helpers";
 
 interface FilterScoutablePlayersParams {
@@ -42,9 +42,11 @@ export function filterScoutablePlayers({
           getTeamName(teams, player.team_id).toLowerCase().includes(query))
       );
     })
-    .sort(
-      (left, right) =>
-        getPlayerOvr(right) - getPlayerOvr(left),
+    // Sort by NAME, not raw OVR — sorting by OVR leaks relative ability
+    // of unscouted players (the guy at the top is clearly the best).
+    // Alphabetical is neutral and doesn't reveal anything.
+    .sort((left, right) =>
+      left.full_name.localeCompare(right.full_name),
     );
 }
 

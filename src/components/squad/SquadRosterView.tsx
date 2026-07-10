@@ -27,6 +27,7 @@ import {
 } from "../../lib/helpers";
 import { canDelegateToYouthAcademy, isSeniorSquadPlayer } from "../../lib/playerSquad";
 import { getInjurySeverity, resolveInjuryName } from "../../lib/injury";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import { useTranslation } from "react-i18next";
 import ContextMenu, { type ContextMenuHandle } from "../ContextMenu";
 import {
@@ -926,14 +927,10 @@ export default function SquadRosterView({
  </td>
  <td className="py-2.5 px-4 text-right">
  <span
- className={`font-mono font-bold text-sm ${ovr >= 80
- ? "text-primary-500"
- : ovr >= 55
- ? "text-accent-600 dark:text-accent-400"
- : "text-gray-500 dark:text-gray-400"
- }`}
+ className={`font-heading font-bold text-xs ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
- {ovr}
+ {shortOvrLabel(ovr, player.natural_position || player.position)}
  </span>
  </td>
  </tr>

@@ -11,6 +11,7 @@ import { buildViewProfileMenuItem } from "../playerActions/playerContextMenuItem
 import { Badge, Card, CardBody, CardHeader, CountryFlag, PlayerAvatar, ProgressBar } from "../ui";
 import { useSortableTable, SortableHeader } from "../ui/SortableTable";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import type { TeamProfileTranslate } from "./TeamProfile.types";
 
 interface TeamProfileRosterCardProps {
@@ -136,16 +137,15 @@ export default function TeamProfileRosterCard({
  )}
  <td className="py-3 px-5">
  <span
- className={`font-heading font-bold text-lg tabular-nums ${isOwnTeam
- ? ovr >= 75
- ? "text-primary-500"
- : ovr >= 55
- ? "text-accent-500"
- : "text-gray-400"
- : "text-gray-400"
+ className={`font-heading font-bold text-xs ${isOwnTeam
+ ? interpretOvr(ovr, player.natural_position || player.position).colorClass
+ : "text-gray-400 dark:text-gray-500"
  }`}
+ title={isOwnTeam ? interpretOvr(ovr, player.natural_position || player.position).description : "Scout this player to reveal their rating"}
  >
- {isOwnTeam ? ovr : "??"}
+ {isOwnTeam
+ ? shortOvrLabel(ovr, player.natural_position || player.position)
+ : "??"}
  </span>
  </td>
  </tr>
