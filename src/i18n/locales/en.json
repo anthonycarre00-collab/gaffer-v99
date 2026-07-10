@@ -2677,6 +2677,27 @@
         "Off the bar! {{player}} smashes it against the woodwork!",
         "{{player}} skied it! That's a shocking miss.",
         "Penalty saved! {{player}} can't believe it."
+      ],
+      "headerWon": [
+        "{{player}} wins the header — beats his man in the air!",
+        "Powerful header from {{player}} — the defender couldn't compete.",
+        "{{player}} rises highest — wins the aerial duel.",
+        "Bullet header from {{player}} — proper centre-half stuff.",
+        "{{player}} dominates in the air — no contest."
+      ],
+      "headerLost": [
+        "{{player}} loses the aerial duel — the defender wins it.",
+        "Beaten in the air — {{player}} couldn't get there.",
+        "The defender outjumps {{player}} — header cleared.",
+        "{{player}} mistimes the jump — ball goes the other way.",
+        "Outmuscled in the air — {{player}} loses out."
+      ],
+      "offside": [
+        "Flag's up! {{player}} was offside — goal kick.",
+        "Offside! {{player}} timed the run too early.",
+        "Linesman's flag — {{player}} just behind the line.",
+        "Offside against {{player}} — the defender caught him napping.",
+        "Flag goes up — {{player}} was a yard off."
       ]
     },
     "matchReport": "Match Report",

@@ -205,9 +205,16 @@ fn simulate_minute<R: Rng>(ctx: &mut MatchContext, minute: u8, rng: &mut R) {
 
     // Deplete team condition ~0.18 over 90 minutes (floor at 0.70, but never increase
     // if condition is already below 0.70 at match start).
-    let depletion = ctx.config.fatigue_per_minute / 100.0;
-    ctx.home_condition = (ctx.home_condition - depletion).max(0.70_f64.min(ctx.home_condition));
-    ctx.away_condition = (ctx.away_condition - depletion).max(0.70_f64.min(ctx.away_condition));
+    // V99: Apply tactics_pressing_fatigue so aggressive pressing tires CPU teams
+    // the same way it tires user teams. Previously only the live match path
+    // applied this — CPU-only matches ignored it, creating a divergence.
+    let base_depletion = ctx.config.fatigue_per_minute / 100.0;
+    let home_pressing_mod = shared::tactics_pressing_fatigue(&ctx.home.tactics);
+    let away_pressing_mod = shared::tactics_pressing_fatigue(&ctx.away.tactics);
+    let home_depletion = base_depletion * home_pressing_mod;
+    let away_depletion = base_depletion * away_pressing_mod;
+    ctx.home_condition = (ctx.home_condition - home_depletion).max(0.70_f64.min(ctx.home_condition));
+    ctx.away_condition = (ctx.away_condition - away_depletion).max(0.70_f64.min(ctx.away_condition));
 
     let actions = rng.random_range(1..=3u8);
     for _ in 0..actions {

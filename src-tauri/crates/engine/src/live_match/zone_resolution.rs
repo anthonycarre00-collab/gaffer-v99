@@ -2,7 +2,8 @@ use rand::{Rng, RngExt};
 
 use crate::event::{EventDetail, EventType, MatchEvent};
 use crate::shared::{
-    PlayStylePhase, PlayerSnap, TraitContext, play_style_modifier, role_attribute_modifier,
+    PlayStylePhase, PlayerSnap, TraitContext, burst_modifier, leadership_modifier,
+    play_style_modifier, role_attribute_modifier, stability_pressure_modifier,
     tactics_buildup_mod, tactics_cross_probability, tactics_defensive_conversion_mod,
     tactics_foul_modifier, tactics_shape_modifier, tactics_tempo_progression, trait_bonus,
 };
@@ -53,7 +54,19 @@ impl LiveMatchState {
         let ball_zone = self.ball_zone;
 
         let buildup_mod = tactics_buildup_mod(&self.team_ref(att_side).tactics);
-        let success_chance = (pass_skill * 1.3 * buildup_mod) / (pass_skill * 1.3 * buildup_mod + press);
+
+        // V99: Wire `playing_out` — when the ball is in the defensive third
+        // (typically after a goal kick or GK save), the keeper's distribution
+        // skill affects how cleanly the team plays out from the back.
+        let playing_out_mod = if ball_zone == Zone::defensive_third(att_side) {
+            let gk = self.snap_player(att_side, Position::Goalkeeper, rng);
+            1.0 + (gk.playing_out as f64 - 50.0) / 1000.0
+        } else {
+            1.0
+        };
+
+        let success_chance = (pass_skill * 1.3 * buildup_mod * playing_out_mod)
+            / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press);
         if rng.random_range(0.0..1.0f64) < success_chance {
             let evt = MatchEvent::new(minute, EventType::PassCompleted, att_side, ball_zone)
                 .with_player(&passer.id);
@@ -123,7 +136,20 @@ impl LiveMatchState {
                 .with_player(&attacker.id);
             self.events.push(evt.clone());
             events.push(evt);
-            self.ball_zone = Zone::attacking_third(att_side);
+            // V99: Offside check — driven by attacker decisions + defender anticipation.
+            let offside_chance = 0.04
+                * (1.0 - (attacker.decisions as f64 - 50.0) / 200.0)
+                * (1.0 + (defender.anticipation as f64 - 50.0) / 200.0);
+            if rng.random_range(0.0..1.0f64) < offside_chance.clamp(0.01, 0.12) {
+                let off_evt = MatchEvent::new(minute, EventType::Offside, att_side, Zone::Midfield)
+                    .with_player(&attacker.id);
+                self.events.push(off_evt.clone());
+                events.push(off_evt);
+                self.possession = def_side;
+                self.ball_zone = Zone::defensive_third(att_side);
+            } else {
+                self.ball_zone = Zone::attacking_third(att_side);
+            }
         } else {
             if rng.random_range(0.0..1.0f64) < 0.6 {
                 let evt = MatchEvent::new(minute, EventType::Tackle, def_side, Zone::Midfield)
@@ -164,6 +190,7 @@ impl LiveMatchState {
         let mut events = Vec::new();
         let attacker = self.snap_player(att_side, Position::Forward, rng);
         let defender = self.snap_player(def_side, Position::Defender, rng);
+        let pressure = self.is_pressure_situation(minute);
 
         let att_raw = (attacker.touch as f64
             + attacker.pace as f64
@@ -175,10 +202,18 @@ impl LiveMatchState {
             + defender.anticipation as f64
             + defender.aerial as f64)
             / 4.0;
+        // V99: Apply burst_modifier to dribbling + leadership_modifier to
+        // defending under pressure. Also apply stability + morale modifiers
+        // for consistency with the simple engine path.
+        let captain_leadership = self.team_captain_leadership(def_side);
         let att_rating = self.condition_adjusted_skill(&attacker.id, att_raw)
-            * trait_bonus(&attacker, TraitContext::Dribbling);
+            * trait_bonus(&attacker, TraitContext::Dribbling)
+            * burst_modifier(attacker.burst)
+            * stability_pressure_modifier(attacker.stability, pressure);
         let def_rating = self.condition_adjusted_skill(&defender.id, def_raw)
-            * trait_bonus(&defender, TraitContext::Tackling);
+            * trait_bonus(&defender, TraitContext::Tackling)
+            * leadership_modifier(captain_leadership, pressure)
+            * stability_pressure_modifier(defender.stability, pressure);
 
         let att_mod = play_style_modifier(
             self.team_ref(att_side).play_style,
@@ -216,10 +251,22 @@ impl LiveMatchState {
                 let aerial_def = def_header.aerial as f64;
                 let aerial_win = aerial_att / (aerial_att + aerial_def);
                 if rng.random_range(0.0..1.0f64) < aerial_win {
+                    // V99: Emit HeaderWon event.
+                    let hdr_evt = MatchEvent::new(minute, EventType::HeaderWon, att_side, zone)
+                        .with_player(&header.id)
+                        .with_secondary(&def_header.id);
+                    self.events.push(hdr_evt.clone());
+                    events.push(hdr_evt);
                     self.ball_zone = Zone::attacking_box(att_side);
                     let shot_events = self.resolve_shot(minute, att_side, rng);
                     events.extend(shot_events);
                 } else {
+                    // V99: Emit HeaderLost event.
+                    let hdr_evt = MatchEvent::new(minute, EventType::HeaderLost, att_side, zone)
+                        .with_player(&header.id)
+                        .with_secondary(&def_header.id);
+                    self.events.push(hdr_evt.clone());
+                    events.push(hdr_evt);
                     let clear_evt =
                         MatchEvent::new(minute, EventType::Clearance, def_side, zone)
                             .with_player(&def_header.id);

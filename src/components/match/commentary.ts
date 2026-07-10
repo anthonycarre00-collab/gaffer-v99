@@ -41,6 +41,10 @@ const COMMENTARY_EVENTS = new Set([
   "Tackle",
   "Interception",
   "Clearance",
+  // V99: Aerial duels + offside
+  "HeaderWon",
+  "HeaderLost",
+  "Offside",
   // Set pieces
   "Corner",
   "FreeKick",

@@ -54,6 +54,17 @@ opt-level = 1
 [profile.dev.package."*"]
 opt-level = 3
 
+# Release builds (`tauri build` — produces the .exe installer).
+# V99 tuning: thin LTO + codegen-units=16 trades ~5-10% larger binary for
+# 3-5x faster build time. The default Tauri profile uses fat LTO + 1 codegen
+# unit which produces a slightly smaller/faster binary but takes 1hr+ to link.
+# For a game like this the runtime perf difference is negligible; the build
+# time difference is massive. Flip back to lto=true + codegen-units=1 for
+# the final shipping build if binary size matters.
+[profile.release]
+lto = "thin"
+codegen-units = 16
+
 [features]
 mcp = ["dep:rmcp", "dep:axum", "dep:tower", "dep:tokio", "dep:tokio-util"]
 # Forwards to `db/save-snapshots`. Enable with `tauri dev -f save-snapshots`

@@ -48,10 +48,33 @@ impl LiveMatchState {
             .player_conditions
             .get(player_id)
             .copied()
-            .unwrap_or(50.0);
-        // At 100% condition: full skill. At 50%: ~80% skill. At 0%: ~60% skill.
+            .unwrap_or(100.0);
+        // Condition factor: 0.6 at 0%, 1.0 at 100%. Tired players perform worse.
         let factor = 0.6 + 0.4 * (condition / 100.0);
         base_skill * factor
+    }
+
+    /// V99: Is this a pressure situation? (Last 20 minutes with a close score.)
+    /// Used for leadership + stability modifier gating.
+    pub(super) fn is_pressure_situation(&self, minute: u8) -> bool {
+        if minute < 70 {
+            return false;
+        }
+        let goal_diff = (self.home_score as i16 - self.away_score as i16).abs();
+        goal_diff <= 1
+    }
+
+    /// V99: Get the leadership rating of the team's captain — the player with
+    /// the highest leadership in the starting XI. Returns 50 (neutral) if no
+    /// captain can be identified.
+    pub(super) fn team_captain_leadership(&self, side: Side) -> u8 {
+        let team = self.team_ref(side);
+        team.players
+            .iter()
+            .filter(|p| !self.sent_off.contains(&p.id))
+            .map(|p| p.leadership)
+            .max()
+            .unwrap_or(50)
     }
 
     // -----------------------------------------------------------------------

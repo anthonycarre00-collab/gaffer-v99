@@ -501,6 +501,57 @@ export function getPunditLine(
  return { line: lines[hash % lines.length], tone: "amazed" };
  }
 
+ case "HeaderWon": {
+ if (isUserEvent) {
+ const lines = [
+ `Proper header that — ${player} dominates in the air.`,
+ `The gaffer loves a big lad. ${player} wins it clean.`,
+ `${player} rises highest — that's why he's in the team.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+ const lines = [
+ `Dangerous — ${player} wins the header.`,
+ `${player} dominates in the air — we need to deal with that.`,
+ `The defender couldn't compete — ${player} too strong.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+
+ case "HeaderLost": {
+ if (isUserEvent) {
+ const lines = [
+ `Beaten in the air — ${player} couldn't get there.`,
+ `Lost the header — ${player} mistimed it.`,
+ `The defender outjumps him — ${player} loses out.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+ const lines = [
+ `Good defending — wins the header against ${player}.`,
+ `${player} beaten in the air — proper defending.`,
+ `The defender dominates — ${player} couldn't compete.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+
+ case "Offside": {
+ if (isUserEvent) {
+ const lines = [
+ `Flag's up — ${player} timed the run too early.`,
+ `Offside. ${player} a yard ahead — the gaffer's frustrated.`,
+ `Linesman's flag. ${player} caught napping.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "negative" };
+ }
+ const lines = [
+ `Offside! ${player} caught — the line held well.`,
+ `Flag goes up — ${player} a step too early.`,
+ `Good defensive line — ${player} offside.`,
+ ];
+ return { line: lines[hash % lines.length], tone: "positive" };
+ }
+
  default:
  return null;
  }

@@ -2,8 +2,8 @@ use rand::{Rng, RngExt};
 
 use crate::event::{EventType, MatchEvent};
 use crate::shared::{
-    PlayStylePhase, TraitContext, home_mod, morale_modifier, play_style_modifier,
-    role_attribute_modifier, stability_pressure_modifier, tactics_buildup_mod,
+    PlayStylePhase, TraitContext, burst_modifier, home_mod, leadership_modifier, morale_modifier,
+    play_style_modifier, role_attribute_modifier, stability_pressure_modifier, tactics_buildup_mod,
     tactics_cross_probability, tactics_defensive_conversion_mod, tactics_foul_modifier,
     tactics_pressing_press, tactics_shape_modifier, tactics_tempo_progression, trait_bonus,
 };
@@ -12,6 +12,21 @@ use crate::types::{Position, Side, Zone};
 use super::MatchContext;
 use super::fouls::{self, maybe_foul};
 use super::snap_player;
+
+/// V99: Get the leadership rating of the team's captain (first player in the
+/// starting XI with the highest leadership). Returns 50 (neutral) if no
+/// captain can be identified.
+fn team_captain_leadership(ctx: &MatchContext, side: Side) -> u8 {
+    let team = ctx.team(side);
+    // The captain is the player with the highest leadership in the starting XI.
+    // For the simple engine path we don't track captaincy explicitly, so we
+    // approximate by taking the max leadership across all players.
+    team.players
+        .iter()
+        .map(|p| p.leadership)
+        .max()
+        .unwrap_or(50)
+}
 
 // ---------------------------------------------------------------------------
 // Pressure detection — late game with close score = pressure situation
@@ -70,7 +85,22 @@ fn resolve_buildup<R: Rng>(
     let ball_zone = ctx.ball_zone;
 
     let buildup_mod = tactics_buildup_mod(&ctx.team(att_side).tactics);
-    let success_chance = (pass_skill * 1.3 * buildup_mod) / (pass_skill * 1.3 * buildup_mod + press);
+
+    // V99: Wire `playing_out` — when the ball is in the defensive third
+    // (typically after a goal kick or GK save), the keeper's distribution
+    // skill affects how cleanly the team plays out from the back. A
+    // sweeper-keeper with high playing_out makes the first pass safer;
+    // a poor distributor puts the defender under pressure.
+    let playing_out_mod = if ball_zone == Zone::defensive_third(att_side) {
+        let gk = snap_player(ctx, att_side, Position::Goalkeeper, rng);
+        // 0.95 (poor distributor) .. 1.05 (sweeper-keeper)
+        1.0 + (gk.playing_out as f64 - 50.0) / 1000.0
+    } else {
+        1.0
+    };
+
+    let success_chance = (pass_skill * 1.3 * buildup_mod * playing_out_mod)
+        / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press);
     if rng.random_range(0.0..1.0f64) < success_chance {
         ctx.emit(
             MatchEvent::new(minute, EventType::PassCompleted, att_side, ball_zone)
@@ -138,7 +168,24 @@ fn resolve_midfield<R: Rng>(
             MatchEvent::new(minute, EventType::PassCompleted, att_side, Zone::Midfield)
                 .with_player(&attacker.id),
         );
-        ctx.ball_zone = Zone::attacking_third(att_side);
+        // V99: Offside check — when the ball is played into the attacking
+        // third, there's a small chance the linesman flags. Driven by the
+        // attacker's decisions (lower = more likely to mistime the run)
+        // and the defender's anticipation (higher = better at holding the line).
+        let offside_chance = 0.04 // base 4% chance
+            * (1.0 - (attacker.decisions as f64 - 50.0) / 200.0) // -25% at 100 decisions
+            * (1.0 + (defender.anticipation as f64 - 50.0) / 200.0); // +25% at 100 anticipation
+        if rng.random_range(0.0..1.0f64) < offside_chance.clamp(0.01, 0.12) {
+            ctx.emit(
+                MatchEvent::new(minute, EventType::Offside, att_side, Zone::Midfield)
+                    .with_player(&attacker.id),
+            );
+            // Offside = turnover to the defending side, goal kick.
+            ctx.possession = def_side;
+            ctx.ball_zone = Zone::defensive_third(att_side);
+        } else {
+            ctx.ball_zone = Zone::attacking_third(att_side);
+        }
     } else {
         if rng.random_range(0.0..1.0f64) < 0.6 {
             ctx.emit(
@@ -184,6 +231,8 @@ fn resolve_attacking_third<R: Rng>(
     let attacker = snap_player(ctx, att_side, Position::Forward, rng);
     let defender = snap_player(ctx, def_side, Position::Defender, rng);
 
+    // V99: Apply burst_modifier to dribbling — burst is the first-5-yards
+    // acceleration that beats a defender in 1v1. Separate from pace (top speed).
     let att_rating = (attacker.touch as f64
         + attacker.pace as f64
         + attacker.agility as f64
@@ -191,7 +240,11 @@ fn resolve_attacking_third<R: Rng>(
         / 4.0
         * trait_bonus(&attacker, TraitContext::Dribbling)
         * morale_modifier(attacker.morale)
-        * stability_pressure_modifier(attacker.stability, pressure);
+        * stability_pressure_modifier(attacker.stability, pressure)
+        * burst_modifier(attacker.burst);
+    // V99: Apply leadership_modifier to the defender under pressure — the
+    // captain's voice organises the back line when the chips are down.
+    let captain_leadership = team_captain_leadership(ctx, def_side);
     let def_rating = (defender.defending as f64
         + defender.power as f64
         + defender.anticipation as f64
@@ -199,7 +252,8 @@ fn resolve_attacking_third<R: Rng>(
         / 4.0
         * trait_bonus(&defender, TraitContext::Tackling)
         * morale_modifier(defender.morale)
-        * stability_pressure_modifier(defender.stability, pressure);
+        * stability_pressure_modifier(defender.stability, pressure)
+        * leadership_modifier(captain_leadership, pressure);
 
     let att_mod = play_style_modifier(ctx.team(att_side).play_style, PlayStylePhase::Attack, true)
         * role_attribute_modifier(attacker.role, PlayStylePhase::Attack);
@@ -231,9 +285,21 @@ fn resolve_attacking_third<R: Rng>(
             let aerial_def = def_header.aerial as f64;
             let aerial_win = aerial_att / (aerial_att + aerial_def);
             if rng.random_range(0.0..1.0f64) < aerial_win {
+                // V99: Emit HeaderWon event for the aerial duel.
+                ctx.emit(
+                    MatchEvent::new(minute, EventType::HeaderWon, att_side, zone)
+                        .with_player(&header.id)
+                        .with_secondary(&def_header.id),
+                );
                 ctx.ball_zone = Zone::attacking_box(att_side);
                 resolve_shot(ctx, minute, att_side, rng);
             } else {
+                // V99: Emit HeaderLost event for the attacker.
+                ctx.emit(
+                    MatchEvent::new(minute, EventType::HeaderLost, att_side, zone)
+                        .with_player(&header.id)
+                        .with_secondary(&def_header.id),
+                );
                 ctx.emit(
                     MatchEvent::new(minute, EventType::Clearance, def_side, zone)
                         .with_player(&def_header.id),

@@ -34,6 +34,14 @@ pub enum EventType {
     Dribble,
     DribbleTackled,
     Cross,
+    /// V99: Aerial duel won (header). Emitted when a player wins a header
+    /// — from goal kicks, long balls, crosses, set pieces. The player_id
+    /// is the winner; secondary_player_id is the opponent they beat (if any).
+    HeaderWon,
+    /// V99: Aerial duel lost. The player_id is the loser; secondary is the winner.
+    HeaderLost,
+    /// V99: Offside. Emitted when the linesman flags. player_id is the attacker.
+    Offside,
 
     // --- Shooting ---
     ShotOnTarget,
