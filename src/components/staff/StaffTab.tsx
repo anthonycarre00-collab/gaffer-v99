@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { GameStateData, StaffData, useGameStore } from "../../store/gameStore";
 import { getStaff, type StaffSlice } from "../../services/staffService";
 import { Card, CardBody, Badge, CountryFlag, ProgressBar } from "../ui";
-import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
+import {
+ interpretStaffAttr,
+ staffOvrLabel,
+ staffOvrDescription,
+ type StaffAttrKey,
+} from "../../lib/staffInterpretation";
 import {
  UserCog,
  Search,
@@ -280,8 +285,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  }
  size="sm"
  >
- <span title={interpretOvr(ovr).description}>
- {shortOvrLabel(ovr)}
+ <span title={staffOvrDescription(ovr, staff.role)}>
+ {staffOvrLabel(ovr)}
  </span>
  </Badge>
  </div>
@@ -336,18 +341,26 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <AttrBar
  label={t("staff.attrs.coaching")}
  value={staff.attributes.coaching}
+ attrKey="coaching"
+ role={staff.role}
  />
  <AttrBar
  label={t("staff.attrs.judgingAbility")}
  value={staff.attributes.judgingAbility}
+ attrKey="judgingAbility"
+ role={staff.role}
  />
  <AttrBar
  label={t("staff.attrs.judgingPotential")}
  value={staff.attributes.judgingPotential}
+ attrKey="judgingPotential"
+ role={staff.role}
  />
  <AttrBar
  label={t("staff.attrs.physiotherapy")}
  value={staff.attributes.physiotherapy}
+ attrKey="physiotherapy"
+ role={staff.role}
  />
  </div>
 
@@ -408,23 +421,29 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  );
 }
 
-function AttrBar({ label, value }: { label: string; value: number }) {
- // V99.1: Show Gaffer interpretation instead of raw number
- const interpretStaffAttr = (v: number): string => {
- if (v >= 80) return "Top Class";
- if (v >= 70) return "Quality";
- if (v >= 55) return "Decent";
- if (v >= 40) return "Limited";
- return "Poor";
- };
+function AttrBar({
+ label,
+ value,
+ attrKey,
+ role,
+}: {
+ label: string;
+ value: number;
+ attrKey: StaffAttrKey;
+ role: string;
+}) {
+ // V99.2: Use role-specific Gaffer-voice interpretation layer.
+ // Falls back to the "Coach" ladder if role is unrecognised.
+ const tier = interpretStaffAttr(attrKey, value, role);
  return (
  <div>
- <div className="flex justify-between text-xs mb-0.5">
+ <div className="flex justify-between items-baseline text-xs mb-0.5">
  <span className="text-gray-500 dark:text-gray-400">{label}</span>
  <span
- className={`font-heading font-bold ${value >= 70 ? "text-primary-500" : value >= 50 ? "text-accent-500" : "text-gray-400"}`}
+ className={`font-heading font-bold ${tier.colorClass}`}
+ title={tier.description}
  >
- {interpretStaffAttr(value)}
+ {tier.short}
  </span>
  </div>
  <ProgressBar

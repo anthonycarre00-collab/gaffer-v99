@@ -851,8 +851,10 @@ export default function PlayerProfile({
  </div>
 
  {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}
- <div className="mt-5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-5">
- <HexAttributeCluster attributes={{
+ <div className="mt-5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-5 gaffer-card-texture gaffer-framed">
+ <HexAttributeCluster
+ position={primaryPosition ?? undefined}
+ attributes={{
  pace: player.attributes.pace, burst: player.attributes.burst,
  engine: player.attributes.engine, power: player.attributes.power,
  agility: player.attributes.agility,
@@ -869,7 +871,8 @@ export default function PlayerProfile({
  head_avg: Math.round((player.attributes.anticipation + player.attributes.vision + player.attributes.decisions + player.attributes.composure + player.attributes.leadership) / 5),
  gloves_avg: Math.round((player.attributes.shot_stopping + player.attributes.commanding + player.attributes.playing_out) / 3),
  overall: player.ovr ?? 50,
- }} />
+ }}
+ />
  </div>
 
  {/* Full-width data cards, stacked for a uniform page */}

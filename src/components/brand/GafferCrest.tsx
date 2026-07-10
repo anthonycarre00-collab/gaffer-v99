@@ -11,7 +11,8 @@
  * a ball. The formation diagram makes it instantly recognizable as a
  * management game, not just a football game.
  *
- * Tagline: "Manage the Game. Master the Mind."
+ * Tagline: "Tactics. Touchlines. Trophies." — three T's, captures the three
+ * pillars of management (setup, matchday, winning). Proper football voice.
  */
 
 interface GafferCrestProps {
@@ -161,7 +162,7 @@ export function GafferCrest({
  className="mt-1 text-center text-sm italic text-gray-500 dark:text-gray-400"
  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
  >
- Manage the Game. Master the Mind.
+ Tactics. Touchlines. Trophies.
  </p>
  )}
  </div>
@@ -170,10 +171,10 @@ export function GafferCrest({
 
 /**
  * GafferTagline — the official tagline.
- * "Manage the Game. Master the Mind."
+ * "Tactics. Touchlines. Trophies."
  */
 const GAFFER_TAGLINES = [
- "Manage the Game. Master the Mind.",
+ "Tactics. Touchlines. Trophies.",
 ];
 
 export function GafferTagline({ className = "" }: { className?: string }) {

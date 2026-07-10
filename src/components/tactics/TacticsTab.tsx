@@ -53,6 +53,8 @@ import TacticsCommandBar, {
  type TacticsLibraryEntry,
 } from "./TacticsCommandBar";
 import TacticsPlayerFocusPanel from "./TacticsPlayerFocusPanel";
+import { PlayingStyleHero } from "./PlayingStyleHero";
+import { StyleGuidancePanel } from "./StyleGuidancePanel";
 
 interface TacticsTabProps {
  gameState: GameStateData | null;
@@ -812,15 +814,23 @@ export default function TacticsTab({
  }
 
  return (
- <div className="tactics-board-bg flex w-full flex-col gap-5">
+ <div className="tactics-board-bg flex w-full flex-col gap-4">
  <div
  ref={dragPreviewRef}
  aria-hidden="true"
  className="pointer-events-none fixed -left-20 top-0 h-8 w-8 rounded-full border border-white/15 bg-navy-900/90 "
  />
 
+ {/* V99.2: Playing Style hero — prominent banner showing formation + style
+     + Gaffer-voice description. Always visible at the top of the screen. */}
+ <PlayingStyleHero
+ formation={formation}
+ playStyle={activePlayStyle}
+ tacticName={activeTactic?.name}
+ />
+
  {/* V99: Sub-tab navigation */}
- <div className="mb-4 flex gap-1 border-b border-gray-200 dark:border-navy-600">
+ <div className="flex gap-1 border-b border-gray-200 dark:border-navy-600">
  {([
  { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
  { id: "selection", label: t("tactics.subTabs.selection", { defaultValue: "Selection" }) },
@@ -866,16 +876,17 @@ export default function TacticsTab({
  tacticLibrary={tacticLibrary}
  />
 
- {/* V99: Tab-conditional layout. Pitch tab shows all 3 columns.
-     Selection tab emphasizes the player list. Style tab emphasizes
-     the right panel. Set Pieces tab shows set piece takers. */}
- <div className={`grid grid-cols-1 gap-5 xl:items-start ${
+ {/* V99.2: Tab-conditional layout — tighter gaps (gap-4 vs gap-5) and
+     wider center column for the pitch. Style tab now uses a 2-column
+     layout with style guidance on the left and phase blueprint on the right
+     (no longer leaves the right side empty). */}
+ <div className={`grid grid-cols-1 gap-4 xl:items-start ${
  activeSubTab === "pitch"
- ? "xl:grid-cols-[260px_1fr_270px]"
+ ? "xl:grid-cols-[260px_1fr_280px]"
  : activeSubTab === "selection"
- ? "xl:grid-cols-[1fr_270px]"
+ ? "xl:grid-cols-[1fr_280px]"
  : activeSubTab === "style"
- ? "xl:grid-cols-[270px]"
+ ? "xl:grid-cols-[1fr_320px]"
  : "xl:grid-cols-1"
  }`}>
  {/* Left: player list — shown in pitch + selection tabs */}
@@ -974,6 +985,17 @@ export default function TacticsTab({
  void handleTacticsPhaseChange(patch);
  }}
  startingPlayers={startingXI}
+ tacticsPhase={team?.tactics_phase}
+ />
+ )}
+
+ {/* Style tab — left column shows a Gaffer-voice style guidance panel so
+     the screen is no longer empty on the left when only the right panel
+     would otherwise be visible. */}
+ {activeSubTab === "style" && (
+ <StyleGuidancePanel
+ formation={formation}
+ playStyle={activePlayStyle}
  tacticsPhase={team?.tactics_phase}
  />
  )}

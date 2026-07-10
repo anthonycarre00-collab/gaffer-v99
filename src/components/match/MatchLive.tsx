@@ -263,17 +263,37 @@ export default function MatchLive({
  </div>
  </div>
 
- {/* Possession bar */}
+ {/* Possession bar — uses each team's actual colours so the user can tell
+ the two halves apart. Falls back to primary/accent if team colours
+ haven't resolved yet (e.g. exhibition match). */}
  <div className="mt-2">
  <div className="flex items-center gap-2 text-xs">
- <span className="font-heading font-bold text-primary-400 w-12 text-right">
+ <span
+ className="font-heading font-bold w-12 text-right tabular-nums"
+ style={{ color: homeTeamColor }}
+ >
  {snapshot.home_possession_pct.toFixed(0)}%
  </span>
  <div className="flex-1 h-1.5 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden flex transition-colors duration-300">
- <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${snapshot.home_possession_pct}%` }} />
- <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${snapshot.away_possession_pct}%` }} />
+ <div
+ className="h-full transition-all duration-500"
+ style={{
+ width: `${snapshot.home_possession_pct}%`,
+ backgroundColor: homeTeamColor,
+ }}
+ />
+ <div
+ className="h-full transition-all duration-500"
+ style={{
+ width: `${snapshot.away_possession_pct}%`,
+ backgroundColor: awayTeamColor,
+ }}
+ />
  </div>
- <span className="font-heading font-bold text-primary-400 w-12">
+ <span
+ className="font-heading font-bold w-12 tabular-nums"
+ style={{ color: awayTeamColor }}
+ >
  {snapshot.away_possession_pct.toFixed(0)}%
  </span>
  </div>

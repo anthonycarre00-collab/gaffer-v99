@@ -201,36 +201,80 @@ fn apply_generated_past_history(game: &mut Game, startup_options: &StartupOption
     );
 }
 
-fn load_world_data(world_source: Option<&str>) -> Result<ofm_core::generator::WorldData, String> {
+/// Resolve the path to the bundled `gaffer_world.json` resource.
+///
+/// In a packaged Tauri app, the file is shipped as a bundle resource and is
+/// accessible via `app_handle.path().resource_dir()`. In dev mode (or when
+/// the resource lookup fails), we fall back to the source-relative path
+/// (`<manifest>/databases/gaffer_world.json`).
+fn resolve_bundled_world_path(app_handle: &tauri::AppHandle) -> Option<std::path::PathBuf> {
+    // 1. Tauri resource dir (works in packaged builds)
+    if let Ok(resource_dir) = app_handle.path().resource_dir() {
+        let candidate = resource_dir.join("databases").join("gaffer_world.json");
+        if candidate.exists() {
+            log::info!("[world] Found bundled world via Tauri resource_dir: {:?}", candidate);
+            return Some(candidate);
+        }
+    }
+    // 2. Source-relative path (works in dev mode and cargo test)
+    let dev_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("databases")
+        .join("gaffer_world.json");
+    if dev_path.exists() {
+        log::info!("[world] Found bundled world via CARGO_MANIFEST_DIR: {:?}", dev_path);
+        return Some(dev_path);
+    }
+    log::warn!("[world] No bundled world database found in either resource_dir or CARGO_MANIFEST_DIR");
+    None
+}
+
+fn load_world_data(
+    world_source: Option<&str>,
+    app_handle: &tauri::AppHandle,
+) -> Result<ofm_core::generator::WorldData, String> {
     match world_source {
         None | Some("random") => {
-            // Gaffer Phase 0.5: Try to load the bundled world database first.
-            // If it exists, use it (real players, real teams). Otherwise fall
-            // back to random procedural generation.
-            let bundled_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-                .join("databases")
-                .join("gaffer_world.json");
-            if bundled_path.exists() {
+            // Gaffer V99.2: ALWAYS prefer the bundled real-world database
+            // (FIFA 22 roster, 5,324 players, 184 teams, 21 competitions) over
+            // procedural generation. Only fall back to generation if the file
+            // is genuinely missing (e.g. corrupted install).
+            if let Some(bundled_path) = resolve_bundled_world_path(app_handle) {
                 log::info!("[world] Loading bundled world database: {:?}", bundled_path);
-                ofm_core::generator::load_world_from_path(&bundled_path)
-                    .map_err(|e| {
-                        log::warn!("[world] Failed to load bundled world ({}), falling back to random", e);
-                        format!("be.error.worldReadFileFailed: {}", e)
-                    })
-                    .or_else(|_| Ok(ofm_core::generator::generate_world_data(None)))
-            } else {
-                log::info!("[world] No bundled world found, generating random world");
-                Ok(ofm_core::generator::generate_world_data(None))
+                match ofm_core::generator::load_world_from_path(&bundled_path) {
+                    Ok(world) => {
+                        log::info!(
+                            "[world] Bundled world loaded: {} teams, {} players, {} staff",
+                            world.teams.len(),
+                            world.players.len(),
+                            world.staff.len()
+                        );
+                        return Ok(world);
+                    }
+                    Err(e) => {
+                        log::warn!(
+                            "[world] Failed to load bundled world ({}), falling back to random",
+                            e
+                        );
+                        // fall through to generation
+                    }
+                }
             }
+            log::info!("[world] Generating random world (bundled DB unavailable)");
+            Ok(ofm_core::generator::generate_world_data(None))
         }
-        Some(source) => {
-            let raw = source.strip_prefix("file:").unwrap_or(source);
-            if std::path::Path::new(raw).is_dir() {
-                load_world_data_from_package(raw)
-            } else {
-                load_world_data_from_path(source)
-            }
-        }
+        Some(source) => load_world_data_from_source(source),
+    }
+}
+
+/// Load a world from an explicit source path (file or package directory).
+/// Extracted from `load_world_data` so unit tests can exercise the path-based
+/// loader without needing a Tauri `AppHandle`.
+fn load_world_data_from_source(source: &str) -> Result<ofm_core::generator::WorldData, String> {
+    let raw = source.strip_prefix("file:").unwrap_or(source);
+    if std::path::Path::new(raw).is_dir() {
+        load_world_data_from_package(raw)
+    } else {
+        load_world_data_from_path(source)
     }
 }
 
@@ -1584,11 +1628,12 @@ fn validate_against_world(
 /// before the player commits.
 #[tauri::command]
 pub fn validate_competition_definitions(
+    app_handle: tauri::AppHandle,
     world_source: Option<String>,
     definitions_json: String,
 ) -> Result<Vec<CompetitionDefinitionIssue>, String> {
     let file = parse_competition_definitions(&definitions_json)?;
-    let world = load_world_data(world_source.as_deref())?;
+    let world = load_world_data(world_source.as_deref(), &app_handle)?;
     Ok(validate_against_world(&file, &world))
 }
 
@@ -1719,7 +1764,7 @@ pub async fn start_new_game(
                 .join("packages");
             load_world_data_from_package_ids(&packages_dir, ids)?
         } else {
-            (load_world_data(world_source.as_deref())?, vec![])
+            (load_world_data(world_source.as_deref(), &app_handle)?, vec![])
         };
 
     // Layer a user-picked standalone definition file onto the world. It is
@@ -2690,7 +2735,7 @@ competitions:
         .unwrap();
 
         let world =
-            super::load_world_data(Some(dir.to_string_lossy().as_ref())).expect("package loads");
+            super::load_world_data_from_source(dir.to_string_lossy().as_ref()).expect("package loads");
         assert!(world.teams.iter().any(|t| t.id == "zed-fc"));
         assert!(world.teams.iter().any(|t| t.id == "zed-utd"));
 

@@ -42,6 +42,13 @@ export function EventFeed({
  return "text-gray-600 dark:text-gray-400 border-gray-200 dark:border-navy-700";
  }
  };
+ // V99.2: Differentiate home vs away using distinct accent classes so the
+ // user can tell at a glance which side did what. Previously both used the
+ // same `text-primary-400` — making it impossible to distinguish.
+ const sideAccentClass = (isHome: boolean): string =>
+ isHome
+ ? "text-primary-600 dark:text-primary-300"
+ : "text-accent-600 dark:text-accent-300";
  return (
  <div ref={feedRef} className="flex flex-col gap-1">
  {events.length === 0 ? (
@@ -73,7 +80,7 @@ export function EventFeed({
  <>
  <div className="flex items-center gap-2">
  <span
- className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-primary-400"}`}
+ className={`font-heading font-bold text-xs uppercase tracking-wider ${sideAccentClass(isHome)}`}
  >
  {commentary.headline}
  </span>
@@ -107,7 +114,7 @@ export function EventFeed({
  <>
  <div className="flex items-center gap-2">
  <span
- className={`font-heading font-bold text-xs uppercase tracking-wider ${isHome ? "text-primary-400" : "text-primary-400"}`}
+ className={`font-heading font-bold text-xs uppercase tracking-wider ${sideAccentClass(isHome)}`}
  >
  {isHome ? snapshot.home_team.name : snapshot.away_team.name}
  </span>

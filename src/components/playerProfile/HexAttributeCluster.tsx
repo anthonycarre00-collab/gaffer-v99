@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
+import { interpretAttributeForPosition, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
 
 /**
  * HexAttributeCluster — signature attribute visualization for Player Detail.
  *
  * Shows 4 hexagons (Body / Ball / Head / Gloves), each displaying the group
- * average. Click a hex to expand and see individual attributes as bars.
+ * average as a Gaffer-voice label (NOT a raw number). Click a hex to expand
+ * and see individual attributes as bars with their tier short labels.
  *
- * This replaces the unreadable 19-axis radar with a clean, scannable hierarchy.
- * All numbers use IBM Plex Mono with tabular-nums.
+ * Per the Gaffer constitution: raw attribute numbers are NEVER displayed.
+ * Every value is interpreted into a short tier label ("ELT", "EXC", "STL",
+ * etc.) backed by a full Gaffer-voice description on hover.
  */
 
 interface AttributeGroup {
@@ -28,6 +31,8 @@ interface HexAttributeClusterProps {
  shot_stopping: number; commanding: number; playing_out: number;
  body_avg: number; ball_avg: number; head_avg: number; gloves_avg: number; overall: number;
  };
+ /** Player's position — drives position-dependent attribute descriptions. */
+ position?: string;
 }
 
 const GROUP_COLORS: Record<string, string> = {
@@ -45,7 +50,57 @@ function getAttrColor(val: number): string {
  return "#7a2e1f"; // Mahogany — poor
 }
 
-export function HexAttributeCluster({ attributes }: HexAttributeClusterProps) {
+/**
+ * Map a translated attribute display name back to its canonical key so we can
+ * look up the interpretation tier. Reverse lookup table cached at module scope.
+ */
+const NAME_TO_KEY_CACHE: Record<string, AttributeKey | null> = {};
+function buildNameToKeyMap(): void {
+ if (Object.keys(NAME_TO_KEY_CACHE).length > 0) return;
+ for (const key of Object.keys(ATTRIBUTE_SPECS) as AttributeKey[]) {
+ const spec = ATTRIBUTE_SPECS[key];
+ NAME_TO_KEY_CACHE[spec.label.toLowerCase()] = key;
+ }
+}
+
+/** Lookup the canonical attr key for a hex bar's display name. */
+const HEX_ATTR_KEY_MAP: Record<string, AttributeKey> = {
+ "Pace": "pace",
+ "Burst": "burst",
+ "Engine": "engine",
+ "Power": "power",
+ "Agility": "agility",
+ "Passing": "passing",
+ "Distribution": "distribution",
+ "Touch": "touch",
+ "Finishing": "finishing",
+ "Defending": "defending",
+ "Aerial": "aerial",
+ "Anticipation": "anticipation",
+ "Vision": "vision",
+ "Decisions": "decisions",
+ "Composure": "composure",
+ "Leadership": "leadership",
+ "Shot Stopping": "shot_stopping",
+ "Commanding": "commanding",
+ "Playing Out": "playing_out",
+};
+
+function shortAttrLabel(name: string, val: number, position?: string): string {
+ buildNameToKeyMap();
+ const key = HEX_ATTR_KEY_MAP[name] ?? NAME_TO_KEY_CACHE[name.toLowerCase()];
+ if (!key) return shortOvrLabel(val, position);
+ return interpretAttributeForPosition(key, val, position).short;
+}
+
+function attrDescription(name: string, val: number, position?: string): string {
+ buildNameToKeyMap();
+ const key = HEX_ATTR_KEY_MAP[name] ?? NAME_TO_KEY_CACHE[name.toLowerCase()];
+ if (!key) return interpretOvr(val, position).description;
+ return interpretAttributeForPosition(key, val, position).description;
+}
+
+export function HexAttributeCluster({ attributes, position }: HexAttributeClusterProps) {
  const { t } = useTranslation();
  const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
 
@@ -97,36 +152,42 @@ export function HexAttributeCluster({ attributes }: HexAttributeClusterProps) {
 
  return (
  <div className="space-y-4">
- {/* Hex cluster — 4 hexagons in a row */}
+ {/* Hex cluster — 4 hexagons in a row.
+ Each hex shows the Gaffer-voice tier label for the group average,
+ NOT the raw number. The number is hidden behind a tooltip. */}
  <div className="grid grid-cols-4 gap-3">
  {groups.map((group) => {
  const color = GROUP_COLORS[group.label] || "#2d5a3d";
  const isExpanded = expandedGroup === group.label;
+ const tierLabel = shortOvrLabel(group.avg, position);
+ const tierDesc = interpretOvr(group.avg, position).description;
  return (
  <button
  key={group.label}
  onClick={() => setExpandedGroup(isExpanded ? null : group.label)}
  className="flex flex-col items-center p-3 rounded transition-colors hover:bg-gray-100 dark:hover:bg-navy-700"
  style={{ borderBottom: `3px solid ${color}` }}
+ title={tierDesc}
  >
  {/* Hexagon SVG */}
- <svg width="60" height="56" viewBox="0 0 60 56" fill="none">
+ <svg width="64" height="60" viewBox="0 0 64 60" fill="none">
  <polygon
- points="30,4 54,18 54,38 30,52 6,38 6,18"
+ points="32,4 58,18 58,42 32,56 6,42 6,18"
  fill={color}
  fillOpacity={0.15}
  stroke={color}
  strokeWidth="2"
  />
  <text
- x="30" y="34"
+ x="32" y="36"
  textAnchor="middle"
  fill={color}
- fontFamily="IBM Plex Mono, monospace"
- fontSize="18"
- fontWeight="600"
+ fontFamily="IBM Plex Sans, system-ui, sans-serif"
+ fontSize="13"
+ fontWeight="700"
+ letterSpacing="0.5"
  >
- {group.avg}
+ {tierLabel}
  </text>
  </svg>
  <span className="mt-1 text-xs font-heading font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400">
@@ -137,18 +198,28 @@ export function HexAttributeCluster({ attributes }: HexAttributeClusterProps) {
  })}
  </div>
 
- {/* Expanded attribute bars */}
+ {/* Expanded attribute bars — uses short tier label (e.g. "EXC", "STL")
+ instead of the raw number. Bar colour still reflects the underlying value. */}
  {expandedGroup && (
  <div className="tab-enter rounded border border-gray-200 dark:border-navy-600 p-4 bg-white dark:bg-navy-700">
  <div className="flex items-center justify-between mb-3">
- <h4 className="font-heading font-bold uppercase tracking-wide text-sm" style={{ color: GROUP_COLORS[expandedGroup] }}>
+ <h4
+ className="font-heading font-bold uppercase tracking-wide text-sm"
+ style={{ color: GROUP_COLORS[expandedGroup] }}
+ >
  {expandedGroup}
  </h4>
- <span className="text-xs text-gray-500 dark:text-gray-400">
- Avg <span className="font-mono font-bold">{groups.find(g => g.label === expandedGroup)?.avg}</span>
+ <span
+ className="text-xs text-gray-500 dark:text-gray-400"
+ title={interpretOvr(groups.find(g => g.label === expandedGroup)?.avg ?? 50, position).description}
+ >
+ Group <span className="font-heading font-bold">{shortOvrLabel(groups.find(g => g.label === expandedGroup)?.avg ?? 50, position)}</span>
  </span>
  </div>
- {groups.find(g => g.label === expandedGroup)?.attrs.map(([name, val]) => (
+ {groups.find(g => g.label === expandedGroup)?.attrs.map(([name, val]) => {
+ const tierLabel = shortAttrLabel(name, val, position);
+ const tierDesc = attrDescription(name, val, position);
+ return (
  <div key={name} className="flex items-center gap-3 mb-2">
  <span className="w-28 text-xs text-gray-600 dark:text-gray-400">{name}</span>
  <div className="flex-1 h-2 bg-gray-200 dark:bg-navy-600 rounded-sm overflow-hidden">
@@ -157,11 +228,16 @@ export function HexAttributeCluster({ attributes }: HexAttributeClusterProps) {
  style={{ width: `${(val / 99) * 100}%`, backgroundColor: getAttrColor(val) }}
  />
  </div>
- <span className="w-8 text-right font-mono text-sm font-bold" style={{ color: getAttrColor(val) }}>
- {val}
+ <span
+ className="w-12 text-right font-heading text-sm font-bold tracking-wide"
+ style={{ color: getAttrColor(val) }}
+ title={tierDesc}
+ >
+ {tierLabel}
  </span>
  </div>
- ))}
+ );
+ })}
  </div>
  )}
 

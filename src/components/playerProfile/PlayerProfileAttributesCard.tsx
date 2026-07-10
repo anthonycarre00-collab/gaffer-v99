@@ -118,37 +118,29 @@ export default function PlayerProfileAttributesCard({
  description in the middle (Gaffer voice), thin bar at bottom. */}
  <div className="flex flex-col gap-2.5">
  {group.attrs.map((attr) => {
- // Look up the description. Falls back to undefined if the
- // attribute name doesn't match a known key (rare).
+ // Look up the description. Falls back to a generic OVR
+ // interpretation if the attribute name doesn't match a known
+ // key (rare) — NEVER falls back to a raw number.
  const attrKey = mapNameToAttrKey(attr.name);
  const tier = attrKey
  ? interpretAttributeForPosition(attrKey, attr.value, position)
- : null;
+ : interpretOvr(attr.value, position);
  return (
  <div key={attr.name} className="flex flex-col gap-0.5">
  <div className="flex items-baseline justify-between gap-2">
  <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 whitespace-nowrap">
  {attr.name}
  </span>
- {tier ? (
  <span
  className={`text-xs font-bold tabular-nums ${getAttributeColorClass(attr.value)}`}
+ title={tier.description}
  >
  {tier.short}
  </span>
- ) : (
- <span
- className={`font-mono font-bold text-xs text-right tabular-nums ${getAttributeColorClass(attr.value)}`}
- >
- {attr.value}
- </span>
- )}
  </div>
- {tier ? (
  <p className="text-[11px] leading-tight text-gray-700 dark:text-gray-300 italic">
  {tier.description}
  </p>
- ) : null}
  <ProgressBar
  value={attr.value}
  variant={getAttributeColors(attr.value).barVariant}

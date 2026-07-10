@@ -255,6 +255,16 @@ describe("StaffTab", () => {
     // (judgingAbility / judgingPotential); the frontend used to read
     // snake_case → values came back undefined, OVR rendered as "NaN OVR" and
     // the AttrBar showed no number with a full-width bar. See commit 09d33244.
+    //
+    // V99.2: Values are now rendered as Gaffer-voice tier labels instead of
+    // raw numbers (per the Gaffer constitution). The regression is verified
+    // by checking that the correct tier labels appear (which can only happen
+    // if the camelCase keys are correctly read).
+    //  - coaching 63 → "Solid" (50-64 tier)
+    //  - judgingAbility 52 → "Solid"
+    //  - judgingPotential 71 → "Quality" (65-79 tier)
+    //  - physiotherapy 44 → "Limited" (35-49 tier)
+    //  - OVR = (63+52+71+44)/4 = 57.5 → 58 → "Solid"
     const staffCamelCase = createStaff({
       attributes: { coaching: 63, judgingAbility: 52, judgingPotential: 71, physiotherapy: 44
 },
@@ -274,11 +284,16 @@ describe("StaffTab", () => {
     render(<StaffTab gameState={createGameState([])} />);
 
     const card = await screen.findByTestId("staff-card-staff-1");
-    // OVR = (63+52+71+44)/4 = 57.5 → 58
-    expect(within(card).getByText("58 OVR")).toBeInTheDocument();
-    expect(within(card).getByText("52")).toBeInTheDocument();
-    expect(within(card).getByText("71")).toBeInTheDocument();
-    expect(within(card).getByText(/judgingPotential \(71\)/)).toBeInTheDocument();
+    // OVR badge should show "Solid" (the Gaffer-voice label for 58).
+    // Multiple "Solid" entries may appear (coaching 63 and OVR 58 both fall
+    // in the 50-64 tier), so use getAllByText.
+    expect(within(card).getAllByText("Solid").length).toBeGreaterThan(0);
+    // judgingAbility 52 → "Trustworthy" (50-64 tier for Coach.judgingAbility).
+    expect(within(card).getByText("Trustworthy")).toBeInTheDocument();
+    // judgingPotential 71 → "Promising" (65-79 tier for Coach.judgingPotential).
+    expect(within(card).getByText("Promising")).toBeInTheDocument();
+    // physiotherapy 44 → "Limited" (35-49 tier for Coach.physiotherapy).
+    expect(within(card).getByText("Limited")).toBeInTheDocument();
   });
 
   it("shows scout workload details and opens the scouting workflow", async () => {

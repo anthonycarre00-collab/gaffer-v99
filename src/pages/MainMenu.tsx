@@ -704,7 +704,9 @@ export default function MainMenu() {
  <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-navy-900 transition-colors duration-500 relative overflow-x-hidden">
  {/* Background — stadium at night */}
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
- <div className="absolute inset-0 stadium-bg opacity-20" />
+ <div className="absolute inset-0 stadium-bg opacity-35" />
+ {/* Subtle dark overlay so the menu card stays legible */}
+ <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-white/70 dark:from-transparent dark:via-navy-900/30 dark:to-navy-900/70" />
  </div>
 
  {/* Theme Toggle */}

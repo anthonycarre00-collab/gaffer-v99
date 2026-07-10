@@ -10,49 +10,64 @@ import type {
 } from "./types";
 import { getPlayerName } from "./helpers";
 
+/**
+ * Map PascalCase event_type values (from the Rust engine) to the camelCase
+ * i18n keys used in `match.commentary.*`. Some event types are also aliased
+ * (e.g. `ShotSaved` → `save`, `YellowCard` → `card`) because the i18n
+ * templates were written before the engine's event-type enum was finalised.
+ *
+ * Without this map, the lookup `match.commentary.${evt.event_type}` resolves
+ * to e.g. `match.commentary.Goal` (PascalCase) — but the i18n key is
+ * `match.commentary.goal` (camelCase). The lookup fails silently, falls
+ * through to the plain "team + event type label" fallback in MatchPanels,
+ * and the user sees what looks like "broken commentary".
+ */
+const EVENT_TYPE_TO_I18N_KEY: Record<string, string> = {
+ // Goals & shots
+ Goal: "goal",
+ PenaltyGoal: "penaltyGoal",
+ PenaltyMiss: "penaltyMissed",
+ PenaltyAwarded: "penalty",
+ ShotSaved: "save",
+ ShotOffTarget: "miss",
+ ShotBlocked: "shotBlocked",
+ ShotOnTarget: "save", // close enough — a shot on target is a save
+ // Discipline
+ Foul: "foul",
+ YellowCard: "card",
+ RedCard: "card",
+ SecondYellow: "card",
+ // Match flow
+ Injury: "injury",
+ Substitution: "substitution",
+ KickOff: "kickOff",
+ HalfTime: "halfTime",
+ SecondHalfStart: "secondHalfStart",
+ FullTime: "fullTime",
+ // Build-up & defending
+ PassCompleted: "passCompleted",
+ PassIntercepted: "passIntercepted",
+ Dribble: "dribble",
+ DribbleTackled: "dribbleTackled",
+ Cross: "cross",
+ Tackle: "tackle",
+ Interception: "interception",
+ Clearance: "clearance",
+ // Aerial duels + offside
+ HeaderWon: "headerWon",
+ HeaderLost: "headerLost",
+ Offside: "offside",
+ // Set pieces
+ Corner: "corner",
+ FreeKick: "freeKick",
+ GoalKick: "goalKick",
+ // Penalty shootout
+ ShootoutGoal: "shootoutGoal",
+ ShootoutMiss: "shootoutMiss",
+};
+
 /** Event types that get the full headline + prose treatment. */
-const COMMENTARY_EVENTS = new Set([
-  // Goals & shots
-  "Goal",
-  "PenaltyGoal",
-  "PenaltyMiss",
-  "PenaltyAwarded",
-  "ShotSaved",
-  "ShotOffTarget",
-  "ShotBlocked",
-  // Discipline
-  "Foul",
-  "YellowCard",
-  "RedCard",
-  "SecondYellow",
-  // Match flow
-  "Injury",
-  "Substitution",
-  "KickOff",
-  "HalfTime",
-  "SecondHalfStart",
-  "FullTime",
-  // Build-up & defending (previously silenced — the "no events beside goals" bug)
-  "PassCompleted",
-  "PassIntercepted",
-  "Dribble",
-  "DribbleTackled",
-  "Cross",
-  "Tackle",
-  "Interception",
-  "Clearance",
-  // V99: Aerial duels + offside
-  "HeaderWon",
-  "HeaderLost",
-  "Offside",
-  // Set pieces
-  "Corner",
-  "FreeKick",
-  "GoalKick",
-  // Penalty shootout
-  "ShootoutGoal",
-  "ShootoutMiss",
-]);
+const COMMENTARY_EVENTS = new Set(Object.keys(EVENT_TYPE_TO_I18N_KEY));
 
 export interface Commentary {
   headline: string;
@@ -145,6 +160,15 @@ function interpolate(template: string, tokens: Record<string, string>): string {
   return template.replace(/\{\{(\w+)\}\}/g, (_, name: string) => tokens[name] ?? "");
 }
 
+/**
+ * Capitalise the first letter of a variant string. Used to compose top-level
+ * variant keys like `goalBrace`, `goalHattrick`, `goalOpener` — the i18n
+ * schema has these as separate top-level entries (NOT nested under `goal`).
+ */
+function capitalise(s: string): string {
+ return s.length === 0 ? s : s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 function pickLine(
   t: TFunction,
   baseKey: string,
@@ -152,8 +176,17 @@ function pickLine(
   hash: number,
   tokens: Record<string, string>,
 ): Commentary | null {
-  // Try the refined variant first, then fall back to the base key.
-  const candidates = variant ? [`${baseKey}.${variant}`, baseKey] : [baseKey];
+  // V99.2: Build the candidate key list.
+  // 1. If there's a variant, try `${baseKey}${Capitalised(variant)}` as a
+  //    sibling top-level key (e.g. `match.commentary.goalBrace`).
+  // 2. Then try `${baseKey}.${variant}` (nested form, e.g. `match.commentary.goal.brace`).
+  // 3. Finally fall back to the bare `${baseKey}`.
+  const candidates: string[] = [];
+  if (variant) {
+ candidates.push(`${baseKey}${capitalise(variant)}`, `${baseKey}.${variant}`);
+  }
+  candidates.push(baseKey);
+
   for (const key of candidates) {
     // The i18n structure can be either:
     //   match.commentary.goal: ["line1", "line2", ...]   (array form)
@@ -180,7 +213,17 @@ function pickLine(
     if (values.length === 0) continue;
     const template = values[hash % values.length];
     if (typeof template !== "string") continue;
-    const headline = t(`${key}.headline`, { defaultValue: "" });
+    let headline = t(`${key}.headline`, { defaultValue: "" });
+    // V99.2: If no explicit headline was set, derive one from the line's
+    // opening word(s) — e.g. "HAT-TRICK! {{scorer}} has got three!" → "HAT-TRICK!"
+    // This makes the headline meaningful for variant arrays that don't have
+    // a separate headline field in the i18n.
+    if (!headline) {
+      const exclaimIdx = template.indexOf("!");
+      if (exclaimIdx > 0 && exclaimIdx <= 16) {
+        headline = template.slice(0, exclaimIdx + 1).trim();
+      }
+    }
     return { headline, line: interpolate(template, tokens) };
   }
   return null;
@@ -199,10 +242,38 @@ export function getCommentary(
   const player = getPlayerName(snapshot, evt.player_id);
   const victim = getPlayerName(snapshot, evt.secondary_player_id);
 
-  const tokens: Record<string, string> = { team, opponent, player, victim };
-  const baseKey = `match.commentary.${evt.event_type}`;
+  // Tokens — cover all variants used in the i18n templates. `scorer` is an
+  // alias for `player` (goal templates use {{scorer}}), `on`/`off` are for
+  // substitutions (substitution templates use {{on}}/{{off}}).
+  const tokens: Record<string, string> = {
+    team,
+    opponent,
+    player,
+    victim,
+    scorer: player,
+    on: player,
+    off: victim,
+  };
+
+  // V99.2: Map PascalCase event_type to camelCase i18n key.
+  // Without this, the lookup always fails (key `match.commentary.Goal`
+  // doesn't exist — only `match.commentary.goal` does).
+  const i18nKey = EVENT_TYPE_TO_I18N_KEY[evt.event_type];
+  if (!i18nKey) return null;
+
+  const baseKey = `match.commentary.${i18nKey}`;
   const variant = variantKey(evt, snapshot);
   const hash = hashEvent(evt);
 
-  return pickLine(t, baseKey, variant, hash, tokens);
+  const result = pickLine(t, baseKey, variant, hash, tokens);
+  if (result) return result;
+
+  // Fallback: synthesize a basic commentary line if no i18n template matched.
+  // This ensures the user always sees SOMETHING in the commentary feed rather
+  // than a bare "team + event label" — the previous "broken commentary" bug.
+  const fallbackHeadline = t(`match.eventTypes.${evt.event_type}`, {
+    defaultValue: evt.event_type,
+  });
+  const fallbackLine = [player, team].filter(Boolean).join(" — ") || team;
+  return { headline: fallbackHeadline, line: fallbackLine };
 }

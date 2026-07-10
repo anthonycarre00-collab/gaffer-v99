@@ -9,6 +9,7 @@ import { countryName } from "../../lib/countries";
 import { Badge, Card, CardBody, CardHeader, CountryFlag, ProgressBar } from "../ui";
 import { Eye } from "lucide-react";
 import { scoutAssignmentCount, scoutMaxSlots } from "./ScoutingTab.helpers";
+import { interpretStaffAttr } from "../../lib/staffInterpretation";
 
 interface ScoutingScoutDetailsCardProps {
  scouts: StaffData[];
@@ -68,9 +69,17 @@ export default function ScoutingScoutDetailsCard({
  </div>
  <div className="mt-2 grid grid-cols-2 gap-2">
  <div>
+ <div className="flex items-baseline justify-between mb-0.5">
  <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase">
  {t("scouting.judgingAbility")}
  </p>
+ <span
+ className={`text-[10px] font-heading font-bold ${interpretStaffAttr("judgingAbility", scout.attributes.judgingAbility, "Scout").colorClass}`}
+ title={interpretStaffAttr("judgingAbility", scout.attributes.judgingAbility, "Scout").description}
+ >
+ {interpretStaffAttr("judgingAbility", scout.attributes.judgingAbility, "Scout").short}
+ </span>
+ </div>
  <ProgressBar
  value={scout.attributes.judgingAbility}
  variant="auto"
@@ -78,9 +87,17 @@ export default function ScoutingScoutDetailsCard({
  />
  </div>
  <div>
+ <div className="flex items-baseline justify-between mb-0.5">
  <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase">
  {t("scouting.judgingPotential")}
  </p>
+ <span
+ className={`text-[10px] font-heading font-bold ${interpretStaffAttr("judgingPotential", scout.attributes.judgingPotential, "Scout").colorClass}`}
+ title={interpretStaffAttr("judgingPotential", scout.attributes.judgingPotential, "Scout").description}
+ >
+ {interpretStaffAttr("judgingPotential", scout.attributes.judgingPotential, "Scout").short}
+ </span>
+ </div>
  <ProgressBar
  value={scout.attributes.judgingPotential}
  variant="auto"

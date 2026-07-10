@@ -2512,16 +2512,16 @@
       ],
       "goalHattrick": [
         "HAT-TRICK! {{scorer}} has got three! Take a bow, son — that's a match ball!",
-        "Three for {{scorer}}! He's taking the match ball home tonight!",
-        "HAT-TRICK HERO! {{scorer}} completes his treble — the fans are chanting his name!",
-        "GOAL! That's three for {{scorer}} — he's absolutely unplayable today!",
-        "Hat-trick! {{scorer}} — the gaffer's going to have to dig him out a special bonus!"
+        "HAT-TRICK! Three for {{scorer}}! He's taking the match ball home tonight!",
+        "HAT-TRICK! {{scorer}} completes his treble — the fans are chanting his name!",
+        "HAT-TRICK! That's three for {{scorer}} — he's absolutely unplayable today!",
+        "HAT-TRICK! {{scorer}} — the gaffer's going to have to dig him out a special bonus!"
       ],
       "goalBrace": [
-        "Second of the night for {{scorer}} — he's running the show!",
+        "BRACE! Second of the night for {{scorer}} — he's running the show!",
         "BRACE! {{scorer}} has his second — they can't handle him!",
         "Two for {{scorer}} — the man is on fire!",
-        "GOAL! {{scorer}} has his double — that should be game, set, match!",
+        "BRACE! {{scorer}} has his double — that should be game, set, match!",
         "{{scorer}} again! Two goals — he's dragged his team forward by the shirt collar!"
       ],
       "goalConceded": [
@@ -2710,6 +2710,41 @@
         "Linesman's flag — {{player}} just behind the line.",
         "Offside against {{player}} — the defender caught him napping.",
         "Flag goes up — {{player}} was a yard off."
+      ],
+      "penaltyGoal": [
+        "PENALTY! {{scorer}} slots it home from the spot — nerveless!",
+        "GOAL! {{scorer}} sends the keeper the wrong way — cool as you like!",
+        "Penalty converted by {{scorer}} — no mistake from 12 yards!",
+        "He's buried it! {{scorer}} from the spot — the keeper never had a chance!",
+        "PENALTY! {{scorer}} hammers it down the middle — cheeky!"
+      ],
+      "shotBlocked": [
+        "Blocked! The defender throws himself in front of it — brave defending.",
+        "The shot's charged down — no way through for {{player}}.",
+        "{{player}}'s effort is blocked — the wall stood tall.",
+        "Deflected behind for a corner — {{player}}'s shot didn't make it through.",
+        "Big block! {{player}}'s shot cannoned away to safety."
+      ],
+      "foul": [
+        "Foul by {{player}} — the ref blows straight away.",
+        "{{player}} concedes the free kick — clumsy challenge.",
+        "Whistle goes — {{player}} caught {{victim}} late.",
+        "{{player}} is in the book waiting to happen — another foul given.",
+        "Free kick conceded by {{player}} — he'll have to be careful now."
+      ],
+      "kickOff": [
+        "And we're off! The match is underway.",
+        "Kick-off — let's see what today brings.",
+        "The whistle blows — football is back.",
+        "Underway at last. Get stuck in, lads.",
+        "Ball's rolling. Time to make it count."
+      ],
+      "secondHalfStart": [
+        "Second half underway — let's see what the gaffer's said at half-time.",
+        "Back out for the second 45. Game on.",
+        "Second half kicks off — no changes for either side.",
+        "Away we go again. 45 minutes to make it count.",
+        "The second period starts. Make it matter."
       ]
     },
     "matchReport": "Match Report",
