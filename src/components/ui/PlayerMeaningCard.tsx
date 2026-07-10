@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { usePlayerMeaning } from '../../store/meaningStore';
 import { Card } from './Card';
 import { Badge } from './Badge';
-import { ProgressBar } from './ProgressBar';
-import { shortOvrLabel, interpretOvr } from '../../lib/ovrInterpretation';
 import { useTranslation } from 'react-i18next';
 
 export function PlayerMeaningCard({ playerId }: { playerId: string | null | undefined }) {
  const { snapshot, loading } = usePlayerMeaning(playerId);
  const { t } = useTranslation();
- const [show, setShow] = useState(false);
  const [exp, setExp] = useState<string | null>(null);
 
  if (!playerId) {
@@ -145,44 +142,13 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  </div>
  )}
 
- <div className="border-t border-gray-200 pt-3 dark:border-navy-600">
- <button onClick={() => setShow(!show)} className="text-xs text-primary-600 hover:underline dark:text-primary-400">
- {show ? t('meaning.hideAdvanced') : t('meaning.showAdvanced')}
- </button>
- {show && (
- <div className="mt-3 space-y-3 text-xs">
- {[
- { label: t('playerProfile.attrGroups.body') || 'The Body', avg: snapshot.spreadsheet_attributes.body_avg, attrs: [['Pace', snapshot.spreadsheet_attributes.pace], ['Burst', snapshot.spreadsheet_attributes.burst], ['Engine', snapshot.spreadsheet_attributes.engine], ['Power', snapshot.spreadsheet_attributes.power], ['Agility', snapshot.spreadsheet_attributes.agility]] },
- { label: t('playerProfile.attrGroups.ball') || 'The Ball', avg: snapshot.spreadsheet_attributes.ball_avg, attrs: [['Passing', snapshot.spreadsheet_attributes.passing], ['Distribution', snapshot.spreadsheet_attributes.distribution], ['Touch', snapshot.spreadsheet_attributes.touch], ['Finishing', snapshot.spreadsheet_attributes.finishing], ['Defending', snapshot.spreadsheet_attributes.defending], ['Aerial', snapshot.spreadsheet_attributes.aerial]] },
- { label: t('playerProfile.attrGroups.head') || 'The Head', avg: snapshot.spreadsheet_attributes.head_avg, attrs: [['Anticipation', snapshot.spreadsheet_attributes.anticipation], ['Vision', snapshot.spreadsheet_attributes.vision], ['Decisions', snapshot.spreadsheet_attributes.decisions], ['Composure', snapshot.spreadsheet_attributes.composure], ['Leadership', snapshot.spreadsheet_attributes.leadership]] },
- { label: t('playerProfile.attrGroups.gloves') || 'The Gloves', avg: snapshot.spreadsheet_attributes.gloves_avg, attrs: [['Shot Stopping', snapshot.spreadsheet_attributes.shot_stopping], ['Commanding', snapshot.spreadsheet_attributes.commanding], ['Playing Out', snapshot.spreadsheet_attributes.playing_out]] },
- ].map((g) => (
- <div key={g.label}>
- <div className="flex justify-between mb-1">
- <span className="font-semibold text-gray-700 dark:text-gray-300">{g.label}</span>
- <span className="text-gray-500 dark:text-gray-400">avg {g.avg}</span>
- </div>
- {g.attrs.map(([n, v]) => (
- <div key={n} className="flex items-center gap-2 mb-1">
- <span className="w-24 text-gray-600 dark:text-gray-400">{n}</span>
- <ProgressBar value={Math.round(((v as number) / 99) * 100)} className="flex-1" />
- <span className="w-8 text-right font-mono text-gray-900 dark:text-white">{v}</span>
- </div>
- ))}
- </div>
- ))}
- <div className="border-t pt-2 flex justify-between">
- <span className="font-semibold">{t('common.overall') || 'Overall'}</span>
- <span
- className={`font-bold ${interpretOvr(snapshot.spreadsheet_attributes.overall).colorClass}`}
- title={interpretOvr(snapshot.spreadsheet_attributes.overall).description}
- >
- {shortOvrLabel(snapshot.spreadsheet_attributes.overall)}
- </span>
- </div>
- </div>
- )}
- </div>
+ {/* V99.1: Removed the "Show the numbers" / advanced section that displayed
+     raw attribute values. This violated the Gaffer constitution which
+     states players should NEVER see raw attribute numbers. The
+     interpretation layer in PlayerProfileAttributesCard is the only
+     place attributes should be displayed, and only as Gaffer-voice
+     descriptions (not numbers). */}
+
  </Card>
  );
 }

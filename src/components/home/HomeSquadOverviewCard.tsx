@@ -2,6 +2,7 @@ import { AlertTriangle, Dumbbell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
+import { shortOvrLabel } from "../../lib/ovrInterpretation";
 
 interface HomeSquadOverviewCardProps {
  avgCondition: number;
@@ -57,7 +58,7 @@ export default function HomeSquadOverviewCard({
  {t("home.avgOvr")}
  </span>
  <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100">
- {avgOvr}
+ {shortOvrLabel(avgOvr)}
  </span>
  </div>
 
