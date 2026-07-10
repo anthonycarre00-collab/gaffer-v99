@@ -18,6 +18,7 @@
 //! - Per-minute commentary (use full engine for that)
 //! - Detailed match reports (use full engine)
 
+use rand::{Rng, RngExt};
 use crate::types::{PlayerData, TeamData};
 
 /// Sparse match event — just the bare minimum for news + stats.
@@ -53,15 +54,7 @@ pub struct SparseMatchResult {
 
 /// Simulate a match sparsely — produces a scoreline + scorers + cards
 /// without running the full per-minute engine.
-///
-/// Based on:
-/// 1. Team strength (top-11 OVR average) → Poisson xG
-/// 2. Sample goals from xG
-/// 3. For each goal, pick a scorer + assister from the squad (weighted by
-///    position + finishing/attacking ability)
-/// 4. Sample 0-3 yellow cards per team (weighted by aggression)
-/// 5. Rarely sample a red card (0-5% chance per team)
-pub fn simulate_sparse_match<R: rand::Rng>(
+pub fn simulate_sparse_match<R: Rng>(
     home: &TeamData,
     away: &TeamData,
     rng: &mut R,
@@ -179,7 +172,7 @@ fn club_strength(team: &TeamData) -> f64 {
 }
 
 /// Sample goals from expected goals using Poisson distribution.
-fn sample_goals<R: rand::Rng>(xg: f64, rng: &mut R) -> u8 {
+fn sample_goals<R: Rng>(xg: f64, rng: &mut R) -> u8 {
     let mut goals = 0u8;
     let mut remaining = 1.0f64;
     let p = (-xg).exp(); // P(0 goals)
@@ -196,14 +189,14 @@ fn sample_goals<R: rand::Rng>(xg: f64, rng: &mut R) -> u8 {
 }
 
 /// Sample a random match minute (1-90).
-fn sample_match_minute<R: rand::Rng>(rng: &mut R) -> u8 {
+fn sample_match_minute<R: Rng>(rng: &mut R) -> u8 {
     rng.random_range(1..=90u8)
 }
 
 /// Pick a scorer + optional assister from the squad.
 /// Scorers are weighted toward forwards (high finishing), assisters toward
 /// midfielders (high passing + vision).
-fn pick_scorer_and_assister<R: rand::Rng>(
+fn pick_scorer_and_assister<R: Rng>(
     team: &TeamData,
     rng: &mut R,
 ) -> (String, Option<String>) {
@@ -218,7 +211,7 @@ fn pick_scorer_and_assister<R: rand::Rng>(
                 crate::types::Position::Defender => 0.3,
                 crate::types::Position::Goalkeeper => 0.0,
             };
-            pos_weight * (p.attributes.finishing as f64 / 50.0)
+            pos_weight * (p.finishing as f64 / 50.0)
         },
     );
 
@@ -234,7 +227,7 @@ fn pick_scorer_and_assister<R: rand::Rng>(
                     crate::types::Position::Defender => 0.5,
                     crate::types::Position::Goalkeeper => 0.0,
                 };
-                pos_weight * (p.attributes.passing as f64 / 50.0)
+                pos_weight * (p.passing as f64 / 50.0)
             },
         ))
     } else {
@@ -245,7 +238,7 @@ fn pick_scorer_and_assister<R: rand::Rng>(
 }
 
 /// Pick a player weighted by the given scoring function.
-fn pick_weighted_player<R: rand::Rng, F>(
+fn pick_weighted_player<R: Rng, F>(
     team: &TeamData,
     rng: &mut R,
     weight_fn: F,
@@ -273,15 +266,15 @@ where
 }
 
 /// Sample yellow cards — 0-3 per team, weighted by team's average aggression.
-fn sample_yellow_cards<R: rand::Rng>(team: &TeamData, rng: &mut R) -> u8 {
+fn sample_yellow_cards<R: Rng>(team: &TeamData, rng: &mut R) -> u8 {
     let avg_aggression: f64 = if team.players.is_empty() {
         50.0
     } else {
-        team.players.iter().map(|p| p.attributes.aggression as f64).sum::<f64>()
+        team.players.iter().map(|p| p.aggression as f64).sum::<f64>()
             / team.players.len() as f64
     };
     // Higher aggression → more cards. 50 aggression → ~1.2 avg, 80 → ~2.0, 20 → ~0.5
-    let base_rate = 0.5 + (avg_aggression - 50.0) / 60.0;
+    let base_rate: f64 = 0.5 + (avg_aggression - 50.0) / 60.0;
     let rate = base_rate.clamp(0.3, 2.5);
     let mut cards = 0u8;
     while rng.random_range(0.0..1.0f64) < (rate / 3.0) && cards < 4 {
@@ -291,7 +284,7 @@ fn sample_yellow_cards<R: rand::Rng>(team: &TeamData, rng: &mut R) -> u8 {
 }
 
 /// Pick a card candidate — weighted toward defenders + high-aggression players.
-fn pick_card_candidate<R: rand::Rng>(team: &TeamData, rng: &mut R) -> String {
+fn pick_card_candidate<R: Rng>(team: &TeamData, rng: &mut R) -> String {
     pick_weighted_player(team, rng, |p| {
         let pos_weight = match p.position {
             crate::types::Position::Defender => 2.0,
@@ -299,6 +292,6 @@ fn pick_card_candidate<R: rand::Rng>(team: &TeamData, rng: &mut R) -> String {
             crate::types::Position::Forward => 0.8,
             crate::types::Position::Goalkeeper => 0.1,
         };
-        pos_weight * (p.attributes.aggression as f64 / 50.0)
+        pos_weight * (p.aggression as f64 / 50.0)
     })
 }
