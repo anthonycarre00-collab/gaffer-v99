@@ -3,6 +3,7 @@ import { Shield } from "lucide-react";
 import { getAttributeColorClass } from "./PlayerProfile.helpers";
 import { getAttributeColors } from "../../lib/playerAttributeDisplay";
 import { interpretAttributeForPosition, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
+import { interpretOvr } from "../../lib/ovrInterpretation";
 import type { PlayerAttributeGroup } from "./PlayerProfile.attributes";
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
 import { PlayerAttributeRadarChart } from "./PlayerAttributeRadarChart";
@@ -107,9 +108,9 @@ export default function PlayerProfileAttributesCard({
  headerRight={
  <span
  title={averageLabel}
- className={`font-mono font-bold text-sm tabular-nums ${getAttributeColorClass(group.average)}`}
+ className={`font-heading font-bold text-xs ${getAttributeColorClass(group.average)}`}
  >
- {group.average}
+ {interpretOvr(group.average, position).short}
  </span>
  }
  >

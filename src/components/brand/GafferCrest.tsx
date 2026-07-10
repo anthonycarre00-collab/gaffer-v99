@@ -138,14 +138,10 @@ export function GafferCrest({
  * session but doesn't feel stale across launches.
  */
 const GAFFER_TAGLINES = [
- "Tactics. Touchlines. Tears.",
- "Where the dressing room meets the boardroom.",
- "Every Sunday league manager's power fantasy.",
- "Eleven men. One whistle. No excuses.",
- "Manage the game. Manage the man.",
- "From the dugout to the hall of fame.",
- "The gaffer's word is law.",
  "Picks the team. Takes the flak.",
+ "Eleven men. One whistle. No excuses.",
+ "The gaffer's word is law.",
+ "From the dugout to the hall of fame.",
 ];
 
 export function GafferTagline({ className = "" }: { className?: string }) {

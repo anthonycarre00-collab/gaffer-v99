@@ -354,7 +354,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
  {t("staff.best")}:{" "}
  <span className="font-medium text-gray-600 dark:text-gray-300">
- {t(`staff.attrs.${best.key}`)} ({best.value})
+ {t(`staff.attrs.${best.key}`)}
  </span>
  </p>
 
@@ -409,14 +409,22 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
 }
 
 function AttrBar({ label, value }: { label: string; value: number }) {
+ // V99.1: Show Gaffer interpretation instead of raw number
+ const interpretStaffAttr = (v: number): string => {
+ if (v >= 80) return "Top Class";
+ if (v >= 70) return "Quality";
+ if (v >= 55) return "Decent";
+ if (v >= 40) return "Limited";
+ return "Poor";
+ };
  return (
  <div>
  <div className="flex justify-between text-xs mb-0.5">
  <span className="text-gray-500 dark:text-gray-400">{label}</span>
  <span
- className={`font-mono font-mono font-bold tabular-nums ${value >= 70 ? "text-primary-500" : value >= 50 ? "text-accent-500" : "text-gray-400"}`}
+ className={`font-heading font-bold ${value >= 70 ? "text-primary-500" : value >= 50 ? "text-accent-500" : "text-gray-400"}`}
  >
- {value}
+ {interpretStaffAttr(value)}
  </span>
  </div>
  <ProgressBar

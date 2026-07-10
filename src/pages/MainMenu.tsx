@@ -461,7 +461,11 @@ export default function MainMenu() {
  return;
  }
  void autoSaveProfile();
- proceedToPackages();
+ // V99.1: Skip the confusing "Packages" step — go straight to generation.
+ // The bundled FIFA world DB loads automatically (world_source=None
+ // triggers load_world_data which tries gaffer_world.json first).
+ // Users who want custom world packages can use the World Editor.
+ setMenuState("generation");
  };
 
 

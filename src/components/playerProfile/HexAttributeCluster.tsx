@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 
 /**
  * HexAttributeCluster — signature attribute visualization for Player Detail.
@@ -164,13 +165,17 @@ export function HexAttributeCluster({ attributes }: HexAttributeClusterProps) {
  </div>
  )}
 
- {/* Overall — always visible */}
+ {/* Overall — always visible, shown as Gaffer interpretation (not raw number) */}
  <div className="flex items-center justify-between border-t border-gray-200 dark:border-navy-600 pt-3">
  <span className="font-heading font-bold uppercase tracking-wide text-sm text-gray-700 dark:text-gray-300">
  {t("common.overall") || "Overall"}
  </span>
- <span className="font-mono text-2xl font-bold" style={{ color: getAttrColor(attributes.overall) }}>
- {attributes.overall}
+ <span
+ className="font-heading text-lg font-bold"
+ style={{ color: getAttrColor(attributes.overall) }}
+ title={interpretOvr(attributes.overall).description}
+ >
+ {shortOvrLabel(attributes.overall)}
  </span>
  </div>
  </div>
