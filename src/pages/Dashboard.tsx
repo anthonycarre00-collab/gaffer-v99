@@ -342,7 +342,9 @@ export default function Dashboard(): JSX.Element {
  }
  }, [markClean]);
 
- // Intercept window close to warn about unsaved changes
+ // V99.1: Auto-save on close — if auto_save setting is ON, save silently
+ // without prompting. Only prompt if auto_save is OFF and there are
+ // unsaved changes.
  const [showCloseConfirm, setShowCloseConfirm] = useState(false);
  const isClosingRef = useRef(false);
  useEffect(() => {
@@ -350,14 +352,28 @@ export default function Dashboard(): JSX.Element {
  const unlisten = appWindow.onCloseRequested(async (event) => {
  if (isClosingRef.current) return;
  if (isDirty) {
+ if (settings.auto_save) {
+ // Auto-save is ON — save silently, don't prompt
+ event.preventDefault();
+ try {
+ await invoke("save_game");
+ markClean();
+ } catch (err) {
+ console.error("Auto-save on close failed:", err);
+ }
+ isClosingRef.current = true;
+ await appWindow.destroy();
+ } else {
+ // Auto-save is OFF — prompt the user
  event.preventDefault();
  setShowCloseConfirm(true);
+ }
  }
  });
  return () => {
  unlisten.then((fn) => fn());
  };
- }, [isDirty]);
+ }, [isDirty, settings.auto_save, markClean]);
 
  const handleCloseQuit = async (save: boolean) => {
  isClosingRef.current = true;

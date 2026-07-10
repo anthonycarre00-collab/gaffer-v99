@@ -572,23 +572,23 @@ export default function PreMatchSetup({
  className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-100 dark:hover:bg-navy-700/30 transition-colors"
  >
  <div className="h-7 w-7 shrink-0 rounded-full bg-gray-200 dark:bg-navy-600 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-400 transition-colors duration-300">
- {p.ovr}
+ {p.ovr >= 75 ? "★" : p.ovr >= 60 ? "●" : "○"}
  </div>
  <span className="flex-1 truncate text-sm text-gray-700 dark:text-gray-300">
  {p.name}
  </span>
  <div className="flex items-center">
  <span
- className={`text-[10px] font-mono font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(p.ovr)}`}
+ className={`text-[10px] font-heading font-bold w-7 text-center ${starterOvrColor(p.ovr)}`}
  >
- {p.ovr}
+ {p.ovr >= 75 ? "Class" : p.ovr >= 60 ? "Solid" : p.ovr >= 45 ? "Squad" : "Lim."}
  </span>
  {keyStats.map((s) => (
  <span
  key={s.label}
- className={`text-[10px] font-mono tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
+ className={`text-[10px] font-heading tabular-nums w-7 text-center ${statColor(getStatVal(p, s.key))}`}
  >
- {getStatVal(p, s.key)}
+ {getStatVal(p, s.key) >= 70 ? "★" : getStatVal(p, s.key) >= 50 ? "●" : "○"}
  </span>
  ))}
  </div>
