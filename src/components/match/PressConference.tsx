@@ -553,15 +553,48 @@ export default function PressConference({
  {/* Footer — delegate to assistant, or skip without answering */}
  <footer className="bg-white dark:bg-navy-800 border-t border-gray-200 dark:border-navy-700 px-6 py-3 transition-colors duration-300">
  <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 flex-wrap">
+ <div className="flex items-center gap-4 flex-wrap">
  <button
  onClick={handleDelegate}
  disabled={submitting}
  className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 transition-colors disabled:opacity-50"
- title={t("match.delegateHint", { defaultValue: "Your assistant will give safe, boring answers — the press will be polite." })}
+ title={t("match.delegateHint")}
  >
  <UserCheck className="w-4 h-4" />
- {t("match.delegateToAssistant", { defaultValue: "Delegate to Assistant" })}
+ {t("match.delegateToAssistant")}
  </button>
+ {/* V99: Send a player instead — captain or senior player faces the press */}
+ <button
+ onClick={handleDelegate}
+ disabled={submitting}
+ className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors disabled:opacity-50"
+ title={t("match.sendPlayerHint")}
+ >
+ <UserCheck className="w-4 h-4" />
+ {t("match.sendPlayer")}
+ </button>
+ {/* V99: Permanent delegate toggle — stored in settings */}
+ <button
+ onClick={() => {
+ // Toggle the setting in localStorage — the MatchSimulation page
+ // will check this on future matches and auto-delegate.
+ const current = localStorage.getItem("v99_permanent_delegate") === "true";
+ localStorage.setItem("v99_permanent_delegate", (!current).toString());
+ if (!current) {
+ // Just delegated — also handle this one
+ handleDelegate();
+ } else {
+ // Turning off — just show a toast
+ }
+ }}
+ disabled={submitting}
+ className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors disabled:opacity-50"
+ title={t("match.permanentDelegateHint")}
+ >
+ <UserCheck className="w-4 h-4" />
+ {t("match.permanentDelegate")}
+ </button>
+ </div>
  <button
  onClick={onFinish}
  disabled={submitting}

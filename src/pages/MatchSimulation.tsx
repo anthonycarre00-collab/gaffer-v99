@@ -277,6 +277,14 @@ export default function MatchSimulation() {
  }, [isSpectator, handleFinishMatch]);
 
  const handlePressConference = useCallback(() => {
+ // V99: Check if permanent delegate is enabled — if so, skip the press
+ // conference screen entirely and go straight to the digest.
+ const permanentDelegate = localStorage.getItem("v99_permanent_delegate") === "true";
+ if (permanentDelegate) {
+ console.info("[MatchSimulation] handlePressConference: permanent delegate ON — skipping");
+ setStage("digest");
+ return;
+ }
  console.info("[MatchSimulation] handlePressConference");
  setStage("press");
  }, []);

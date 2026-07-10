@@ -227,7 +227,7 @@ export default function RoundDigestScreen({
  onClick={onPressConference}
  className="flex items-center gap-2 px-5 py-2 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-white transition-all"
  >
- {t("match.pressConference")}
+ {t("match.pressConferenceButton", { defaultValue: "Face the Press" })}
  <ChevronRight className="w-4 h-4" />
  </button>
  </div>
