@@ -21,8 +21,9 @@ export function Card({ children, className = "", accent = "none" }: CardProps) {
  bg-white dark:bg-navy-700
  border border-gray-200 dark:border-navy-600
  ${accentBorder}
- rounded
- transition-colors duration-150
+ rounded-lg
+ shadow-sm
+ transition-all duration-200
  ${className}
  `}
  >

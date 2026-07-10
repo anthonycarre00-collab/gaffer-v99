@@ -85,6 +85,9 @@ export default function TacticsTab({
  : null;
  const [playerSearch, setPlayerSearch] = useState("");
  const [positionFilter, setPositionFilter] = useState("All");
+ // V99: Sub-tab navigation for the tactics screen.
+ type TacticsSubTab = "pitch" | "selection" | "style" | "setPieces";
+ const [activeSubTab, setActiveSubTab] = useState<TacticsSubTab>("pitch");
  const sortKey: SortKey = "pos";
  const sortDir: "asc" | "desc" = "asc";
  const [dragState, setDragState] = useState<DragState | null>(null);
@@ -815,6 +818,29 @@ export default function TacticsTab({
  aria-hidden="true"
  className="pointer-events-none fixed -left-20 top-0 h-8 w-8 rounded-full border border-white/15 bg-navy-900/90 "
  />
+
+ {/* V99: Sub-tab navigation */}
+ <div className="mb-4 flex gap-1 border-b border-gray-200 dark:border-navy-600">
+ {([
+ { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
+ { id: "selection", label: t("tactics.subTabs.selection", { defaultValue: "Selection" }) },
+ { id: "style", label: t("tactics.subTabs.style", { defaultValue: "Style" }) },
+ { id: "setPieces", label: t("tactics.subTabs.setPieces", { defaultValue: "Set Pieces" }) },
+ ] as const).map((tab) => (
+ <button
+ key={tab.id}
+ onClick={() => setActiveSubTab(tab.id)}
+ className={`px-4 py-2 text-sm font-heading font-bold uppercase tracking-wider transition-all duration-200 border-b-2 ${
+ activeSubTab === tab.id
+ ? "border-primary-500 text-primary-600 dark:text-primary-400"
+ : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+ }`}
+ >
+ {tab.label}
+ </button>
+ ))}
+ </div>
+
  <TacticsCommandBar
  activeTactic={activeTactic}
  activePlayStyle={activePlayStyle}
@@ -840,8 +866,20 @@ export default function TacticsTab({
  tacticLibrary={tacticLibrary}
  />
 
- <div className="grid grid-cols-1 gap-5 xl:grid-cols-[260px_1fr_270px] xl:items-start">
- {/* Left: player list */}
+ {/* V99: Tab-conditional layout. Pitch tab shows all 3 columns.
+     Selection tab emphasizes the player list. Style tab emphasizes
+     the right panel. Set Pieces tab shows set piece takers. */}
+ <div className={`grid grid-cols-1 gap-5 xl:items-start ${
+ activeSubTab === "pitch"
+ ? "xl:grid-cols-[260px_1fr_270px]"
+ : activeSubTab === "selection"
+ ? "xl:grid-cols-[1fr_270px]"
+ : activeSubTab === "style"
+ ? "xl:grid-cols-[270px]"
+ : "xl:grid-cols-1"
+ }`}>
+ {/* Left: player list — shown in pitch + selection tabs */}
+ {(activeSubTab === "pitch" || activeSubTab === "selection") && (
  <TacticsPlayerList
  bench={filteredBench}
  comparePlayerId={comparePlayerId}
@@ -871,8 +909,10 @@ export default function TacticsTab({
  starters={filteredStartingXI}
  xiActivePosition={xiActivePosition}
  />
+ )}
 
- {/* Center: pitch */}
+ {/* Center: pitch — shown in pitch tab only */}
+ {activeSubTab === "pitch" && (
  <TacticsPitch
  dragState={dragState}
  formation={formation}
@@ -922,8 +962,10 @@ export default function TacticsTab({
  selectedPlayer={selectedPlayer}
  selectedPlayerId={selectedPlayerId}
  />
+ )}
 
- {/* Right: roles + phase blueprint */}
+ {/* Right: roles + phase blueprint — shown in pitch + style + setPieces tabs */}
+ {(activeSubTab === "pitch" || activeSubTab === "style" || activeSubTab === "setPieces") && (
  <TacticsRightPanel
  allSquad={roster}
  matchRoles={team.match_roles}
@@ -934,6 +976,7 @@ export default function TacticsTab({
  startingPlayers={startingXI}
  tacticsPhase={team?.tactics_phase}
  />
+ )}
  </div>
 
  {/* Inspector modal — only when both players are selected for comparison */}

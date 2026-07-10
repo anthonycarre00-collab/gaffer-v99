@@ -52,6 +52,7 @@ import {
 } from "../lib/helpers";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "../store/settingsStore";
+import { toast } from "../components/ui/Toast";
 import {
  getBackgroundPortraitPrewarmKey,
  queueBackgroundPortraitPrewarm,
@@ -301,8 +302,10 @@ export default function Dashboard(): JSX.Element {
  markClean();
  setSaveFlash(true);
  setTimeout(() => setSaveFlash(false), 2000);
+ toast.success("Game saved");
  } catch (err) {
  console.error("Failed to save:", err);
+ toast.error("Failed to save — check the console");
  } finally {
  setIsSaving(false);
  }
@@ -330,9 +333,10 @@ export default function Dashboard(): JSX.Element {
  markClean();
  setSaveFlash(true);
  setTimeout(() => setSaveFlash(false), 2000);
+ toast.success(`Saved as "${name.trim()}"`);
  } catch (err) {
  console.error("Failed to save as:", err);
- alert(`Failed to save: ${err}`);
+ toast.error(`Failed to save: ${err}`);
  } finally {
  setIsSaving(false);
  }

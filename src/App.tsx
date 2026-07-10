@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSettingsStore } from "./store/settingsStore";
 import i18n, { changeAppLanguage } from "./i18n";
+import { ToastContainer } from "./components/ui/Toast";
 import "./App.css";
 
 const MainMenu = lazy(() => import("./pages/MainMenu"));
@@ -66,6 +67,7 @@ function App() {
           <Route path="/world-editor" element={<WorldEditorPage />} />
         </Routes>
       </Suspense>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

@@ -23,7 +23,7 @@ export function Badge({ children, variant = "neutral", size = "sm", className = 
 
  return (
  <span
- className={`inline-flex items-center font-bold font-heading uppercase tracking-wider rounded-md ${variants[variant]} ${sizes[size]} ${className}`}
+ className={`inline-flex items-center font-bold font-heading uppercase tracking-wider rounded-full ${variants[variant]} ${sizes[size]} ${className}`}
  >
  {children}
  </span>

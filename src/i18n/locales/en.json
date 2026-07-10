@@ -753,6 +753,12 @@
     "tacticLibrary": "Tactic Library",
     "chooseTactic": "Choose tactic",
     "searchTactics": "Search tactics...",
+    "subTabs": {
+      "pitch": "The Pitch",
+      "selection": "Selection",
+      "style": "Style of Play",
+      "setPieces": "Set Pieces"
+    },
     "myTactics": "My tactics",
     "newTactic": "New tactic",
     "duplicateTactic": "Duplicate",
