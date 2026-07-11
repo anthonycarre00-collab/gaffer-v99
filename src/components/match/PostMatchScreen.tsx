@@ -18,6 +18,7 @@ import {
 } from "./PostMatchHelpers";
 import { PossessionDonut } from "./PostMatchCharts";
 import { interpretMorale } from "../../lib/gafferEngine";
+import { generateMatchHighlights } from "./matchHighlights";
 import {
  Trophy,
  TrendingDown,
@@ -582,6 +583,47 @@ export default function PostMatchScreen({
  hidden={activeTab !== "matchReport"}
  className="grid grid-cols-2 gap-6"
  >
+ {/* V99.3 IDEAS #1: Match Highlights package — Gaffer-voice narrative */}
+ {(() => {
+ const highlights = generateMatchHighlights(
+ snapshot,
+ importantEvents,
+ userSide === "Home",
+ t,
+ );
+ return (
+ <div className="col-span-2 bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300 gaffer-card-texture">
+ <div className="flex items-center gap-2 mb-2">
+ <Trophy className="w-4 h-4 text-accent-500" />
+ <h3 className="text-sm font-heading font-bold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+ {highlights.headline}
+ </h3>
+ </div>
+ <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+ {highlights.summary}
+ </p>
+ {highlights.keyMoments.length > 0 && (
+ <div className="mt-3 pt-3 border-t border-gray-100 dark:border-navy-700">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+ Key Moments
+ </p>
+ <div className="flex flex-col gap-1.5">
+ {highlights.keyMoments.map((moment, i) => (
+ <div key={i} className="flex items-start gap-2 text-xs">
+ <span className="font-heading font-bold tabular-nums text-gray-500 dark:text-gray-400 w-8 shrink-0">
+ {moment.minute}'
+ </span>
+ <span className={`flex-1 ${moment.important ? "font-medium text-gray-800 dark:text-gray-200" : "text-gray-600 dark:text-gray-400"}`}>
+ {moment.line}
+ </span>
+ </div>
+ ))}
+ </div>
+ </div>
+ )}
+ </div>
+ );
+ })()}
  {/* Scorers */}
  <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
