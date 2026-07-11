@@ -994,6 +994,14 @@ pub fn evaluate_transfer_market(game: &mut Game) {
     let mut new_user_offers_today = 0_usize;
     let mut new_user_loan_offers_today = 0_usize;
 
+    // V99.4 T3.1: Deadline Day Drama — AI clubs become more aggressive on
+    // deadline day. More interest, higher daily cap, lower fee threshold.
+    let is_deadline_day = matches!(
+        game.season_context.transfer_window.status,
+        TransferWindowStatus::DeadlineDay
+    );
+    let deadline_bonus = if is_deadline_day { 20 } else { 0 };
+
     // A player's transfer appeal and asking fee don't depend on who's buying, so
     // score every player once and keep only the genuinely attractive targets.
     // Each club then scans this short, score-sorted list instead of the whole
@@ -1006,11 +1014,13 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         if player_has_pending_registration(player) {
             continue;
         }
-        let mut score = incoming_interest_score(current_date, player);
+        let mut score = incoming_interest_score(current_date, player) + deadline_bonus;
         if award_leaderboards.contains(&player.id) {
             score += AWARD_LEADERBOARD_INTEREST_BONUS;
         }
-        if score < 35 {
+        // V99.4 T3.1: Lower the threshold on deadline day (35 → 25).
+        let score_threshold = if is_deadline_day { 25 } else { 35 };
+        if score < score_threshold {
             continue;
         }
         let is_user_owned = Some(owner_team_id) == user_team_id.as_deref();
@@ -1094,6 +1104,7 @@ pub fn evaluate_transfer_market(game: &mut Game) {
                 .copied()
                 .unwrap_or(0)
                 >= max_ai_transfers_for_reputation(buyer_team.reputation)
+                    + if is_deadline_day { 2 } else { 0 } // V99.4 T3.1: +2 cap on deadline day
             {
                 return false;
             }

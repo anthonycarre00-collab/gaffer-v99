@@ -212,6 +212,34 @@ where
     crate::ai_hiring::process_vacant_ai_clubs(game);
     crate::job_offers::check_job_offers(game);
 
+    // V99.4 T3.1: Deadline Day news branding.
+    if matches!(
+        game.season_context.transfer_window.status,
+        domain::season::TransferWindowStatus::DeadlineDay
+    ) {
+        let dd_id = format!("deadline_day_{}", today);
+        if !game.news.iter().any(|a| a.id == dd_id) {
+            game.news.push(domain::news::NewsArticle {
+                id: dd_id,
+                headline: "DEADLINE DAY".to_string(),
+                body: "It's deadline day — the clock is ticking. Expect last-minute \
+                       moves, panic buys, and surprise bids as clubs scramble to get \
+                       their business done before the window slams shut.".to_string(),
+                source: "Transfer Wire".to_string(),
+                date: today.clone(),
+                category: domain::news::NewsCategory::TransferRoundup,
+                team_ids: vec![],
+                player_ids: vec![],
+                match_score: None,
+                read: false,
+                headline_key: None,
+                body_key: None,
+                source_key: None,
+                i18n_params: std::collections::HashMap::new(),
+            });
+        }
+    }
+
     debug!("[turn] process_day {}: complete, advancing clock", today);
 
     // V99.3 PERF-1 C2: Prune old messages + news to prevent unbounded growth.
