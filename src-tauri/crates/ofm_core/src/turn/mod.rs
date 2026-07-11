@@ -628,6 +628,14 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         })
         .collect();
 
+    // V99.4 T1.7: Set tactics_multiplier from the AI manager's tactical acumen.
+    let tactics_multiplier = game
+        .managers
+        .iter()
+        .find(|m| m.team_id.as_deref() == Some(team_id))
+        .map(|m| m.personality.tactics_effectiveness_multiplier())
+        .unwrap_or(1.0);
+
     engine::TeamData {
         id: team_id.to_string(),
         name,
@@ -635,6 +643,7 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         play_style,
         players,
         tactics,
+        tactics_multiplier,
     }
 }
 

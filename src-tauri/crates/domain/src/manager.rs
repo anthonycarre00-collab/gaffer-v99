@@ -4,6 +4,126 @@ fn default_fan_approval() -> u8 {
     50
 }
 
+fn default_personality() -> ManagerPersonality {
+    ManagerPersonality::default()
+}
+
+/// V99.4 T1.7: AI manager personality — drives tactical style, transfer
+/// philosophy, and media behaviour. A Guardiola type plays possession
+/// football; an Allardyce type is direct and defensive.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ManagerPersonality {
+    /// Tactical style preference — drives formation + play style choices.
+    pub tactical_style: TacticalStyle,
+    /// How well the manager sets up the team (0-100). Higher = tactics
+    /// modifiers are more effective. A tactically astute manager gets
+    /// more out of the same players.
+    #[serde(default = "default_acumen")]
+    pub tactical_acumen: u8,
+    /// Transfer philosophy — what kind of players the manager targets.
+    pub transfer_philosophy: TransferPhilosophy,
+    /// Man-management skill (0-100). Higher = faster morale recovery
+    /// + better at keeping unhappy players content.
+    #[serde(default = "default_acumen")]
+    pub man_management: u8,
+    /// Risk appetite (0-100). Higher = more attacking, lower = more
+    /// conservative. Affects formation choice + in-game decisions.
+    #[serde(default = "default_acumen")]
+    pub risk_appetite: u8,
+    /// Media personality — affects press conference tone + news quotes.
+    pub media_style: MediaStyle,
+}
+
+impl Default for ManagerPersonality {
+    fn default() -> Self {
+        Self {
+            tactical_style: TacticalStyle::Balanced,
+            tactical_acumen: 50,
+            transfer_philosophy: TransferPhilosophy::SquadBuilder,
+            man_management: 50,
+            risk_appetite: 50,
+            media_style: MediaStyle::Reserved,
+        }
+    }
+}
+
+fn default_acumen() -> u8 {
+    50
+}
+
+/// V99.4 T1.7: Tactical style preference.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum TacticalStyle {
+    Possession,    // Guardiola — high-tempo, short passing
+    Direct,        // Allardyce — long ball, physical
+    Counter,       // Mourinho — soak and spring
+    Pressing,      // Klopp — high press, intense
+    Defensive,     // Simeone — low block, compact
+    #[default]
+    Balanced,      // Default — no strong preference
+}
+
+/// V99.4 T1.7: Transfer philosophy.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum TransferPhilosophy {
+    YouthFocused,  // Prioritises young players with potential
+    StarSigning,   // Chases established stars
+    #[default]
+    SquadBuilder,  // Balanced — fills gaps with best available
+    BargainHunter, // Looks for undervalued players
+}
+
+/// V99.4 T1.7: Media personality.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum MediaStyle {
+    #[default]
+    Reserved,     // Says little, keeps cards close
+    Outspoken,    // Controversial, winds up rivals
+    Charismatic,  // Engaging, fan favourite
+    Pragmatic,    // Factual, no-nonsense
+}
+
+impl ManagerPersonality {
+    /// Returns a play style string compatible with the engine's PlayStyle enum.
+    /// Used by AI training to set the team's play_style based on the manager's
+    /// tactical preference.
+    pub fn preferred_play_style(&self) -> &str {
+        match self.tactical_style {
+            TacticalStyle::Possession => "Possession",
+            TacticalStyle::Direct => "Attacking", // Direct ≈ attacking with long balls
+            TacticalStyle::Counter => "Counter",
+            TacticalStyle::Pressing => "HighPress",
+            TacticalStyle::Defensive => "Defensive",
+            TacticalStyle::Balanced => "Balanced",
+        }
+    }
+
+    /// Returns a preferred formation string based on tactical style.
+    pub fn preferred_formation(&self) -> &str {
+        match self.tactical_style {
+            TacticalStyle::Possession => "4-3-3",    // Guardiola
+            TacticalStyle::Direct => "4-4-2",         // Allardyce
+            TacticalStyle::Counter => "4-2-3-1",      // Mourinho
+            TacticalStyle::Pressing => "4-3-3",       // Klopp
+            TacticalStyle::Defensive => "5-4-1",      // Simeone
+            TacticalStyle::Balanced => "4-4-2",
+        }
+    }
+
+    /// Returns the tactical acumen as a multiplier (0.90–1.08).
+    /// A tactically astute manager (100) gets +8% effectiveness from their
+    /// tactics; a poor tactician (0) gets -10%.
+    pub fn tactics_effectiveness_multiplier(&self) -> f64 {
+        0.90 + (self.tactical_acumen as f64 / 100.0) * 0.18
+    }
+
+    /// Returns the man-management morale recovery bonus (0.0–0.5).
+    /// A great man-manager (100) gives +0.5 to daily morale recovery.
+    pub fn morale_recovery_bonus(&self) -> f64 {
+        (self.man_management as f64 / 100.0) * 0.5
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Manager {
     pub id: String,
@@ -31,6 +151,10 @@ pub struct Manager {
 
     // Employment history
     pub career_history: Vec<ManagerCareerEntry>,
+
+    /// V99.4 T1.7: Manager personality — drives tactical style, transfers, media.
+    #[serde(default = "default_personality")]
+    pub personality: ManagerPersonality,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

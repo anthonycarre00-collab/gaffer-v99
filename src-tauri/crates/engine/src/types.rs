@@ -303,6 +303,15 @@ pub struct TeamData {
     pub players: Vec<PlayerData>,
     #[serde(default)]
     pub tactics: TacticsConfig,
+    /// V99.4 T1.7: Manager tactical acumen multiplier (0.90–1.08).
+    /// Scales all tactics modifiers for this team. Higher = tactics are
+    /// more effective. Set from the AI manager's personality.
+    #[serde(default = "default_tactics_mult")]
+    pub tactics_multiplier: f64,
+}
+
+fn default_tactics_mult() -> f64 {
+    1.0
 }
 
 impl TeamData {

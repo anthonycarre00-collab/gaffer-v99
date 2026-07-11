@@ -113,7 +113,7 @@ fn resolve_buildup<R: Rng>(
     let press = effective_press(ctx, def_side);
     let ball_zone = ctx.ball_zone;
 
-    let buildup_mod = tactics_buildup_mod(&ctx.team(att_side).tactics);
+    let buildup_mod = tactics_buildup_mod(&ctx.team(att_side).tactics) * ctx.team(att_side).tactics_multiplier;
 
     // V99: Wire `playing_out` — when the ball is in the defensive third
     // (typically after a goal kick or GK save), the keeper's distribution
@@ -180,12 +180,14 @@ fn resolve_midfield<R: Rng>(
         ctx.team(att_side).play_style,
         PlayStylePhase::Midfield,
         true,
-    ) * role_attribute_modifier(attacker.role, PlayStylePhase::Midfield);
+    ) * role_attribute_modifier(attacker.role, PlayStylePhase::Midfield)
+        * ctx.team(att_side).tactics_multiplier;
     let def_mod = play_style_modifier(
         ctx.team(def_side).play_style,
         PlayStylePhase::Midfield,
         false,
-    ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense);
+    ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense)
+        * ctx.team(def_side).tactics_multiplier;
     let att_eff = att_rating
         * att_mod
         * home_mod(att_side, ctx.config)
@@ -286,12 +288,14 @@ fn resolve_attacking_third<R: Rng>(
         * leadership_modifier(captain_leadership, pressure);
 
     let att_mod = play_style_modifier(ctx.team(att_side).play_style, PlayStylePhase::Attack, true)
-        * role_attribute_modifier(attacker.role, PlayStylePhase::Attack);
+        * role_attribute_modifier(attacker.role, PlayStylePhase::Attack)
+        * ctx.team(att_side).tactics_multiplier;
     let def_mod = play_style_modifier(
         ctx.team(def_side).play_style,
         PlayStylePhase::Defense,
         false,
-    ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense);
+    ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense)
+        * ctx.team(def_side).tactics_multiplier;
     let att_eff = att_rating * att_mod * home_mod(att_side, ctx.config);
     let def_eff = def_rating
         * def_mod

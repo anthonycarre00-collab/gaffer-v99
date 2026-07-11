@@ -60,6 +60,8 @@ fn create_seeded_manager(
     manager.reputation = team.reputation;
     manager.satisfaction = BASE_AI_MANAGER_SATISFACTION as u8;
     manager.fan_approval = 50;
+    // V99.4 T1.7: Generate a random personality for this AI manager.
+    manager.personality = generate_random_personality(team.reputation);
     manager.hire(team.id.clone());
     manager.career_history.push(ManagerCareerEntry::open(
         team.id.clone(),
@@ -67,6 +69,103 @@ fn create_seeded_manager(
         game.clock.current_date.format("%Y-%m-%d").to_string(),
     ));
     Some(manager)
+}
+
+/// V99.4 T1.7: Generate a random manager personality.
+///
+/// Higher-reputation clubs tend to attract more tactically astute managers
+/// (Guardiola, Klopp). Lower-reputation clubs tend to get more pragmatic,
+/// defensive managers (Allardyce, Pulis).
+fn generate_random_personality(team_reputation: u32) -> domain::manager::ManagerPersonality {
+    use domain::manager::{MediaStyle, TacticalStyle, TransferPhilosophy};
+    use rand::Rng;
+    let mut rng = rand::rng();
+
+    // Tactical style: weighted by club reputation.
+    // Elite clubs: more Possession/Pressing. Lower clubs: more Direct/Defensive.
+    let tactical_style = if team_reputation >= 700 {
+        // Elite: 30% Possession, 25% Pressing, 20% Counter, 15% Balanced, 10% Defensive
+        match rng.random_range(0..100) {
+            0..=29 => TacticalStyle::Possession,
+            30..=54 => TacticalStyle::Pressing,
+            55..=74 => TacticalStyle::Counter,
+            75..=89 => TacticalStyle::Balanced,
+            _ => TacticalStyle::Defensive,
+        }
+    } else if team_reputation >= 400 {
+        // Mid-tier: 20% Counter, 20% Balanced, 20% Direct, 20% Defensive, 20% Possession
+        match rng.random_range(0..100) {
+            0..=19 => TacticalStyle::Counter,
+            20..=39 => TacticalStyle::Balanced,
+            40..=59 => TacticalStyle::Direct,
+            60..=79 => TacticalStyle::Defensive,
+            _ => TacticalStyle::Possession,
+        }
+    } else {
+        // Lower: 35% Direct, 30% Defensive, 20% Counter, 15% Balanced
+        match rng.random_range(0..100) {
+            0..=34 => TacticalStyle::Direct,
+            35..=64 => TacticalStyle::Defensive,
+            65..=84 => TacticalStyle::Counter,
+            _ => TacticalStyle::Balanced,
+        }
+    };
+
+    // Tactical acumen: higher for elite clubs (40-90 range vs 20-60 for lower).
+    let acumen_base = if team_reputation >= 700 { 40 } else if team_reputation >= 400 { 30 } else { 20 };
+    let acumen_range = if team_reputation >= 700 { 50 } else if team_reputation >= 400 { 40 } else { 40 };
+    let tactical_acumen = (acumen_base + rng.random_range(0..acumen_range)).min(95) as u8;
+
+    // Transfer philosophy: correlated with tactical style.
+    let transfer_philosophy = match tactical_style {
+        TacticalStyle::Possession | TacticalStyle::Pressing => {
+            // Attacking managers prefer stars or youth.
+            if rng.random_range(0..2) == 0 {
+                TransferPhilosophy::StarSigning
+            } else {
+                TransferPhilosophy::YouthFocused
+            }
+        }
+        TacticalStyle::Direct | TacticalStyle::Defensive => {
+            // Pragmatic managers look for bargains or build squads.
+            if rng.random_range(0..2) == 0 {
+                TransferPhilosophy::BargainHunter
+            } else {
+                TransferPhilosophy::SquadBuilder
+            }
+        }
+        _ => TransferPhilosophy::SquadBuilder,
+    };
+
+    // Man-management: random 30-80, slightly higher for elite.
+    let mm_base = if team_reputation >= 700 { 40 } else { 30 };
+    let man_management = (mm_base + rng.random_range(0..40)).min(90) as u8;
+
+    // Risk appetite: correlated with tactical style.
+    let risk_appetite = match tactical_style {
+        TacticalStyle::Possession | TacticalStyle::Pressing => 60 + rng.random_range(0..30),
+        TacticalStyle::Direct => 50 + rng.random_range(0..30),
+        TacticalStyle::Counter => 40 + rng.random_range(0..30),
+        TacticalStyle::Defensive => 25 + rng.random_range(0..30),
+        _ => 45 + rng.random_range(0..30),
+    };
+
+    // Media personality: random.
+    let media_style = match rng.random_range(0..4) {
+        0 => MediaStyle::Reserved,
+        1 => MediaStyle::Outspoken,
+        2 => MediaStyle::Charismatic,
+        _ => MediaStyle::Pragmatic,
+    };
+
+    domain::manager::ManagerPersonality {
+        tactical_style,
+        tactical_acumen,
+        transfer_philosophy,
+        man_management,
+        risk_appetite: risk_appetite.min(95) as u8,
+        media_style,
+    }
 }
 
 fn ai_manager_satisfaction(form: &[String]) -> u8 {
