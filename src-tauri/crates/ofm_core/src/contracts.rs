@@ -231,7 +231,8 @@ pub fn evaluate_renewal_offer(
     let round = next_renewal_round(player, None);
     let expected_wage = expected_wage(player, team, current_date);
     let expected_years = expected_contract_years(player, current_date);
-    let minimum_wage = minimum_acceptable_wage(player.wage);
+    let player_age = player_age_on(current_date, &player.date_of_birth);
+    let minimum_wage = minimum_acceptable_wage(player.wage, player_age);
 
     if offer.contract_years == 0 || offer.contract_years > MAX_CONTRACT_YEARS {
         let feedback = build_renewal_feedback(
@@ -594,7 +595,8 @@ pub fn offer_free_agent_contract(
     let expected_wage = expected_wage(&game.players[player_index], &team, current_date);
     let expected_years = expected_contract_years(&game.players[player_index], current_date);
     let reference_wage = reference_player_wage(&game.players[player_index]);
-    let minimum_wage = minimum_acceptable_wage(reference_wage);
+    let player_age = player_age_on(current_date, &game.players[player_index].date_of_birth);
+    let minimum_wage = minimum_acceptable_wage(reference_wage, player_age);
 
     if offer.contract_years == 0 || offer.contract_years > MAX_CONTRACT_YEARS {
         return Ok(renewal_outcome(
@@ -1227,13 +1229,34 @@ pub(crate) fn expected_contract_years(player: &Player, current_date: NaiveDate) 
     1
 }
 
-fn minimum_acceptable_wage(current_wage: u32) -> u32 {
-    ((current_wage as f32) * 0.85).floor() as u32
+/// V99.3 REALISM-1 M11: Age-tiered minimum acceptable wage.
+/// Was a flat 0.85× — players accepted 15% pay cuts without complaint.
+/// Real life: players almost never accept cuts unless 33+ and out of options.
+/// Now age-tiered:
+///   <28: 1.00× (no cut accepted)
+///   28-30: 0.95× (5% cut max)
+///   31-33: 0.85× (15% cut — old behaviour)
+///   34+: 0.70× (30% cut — veterans accept less)
+fn minimum_acceptable_wage(current_wage: u32, player_age: i32) -> u32 {
+    let factor = if player_age < 28 {
+        1.00
+    } else if player_age <= 30 {
+        0.95
+    } else if player_age <= 33 {
+        0.85
+    } else {
+        0.70
+    };
+    ((current_wage as f32) * factor).floor() as u32
 }
 
+/// V99.3 REALISM-1 M12: Insulting-wage threshold tightened.
+/// Was 0.65× — players accepted up to 35% pay cuts before triggering the
+/// 30-day block. Real life: most players balk at cuts >10-15%.
+/// Now 0.80× — only 20% cut before it's considered insulting.
 fn is_insulting_wage_offer(reference_wage: u32, expected_wage: u32, offered_wage: u32) -> bool {
     let anchor_wage = reference_wage.max(expected_wage);
-    let insulting_floor = ((anchor_wage as f32) * 0.65).floor() as u32;
+    let insulting_floor = ((anchor_wage as f32) * 0.80).floor() as u32;
 
     offered_wage < insulting_floor
 }
