@@ -72,7 +72,7 @@ function ovrRating(s: StaffData): number {
 
 export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffTabProps) {
  const { t, i18n } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
  const [fetchedStaff, setFetchedStaff] = useState<StaffSlice | null>(null);
  const [view, setView] = useState<"mystaff" | "available">("mystaff");
  const [search, setSearch] = useState("");

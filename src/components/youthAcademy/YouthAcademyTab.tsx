@@ -64,7 +64,7 @@ export default function YouthAcademyTab({
  onNavigate,
 }: YouthAcademyTabProps) {
  const { t, i18n } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
  const [fetchedStaff, setFetchedStaff] = useState<StaffSlice | null>(null);
  const [selectedYouthScoutId, setSelectedYouthScoutId] = useState("");
  const [youthRegion, setYouthRegion] = useState("Domestic");

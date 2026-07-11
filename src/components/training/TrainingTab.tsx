@@ -97,7 +97,7 @@ export default function TrainingTab({
  onGameUpdate,
 }: TrainingTabProps) {
  const { t } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
  const [isSaving, setIsSaving] = useState(false);
  const teamId = sessionState?.manager?.team_id ?? gameState?.manager?.team_id ?? null;
  const clockDate = sessionState?.clock.current_date ?? gameState?.clock.current_date ?? "";

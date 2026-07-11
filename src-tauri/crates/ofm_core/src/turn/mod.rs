@@ -728,6 +728,8 @@ pub fn simulate_other_matches_with_capture<F>(
 ) where
     F: FnMut(StatsState),
 {
+    let user_team_id = game.manager.team_id.clone();
+
     let fixture_indices: Vec<usize> = game.league.as_ref().map_or(vec![], |league| {
         league
             .fixtures
@@ -743,8 +745,180 @@ pub fn simulate_other_matches_with_capture<F>(
     });
 
     for idx in fixture_indices {
-        simulate_single_match_with_capture(game, idx, on_capture);
+        // V99.4 PERF-1 M4: Use sparse_sim for AI-vs-AI matches (neither team
+        // is the user's). The full 90-minute engine is only needed for:
+        // - User's own matches (full match report + player stats)
+        // - Matches the user might want to watch live
+        // AI-vs-AI matches only need a scoreline + scorers for news + stats.
+        let is_user_match = game.league.as_ref().map_or(false, |league| {
+            let f = &league.fixtures[idx];
+            Some(&f.home_team_id) == user_team_id.as_ref()
+                || Some(&f.away_team_id) == user_team_id.as_ref()
+        });
+
+        if is_user_match {
+            simulate_single_match_with_capture(game, idx, on_capture);
+        } else {
+            // Use sparse sim for AI-vs-AI — ~10× faster than full engine.
+            simulate_sparse_ai_match(game, idx, on_capture);
+        }
     }
+}
+
+/// V99.4 PERF-1 M4: Simulate an AI-vs-AI match using the sparse simulator.
+///
+/// This is ~10× faster than the full 90-minute engine because it:
+/// - Uses a Poisson xG model instead of per-minute simulation
+/// - Only generates sparse events (goals, assists, cards) — no possession
+///   ticks, no buildup/midfield/attacking-third resolution
+/// - Skips detailed match report construction
+///
+/// The sparse events are enough for: news story generation, stat aggregation,
+/// player career highlights, and league standings updates.
+fn simulate_sparse_ai_match<F>(game: &mut Game, idx: usize, _on_capture: &mut F)
+where
+    F: FnMut(StatsState),
+{
+    let (home_team_id, away_team_id, weather_str, importance) = {
+        let league = game.league.as_ref().unwrap();
+        let f = &league.fixtures[idx];
+        (
+            f.home_team_id.clone(),
+            f.away_team_id.clone(),
+            f.weather.clone(),
+            f.importance.clone(),
+        )
+    };
+
+    let home_data = build_engine_team(game, &home_team_id);
+    let away_data = build_engine_team(game, &away_team_id);
+
+    let mut rng = rand::rng();
+    let result = engine::sparse_sim::simulate_sparse_match(&home_data, &away_data, &mut rng);
+
+    // Apply the result to the fixture.
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+    if let Some(league) = game.league.as_mut() {
+        if let Some(fixture) = league.fixtures.get_mut(idx) {
+            fixture.status = FixtureStatus::Completed;
+            fixture.result = Some(domain::league::MatchResult {
+                home_goals: result.home_goals,
+                away_goals: result.away_goals,
+                home_scorers: result.events.iter()
+                    .filter(|e| e.side == engine::sparse_sim::SparseSide::Home && e.event_type == engine::sparse_sim::SparseEventType::Goal)
+                    .map(|e| domain::league::GoalEvent {
+                        player_id: e.player_id.clone(),
+                        minute: e.minute,
+                    })
+                    .collect(),
+                away_scorers: result.events.iter()
+                    .filter(|e| e.side == engine::sparse_sim::SparseSide::Away && e.event_type == engine::sparse_sim::SparseEventType::Goal)
+                    .map(|e| domain::league::GoalEvent {
+                        player_id: e.player_id.clone(),
+                        minute: e.minute,
+                    })
+                    .collect(),
+                report: None, // Sparse sim doesn't produce a full report
+                home_penalties: None,
+                away_penalties: None,
+            });
+        }
+
+        // Update standings.
+        if let Some(fixture) = league.fixtures.get(idx) {
+            if let Some(result) = &fixture.result {
+                update_standings_from_result(league, &fixture.home_team_id, &fixture.away_team_id, result);
+            }
+        }
+    }
+
+    // Apply sparse player stats (goals, assists, cards).
+    for event in &result.events {
+        if let Some(player) = game.players.iter_mut().find(|p| p.id == event.player_id) {
+            match event.event_type {
+                engine::sparse_sim::SparseEventType::Goal => {
+                    player.stats.goals += 1;
+                    player.stats.appearances += 1;
+                }
+                engine::sparse_sim::SparseEventType::YellowCard => {
+                    player.stats.yellow_cards += 1;
+                }
+                engine::sparse_sim::SparseEventType::RedCard => {
+                    player.stats.red_cards += 1;
+                }
+                _ => {}
+            }
+        }
+        if let Some(secondary_id) = &event.secondary_player_id {
+            if let Some(player) = game.players.iter_mut().find(|p| &p.id == secondary_id) {
+                if event.event_type == engine::sparse_sim::SparseEventType::Goal {
+                    player.stats.assists += 1;
+                }
+            }
+        }
+    }
+
+    // Deplete stamina for both teams (simplified — flat 15% reduction).
+    for player in &mut game.players {
+        if player.team_id.as_deref() == Some(&home_team_id)
+            || player.team_id.as_deref() == Some(&away_team_id)
+        {
+            player.condition = player.condition.saturating_sub(15);
+        }
+    }
+
+    log::debug!(
+        "[sparse_sim] {} {}-{} {} ({} events)",
+        today,
+        result.home_goals,
+        result.away_goals,
+        importance.label(),
+        result.events.len()
+    );
+}
+
+/// Update league standings from a match result.
+fn update_standings_from_result(
+    league: &mut domain::league::League,
+    home_team_id: &str,
+    away_team_id: &str,
+    result: &domain::league::MatchResult,
+) {
+    for standing in &mut league.standings {
+        if standing.team_id == home_team_id {
+            standing.played += 1;
+            standing.goals_for += result.home_goals as u32;
+            standing.goals_against += result.away_goals as u32;
+            if result.home_goals > result.away_goals {
+                standing.won += 1;
+                standing.points += 3;
+            } else if result.home_goals == result.away_goals {
+                standing.drawn += 1;
+                standing.points += 1;
+            } else {
+                standing.lost += 1;
+            }
+        } else if standing.team_id == away_team_id {
+            standing.played += 1;
+            standing.goals_for += result.away_goals as u32;
+            standing.goals_against += result.home_goals as u32;
+            if result.away_goals > result.home_goals {
+                standing.won += 1;
+                standing.points += 3;
+            } else if result.away_goals == result.home_goals {
+                standing.drawn += 1;
+                standing.points += 1;
+            } else {
+                standing.lost += 1;
+            }
+        }
+    }
+    // Re-sort standings.
+    league.standings.sort_by(|a, b| {
+        b.points.cmp(&a.points)
+            .then_with(|| b.goals_for.saturating_sub(b.goals_against).cmp(&a.goals_for.saturating_sub(a.goals_against)))
+            .then_with(|| b.goals_for.cmp(&a.goals_for))
+    });
 }
 
 fn simulate_single_match_with_capture<F>(game: &mut Game, idx: usize, on_capture: &mut F)

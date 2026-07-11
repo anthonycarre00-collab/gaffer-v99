@@ -486,6 +486,59 @@ pub(crate) fn burst_modifier(burst: u8) -> f64 {
     1.0 + (burst as f64 - 50.0) / 1666.0
 }
 
+// ---------------------------------------------------------------------------
+// V99.4 A1: Shared compute_zone_rating — single source of truth for the
+// modifier chain used by BOTH the engine path (resolution.rs) and the live
+// match path (zone_resolution.rs). Prevents future drift between the two.
+// ---------------------------------------------------------------------------
+
+/// Bundle of all modifiers applied to a zone rating computation.
+/// Both resolution paths build this from the same source data, ensuring
+/// no modifier is accidentally dropped from one path but not the other.
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct ModifierBundle {
+    pub trait_bonus: f64,
+    pub condition: f64,
+    pub stability: f64,
+    pub morale: f64,
+    pub partnership_bonus: f64,
+    pub play_style: f64,
+    pub role: f64,
+    pub home_advantage: f64,
+    pub tactics_multiplier: f64,
+    pub weather: f64,
+    pub fixture_pressure: f64,
+}
+
+/// Compute the effective zone rating from a raw skill value + all modifiers.
+///
+/// This is the SINGLE function both resolution paths should use to compute
+/// effective skill. It applies modifiers in a consistent order:
+/// raw → trait → condition → stability → morale → partnership →
+/// play_style → role → home_advantage → tactics → weather
+///
+/// The fixture_pressure modifier is applied to the stability component
+/// (not the raw skill) — pressure amplifies the stability effect.
+pub(crate) fn compute_zone_rating(raw_skill: f64, mods: &ModifierBundle) -> f64 {
+    // Scale stability by fixture pressure (cup finals amplify clutch/choke).
+    let effective_stability = if mods.fixture_pressure > 1.0 {
+        1.0 + (mods.stability - 1.0) * mods.fixture_pressure
+    } else {
+        mods.stability
+    };
+
+    raw_skill
+        * mods.trait_bonus
+        * mods.condition
+        * effective_stability
+        * mods.morale
+        * mods.partnership_bonus
+        * mods.play_style
+        * mods.role
+        * mods.home_advantage
+        * mods.tactics_multiplier
+}
+
 #[cfg(test)]
 mod phase_modifier_tests {
     use super::*;

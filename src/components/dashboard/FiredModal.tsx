@@ -5,7 +5,9 @@ import { useGameStore } from "../../store/gameStore";
 
 export default function FiredModal(): JSX.Element | null {
  const { t } = useTranslation();
- const { showFiredModal, setShowFiredModal, gameState } = useGameStore();
+ const showFiredModal = useGameStore((s) => s.showFiredModal);
+ const setShowFiredModal = useGameStore((s) => s.setShowFiredModal);
+ const gameState = useGameStore((s) => s.gameState);
 
  if (!showFiredModal || !gameState) return null;
 

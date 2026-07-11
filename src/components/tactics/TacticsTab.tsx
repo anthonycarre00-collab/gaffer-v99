@@ -74,7 +74,7 @@ export default function TacticsTab({
  onGameUpdate,
 }: TacticsTabProps): JSX.Element {
  const { t } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
  const teamId = sessionState?.manager?.team_id ?? gameState?.manager?.team_id ?? null;
  const clockDate = sessionState?.clock.current_date ?? gameState?.clock.current_date ?? "";
  const [fetchedSquad] = useFetchedSquad(teamId, clockDate);

@@ -26,7 +26,7 @@ export default function SquadTab({
  onSortStateChange,
 }: SquadTabProps) {
  const { t } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
 
  const teamId =
  sessionState?.manager?.team_id ?? gameState?.manager?.team_id ?? null;

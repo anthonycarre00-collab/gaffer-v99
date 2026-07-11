@@ -43,7 +43,7 @@ export default function InboxTab({
  onNavigate,
 }: InboxTabProps): JSX.Element {
  const { i18n } = useTranslation();
- const { sessionState } = useGameStore();
+ const sessionState = useGameStore((s) => s.sessionState);
  const [fetchedMessages, setFetchedMessages] = useState<MessageData[] | null>(null);
 
  // Prefer live sessionState clock; fall back to prop snapshot while sessionState loads.
