@@ -4,6 +4,7 @@ import { Card, TeamLocation, TeamLogo } from "../ui";
 import type { TeamProfileTranslate } from "./TeamProfile.types";
 import { QuickStat } from "./TeamProfile.primitives";
 import type { TeamProfileViewModel } from "./TeamProfile.types";
+import { interpretReputation, shortOvrLabel } from "../../lib/gafferEngine";
 import type { TeamData } from "../../store/gameStore";
 
 interface TeamProfileHeroCardProps {
@@ -57,11 +58,11 @@ export default function TeamProfileHeroCard({
  </div>
 
  <div className="hidden md:grid grid-cols-2 gap-3">
- <QuickHeroStat label={t("teams.avgOvr")} value={String(viewModel.avgOvr)} />
+ <QuickHeroStat label={t("teams.avgOvr")} value={shortOvrLabel(viewModel.avgOvr)} />
  <QuickHeroStat
  label={t("manager.reputation")}
- value={String(team.reputation)}
- valueClassName="text-accent-300"
+ value={interpretReputation(team.reputation).short}
+ valueClassName={interpretReputation(team.reputation).colorClass}
  />
  <QuickHeroStat
  label={t("teamProfile.leaguePos")}

@@ -12,6 +12,7 @@ import {
 } from "../../lib/helpers";
 import { countryName } from "../../lib/countries";
 import { positionBadgeVariant } from "../../lib/playerRating";
+import { shortOvrLabel, interpretOvr, interpretPotential, interpretGrowthRoom } from "../../lib/gafferEngine";
 import type { MessageData } from "../../store/gameStore";
 import ScoutPlayerCard from "../ScoutPlayerCard";
 import SwitchClubConfirmModal from "../SwitchClubConfirmModal";
@@ -308,12 +309,16 @@ export default function InboxMessageDetailPane({
  </div>
 
  <div className="flex flex-wrap gap-2">
+ <span title={interpretOvr(prospect.ovr ?? 0, prospect.natural_position).description}>
  <Badge variant="neutral" size="sm">
- {t("youthAcademy.ovr")} {prospect.ovr ?? 0}
+ {t("youthAcademy.ovr")} <span className={interpretOvr(prospect.ovr ?? 0, prospect.natural_position).colorClass}>{shortOvrLabel(prospect.ovr ?? 0, prospect.natural_position)}</span>
  </Badge>
+ </span>
+ <span title={interpretPotential(prospect.potential ?? 0).description}>
  <Badge variant="neutral" size="sm">
- {t("youthAcademy.potential")} {prospect.potential ?? 0}
+ {t("youthAcademy.potential")} <span className={interpretPotential(prospect.potential ?? 0).colorClass}>{interpretPotential(prospect.potential ?? 0).short}</span>
  </Badge>
+ </span>
  </div>
  </div>
 
@@ -339,8 +344,11 @@ export default function InboxMessageDetailPane({
  }
  size="sm"
  />
- <span className="w-8 text-right text-xs font-mono font-mono font-bold tabular-nums text-gray-500 dark:text-gray-400">
- +{growthRoom}
+ <span
+ className={`w-20 text-right text-xs font-heading font-bold ${interpretGrowthRoom(prospect.ovr ?? 0, potential).colorClass}`}
+ title={interpretGrowthRoom(prospect.ovr ?? 0, potential).description}
+ >
+ {interpretGrowthRoom(prospect.ovr ?? 0, potential).short}
  </span>
  </div>
  <p className={`mt-1 text-[10px] font-heading uppercase tracking-wider ${potentialLabel.color}`}>

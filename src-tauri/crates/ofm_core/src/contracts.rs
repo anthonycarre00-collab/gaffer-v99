@@ -598,27 +598,39 @@ pub fn offer_free_agent_contract(
     let player_age = player_age_on(current_date, &game.players[player_index].date_of_birth);
     let minimum_wage = minimum_acceptable_wage(reference_wage, player_age);
 
-    // V99.4 T3.2: Check club appeal — players can refuse to sign for
-    // clubs they don't want to join (too small, wrong level, etc.)
+    // V99.4 T3.2 (revised Sprint 6): Club appeal — probabilistic refusal.
+    // Players USUALLY refuse low-appeal clubs, but money + personality
+    // can sometimes persuade them.
     let appeal = club_appeal_score(&game.players[player_index], &team);
-    if appeal < 30 {
-        return Ok(renewal_outcome(
-            RenewalDecision::Rejected,
-            None,
-            None,
-            RenewalSessionStatus::Stalled,
-            false,
-            cooled_off,
-            Some(RenewalFeedback {
-                stage: ContractWarningStage::Stalled,
-                message: "He's not interested in joining this club. \
-                    The player doesn't see this as a step forward in his career.".to_string(),
-            }),
-        ));
-    }
-    // Appeal 30-50: demand 20% wage premium
-    let appeal_premium = if appeal < 50 { 1.20 } else { 1.00 };
-    let expected_wage = ((expected_wage_raw as f32) * appeal_premium as f32) as u32;
+    let appeal_premium: f32 = if appeal < 30 {
+        let persuaded = can_be_persuaded(
+            &game.players[player_index],
+            appeal,
+            offer.weekly_wage,
+            expected_wage_raw,
+        );
+        if !persuaded {
+            return Ok(renewal_outcome(
+                RenewalDecision::Rejected,
+                None,
+                None,
+                RenewalSessionStatus::Stalled,
+                false,
+                cooled_off,
+                Some(RenewalFeedback {
+                    stage: ContractWarningStage::Stalled,
+                    message: "He's not interested in joining this club. \
+                        The player doesn't see this as a step forward in his career.".to_string(),
+                }),
+            ));
+        }
+        1.40 // Persuaded despite low appeal — demands a BIG wage premium
+    } else if appeal < 50 {
+        1.20 // Appeal 30-50: demand 20% wage premium
+    } else {
+        1.00 // Appeal 50+: normal
+    };
+    let expected_wage = ((expected_wage_raw as f32) * appeal_premium) as u32;
 
     if offer.contract_years == 0 || offer.contract_years > MAX_CONTRACT_YEARS {
         return Ok(renewal_outcome(
@@ -1180,40 +1192,114 @@ fn backend_text_with_param(key: &str, param_name: &str, param_value: &str) -> St
     message
 }
 
-/// V99.4 T3.2: Calculate a player's club-appeal score (0-100).
+/// V99.4 T3.2 (revised): Calculate a player's club-appeal score (0-100).
+///
+/// V99.4 Sprint 6 BALANCE: Refusal is now probabilistic, not hard.
+/// A low appeal score means the player is HARD to persuade, not impossible.
+/// High wage offers + personality (high extraversion = more open to moves)
+/// can override a low appeal score.
 ///
 /// Factors:
 /// - Base: 50
 /// - +15 if club reputation >= 700 (elite club appeal)
+/// - +5 if club reputation >= 500 (good club)
 /// - -15 if club reputation < 300 (small club)
-/// - +10 if player's former team is a rival of this club (forbidden fruit)
-/// - -10 if player's morale is very high at current club (happy where he is)
-///
-/// Returns a score. Below 30 = player refuses to sign. 30-50 = demands
-/// 20% wage premium. Above 50 = normal.
+/// - -10 if player morale >= 80 (happy where he is)
+/// - -15 if player OVR >= 80 and club reputation < 600 (star won't drop)
+/// - +personality bonus: high extraversion = more open to new experiences
+/// - +age factor: older players (32+) more willing to drop down for playing time
 pub fn club_appeal_score(player: &Player, team: &Team) -> i32 {
     let mut score: i32 = 50;
 
     // Club reputation
     if team.reputation >= 700 {
-        score += 15; // Elite club — players want to join
+        score += 15;
     } else if team.reputation >= 500 {
-        score += 5;  // Good club
+        score += 5;
     } else if team.reputation < 300 {
-        score -= 15; // Small club — less appealing
+        score -= 15;
     }
 
-    // If player is happy at his current club, he's less keen to move
+    // Happy players harder to prise away
     if player.morale >= 80 {
         score -= 10;
     }
 
-    // Star players (OVR >= 80) prefer bigger clubs
+    // Stars prefer bigger clubs
     if player.ovr >= 80 && team.reputation < 600 {
-        score -= 15; // Star won't drop to a smaller club
+        score -= 15;
+    }
+
+    // V99.4 Sprint 6: Personality — extraverted players are more open to moves.
+    // Neurotic players are more risk-averse (harder to persuade to move).
+    let extraversion = player.personality.extraversion as i32;
+    let neuroticism = player.personality.neuroticism as i32;
+    score += (extraversion - 50) / 5;  // +5 to -5
+    score -= (neuroticism - 50) / 8;   // -3 to +3 (high neuroticism = harder)
+
+    // V99.4 Sprint 6: Age factor — veterans (32+) more willing to drop down
+    // for guaranteed playing time. Young players (21-) more ambitious.
+    // Age is computed lazily from DOB — we don't have current_date here,
+    // so we approximate from the contract_end year.
+    if let Some(dob_str) = player.date_of_birth.get(0..4) {
+        if let Ok(birth_year) = dob_str.parse::<i32>() {
+            let approx_age = 2026 - birth_year; // approximate
+            if approx_age >= 33 {
+                score += 10; // Veterans will drop for playing time
+            } else if approx_age <= 21 {
+                score -= 5;  // Young players more ambitious
+            }
+        }
     }
 
     score.clamp(0, 100)
+}
+
+/// V99.4 Sprint 6: Determine whether a player accepts a club despite low appeal.
+///
+/// Returns true if the player can be persuaded by money + personality.
+/// This replaces the hard refusal at appeal < 30 with a probabilistic check.
+///
+/// - Appeal >= 30: always persuadable
+/// - Appeal 20-29: 60% chance (modified by personality)
+/// - Appeal 10-19: 25% chance
+/// - Appeal < 10: 5% chance (almost never)
+pub fn can_be_persuaded(player: &Player, appeal: i32, offered_wage: u32, expected_wage: u32) -> bool {
+    if appeal >= 30 {
+        return true;
+    }
+
+    // V99.4 Sprint 6: Wage sweetener — if the offer is significantly above
+    // what the player expected, it can overcome a low appeal score.
+    let wage_ratio = if expected_wage > 0 {
+        offered_wage as f64 / expected_wage as f64
+    } else {
+        1.0
+    };
+
+    // Each 50% wage premium adds +15% to the persuasion chance.
+    let wage_bonus = ((wage_ratio - 1.0) / 0.5).max(0.0) * 0.15;
+
+    // Personality: high extraversion = more open, high agreeableness = flexible.
+    let personality_bonus = (player.personality.extraversion as f64 - 50.0) / 200.0
+        + (player.personality.agreeableness as f64 - 50.0) / 300.0;
+
+    let base_chance = if appeal >= 20 {
+        0.60
+    } else if appeal >= 10 {
+        0.25
+    } else {
+        0.05
+    };
+
+    let total_chance = (base_chance + wage_bonus + personality_bonus).clamp(0.0, 0.95);
+
+    // Deterministic "random" based on player ID + appeal so the same player
+    // always gets the same answer for the same appeal level.
+    let seed = player.id.bytes().fold(0u64, |acc, b| acc.wrapping_mul(31).wrapping_add(b as u64));
+    let roll = ((seed.wrapping_add(appeal as u64)) % 1000) as f64 / 1000.0;
+
+    roll < total_chance
 }
 
 pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDate) -> u32 {

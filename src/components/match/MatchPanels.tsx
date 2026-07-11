@@ -5,6 +5,7 @@ import { getCommentary } from "./commentary";
 import { getPunditLine } from "./punditry";
 import { Badge } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
+import { interpretCondition } from "../../lib/gafferEngine";
 
 export function EventFeed({
  events,
@@ -317,8 +318,11 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  style={{ width: `${p.condition}%` }}
  />
  </div>
- <span className="text-gray-500 dark:text-gray-400 tabular-nums text-[10px] w-6 text-right">
- {Math.round(p.condition)}
+ <span
+ className={`tabular-nums text-[10px] w-12 text-right ${interpretCondition(p.condition).colorClass}`}
+ title={interpretCondition(p.condition).description}
+ >
+ {interpretCondition(p.condition).short}
  </span>
  </div>
  </div>
@@ -350,8 +354,11 @@ export function Lineups({ snapshot }: { snapshot: MatchSnapshot }) {
  <Badge variant="neutral" size="sm">
  {translatePositionAbbreviation(t, p.position)}
  </Badge>
- <span className="text-gray-500 dark:text-gray-400 tabular-nums text-[10px] w-6 text-right">
- {Math.round(p.condition)}
+ <span
+ className={`tabular-nums text-[10px] w-12 text-right ${interpretCondition(p.condition).colorClass}`}
+ title={interpretCondition(p.condition).description}
+ >
+ {interpretCondition(p.condition).short}
  </span>
  </div>
  );
