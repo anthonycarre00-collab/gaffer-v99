@@ -141,7 +141,6 @@ pub struct Player {
     /// Jersey/squad number (1–99). None means unassigned.
     #[serde(default)]
     pub jersey_number: Option<u8>,
-            ..Default::default()
         }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]

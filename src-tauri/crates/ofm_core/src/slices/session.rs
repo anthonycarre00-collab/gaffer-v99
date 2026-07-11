@@ -197,8 +197,9 @@ mod tests {
             "EN".to_string(),
         );
         m.team_id = team_id.map(|s| s.to_string());
-        m
+        m,
             ..Default::default()
+        
         }
 
     fn make_team(id: &str, name: &str) -> Team {
@@ -210,8 +211,9 @@ mod tests {
             "London".to_string(),
             "Stadium".to_string(),
             40_000,
-        )
+        ),
             ..Default::default()
+        
         }
 
     fn make_fixture(
@@ -273,7 +275,6 @@ mod tests {
                 make_fixture("f3", "t2", "t1", "2025-09-21", FixtureStatus::Scheduled),
                 make_fixture("f4", "t2", "t1", "2025-10-05", FixtureStatus::Scheduled),
             ],
-            ..Default::default()
         };
 
         let mut game = Game::new(

@@ -483,8 +483,9 @@ mod tests {
         );
         team.finance = 5_000_000;
         team.wage_budget = 2_000_000;
-        team
+        team,
             ..Default::default()
+        
         }
 
     fn make_player() -> Player {
@@ -593,7 +594,6 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 domain::team::PlayStyle::Counter => engine::PlayStyle::Counter,
                 domain::team::PlayStyle::HighPress => engine::PlayStyle::HighPress,
                 _ => engine::PlayStyle::Balanced,
-            ..Default::default()
         
             },
             domain_to_engine_tactics(&t.tactics_phase),
@@ -652,7 +652,6 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 commanding: p.attributes.commanding,
                 playing_out: p.attributes.playing_out,
                 traits: p.traits.iter().map(|t| format!("{:?
-            ..Default::default()
         }", t)).collect(),
                 role: player_roles
                     .and_then(|roles| roles.get(&p.id))

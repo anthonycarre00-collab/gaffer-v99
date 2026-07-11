@@ -147,7 +147,6 @@ pub struct Team {
 
     // History
     pub history: Vec<TeamSeasonRecord>,
-            ..Default::default()
         }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]

@@ -70,8 +70,9 @@ mod tests {
         );
         player.team_id = team_id.map(|t| t.to_string());
         player.jersey_number = jersey;
-        player
+        player,
             ..Default::default()
+        
         }
 
     fn make_team(id: &str) -> Team {
@@ -83,8 +84,9 @@ mod tests {
             "City".to_string(),
             "Ground".to_string(),
             20_000,
-        )
+        ),
             ..Default::default()
+        
         }
 
     fn make_game(players: Vec<Player>) -> Game {

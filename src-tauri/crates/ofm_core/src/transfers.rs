@@ -3869,9 +3869,7 @@ mod tests {
             name[..3].to_string(),
             "England".to_string(),
             "Testville".to_string(),
-            format!("{
-            ..Default::default()
-        } Ground", name),
+            format!("{} Ground", name),
             25_000,
         );
         team.reputation = reputation;
@@ -3989,12 +3987,10 @@ mod tests {
                 StandingEntry::new("team1".to_string()),
                 StandingEntry::new("team3".to_string()),
             ],
-            ..Default::default()
         };
         let dormant = League {
             id: "dormant-league".to_string(),
             standings: vec![StandingEntry::new("team2".to_string())],
-            ..Default::default()
         };
         game.competitions = vec![active, dormant];
         game.active_competition_ids = vec!["active-league".to_string()];

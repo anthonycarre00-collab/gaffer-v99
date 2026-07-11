@@ -28,8 +28,9 @@ fn make_team(id: &str, name: &str) -> Team {
     );
     t.finance = 5_000_000;
     t.wage_budget = 2_000_000;
-    t
+    t,
             ..Default::default()
+        
         }
 
 fn make_player(id: &str, team_id: &str, wage: u32) -> Player {
@@ -873,12 +874,10 @@ fn home_match_generates_income() {
             ..Default::default()
         
             }),
-            ..Default::default()
         }],
         standings: vec![StandingEntry::new("team1".to_string())],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
     game.league = Some(league);
 
@@ -927,12 +926,10 @@ fn away_match_no_income() {
             ..Default::default()
         
             }),
-            ..Default::default()
         }],
         standings: vec![StandingEntry::new("team1".to_string())],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
     game.league = Some(league);
 

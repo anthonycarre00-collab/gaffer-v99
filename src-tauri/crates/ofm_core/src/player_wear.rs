@@ -104,8 +104,9 @@ mod tests {
             "ENG".to_string(),
             Position::Midfielder,
             attrs(stamina),
-        )
+        ),
             ..Default::default()
+        
         }
 
     #[test]

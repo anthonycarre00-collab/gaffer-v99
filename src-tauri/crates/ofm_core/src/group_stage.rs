@@ -561,7 +561,6 @@ mod tests {
                 matchday_gap_days: 3,
                 qualifiers_per_group: 2,
                 best_third_qualifiers: 2,
-                ..Default::default()
             },
         );
 

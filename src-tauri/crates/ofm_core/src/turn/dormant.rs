@@ -74,14 +74,15 @@ mod tests {
         Team::new(
             id.to_string(),
             format!("{id
-            ..Default::default()
         } FC"),
             id.to_uppercase(),
             "England".to_string(),
             "Town".to_string(),
             "Ground".to_string(),
             20_000,
-        )
+        ),
+            ..Default::default()
+        
     }
 
     fn make_dormant_game(today: &str) -> Game {

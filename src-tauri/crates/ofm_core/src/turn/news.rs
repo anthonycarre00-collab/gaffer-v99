@@ -820,9 +820,7 @@ mod tests {
             name.to_string(),
             "England".to_string(),
             "Test City".to_string(),
-            format!("{
-            ..Default::default()
-        } Ground", name),
+            format!("{} Ground", name),
             20_000,
         )
     }
@@ -836,8 +834,9 @@ mod tests {
             "England".to_string(),
         );
         manager.hire("team1".to_string());
-        manager
+        manager,
             ..Default::default()
+        
         }
 
     fn make_fixture(
@@ -868,7 +867,6 @@ mod tests {
             ..Default::default()
         
             }),
-            ..Default::default()
         }
     }
 
@@ -900,9 +898,7 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             name.to_string(),
-            format!("Full {
-            ..Default::default()
-        }", name),
+            format!("Full {}", name),
             "1998-03-15".to_string(),
             "England".to_string(),
             Position::Forward,
@@ -972,7 +968,6 @@ mod tests {
             standings: vec![alpha, beta, gamma],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         });
 
         game
@@ -996,8 +991,9 @@ mod tests {
         game.teams
             .iter_mut()
             .find(|team| team.id == team_id)
-            .unwrap()
+            .unwrap(),
             ..Default::default()
+        
         }
 
     fn reset_to_preseason(game: &mut Game) {

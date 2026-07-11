@@ -54,8 +54,9 @@ fn make_player(id: &str, name: &str, team_id: &str) -> Player {
     );
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
-    p
+    p,
             ..Default::default()
+        
         }
 
 fn make_team(id: &str, name: &str) -> Team {
@@ -67,8 +68,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_game() -> Game {
@@ -84,9 +86,7 @@ fn make_game() -> Game {
 
     let team = make_team("team1", "Test FC");
     let players: Vec<Player> = (0..11)
-        .map(|i| make_player(&format!("p{}", i), &format!("Player {
-            ..Default::default()
-        }", i), "team1"))
+        .map(|i| make_player(&format!("p{}", i), &format!("Player {}", i), "team1"))
         .collect();
 
     Game::new(clock, manager, vec![team], players, vec![], vec![])
@@ -113,7 +113,6 @@ fn make_game_with_league() -> Game {
         standings: vec![StandingEntry::new("team1".to_string())],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
     game
 }
@@ -302,7 +301,6 @@ fn check_random_events_board_confidence_triggers_on_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "f2".to_string(),
@@ -323,7 +321,6 @@ fn check_random_events_board_confidence_triggers_on_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "f3".to_string(),
@@ -344,13 +341,11 @@ fn check_random_events_board_confidence_triggers_on_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
         ],
         standings: vec![],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
 
     check_random_events(&mut game);
@@ -402,7 +397,6 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "f2".to_string(),
@@ -423,7 +417,6 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "f3".to_string(),
@@ -444,13 +437,11 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
         ],
         standings: vec![],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
 
     check_random_events(&mut game);
@@ -490,7 +481,6 @@ fn check_random_events_international_callup_with_upcoming_match() {
         standings: vec![],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
 
     // Run many times to trigger the 5% chance
@@ -1081,7 +1071,6 @@ fn rival_interest_msg(player_id: &str) -> InboxMessage {
         }],
         context: MessageContext {
             player_id: Some(player_id.to_string()),
-            ..Default::default()
         },
         subject_key: None,
         body_key: None,

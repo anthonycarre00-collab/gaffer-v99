@@ -26,8 +26,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
@@ -88,7 +89,6 @@ fn make_completed_fixture(id: &str, home: &str, away: &str, hg: u8, ag: u8) -> F
             ..Default::default()
         
         }),
-        ..Default::default()
     }
 }
 
@@ -174,7 +174,6 @@ fn make_completed_season_game() -> Game {
         standings,
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
 
     let mut game = Game::new(
@@ -193,8 +192,9 @@ fn make_club(id: &str, nation: &str, reputation: u32) -> Team {
     let mut team = make_team(id, id);
     team.football_nation = nation.to_string();
     team.reputation = reputation;
-    team
+    team,
             ..Default::default()
+        
         }
 
 /// A single-division domestic league with `clubs` listed strongest-first; the
@@ -220,7 +220,6 @@ fn first_division(id: &str, country: &str, region: &str, clubs: &[&str]) -> Leag
         participant_ids: clubs.iter().map(|c| c.to_string()).collect(),
         standings,
         priority: 0,
-        ..Default::default()
     }
 }
 
@@ -245,7 +244,6 @@ fn domestic_cup(id: &str, country: &str, region: &str, winner: &str, loser: &str
             bye_team_ids: vec![],
             completed: true,
         }],
-        ..Default::default()
     }
 }
 
@@ -260,7 +258,6 @@ fn continental_cup(id: &str, region: &str, field_size: usize) -> League {
         scope: CompetitionScope::Continental,
         required_region_ids: vec![region.to_string()],
         participant_ids: (0..field_size).map(|i| format!("seed-{i}")).collect(),
-        ..Default::default()
     }
 }
 
@@ -558,7 +555,6 @@ fn rollover_passes_continental_qualifiers_into_the_next_season() {
             make_standing("eng-a", 2, 0, 0, 3, 0),
             make_standing("eng-b", 0, 0, 2, 0, 3),
         ],
-        ..Default::default()
     };
     let continental = continental_cup("ucl", "europe", 2);
 
@@ -667,7 +663,6 @@ fn process_end_of_season_records_history_and_prizes_for_every_division() {
             make_standing("team1", 2, 0, 0, 3, 0),
             make_standing("team2", 0, 0, 2, 0, 3),
         ],
-        ..Default::default()
     };
     let div2 = League {
         id: "eng-2".to_string(),
@@ -681,7 +676,6 @@ fn process_end_of_season_records_history_and_prizes_for_every_division() {
             make_standing("team3", 1, 0, 0, 3, 0),
             make_standing("team4", 0, 0, 1, 0, 3),
         ],
-        ..Default::default()
     };
     game.league = Some(div1.clone());
     game.competitions = vec![div1, div2];
@@ -730,7 +724,6 @@ fn make_two_division_game(user_team: &str) -> Game {
             make_standing("team1", 2, 0, 0, 3, 0),
             make_standing("team2", 0, 0, 2, 0, 3),
         ],
-        ..Default::default()
     };
     let div2 = League {
         id: "eng-2".to_string(),
@@ -744,7 +737,6 @@ fn make_two_division_game(user_team: &str) -> Game {
             make_standing("team3", 1, 0, 0, 3, 0),
             make_standing("team4", 0, 0, 1, 0, 3),
         ],
-        ..Default::default()
     };
     game.league = Some(div1.clone());
     game.competitions = vec![div1, div2];
@@ -1066,7 +1058,6 @@ fn season_not_complete_while_another_division_is_unfinished() {
             make_standing("team3", 2, 0, 0, 4, 0),
             make_standing("team4", 0, 0, 2, 0, 4),
         ],
-        ..Default::default()
     };
     div2.fixtures[1].status = FixtureStatus::Scheduled;
     div2.fixtures[1].result = None;
@@ -1114,7 +1105,6 @@ fn summary_reflects_the_users_division_when_not_in_the_primary_competition() {
             make_standing("team1", 2, 0, 0, 3, 0),
             make_standing("team2", 0, 0, 2, 0, 3),
         ],
-        ..Default::default()
     };
     let div2 = League {
         id: "eng-2".to_string(),
@@ -1128,7 +1118,6 @@ fn summary_reflects_the_users_division_when_not_in_the_primary_competition() {
             make_standing("team3", 1, 0, 0, 3, 0),
             make_standing("team4", 0, 0, 1, 0, 3),
         ],
-        ..Default::default()
     };
     game.league = Some(div1.clone());
     game.competitions = vec![div1, div2];
@@ -1178,7 +1167,6 @@ fn process_end_of_season_promotes_and_relegates_between_divisions() {
             make_standing("team1", 2, 0, 0, 3, 0), // champion
             make_standing("team2", 0, 0, 2, 0, 3), // relegated
         ],
-        ..Default::default()
     };
     let div2 = League {
         id: "eng-2".to_string(),
@@ -1192,7 +1180,6 @@ fn process_end_of_season_promotes_and_relegates_between_divisions() {
             make_standing("team3", 1, 0, 0, 3, 0), // promoted
             make_standing("team4", 0, 0, 1, 0, 3),
         ],
-        ..Default::default()
     };
     game.league = Some(div1.clone());
     game.competitions = vec![div1, div2];
@@ -1298,7 +1285,6 @@ fn season_not_complete_with_truncated_completed_fixture_list() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "f2".to_string(),
@@ -1319,7 +1305,6 @@ fn season_not_complete_with_truncated_completed_fixture_list() {
             ..Default::default()
         
                 }),
-                ..Default::default()
             },
         ];
     }
@@ -1786,9 +1771,7 @@ fn lower_table_finish_receives_expected_prize_money() {
     for i in 3..=10 {
         let team_id = format!("team{}", i);
         game.teams
-            .push(make_team(&team_id, &format!("Team {
-            ..Default::default()
-        } FC", i)));
+            .push(make_team(&team_id, &format!("Team {} FC", i)));
     }
 
     if let Some(league) = &mut game.league {
@@ -1964,9 +1947,7 @@ fn bottom_half_gets_concerned_message() {
     // (user_position > 4 AND user_position > total_teams / 2)
     for i in 3..=10 {
         let tid = format!("team{}", i);
-        game.teams.push(make_team(&tid, &format!("Team {
-            ..Default::default()
-        } FC", i)));
+        game.teams.push(make_team(&tid, &format!("Team {} FC", i)));
     }
     if let Some(league) = &mut game.league {
         let mut standings = Vec::new();
@@ -2059,9 +2040,7 @@ fn high_reputation_bottom_side_loses_reputation() {
     for i in 3..=10 {
         let team_id = format!("team{}", i);
         game.teams
-            .push(make_team(&team_id, &format!("Team {
-            ..Default::default()
-        } FC", i)));
+            .push(make_team(&team_id, &format!("Team {} FC", i)));
     }
 
     game.teams
@@ -2335,7 +2314,6 @@ fn season_end_board_message_top_four_uses_correct_body_key() {
 
 fn make_retired_player(id: &str) -> domain::player::Player {
     use domain::player::{CareerEntry, PlayerAttributes, Position
-            ..Default::default()
         };
     let attrs = PlayerAttributes {
         pace: 55,
@@ -2377,7 +2355,9 @@ fn make_retired_player(id: &str) -> domain::player::Player {
         goals: 5,
         assists: 8,
     });
-    p
+    p,
+            ..Default::default()
+        
 }
 
 #[test]

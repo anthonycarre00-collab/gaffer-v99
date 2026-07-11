@@ -203,8 +203,9 @@ mod tests {
             "Smith".to_string(),
             "1990-01-15".to_string(),
             "British".to_string(),
-        )
+        ),
             ..Default::default()
+        
         }
 
     #[test]

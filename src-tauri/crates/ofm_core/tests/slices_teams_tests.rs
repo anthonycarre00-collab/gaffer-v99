@@ -41,15 +41,15 @@ fn make_team(id: &str, name: &str, country: &str, city: &str) -> Team {
         city.to_string(),
         "Ground".to_string(),
         20_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_player(id: &str, team_id: Option<&str>, ovr: u8, value: u64) -> Player {
     let mut p = Player::new(
         id.to_string(),
         format!("{id
-            ..Default::default()
         } short"),
         format!("{id} full"),
         "2000-01-01".to_string(),
@@ -60,7 +60,9 @@ fn make_player(id: &str, team_id: Option<&str>, ovr: u8, value: u64) -> Player {
     p.team_id = team_id.map(String::from);
     p.ovr = ovr;
     p.market_value = value;
-    p
+    p,
+            ..Default::default()
+        
 }
 
 fn make_domestic_league(
@@ -82,7 +84,6 @@ fn make_domestic_league(
             .iter()
             .map(|id| StandingEntry::new(id.to_string()))
             .collect(),
-        ..Default::default()
     }
 }
 

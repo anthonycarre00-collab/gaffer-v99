@@ -344,6 +344,5 @@ fn delegated_renewal_report_message(
                 })
                 .collect(),
         }),
-        ..Default::default()
     })
 }

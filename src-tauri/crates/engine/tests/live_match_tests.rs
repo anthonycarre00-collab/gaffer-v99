@@ -51,9 +51,7 @@ fn make_player(id: &str, name: &str, pos: Position, skill: u8) -> PlayerData {
 
 fn make_team(id: &str, name: &str, skill: u8, style: PlayStyle) -> TeamData {
     let players = vec![
-        make_player(&format!("{
-            ..Default::default()
-        }_gk", id), "GK", Position::Goalkeeper, skill),
+        make_player(&format!("{}_gk", id), "GK", Position::Goalkeeper, skill),
         make_player(&format!("{}_def1", id), "DEF1", Position::Defender, skill),
         make_player(&format!("{}_def2", id), "DEF2", Position::Defender, skill),
         make_player(&format!("{}_def3", id), "DEF3", Position::Defender, skill),
@@ -1333,9 +1331,7 @@ fn make_player_with_traits(
 fn make_team_with_traits(id: &str, name: &str, skill: u8, traits: Vec<&str>) -> TeamData {
     let players = vec![
         make_player_with_traits(
-            &format!("{
-            ..Default::default()
-        }_gk", id),
+            &format!("{}_gk", id),
             "GK",
             Position::Goalkeeper,
             skill,
@@ -1538,7 +1534,6 @@ fn sent_off_players_tracked() {
         foul_probability: 0.5,
         yellow_card_probability: 0.8,
         red_card_probability: 0.3,
-        ..Default::default()
     };
 
     for seed in 0..200 {
@@ -1804,7 +1799,6 @@ fn away_set_pieces_stored() {
 fn custom_config_affects_match() {
     let config = MatchConfig {
         home_advantage: 1.5, // extreme home advantage
-        ..Default::default()
     };
 
     let home = make_team("home", "Home FC", 70, PlayStyle::Balanced);

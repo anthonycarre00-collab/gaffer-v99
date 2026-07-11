@@ -159,9 +159,7 @@ mod tests {
             name.to_string(),
             "England".to_string(),
             "Test City".to_string(),
-            format!("{
-            ..Default::default()
-        } Ground", name),
+            format!("{} Ground", name),
             20_000,
         )
     }
@@ -186,7 +184,6 @@ mod tests {
             ..Default::default()
         
             }),
-            ..Default::default()
         }
     }
 
@@ -235,7 +232,6 @@ mod tests {
             ],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
         let game = make_game((2026, 7, 10), Some(league));
 
@@ -266,7 +262,6 @@ mod tests {
             ],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
         let game = make_game((2026, 8, 31), Some(league));
 
@@ -297,7 +292,6 @@ mod tests {
             ],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
         let game = make_game((2026, 9, 15), Some(league));
 
@@ -335,7 +329,6 @@ mod tests {
             standings: vec![alpha, beta],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
         let game = make_game((2026, 8, 5), Some(league));
 
@@ -363,7 +356,6 @@ mod tests {
             standings: vec![alpha, beta],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
         let game = make_game((2026, 8, 9), Some(league));
 

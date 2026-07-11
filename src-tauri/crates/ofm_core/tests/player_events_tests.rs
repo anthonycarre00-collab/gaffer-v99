@@ -54,8 +54,9 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
     p.condition = 90;
-    p
+    p,
             ..Default::default()
+        
         }
 
 fn make_team(id: &str, name: &str) -> Team {
@@ -67,8 +68,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_game() -> Game {
@@ -127,7 +129,6 @@ fn inject_player_message(game: &mut Game, msg_id: &str, player_id: &str, action_
     )
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_action(MessageAction {
         id: action_id.to_string(),
@@ -270,9 +271,7 @@ fn bench_complaint_after_5_missed_matches() {
     // Set up league with 5 completed fixtures (new minimum); p_fwd0 has 0 appearances
     let fixtures: Vec<Fixture> = (0..5)
         .map(|i| Fixture {
-            id: format!("fix{
-            ..Default::default()
-        }", i),
+            id: format!("fix{}", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),
@@ -291,7 +290,6 @@ fn bench_complaint_after_5_missed_matches() {
                 home_penalties: None,
                 away_penalties: None,
             }),
-            ..Default::default()
         })
         .collect();
     let league = League {
@@ -302,7 +300,6 @@ fn bench_complaint_after_5_missed_matches() {
         standings: vec![StandingEntry::new("team1".to_string())],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
     game.league = Some(league);
 
@@ -336,9 +333,7 @@ fn bench_complaint_not_for_gk() {
     let mut game = make_game();
     let fixtures: Vec<Fixture> = (0..5)
         .map(|i| Fixture {
-            id: format!("fix{
-            ..Default::default()
-        }", i),
+            id: format!("fix{}", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),
@@ -354,7 +349,6 @@ fn bench_complaint_not_for_gk() {
                 home_penalties: None,
                 away_penalties: None,
             }),
-            ..Default::default()
         })
         .collect();
     game.league = Some(League {
@@ -365,7 +359,6 @@ fn bench_complaint_not_for_gk() {
         standings: vec![],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
     // GK has low morale
     game.players
@@ -388,9 +381,7 @@ fn bench_complaint_not_with_fewer_than_5_fixtures() {
     let mut game = make_game();
     let fixtures: Vec<Fixture> = (0..4)
         .map(|i| Fixture {
-            id: format!("fix{
-            ..Default::default()
-        }", i),
+            id: format!("fix{}", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),
@@ -406,7 +397,6 @@ fn bench_complaint_not_with_fewer_than_5_fixtures() {
                 home_penalties: None,
                 away_penalties: None,
             }),
-            ..Default::default()
         })
         .collect();
     game.league = Some(League {
@@ -417,7 +407,6 @@ fn bench_complaint_not_with_fewer_than_5_fixtures() {
         standings: vec![],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     });
     // Set low morale so they would complain if threshold was met
     for p in &mut game.players {

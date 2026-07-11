@@ -97,7 +97,6 @@ pub fn generate_replacement_regen(
     let age_roll: u32 = rng.random_range(0..100);
     let age = if age_roll < 20 {
         16
-            ..Default::default()
         } else if age_roll < 70 {
         17
     } else if age_roll < 90 {
@@ -330,8 +329,9 @@ fn dummy_team_for_regen(team_id: &str, team_country: &str) -> domain::team::Team
         "Unknown".to_string(),
         "Unknown Stadium".to_string(),
         0,
-    )
+    ),
             ..Default::default()
+        
         }
 
 // ============================================================================
@@ -486,7 +486,6 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
                     player_id: user_intake.first().map(|p| p.id.clone()),
                     fixture_id: None,
                     match_result: None,
-                    ..Default::default()
                 },
                 actions: vec![],
                 read: false,

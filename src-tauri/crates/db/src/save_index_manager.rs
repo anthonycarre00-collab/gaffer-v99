@@ -18,7 +18,6 @@ impl SaveIndexManager {
         let (index, index_needs_rebuild) = match load_index(&index_path)? {
             Some(index) => (index, false),
             None => (SaveIndex::new(), true),
-            ..Default::default()
         };
 
         Ok(Self {

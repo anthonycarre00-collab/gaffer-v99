@@ -403,7 +403,6 @@ mod tests {
                     home_penalties: None,
                     away_penalties: None,
                 }),
-                ..Default::default()
             },
         ];
         league.transfer_log = vec![CompletedTransfer {
@@ -582,7 +581,6 @@ mod tests {
             ],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
 
         upsert_league(db.conn(), &replacement).unwrap();

@@ -392,8 +392,9 @@ mod tests {
             "Testville".to_string(),
             "Test Ground".to_string(),
             20_000,
-        )
+        ),
             ..Default::default()
+        
         }
 
     fn make_player(
@@ -415,8 +416,9 @@ mod tests {
         );
         player.team_id = team_id.map(str::to_string);
         player.stats = stats;
-        player
+        player,
             ..Default::default()
+        
         }
 
     fn make_game(players: Vec<Player>, teams: Vec<Team>) -> Game {
@@ -448,9 +450,10 @@ mod tests {
             losses: 5,
             trophies: 1,
             best_finish: Some(1),
-            ..Default::default()
         };
-        manager
+        manager,
+            ..Default::default()
+        
     }
 
     #[test]

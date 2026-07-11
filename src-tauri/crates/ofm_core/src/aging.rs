@@ -300,7 +300,6 @@ mod tests {
             id.to_string(),
             id.to_string(),
             format!("Player {id
-            ..Default::default()
         }"),
             dob.to_string(),
             "England".to_string(),
@@ -328,7 +327,9 @@ mod tests {
             },
         );
         player.team_id = Some("team1".to_string());
-        player
+        player,
+            ..Default::default()
+        
     }
 
     fn make_game(players: Vec<Player>) -> Game {

@@ -4,8 +4,9 @@ use serde::{Deserialize, Serialize};
 // Position — mirrors domain::player::Position but kept independent
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum Position {
+    #[default]
     Goalkeeper,
     Defender,
     Midfielder,
@@ -16,8 +17,9 @@ pub enum Position {
 // PlayStyle — mirrors domain::team::PlayStyle
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum PlayStyle {
+    #[default]
     Balanced,
     Attacking,
     Defensive,
@@ -175,7 +177,6 @@ impl PlayerData {
     /// logic to disagree with the player profile display.
     pub fn overall(&self) -> f64 {
         self.ovr as f64
-            ..Default::default()
         
     }
 
@@ -314,7 +315,6 @@ impl TeamData {
     /// Count players by position.
     pub fn count_position(&self, pos: Position) -> usize {
         self.players.iter().filter(|p| p.position == pos).count()
-            ..Default::default()
         
     }
 

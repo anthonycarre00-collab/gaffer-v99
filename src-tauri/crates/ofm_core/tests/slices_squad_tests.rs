@@ -40,8 +40,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "City".to_string(),
         "Ground".to_string(),
         20_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_player(id: &str, team_id: Option<&str>) -> Player {
@@ -49,7 +50,6 @@ fn make_player(id: &str, team_id: Option<&str>) -> Player {
         id.to_string(),
         id.to_string(),
         format!("Player {id
-            ..Default::default()
         }"),
         "2000-01-01".to_string(),
         "GB".to_string(),
@@ -57,7 +57,9 @@ fn make_player(id: &str, team_id: Option<&str>) -> Player {
         default_attrs(),
     );
     p.team_id = team_id.map(String::from);
-    p
+    p,
+            ..Default::default()
+        
 }
 
 fn make_game(teams: Vec<Team>, players: Vec<Player>) -> Game {

@@ -269,7 +269,6 @@ fn load_world_from_manifest_path(path: &Path, manifest: WorldManifestV2) -> Resu
         metadata: manifest.compatibility.unwrap_or_else(|| super::definitions::WorldDataMetadata {
             format_version: manifest.format_version,
             world_id: manifest.world_id,
-            ..Default::default()
         }),
         extra_translations: std::collections::HashMap::new(),
         build_notices: Vec::new(),
@@ -778,7 +777,6 @@ mod tests {
             kind: crate::generator::WorldDataKind::HistoricalSnapshot,
             base_year: Some(2028),
             snapshot_date: Some("2028-08-15T00:00:00Z".to_string()),
-            ..Default::default()
         };
 
         let json = export_world_to_json(&world).unwrap();

@@ -464,9 +464,7 @@ mod tests {
     fn make_player(id: &str, position: Position, attrs: PlayerAttributes) -> Player {
         Player::new(
             id.to_string(),
-            format!("{
-            ..Default::default()
-        }. Test", id),
+            format!("{}. Test", id),
             format!("{} Test", id),
             "2000-01-01".to_string(),
             "GB".to_string(),
@@ -484,8 +482,9 @@ mod tests {
             "London".to_string(),
             "Test Stadium".to_string(),
             25000,
-        )
+        ),
             ..Default::default()
+        
         }
 
     fn make_manager() -> Manager {
@@ -495,8 +494,9 @@ mod tests {
             "Manager".to_string(),
             "1980-01-01".to_string(),
             "GB".to_string(),
-        )
+        ),
             ..Default::default()
+        
         }
 
     #[test]

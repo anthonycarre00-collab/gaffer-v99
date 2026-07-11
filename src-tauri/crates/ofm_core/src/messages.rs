@@ -55,7 +55,6 @@ pub fn welcome_message(team_name: &str, team_id: &str, date: &str) -> InboxMessa
     ))
     .with_context(MessageContext {
         team_id: Some(team_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         &format!("be.msg.welcome.subject{}", idx),
@@ -116,7 +115,6 @@ pub fn staff_advice_message(team_name: &str, team_id: &str, date: &str) -> Inbox
     ))
     .with_context(MessageContext {
         team_id: Some(team_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.staffAdvice.subject",
@@ -145,7 +143,6 @@ pub fn board_expectations_message(team_name: &str, team_id: &str, date: &str) ->
     ))
     .with_context(MessageContext {
         team_id: Some(team_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.boardExpect.subject",
@@ -214,7 +211,6 @@ pub fn incoming_transfer_offer_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.transferOffer.subject",
@@ -269,7 +265,6 @@ pub fn transfer_interest_digest_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.transferInterest.subject",
@@ -321,7 +316,6 @@ pub fn incoming_loan_offer_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.loanOffer.subject",
@@ -365,7 +359,6 @@ pub fn loan_development_report_message(
     .with_sender_role("")
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.loanDevelopmentReport.subject",
@@ -408,7 +401,6 @@ pub fn loan_buy_option_exercised_message(
     .with_sender_role("")
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
-        ..Default::default()
     })
     .with_i18n(
         "be.msg.loanBuyOptionExercised.subject",

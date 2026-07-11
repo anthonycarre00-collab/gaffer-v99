@@ -469,7 +469,6 @@ fn to_engine_player(
         DomainPosition::Midfielder => Position::Midfielder,
         DomainPosition::Forward => Position::Forward,
         _ => Position::Midfielder,
-            ..Default::default()
         
     };
 
@@ -508,10 +507,11 @@ fn to_engine_player(
         commanding: p.attributes.commanding,
         playing_out: p.attributes.playing_out,
         traits: p.traits.iter().map(|t| format!("{:?
-            ..Default::default()
         }", t)).collect(),
         role,
-    }
+    },
+            ..Default::default()
+        
 }
 
 /// Auto-select set-piece takers from a set of player IDs.
@@ -610,8 +610,9 @@ mod tests {
     }
 
     fn mk(id: &str, attr: u8, condition: u8) -> Player {
-        mk_pos(id, DomainPos::CenterBack, attr, condition)
+        mk_pos(id, DomainPos::CenterBack, attr, condition),
             ..Default::default()
+        
         }
 
     fn mk_pos(id: &str, position: DomainPos, attr: u8, condition: u8) -> Player {
@@ -625,8 +626,9 @@ mod tests {
             attrs(attr),
         );
         p.condition = condition;
-        p
+        p,
             ..Default::default()
+        
         }
 
     #[test]

@@ -386,7 +386,6 @@ mod match_result_tests {
             away_goals: away,
             home_penalties: pens.map(|(h, _)| h),
             away_penalties: pens.map(|(_, a)| a),
-            ..Default::default()
         }
     }
 
@@ -493,7 +492,6 @@ impl StandingEntry {
 impl Fixture {
     pub fn counts_for_league_standings(&self) -> bool {
         matches!(self.competition, FixtureCompetition::League)
-            ..Default::default()
         
     }
 

@@ -395,7 +395,6 @@ pub fn check_transfer_requests(game: &mut Game, today: &str) {
                 player_id: Some(player_id.clone()),
                 fixture_id: None,
                 match_result: None,
-                ..Default::default()
             },
             actions: vec![],
             read: false,

@@ -943,7 +943,6 @@ fn build_scout_report(
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
         scout_report: Some(report_data),
-        ..Default::default()
     })
     .with_i18n("be.msg.scoutReport.subject", "be.msg.scoutReport.body", {
         let mut p = params(&[("player", player_name), ("scout", scout_name)]);

@@ -53,7 +53,6 @@ fn make_team(id: &str, name: &str, skill: u8, play_style: PlayStyle) -> TeamData
         tactics: TacticsConfig::default(),
         players: vec![
             make_player(&format!("{id
-            ..Default::default()
         }_gk1"), "GK1", Position::Goalkeeper, skill),
             make_player(&format!("{id}_def1"), "DEF1", Position::Defender, skill),
             make_player(&format!("{id}_def2"), "DEF2", Position::Defender, skill),
@@ -66,7 +65,9 @@ fn make_team(id: &str, name: &str, skill: u8, play_style: PlayStyle) -> TeamData
             make_player(&format!("{id}_fwd1"), "FWD1", Position::Forward, skill),
             make_player(&format!("{id}_fwd2"), "FWD2", Position::Forward, skill),
         ],
-    }
+    },
+            ..Default::default()
+        
 }
 
 fn seeded_rng(seed: u64) -> StdRng {
@@ -541,7 +542,6 @@ fn player_stats_populated() {
         assert!(
             ps.rating >= 0.0 && ps.rating <= 10.0,
             "Player {player_id
-            ..Default::default()
         } rating out of range: {}",
             ps.rating
         );
@@ -985,9 +985,7 @@ fn player_ratings_computed_for_active_players() {
     for (pid, ps) in &report.player_stats {
         assert!(
             ps.rating >= 0.0 && ps.rating <= 10.0,
-            "Player {
-            ..Default::default()
-        } has invalid rating: {}",
+            "Player {} has invalid rating: {}",
             pid,
             ps.rating
         );

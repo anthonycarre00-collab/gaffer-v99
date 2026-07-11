@@ -289,7 +289,6 @@ mod tests {
             name: "Test League".to_string(),
             fixtures,
             participant_ids: vec!["user-team".to_string(), "other-team".to_string()],
-            ..Default::default()
         };
 
         let start: DateTime<chrono::Utc> =

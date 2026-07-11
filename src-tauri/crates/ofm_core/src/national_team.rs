@@ -95,7 +95,6 @@ pub fn schedule_national_team_friendlies(
             let away_id = national_teams[*away_idx].id.clone();
             let fixture = Fixture {
                 id: format!("ntf-{window_index
-            ..Default::default()
         }-{home_id}-{away_id}"),
                 competition_id: INTERNATIONAL_FRIENDLY_COMPETITION_ID.to_string(),
                 matchday: window_index as u32 + 1,
@@ -105,6 +104,8 @@ pub fn schedule_national_team_friendlies(
                 competition: FixtureCompetition::InternationalNation,
                 status: FixtureStatus::Scheduled,
                 result: None,
+            ..Default::default()
+        
             };
             national_teams[*home_idx].fixtures.push(fixture);
         }
@@ -465,7 +466,6 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             format!("{id
-            ..Default::default()
         } name"),
             format!("{id} fullname"),
             "2000-01-01".to_string(),
@@ -476,20 +476,23 @@ mod tests {
         player.ovr = ovr;
         player.condition = 100;
         player.fitness = 80;
-        player
+        player,
+            ..Default::default()
+        
     }
 
     fn make_national_team(id: &str, nation: &str, squad: &[&str]) -> NationalTeam {
         let mut team = NationalTeam::new(
             id.to_string(),
             format!("{nation
-            ..Default::default()
         } National Team"),
             nation.to_string(),
             None,
         );
         team.squad_player_ids = squad.iter().map(|s| s.to_string()).collect();
-        team
+        team,
+            ..Default::default()
+        
     }
 
     fn empty_game() -> Game {

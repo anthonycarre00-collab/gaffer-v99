@@ -323,7 +323,6 @@ pub fn generate_knockout_cup(
     cup.rules = CompetitionRules {
         format: CompetitionFormat::Knockout,
         counts_in_season_flow: true,
-        ..Default::default()
     };
     cup.standings.clear();
     seed_knockout_round(
@@ -935,9 +934,7 @@ mod tests {
                 .iter()
                 .filter(|f| f.home_team_id == *team || f.away_team_id == *team)
                 .count();
-            assert_eq!(count, 14, "Team {
-            ..Default::default()
-        } plays {} matches", team, count);
+            assert_eq!(count, 14, "Team {} plays {} matches", team, count);
         }
 
         // 8 standings entries
@@ -964,9 +961,7 @@ mod tests {
                 .iter()
                 .filter(|f| f.home_team_id == *team || f.away_team_id == *team)
                 .count();
-            assert_eq!(count, 30, "Team {
-            ..Default::default()
-        } plays {} matches", team, count);
+            assert_eq!(count, 30, "Team {} plays {} matches", team, count);
         }
 
         // 16 standings entries

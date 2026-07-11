@@ -52,8 +52,9 @@ fn make_player(id: &str, name: &str, team_id: &str) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 75;
     p.condition = 90;
-    p
+    p,
             ..Default::default()
+        
         }
 
 fn make_team(id: &str, name: &str) -> Team {
@@ -65,8 +66,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_scout(id: &str, team_id: &str, judging_ability: u8, judging_potential: u8) -> Staff {

@@ -76,7 +76,6 @@ impl RelationshipEdge {
     pub fn positive(strength: i8) -> Self {
         Self {
             strength: strength.clamp(-100, 100),
-            ..Default::default()
         }
     }
 
@@ -85,7 +84,6 @@ impl RelationshipEdge {
         Self {
             strength: strength.clamp(-100, 100),
             volatility: 0.5,
-            ..Default::default()
         }
     }
 

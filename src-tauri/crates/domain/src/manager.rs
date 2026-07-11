@@ -155,7 +155,6 @@ pub struct Manager {
     /// V99.4 T1.7: Manager personality — drives tactical style, transfers, media.
     #[serde(default = "default_personality")]
     pub personality: ManagerPersonality,
-            ..Default::default()
         }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -289,8 +288,9 @@ mod tests {
             "Manager".to_string(),
             "1980-01-01".to_string(),
             "GB".to_string(),
-        )
+        ),
             ..Default::default()
+        
         }
 
     #[test]

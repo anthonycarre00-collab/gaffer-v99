@@ -55,15 +55,14 @@ fn team(id: &str, tactics: TacticsConfig) -> TeamData {
         id: id.to_string(), name: id.to_string(), formation: "4-4-2".to_string(),
         play_style: PlayStyle::Balanced, tactics,
         players: vec![
-            mk(&format!("{id
-            ..Default::default()
-        }_gk"), Position::Goalkeeper),
+            mk(&format!("{id}_gk"), Position::Goalkeeper),
             mk(&format!("{id}_d1"), Position::Defender), mk(&format!("{id}_d2"), Position::Defender),
             mk(&format!("{id}_d3"), Position::Defender), mk(&format!("{id}_d4"), Position::Defender),
             mk(&format!("{id}_m1"), Position::Midfielder), mk(&format!("{id}_m2"), Position::Midfielder),
             mk(&format!("{id}_m3"), Position::Midfielder), mk(&format!("{id}_m4"), Position::Midfielder),
             mk(&format!("{id}_f1"), Position::Forward), mk(&format!("{id}_f2"), Position::Forward),
         ],
+        ..Default::default()
     }
 }
 

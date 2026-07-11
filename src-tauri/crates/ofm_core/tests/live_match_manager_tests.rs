@@ -33,9 +33,7 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let mut p = Player::new(
         id.to_string(),
         name.to_string(),
-        format!("Full {
-            ..Default::default()
-        }", name),
+        format!("Full {}", name),
         "1995-01-01".to_string(),
         "GB".to_string(),
         pos,
@@ -44,7 +42,9 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
     p.condition = 90;
-    p
+    p,
+            ..Default::default()
+        
 }
 
 fn make_team(id: &str, name: &str) -> Team {
@@ -56,8 +56,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 /// Build a full squad of 22 players for a team (4-4-2 formation ready).
@@ -143,7 +144,6 @@ fn make_game_with_fixture() -> Game {
         ],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
 
     let mut game = Game::new(clock, manager, vec![team1, team2], players, vec![], vec![]);

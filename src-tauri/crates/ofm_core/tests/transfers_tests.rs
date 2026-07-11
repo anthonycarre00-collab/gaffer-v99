@@ -47,9 +47,7 @@ fn default_attrs() -> PlayerAttributes {
 fn make_player(id: &str) -> Player {
     let mut player = Player::new(
         id.to_string(),
-        format!("{
-            ..Default::default()
-        }. Test", id),
+        format!("{}. Test", id),
         format!("{} Test", id),
         "2000-01-01".to_string(),
         "England".to_string(),
@@ -66,8 +64,9 @@ fn make_player(id: &str) -> Player {
 fn make_user_player(id: &str) -> Player {
     let mut player = make_player(id);
     player.team_id = Some("team-1".to_string());
-    player
+    player,
             ..Default::default()
+        
         }
 
 fn make_pending_incoming_offer(id: &str, fee: u64) -> TransferOffer {
@@ -126,8 +125,9 @@ fn make_user_team(finance: i64, transfer_budget: i64) -> Team {
     team.transfer_budget = transfer_budget;
     team.wage_budget = 2_000_000;
     team.manager_id = Some("manager-1".to_string());
-    team
+    team,
             ..Default::default()
+        
         }
 
 fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
@@ -141,8 +141,9 @@ fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
         28_000,
     );
     team.starting_xi_ids = starting_xi_ids;
-    team
+    team,
             ..Default::default()
+        
         }
 
 fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Team {
@@ -152,9 +153,7 @@ fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Tea
         name.chars().take(3).collect(),
         "England".to_string(),
         "Manchester".to_string(),
-        format!("{
-            ..Default::default()
-        } Ground", name),
+        format!("{} Ground", name),
         30_000,
     );
     team.finance = finance;
@@ -2352,8 +2351,9 @@ fn rejecting_pending_offer_succeeds_for_pending_loan_player() {
     ));
     player.loan_offers.push(LoanOffer {
         status: LoanOfferStatus::PendingRegistration,
-        ..make_pending_incoming_loan_offer("loan-pending-registration", 75, None)
+        ..make_pending_incoming_loan_offer("loan-pending-registration", 75, None),
             ..Default::default()
+        
         
     });
 

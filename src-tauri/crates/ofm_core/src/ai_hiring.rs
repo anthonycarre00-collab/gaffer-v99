@@ -508,8 +508,9 @@ mod tests {
             "Testville".to_string(),
             "Test Ground".to_string(),
             20_000,
-        )
+        ),
             ..Default::default()
+        
         }
 
     fn make_staff(
@@ -659,7 +660,6 @@ mod tests {
                 }),
                 ..Fixture::default()
             }],
-            ..Default::default()
         };
         rivalry_game.league = Some(league);
 
@@ -834,7 +834,6 @@ mod tests {
             )
             .with_context(MessageContext {
                 team_id: Some("team2".to_string()),
-                ..Default::default()
             })
             .with_action(MessageAction {
                 id: "respond_team2".to_string(),

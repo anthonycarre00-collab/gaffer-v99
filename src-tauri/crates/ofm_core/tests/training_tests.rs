@@ -40,9 +40,7 @@ fn make_player(id: &str, name: &str, team_id: &str, dob: &str) -> Player {
     let mut p = Player::new(
         id.to_string(),
         name.to_string(),
-        format!("Full {
-            ..Default::default()
-        }", name),
+        format!("Full {}", name),
         dob.to_string(),
         "GB".to_string(),
         Position::Midfielder,
@@ -63,8 +61,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_staff(id: &str, team_id: &str, role: StaffRole, coaching: u8, physio: u8) -> Staff {
@@ -162,9 +161,7 @@ fn rest_day_only_recovers_condition() {
     for p in &game.players {
         assert!(
             p.condition > 50,
-            "Player {
-            ..Default::default()
-        } should recover on rest day, got {}",
+            "Player {} should recover on rest day, got {}",
             p.id,
             p.condition
         );

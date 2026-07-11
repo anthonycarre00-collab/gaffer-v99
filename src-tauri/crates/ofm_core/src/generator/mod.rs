@@ -190,8 +190,9 @@ pub fn repair_opening_youth_academies(game: &mut crate::game::Game) -> bool {
 }
 
 pub fn generate_youth_academy_recruit(team: &Team, target_position: Option<&Position>) -> Player {
-    generate_youth_academy_recruit_with_nationality(team, target_position, None)
+    generate_youth_academy_recruit_with_nationality(team, target_position, None),
             ..Default::default()
+        
         }
 
 pub fn generate_youth_academy_recruit_with_nationality(
@@ -214,8 +215,9 @@ pub fn generate_youth_academy_recruit_with_nationality(
     player.squad_role = SquadRole::Youth;
     player.transfer_listed = false;
     player.loan_listed = false;
-    player
+    player,
             ..Default::default()
+        
         }
 
 /// Generate a senior free-agent player for a national squad. `squad_slot`
@@ -235,8 +237,9 @@ pub fn generate_national_team_player(nationality: &str, squad_slot: usize) -> Pl
     player.wage = 0;
     player.transfer_listed = false;
     player.loan_listed = false;
-    player
+    player,
             ..Default::default()
+        
         }
 
 fn normalize_generated_team(team: &mut Team, players: &mut [Player]) {
@@ -495,7 +498,6 @@ pub fn generate_world(
 fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     let team_id = if tdef.id.is_empty() {
         Uuid::new_v4().to_string()
-            ..Default::default()
         } else {
         tdef.id.clone()
     };
@@ -586,7 +588,9 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
             team.kit_pattern = pattern;
         }
     }
-    team
+    team,
+            ..Default::default()
+        
 }
 
 /// Build a club with a full generated squad (22 players) and staff, normalised
@@ -1214,9 +1218,7 @@ mod tests {
         let (teams, players, _) = generate_world_with(&WorldGenConfig::compact(), None);
         let team_ids: Vec<&str> = teams.iter().map(|t| t.id.as_str()).collect();
         for p in &players {
-            assert!(p.team_id.is_some(), "Player {
-            ..Default::default()
-        } has no team", p.full_name);
+            assert!(p.team_id.is_some(), "Player {} has no team", p.full_name);
             assert!(
                 team_ids.contains(&p.team_id.as_deref().unwrap()),
                 "Player has unknown team"
@@ -1237,9 +1239,7 @@ mod tests {
                 .iter()
                 .filter(|p| p.position == Position::Goalkeeper)
                 .count();
-            assert!(gk >= 2, "Team {
-            ..Default::default()
-        } has only {} GK", team.name, gk);
+            assert!(gk >= 2, "Team {} has only {} GK", team.name, gk);
         }
     }
 
@@ -1469,17 +1469,13 @@ mod tests {
         for p in &players {
             assert!(
                 p.nationality.len() == 2 || p.nationality.len() == 3,
-                "Player {
-            ..Default::default()
-        } has invalid nationality code: {}",
+                "Player {} has invalid nationality code: {}",
                 p.full_name,
                 p.nationality
             );
             assert!(
                 p.nationality.chars().all(|c| c.is_ascii_uppercase()),
-                "Player {
-            ..Default::default()
-        } nationality not uppercase: {}",
+                "Player {} nationality not uppercase: {}",
                 p.full_name,
                 p.nationality
             );
@@ -1572,12 +1568,13 @@ mod tests {
             "England".to_string(),
             "London".to_string(),
             format!("{name
-            ..Default::default()
         } Ground"),
             25_000,
         );
         team.football_nation = "ENG".to_string();
-        team
+        team,
+            ..Default::default()
+        
     }
 
     fn make_import_player(
@@ -1589,7 +1586,6 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             format!("{id
-            ..Default::default()
         } M"),
             format!("{id} Player"),
             date_of_birth.to_string(),
@@ -1620,7 +1616,9 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.ovr = 62;
         player.potential = 68;
-        player
+        player,
+            ..Default::default()
+        
     }
 
     fn make_import_staff(id: &str, team_id: Option<&str>, role: StaffRole) -> Staff {
@@ -1695,7 +1693,6 @@ mod tests {
             stats: domain::stats::StatsState::default(),
             world_history: domain::world_history::WorldHistoryArchive::default(),
             metadata: WorldDataMetadata::default(),
-            ..Default::default()
         }
     }
 

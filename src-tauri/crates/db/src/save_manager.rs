@@ -129,7 +129,6 @@ impl SaveManager {
         Ok(Self {
             saves_dir: saves_dir.to_path_buf(),
             save_index,
-            ..Default::default()
         })
     }
 
@@ -917,7 +916,6 @@ mod tests {
             ],
             transfer_log: vec![],
             transfer_rumours: vec![],
-            ..Default::default()
         };
 
         let mut game = Game::new(
@@ -1019,9 +1017,7 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             id.to_uppercase(),
-            format!("Player {
-            ..Default::default()
-        }", id),
+            format!("Player {}", id),
             "2000-01-01".to_string(),
             "GB".to_string(),
             position.clone(),
@@ -1110,9 +1106,7 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             id.to_uppercase(),
-            format!("Player {
-            ..Default::default()
-        }", id),
+            format!("Player {}", id),
             date_of_birth.to_string(),
             "GB".to_string(),
             position,

@@ -37,7 +37,6 @@ impl NationalTeam {
             reputation: 500,
             fixtures: Vec::new(),
             name_key: None,
-            ..Default::default()
         }
     }
 }

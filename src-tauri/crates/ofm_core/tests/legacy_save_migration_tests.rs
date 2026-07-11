@@ -9,14 +9,15 @@ fn team(id: &str) -> Team {
     Team::new(
         id.to_string(),
         format!("{id
-            ..Default::default()
         } FC"),
         id.to_uppercase(),
         "England".to_string(),
         "Town".to_string(),
         "Ground".to_string(),
         20_000,
-    )
+    ),
+            ..Default::default()
+        
 }
 
 /// A save written before the multi-competition system: `league` populated,

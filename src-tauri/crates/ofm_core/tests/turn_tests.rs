@@ -73,7 +73,6 @@ fn gk_attrs() -> PlayerAttributes {
 fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let attrs = if pos == Position::Goalkeeper {
         gk_attrs()
-            ..Default::default()
         } else {
         default_attrs()
     };
@@ -89,7 +88,9 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
     p.condition = 100;
-    p
+    p,
+            ..Default::default()
+        
 }
 
 fn make_team(id: &str, name: &str) -> Team {
@@ -101,8 +102,9 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    )
+    ),
             ..Default::default()
+        
         }
 
 fn make_staff(
@@ -208,7 +210,6 @@ fn make_game_with_match() -> Game {
         ],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
 
     let mut game = Game::new(clock, manager, vec![team1, team2], players, vec![], vec![]);
@@ -297,7 +298,6 @@ fn process_day_routes_world_cup_fixtures_to_the_national_team_engine() {
         id: "wc-round-1".to_string(),
         name: "Final".to_string(),
         fixture_ids: vec!["wc-final".to_string()],
-        ..Default::default()
     });
     game.competitions.push(cup);
 
@@ -505,7 +505,6 @@ fn full_squad_report(home_goals: u8, away_goals: u8) -> MatchReport {
             prefix.to_string(),
             PlayerMatchStats {
                 minutes_played: 90,
-                ..Default::default()
             },
         );
     }
@@ -516,14 +515,12 @@ fn full_squad_report(home_goals: u8, away_goals: u8) -> MatchReport {
                 format!("{}_def{}", prefix, i),
                 PlayerMatchStats {
                     minutes_played: 90,
-                    ..Default::default()
                 },
             );
             player_stats.insert(
                 format!("{}_mid{}", prefix, i),
                 PlayerMatchStats {
                     minutes_played: 90,
-                    ..Default::default()
                 },
             );
         }
@@ -532,7 +529,6 @@ fn full_squad_report(home_goals: u8, away_goals: u8) -> MatchReport {
                 format!("{}_fwd{}", prefix, i),
                 PlayerMatchStats {
                     minutes_played: 90,
-                    ..Default::default()
                 },
             );
         }
@@ -886,7 +882,6 @@ fn apply_match_report_gk_clean_sheet() {
         PlayerMatchStats {
             minutes_played: 90,
             rating: 7.0,
-            ..Default::default()
         },
     );
     let report = MatchReport {
@@ -910,7 +905,6 @@ fn apply_match_report_gk_no_clean_sheet_on_conceding() {
         PlayerMatchStats {
             minutes_played: 90,
             rating: 6.0,
-            ..Default::default()
         },
     );
     let report = MatchReport {
@@ -935,9 +929,7 @@ fn apply_match_report_depletes_stamina() {
     for p in &game.players {
         assert!(
             p.condition < 100,
-            "Player {
-            ..Default::default()
-        } condition should be depleted after match",
+            "Player {} condition should be depleted after match",
             p.id
         );
     }
@@ -1092,7 +1084,6 @@ fn apply_match_report_running_avg_rating() {
         PlayerMatchStats {
             minutes_played: 90,
             rating: 8.0,
-            ..Default::default()
         },
     );
     let report1 = MatchReport {
@@ -1115,7 +1106,6 @@ fn apply_match_report_running_avg_rating() {
         PlayerMatchStats {
             minutes_played: 90,
             rating: 6.0,
-            ..Default::default()
         },
     );
     let report2 = MatchReport {
@@ -1144,7 +1134,6 @@ fn apply_match_report_yellow_and_red_cards() {
             yellow_cards: 1,
             red_cards: 0,
             rating: 5.0,
-            ..Default::default()
         },
     );
     player_stats.insert(
@@ -1154,7 +1143,6 @@ fn apply_match_report_yellow_and_red_cards() {
             yellow_cards: 0,
             red_cards: 1,
             rating: 3.0,
-            ..Default::default()
         },
     );
     let report = MatchReport {
@@ -1275,7 +1263,6 @@ fn apply_match_report_morale_drop_from_red_card() {
             minutes_played: 90,
             red_cards: 1,
             rating: 4.0,
-            ..Default::default()
         },
     );
     let report = MatchReport {
@@ -1731,7 +1718,6 @@ fn make_round_summary_game() -> Game {
                     home_penalties: None,
                     away_penalties: None,
                 }),
-                ..Default::default()
             },
             Fixture {
                 id: "fix2".to_string(),
@@ -1761,7 +1747,6 @@ fn make_round_summary_game() -> Game {
                     home_penalties: None,
                     away_penalties: None,
                 }),
-                ..Default::default()
             },
         ],
         standings: vec![
@@ -1772,7 +1757,6 @@ fn make_round_summary_game() -> Game {
         ],
         transfer_log: vec![],
         transfer_rumours: vec![],
-        ..Default::default()
     };
 
     let mut game = Game::new(
