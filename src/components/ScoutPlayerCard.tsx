@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { User, Calendar, Shield, Eye, EyeOff, TrendingUp, BarChart3 } from "lucide-react";
 import { ProgressBar, CountryFlag } from "./ui";
 import { countryName } from "../lib/countries";
+import { interpretMorale, interpretCondition } from "../lib/gafferEngine";
 import type { ScoutReportData } from "../store/gameStore";
 
 interface ScoutPlayerCardProps {
@@ -89,13 +90,13 @@ export default function ScoutPlayerCard({ report, onPlayerClick }: ScoutPlayerCa
  <Calendar className="w-3 h-3" /> {report.dob}
  </span>
  {report.condition !== null && (
- <span className="flex items-center gap-1">
- {t('scouting.condition')}: {report.condition}%
+ <span className="flex items-center gap-1" title={interpretCondition(report.condition).description}>
+ {t('scouting.condition')}: <span className={`font-bold ${interpretCondition(report.condition).colorClass}`}>{interpretCondition(report.condition).short}</span>
  </span>
  )}
  {report.morale !== null && (
- <span className="flex items-center gap-1">
- {t('scouting.morale')}: {report.morale}/100
+ <span className="flex items-center gap-1" title={interpretMorale(report.morale).description}>
+ {t('scouting.morale')}: <span className={`font-bold ${interpretMorale(report.morale).colorClass}`}>{interpretMorale(report.morale).short}</span>
  </span>
  )}
  </div>

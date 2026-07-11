@@ -27,7 +27,7 @@ import {
 } from "../../lib/helpers";
 import { canDelegateToYouthAcademy, isSeniorSquadPlayer } from "../../lib/playerSquad";
 import { getInjurySeverity, resolveInjuryName } from "../../lib/injury";
-import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
+import { shortOvrLabel, interpretOvr, interpretMorale, interpretCondition } from "../../lib/gafferEngine";
 import { useTranslation } from "react-i18next";
 import ContextMenu, { type ContextMenuHandle } from "../ContextMenu";
 import {
@@ -881,7 +881,7 @@ export default function SquadRosterView({
  <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
  {age}
  </td>
- <td className="py-2.5 px-4 w-28">
+ <td className="py-2.5 px-4 w-28" title={interpretCondition(player.condition).description}>
  <ProgressBar
  value={player.condition}
  variant="auto"
@@ -889,8 +889,18 @@ export default function SquadRosterView({
  showLabel
  />
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-500 dark:text-gray-400 tabular-nums">
- {player.morale}
+ <td className="py-2.5 px-4 text-sm tabular-nums">
+ {(() => {
+ const m = interpretMorale(player.morale);
+ return (
+ <span
+ className={`font-heading font-bold ${m.colorClass}`}
+ title={m.description}
+ >
+ {m.short}
+ </span>
+ );
+ })()}
  </td>
  <td className="py-2.5 px-4 text-xs text-gray-600 dark:text-gray-400">
  <div className="space-y-1">

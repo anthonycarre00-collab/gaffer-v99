@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import type { PlayerData } from "../../store/gameStore";
 import { Badge, Card, CardBody, CardHeader, PlayerAvatar } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
+import { interpretMorale } from "../../lib/gafferEngine";
 
 interface HomePlayerMomentumCardProps {
  hotPlayers: PlayerData[];
@@ -59,8 +60,11 @@ export default function HomePlayerMomentumCard({
  <Badge variant="success" size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-xs font-heading font-bold text-success-500 tabular-nums w-8 text-right">
- {player.morale}
+ <span
+ className={`text-xs font-heading font-bold tabular-nums w-12 text-right ${interpretMorale(player.morale).colorClass}`}
+ title={interpretMorale(player.morale).description}
+ >
+ {interpretMorale(player.morale).short}
  </span>
  </div>
  ))}
@@ -88,8 +92,11 @@ export default function HomePlayerMomentumCard({
  <Badge variant="danger" size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-xs font-heading font-bold text-danger-500 tabular-nums w-8 text-right">
- {player.morale}
+ <span
+ className={`text-xs font-heading font-bold tabular-nums w-12 text-right ${interpretMorale(player.morale).colorClass}`}
+ title={interpretMorale(player.morale).description}
+ >
+ {interpretMorale(player.morale).short}
  </span>
  </div>
  ))}

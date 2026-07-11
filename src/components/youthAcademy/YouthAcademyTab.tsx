@@ -33,6 +33,7 @@ import type { PlayerSquadRole } from "../../store/types";
 import { calculateAvailableScouts } from "../scouting/ScoutingTab.helpers";
 import ScoutingYouthRecruitmentCard from "../scouting/ScoutingYouthRecruitmentCard";
 import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
+import { interpretCondition, interpretGrowthRoom } from "../../lib/gafferEngine";
 
 interface YouthAcademyTabProps {
  gameState: GameStateData | null;
@@ -550,8 +551,11 @@ export default function YouthAcademyTab({
  }
  size="sm"
  />
- <span className="text-[10px] font-heading font-bold text-gray-500 tabular-nums w-6">
- +{growthRoom}
+ <span
+ className={`text-[10px] font-heading font-bold tabular-nums w-20 ${interpretGrowthRoom(player.ovr, player.potential).colorClass}`}
+ title={interpretGrowthRoom(player.ovr, player.potential).description}
+ >
+ {interpretGrowthRoom(player.ovr, player.potential).short}
  </span>
  </div>
  </td>
@@ -560,14 +564,10 @@ export default function YouthAcademyTab({
  </td>
  <td className="py-2.5 px-4 text-center">
  <span
- className={`text-xs font-mono font-mono font-bold tabular-nums ${player.condition >= 70
- ? "text-success-500"
- : player.condition >= 40
- ? "text-accent-500"
- : "text-danger-500"
- }`}
+ className={`text-xs font-heading font-bold tabular-nums ${interpretCondition(player.condition).colorClass}`}
+ title={interpretCondition(player.condition).description}
  >
- {player.condition}%
+ {interpretCondition(player.condition).short}
  </span>
  </td>
  </tr>

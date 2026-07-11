@@ -8,6 +8,7 @@ import {
 import { getPlayerName } from "./helpers";
 import { FormationPitch } from "./FormationPitch";
 import { condBgColor, condColor } from "../../lib/playerConditionDisplay";
+import { shortOvrLabel, interpretOvr } from "../../lib/gafferEngine";
 import { Badge, Select } from "../ui";
 import {
  RefreshCw,
@@ -30,23 +31,28 @@ const CompareBar = ({
  label,
  valA,
  valB,
+ displayA,
+ displayB,
 }: {
  label: string;
  valA: number;
  valB: number;
+ /** Optional display override — if provided, shows this instead of the raw number. */
+ displayA?: string;
+ displayB?: string;
 }) => {
  const diff = valB - valA;
  return (
  <div className="flex items-center gap-1.5 py-0.5 text-xs">
  <span className="w-7 text-right font-heading text-gray-500">{label}</span>
- <span className="w-5 text-right tabular-nums text-danger-400">{valA}</span>
+ <span className="w-5 text-right tabular-nums text-danger-400">{displayA ?? valA}</span>
  <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-navy-600">
  <div className="h-full bg-danger-500/60" style={{ width: `${valA}%` }} />
  </div>
  <div className="flex h-1.5 flex-1 justify-end overflow-hidden rounded-full bg-navy-600">
  <div className="h-full bg-success-500/60" style={{ width: `${valB}%` }} />
  </div>
- <span className="w-5 tabular-nums text-success-400">{valB}</span>
+ <span className="w-5 tabular-nums text-success-400">{displayB ?? valB}</span>
  <span
  className={`w-6 text-right tabular-nums font-heading font-bold ${diff > 0 ? "text-success-400" : diff < 0 ? "text-danger-400" : "text-gray-600"}`}
  >
@@ -403,8 +409,11 @@ export function SubPanel({
  )}
  </span>
  </td>
- <td className="w-12 py-2 text-center font-heading font-bold text-gray-500 dark:text-gray-400">
- {p.ovr}
+ <td
+ className={`w-12 py-2 text-center font-heading font-bold ${interpretOvr(p.ovr, p.position).colorClass}`}
+ title={interpretOvr(p.ovr, p.position).description}
+ >
+ {shortOvrLabel(p.ovr, p.position)}
  </td>
  <td className="w-24 py-2">
  <div className="flex items-center gap-1.5">
@@ -521,8 +530,11 @@ export function SubPanel({
  {!posMatch && selectedOff && " !"}
  </span>
  </td>
- <td className="w-12 py-2 text-center font-heading font-bold text-gray-500 dark:text-gray-400">
- {p.ovr}
+ <td
+ className={`w-12 py-2 text-center font-heading font-bold ${interpretOvr(p.ovr, p.position).colorClass}`}
+ title={interpretOvr(p.ovr, p.position).description}
+ >
+ {shortOvrLabel(p.ovr, p.position)}
  </td>
  <td className="w-24 py-2">
  <div className="flex items-center gap-1.5">
@@ -657,12 +669,16 @@ export function SubPanel({
  </button>
  </div>
  </div>
- {/* Attribute comparison bars */}
+ {/* Attribute comparison bars — V99.3: OVR uses Gaffer label,
+     individual attributes keep raw numbers since they're genuine
+     stat comparisons the manager needs to see exactly. */}
  <div className="grid grid-cols-2 gap-x-4">
  <CompareBar
  label="OVR"
  valA={selectedPlayer.ovr}
  valB={comparedPlayer.ovr}
+ displayA={shortOvrLabel(selectedPlayer.ovr, selectedPlayer.position)}
+ displayB={shortOvrLabel(comparedPlayer.ovr, comparedPlayer.position)}
  />
  <CompareBar
  label="PAC"

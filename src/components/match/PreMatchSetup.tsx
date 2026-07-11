@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 import { FixtureData, GameStateData } from "../../store/gameStore";
 import { getFixtureDisplayLabel } from "../../lib/helpers";
+import { shortOvrLabel, interpretOvr } from "../../lib/gafferEngine";
 import { MatchSnapshot, EnginePlayerData, FORMATIONS, PLAY_STYLES } from "./types";
 import PreMatchLineup, { parseFormationNeeds, POSITION_KEY_STATS, statColor, starterOvrColor, getStatVal } from "./PreMatchLineup";
 import { condColor } from "../../lib/playerConditionDisplay";
@@ -571,8 +572,11 @@ export default function PreMatchSetup({
  key={p.id}
  className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-100 dark:hover:bg-navy-700/30 transition-colors"
  >
- <div className="h-7 w-7 shrink-0 rounded-full bg-gray-200 dark:bg-navy-600 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-400 transition-colors duration-300">
- {p.ovr >= 75 ? "★" : p.ovr >= 60 ? "●" : "○"}
+ <div
+ className="h-7 w-7 shrink-0 rounded-full bg-gray-200 dark:bg-navy-600 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-400 transition-colors duration-300"
+ title={interpretOvr(p.ovr, p.position).description}
+ >
+ {shortOvrLabel(p.ovr, p.position)}
  </div>
  <span className="flex-1 truncate text-sm text-gray-700 dark:text-gray-300">
  {p.name}
@@ -580,8 +584,9 @@ export default function PreMatchSetup({
  <div className="flex items-center">
  <span
  className={`text-[10px] font-heading font-bold w-7 text-center ${starterOvrColor(p.ovr)}`}
+ title={interpretOvr(p.ovr, p.position).description}
  >
- {p.ovr >= 75 ? "Class" : p.ovr >= 60 ? "Solid" : p.ovr >= 45 ? "Squad" : "Lim."}
+ {shortOvrLabel(p.ovr, p.position)}
  </span>
  {keyStats.map((s) => (
  <span

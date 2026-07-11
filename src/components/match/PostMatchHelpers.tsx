@@ -3,6 +3,7 @@ import { MatchSnapshot, MatchEvent } from "./types";
 import { getPlayerName } from "./helpers";
 import { Badge } from "../ui";
 import { Circle, Star } from "lucide-react";
+import { interpretMatchRating } from "../../lib/gafferEngine";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 
 // ---------------------------------------------------------------------------
@@ -198,19 +199,10 @@ export function PlayerRatingsPanel({
  className="flex items-center gap-2 px-1 py-0.5 text-xs"
  >
  <span
- className={`font-mono font-mono font-bold tabular-nums w-8 ${
- p.rating >= 8
- ? "text-accent-700 dark:text-accent-400"
- : p.rating >= 7
- ? "text-success-700 dark:text-success-400"
- : p.rating >= 6
- ? "text-gray-600 dark:text-gray-300"
- : p.rating >= 5
- ? "text-accent-700 dark:text-accent-400"
- : "text-danger-400"
- }`}
+ className={`font-heading font-bold tabular-nums w-16 ${interpretMatchRating(p.rating).colorClass}`}
+ title={interpretMatchRating(p.rating).description}
  >
- {p.rating.toFixed(1)}
+ {interpretMatchRating(p.rating).short}
  </span>
  <span className="text-gray-600 dark:text-gray-400 truncate flex-1">{p.name}</span>
  <span className="text-gray-600 dark:text-gray-500 text-[10px] font-heading uppercase">

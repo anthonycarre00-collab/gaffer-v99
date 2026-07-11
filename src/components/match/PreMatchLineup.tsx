@@ -6,6 +6,7 @@ import { ArrowUpDown, AlertTriangle, Wand2 } from "lucide-react";
 import ContextMenu from "../ContextMenu";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { condColor } from "../../lib/playerConditionDisplay";
+import { shortOvrLabel, interpretOvr } from "../../lib/gafferEngine";
 
 export const POSITION_KEY_STATS: Record<
  string,
@@ -321,8 +322,9 @@ export default function PreMatchLineup({
  <div
  className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-heading font-bold flex-shrink-0"
  style={starterBadgeStyle(userColor)}
+ title={interpretOvr(posOvr, p.position).description}
  >
- {posOvr}
+ {shortOvrLabel(posOvr, p.position)}
  </div>
  {jerseyChip(p.id)}
  <span className="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1 truncate">
@@ -333,9 +335,10 @@ export default function PreMatchLineup({
  )}
  <div className="flex items-center gap-0">
  <span
- className={`text-[10px] font-mono font-mono font-bold tabular-nums w-7 text-center ${starterOvrColor(posOvr)}`}
+ className={`text-[10px] font-heading font-bold tabular-nums w-7 text-center ${starterOvrColor(posOvr)}`}
+ title={interpretOvr(posOvr, p.position).description}
  >
- {posOvr}
+ {shortOvrLabel(posOvr, p.position)}
  </span>
  {keyStats.map((s) => (
  <span
@@ -450,8 +453,9 @@ export default function PreMatchLineup({
  ? "bg-accent-500/20 text-accent-600 dark:text-accent-400"
  : "bg-gray-100 text-gray-500 dark:bg-navy-700 dark:text-gray-400"
  }`}
+ title={interpretOvr(posOvr, bp.position).description}
  >
- {posOvr}
+ {shortOvrLabel(posOvr, bp.position)}
  </span>
  <span
  className={`shrink-0 text-xs tabular-nums w-8 text-right ${condColor(bp.condition)}`}

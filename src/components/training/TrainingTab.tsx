@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import type { GameStateData } from "../../store/gameStore";
 import { useGameStore } from "../../store/gameStore";
 import { isSeniorSquadPlayer } from "../../lib/playerSquad";
+import { interpretMorale, interpretCondition } from "../../lib/gafferEngine";
 import { useFetchedSquad } from "../../hooks/useFetchedSquad";
 import { setTraining, setTrainingSchedule } from "../../services/trainingService";
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
@@ -261,8 +262,11 @@ export default function TrainingTab({
  <span className="text-gray-600 dark:text-gray-400">
  {t("training.avgCondition")}
  </span>
- <span className="font-heading font-bold text-gray-800 dark:text-gray-100">
- {avgCondition}%
+ <span
+ className={`font-heading font-bold ${interpretCondition(avgCondition).colorClass}`}
+ title={interpretCondition(avgCondition).description}
+ >
+ {interpretCondition(avgCondition).short}
  </span>
  </div>
  <ProgressBar value={avgCondition} variant="auto" size="md" />
@@ -272,8 +276,11 @@ export default function TrainingTab({
  <span className="text-gray-600 dark:text-gray-400">
  {t("training.avgMorale")}
  </span>
- <span className="font-heading font-bold text-gray-800 dark:text-gray-100">
- {avgMorale}%
+ <span
+ className={`font-heading font-bold ${interpretMorale(avgMorale).colorClass}`}
+ title={interpretMorale(avgMorale).description}
+ >
+ {interpretMorale(avgMorale).short}
  </span>
  </div>
  <ProgressBar value={avgMorale} variant="auto" size="md" />

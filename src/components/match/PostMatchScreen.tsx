@@ -17,6 +17,7 @@ import {
  PlayerRatingsPanel,
 } from "./PostMatchHelpers";
 import { PossessionDonut } from "./PostMatchCharts";
+import { interpretMorale } from "../../lib/gafferEngine";
 import {
  Trophy,
  TrendingDown,
@@ -554,8 +555,13 @@ export default function PostMatchScreen({
  />
  </div>
  </td>
- <td className="px-3 py-2 text-right text-gray-500 dark:text-gray-400 tabular-nums font-heading">
- {r.new_morale}
+ <td className="px-3 py-2 text-right tabular-nums font-heading">
+ <span
+ className={`font-bold ${interpretMorale(r.new_morale).colorClass}`}
+ title={interpretMorale(r.new_morale).description}
+ >
+ {interpretMorale(r.new_morale).short}
+ </span>
  </td>
  </tr>
  ))}
