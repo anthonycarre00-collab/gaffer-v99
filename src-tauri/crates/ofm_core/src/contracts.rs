@@ -20,7 +20,11 @@ use std::collections::HashMap;
 const RENEWAL_SESSION_STALE_DAYS: i64 = 14;
 const INSULTING_RENEWAL_BLOCK_DAYS: u64 = 30;
 const MAX_CONTRACT_YEARS: u32 = 5;
-const MARKET_VALUE_TO_WAGE_RATIO: u64 = 200;
+/// V99.3 REALISM-1 C4: Lowered from 200 to 50. With the new OVR⁴ market
+/// value formula, an 80-OVR player has a market value of ~£20.5M. At
+/// 1/50 ratio that's £410k/yr — a realistic mid-tier starter wage.
+/// The old 1/200 ratio produced £19k/yr (£369/wk) — 100× too low.
+const MARKET_VALUE_TO_WAGE_RATIO: u64 = 50;
 const MINIMUM_DEFAULT_WAGE: u64 = 500;
 const ERR_NO_TEAM_ASSIGNED: &str = "be.error.noTeamAssigned";
 const ERR_MANAGED_TEAM_NOT_FOUND: &str = "be.error.managedTeamNotFound";
@@ -938,6 +942,12 @@ pub fn contract_warning_stage(
 pub fn process_contract_expiries(game: &mut Game) {
     let current_date = game.clock.current_date.date_naive();
 
+    // V99.3 VITAL-1 C1: AI contract renewal. Before processing expiries,
+    // let AI clubs renew players whose contracts are about to expire.
+    // Without this, AI squads shrink every off-season because expired
+    // players become free agents and AI never signs them back.
+    ai_renew_expiring_contracts(game, current_date);
+
     let expired_player_indices: Vec<usize> = game
         .players
         .iter()
@@ -955,6 +965,129 @@ pub fn process_contract_expiries(game: &mut Game) {
 
     for player_index in expired_player_indices {
         release_player_contract(game, player_index, ContractReleaseReason::Expired);
+    }
+}
+
+/// V99.3 VITAL-1 C1: AI contract renewal.
+///
+/// AI clubs (not the user's team) automatically renew players whose contracts
+/// are about to expire (within 30 days). This prevents AI squads from
+/// shrinking every off-season — previously, expired players became free
+/// agents and AI never signed them back, causing squad sizes to drop below
+/// matchday floor by season 6-7.
+///
+/// Renewal criteria:
+/// - Player's contract expires within 30 days
+/// - Player is not already flagged for let-expire
+/// - Player is not too old (age <= 36 for regular renewal, <= 38 for stars)
+/// - Player's OVR is within 15 of the team's average OVR (still useful)
+///
+/// Renewal terms:
+/// - 2-year extension for players 28+
+/// - 3-year extension for players 23-27
+/// - 4-year extension for players 22 and under
+/// - Wage bump of 5% for under-28s, flat for 28-31, 10% cut for 32+
+fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
+    use chrono::Datelike;
+
+    let user_team_id = game.manager.team_id.clone();
+
+    // Collect (player_index, team_id, age, ovr) for players needing renewal.
+    let renewal_candidates: Vec<(usize, String, i32, u8)> = game
+        .players
+        .iter()
+        .enumerate()
+        .filter_map(|(index, player)| {
+            let team_id = player.team_id.as_ref()?;
+            // Skip user's team — the user handles their own renewals.
+            if Some(team_id) == user_team_id.as_ref() {
+                return None;
+            }
+            // Skip players flagged for let-expire.
+            if has_let_expire_intent(player) {
+                return None;
+            }
+            // Only renew if contract expires within 30 days.
+            let days_remaining =
+                contract_days_remaining(player.contract_end.as_deref(), current_date)?;
+            if days_remaining > 30 || days_remaining < 0 {
+                return None;
+            }
+            let age = player_age_on(current_date, &player.date_of_birth);
+            // Don't renew very old players unless they're stars.
+            if age > 36 && player.ovr < 75 {
+                return None;
+            }
+            if age > 38 {
+                return None;
+            }
+            Some((index, team_id.clone(), age, player.ovr))
+        })
+        .collect();
+
+    if renewal_candidates.is_empty() {
+        return;
+    }
+
+    // Compute team average OVR for each AI team (to filter out players who
+    // are no longer good enough).
+    let mut team_avg_ovr: HashMap<String, f64> = HashMap::new();
+    for player in &game.players {
+        if let Some(team_id) = &player.team_id {
+            team_avg_ovr
+                .entry(team_id.clone())
+                .or_insert_with(|| (0u32, 0u32))
+                .0 += player.ovr as u32;
+            team_avg_ovr
+                .entry(team_id.clone())
+                .or_insert_with(|| (0u32, 0u32))
+                .1 += 1;
+        }
+    }
+    let team_avg_ovr: HashMap<String, f64> = team_avg_ovr
+        .into_iter()
+        .map(|(team_id, (sum, count))| {
+            (team_id, if count > 0 { sum as f64 / count as f64 } else { 50.0 })
+        })
+        .collect();
+
+    let current_year = current_date.year();
+
+    for (player_index, team_id, age, ovr) in renewal_candidates {
+        // Only renew if the player is within 15 OVR of the team average.
+        let avg = team_avg_ovr.get(&team_id).copied().unwrap_or(50.0);
+        if (ovr as f64) < avg - 15.0 {
+            continue;
+        }
+
+        // Determine contract length.
+        let contract_years = if age <= 22 {
+            4
+        } else if age <= 27 {
+            3
+        } else if age <= 32 {
+            2
+        } else {
+            1
+        };
+
+        // Determine wage adjustment.
+        let wage_multiplier = if age <= 27 {
+            1.05 // 5% bump for young players
+        } else if age <= 31 {
+            1.00 // flat for prime
+        } else {
+            0.90 // 10% cut for veterans
+        };
+
+        let player = &mut game.players[player_index];
+        let new_wage = ((player.wage as f64 * wage_multiplier) as u32).max(500);
+        let new_contract_end = format!("{}-06-30", current_year + contract_years);
+
+        player.wage = new_wage;
+        player.contract_end = Some(new_contract_end);
+        // Clear any renewal state from a previous user-initiated session.
+        player.morale_core.renewal_state = None;
     }
 }
 

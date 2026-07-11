@@ -527,7 +527,12 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     );
     team.finance = rng.random_range(fin_range[0]..fin_range[1]);
     team.reputation = rng.random_range(rep_range[0]..rep_range[1]);
-    team.wage_budget = (team.finance as f64 * 0.06) as i64;
+    // V99.3 REALISM-1 M10: Wage budget ratio raised from 6% to 10%.
+    // Coordinated with the economy re-tune (OVR⁴ market values + 1/50
+    // wage ratio). With the old 6%, a £10M-finance club had a £600k wage
+    // budget — not enough to pay even a single 80-OVR star under the new
+    // wage scale. At 10% it's £1M, still tight but workable.
+    team.wage_budget = (team.finance as f64 * 0.10) as i64;
     team.transfer_budget = (team.finance as f64 * 0.15) as i64;
     team.founded_year = rng.random_range(1880..1960);
     team.colors = TeamColors {

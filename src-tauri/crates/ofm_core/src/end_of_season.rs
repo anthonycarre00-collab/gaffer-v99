@@ -119,8 +119,15 @@ pub fn is_season_complete(game: &Game) -> bool {
     !leagues.is_empty() && leagues.into_iter().all(is_league_complete)
 }
 
+/// V99.3 REALISM-1 C5: Prize money bumped 30×. Was £5M for 1st in tier-0
+/// (should be ~£150M for EPL champion). Now tier-0 champion gets £150M,
+/// 10th place gets £40M. Lower tiers get halved per division via the
+/// existing `>> tier` shift. Also enables promoted clubs to afford the
+/// wages of better players, and provides parachute-payment-scale income
+/// for relegated sides.
 const PRIZE_MONEY_BY_POSITION: [i64; 10] = [
-    5_000_000, 3_000_000, 1_500_000, 750_000, 400_000, 300_000, 250_000, 200_000, 175_000, 150_000,
+    150_000_000, 100_000_000, 85_000_000, 75_000_000, 65_000_000, 60_000_000, 55_000_000,
+    50_000_000, 45_000_000, 40_000_000,
 ];
 
 const SEASON_PAYOUT_LEDGER_DESCRIPTION_KEY: &str = "be.msg.seasonPayout.ledgerDescription";
@@ -919,6 +926,14 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
 
     // 2. Compute the user's division's awards before resetting stats
     let awards = compute_division_season_awards(game, league);
+
+    // V99.3 VITAL-1 C3+M4: Record live-season awards + rivalries into the
+    // world history archive. Previously these were only recorded during
+    // generate_past_world_history at game start — the Hall of Fame was
+    // frozen after that, and live-season rivalries were never created.
+    // Now every live season appends to the archive.
+    crate::history_generation::record_historical_awards(game, season, &awards);
+    crate::history_generation::update_historical_rivalries(game, season, &final_standings);
 
     // 3. Build summary
     let user_position = final_standings

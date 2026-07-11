@@ -453,7 +453,10 @@ fn map_manager_award_entry(
     })
 }
 
-fn record_historical_awards(game: &mut Game, season: u32, awards: &SeasonAwards) {
+/// V99.3 VITAL-1 C3: Made public so end_of_season.rs can call it for live
+/// seasons. Previously only called from generate_past_world_history at
+/// game start — the Hall of Fame was frozen after that.
+pub fn record_historical_awards(game: &mut Game, season: u32, awards: &SeasonAwards) {
     game.world_history
         .record_season_awards(HistoricalSeasonAwardsRecord {
             season,
@@ -467,7 +470,10 @@ fn record_historical_awards(game: &mut Game, season: u32, awards: &SeasonAwards)
         });
 }
 
-fn update_historical_rivalries(game: &mut Game, season: u32, standings: &[StandingEntry]) {
+/// V99.3 VITAL-1 C3+M4: Made public so end_of_season.rs can call it for live
+/// seasons. Previously only called from generate_past_world_history —
+/// live-season rivalries were never created.
+pub fn update_historical_rivalries(game: &mut Game, season: u32, standings: &[StandingEntry]) {
     let top_two = standings.iter().take(2).collect::<Vec<_>>();
     if top_two.len() == 2 {
         let team_a = &top_two[0].team_id;
@@ -490,6 +496,18 @@ fn update_historical_rivalries(game: &mut Game, season: u32, standings: &[Standi
             intensity,
             started_season,
         );
+
+        // V99.3 VITAL-1 M4: Mirror high-intensity rivalries into the
+        // relationship_graph so the match engine's narrative system can
+        // detect them via `rivalry_flag`. Previously the world_history
+        // rivalries and relationship_graph were separate data structures
+        // — the narrative engine's `is_rivalry` check read
+        // relationship_graph.rivalry_flag but it was never set from
+        // live-season rivalries.
+        if intensity >= 70 {
+            game.relationship_graph
+                .set_rivalry(team_a, team_b, intensity);
+        }
     }
 }
 

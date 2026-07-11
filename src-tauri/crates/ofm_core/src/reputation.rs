@@ -2,9 +2,17 @@ use crate::game::Game;
 use domain::league::StandingEntry;
 use std::collections::HashMap;
 
-const POSITION_DELTA_WEIGHT: i32 = 12;
-const CHAMPION_BONUS: i32 = 12;
-const BOTTOM_FINISH_PENALTY: i32 = 8;
+/// V99.3 REALISM-1 C6: Reputation drift calmed down. Was 12/12/8 which
+/// produced chaotic champion cycling — a 20-team league expected 1st
+/// that finished 10th lost 108 reputation (10.8% of total range) in
+/// one season. Over 5-10 seasons the table was unrecognizable.
+/// Real life: club stature is much stickier. Man United finishing 8th
+/// didn't make them mid-table stature; Leicester winning didn't make
+/// them top-6 stature.
+/// Now 4/6/4 — still meaningful but not whiplash-inducing.
+const POSITION_DELTA_WEIGHT: i32 = 4;
+const CHAMPION_BONUS: i32 = 6;
+const BOTTOM_FINISH_PENALTY: i32 = 4;
 const MIN_REPUTATION: i32 = 0;
 const MAX_REPUTATION: i32 = 1000;
 

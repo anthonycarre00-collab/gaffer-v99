@@ -239,6 +239,17 @@ impl RelationshipGraph {
         edge.volatility = volatility;
     }
 
+    /// V99.3 VITAL-1 M4: Set a rivalry edge between two teams. Mirrors
+    /// the world_history rivalries into the relationship_graph so the
+    /// match engine's narrative system can detect rivalries via
+    /// `rivalry_flag` (used by `is_rivalry` in post_match.rs).
+    pub fn set_rivalry(&mut self, a: &str, b: &str, intensity: u8) {
+        let key = Self::edge_key(a, b);
+        let edge = self.edges.entry(key).or_insert_with(RelationshipEdge::neutral);
+        edge.rivalry_flag = true;
+        edge.strength = edge.strength.max(intensity as i8);
+    }
+
     /// Escalate a relationship (records date, adjusts volatility).
     pub fn escalate(&mut self, a: &str, b: &str, date: &str, intensity: i8) {
         let key = Self::edge_key(a, b);

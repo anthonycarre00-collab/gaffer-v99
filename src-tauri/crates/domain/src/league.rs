@@ -128,6 +128,9 @@ pub enum BerthRule {
 pub struct League {
     pub id: String,
     pub name: String,
+    /// V99.3: accept `competition_type` alias for bundled DBs that use the
+    /// older field name.
+    #[serde(alias = "competition_type")]
     pub kind: CompetitionType,
     pub scope: CompetitionScope,
     pub season: u32,
@@ -135,6 +138,10 @@ pub struct League {
     pub country_id: Option<String>,
     #[serde(default)]
     pub required_region_ids: Vec<String>,
+    /// V99.3: accept `participants` alias for bundled DBs that use the
+    /// older field name. Without this, the DB's `participants` array is
+    /// silently ignored and competitions load with empty participant lists.
+    #[serde(alias = "participants")]
     pub participant_ids: Vec<String>,
     pub rules: CompetitionRules,
     pub fixtures: Vec<Fixture>,

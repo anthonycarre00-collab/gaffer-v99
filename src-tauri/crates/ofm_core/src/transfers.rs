@@ -383,7 +383,38 @@ fn minimum_acceptable_fee(
         multiplier -= 0.10;
     }
 
-    let multiplier = multiplier.clamp(0.55, 1.6);
+    // V99.3 REALISM-1 C3: Not-for-sale premium. Elite clubs refuse to sell
+    // their best players unless the fee is astronomical. Real life: clubs
+    // routinely reject £100M+ bids (Liverpool/Coutinho, Spurs/Kane,
+    // Napoli/Osimhen, Leverkusen/Wirtz). We model this as a multiplier
+    // premium rather than a hard refusal so the user can still theoretically
+    // sign a star — but only for 3-5× market value.
+    let owner_rep = owner_team.reputation;
+    let buyer_rep = buyer_team.reputation;
+    let rep_gap = buyer_rep.saturating_sub(owner_rep);
+
+    if player.ovr >= 85 && owner_rep >= 700 {
+        // World-class star at an elite club — virtually not for sale.
+        // 3.0× multiplier means a £50M player costs £150M+.
+        multiplier += 1.8;
+    } else if player.ovr >= 80 && owner_rep >= 650 {
+        // Star at a strong club — very hard to sign.
+        multiplier += 1.0;
+    } else if player.ovr >= 75 && owner_rep >= 600 && rep_gap < 100 {
+        // Key player at a mid-strong club, buyer is similar level — hard.
+        multiplier += 0.5;
+    }
+
+    // V99.3 REALISM-1 M6: Wonderkid premium. Young high-potential players
+    // cost more because their resale value + development upside is huge.
+    let age = player_age_years(&player.date_of_birth, current_date);
+    if age <= 21 && player.potential >= player.ovr.saturating_add(15) {
+        multiplier += 0.5; // Wonderkid — 50% premium
+    } else if age <= 23 && player.potential >= player.ovr.saturating_add(10) {
+        multiplier += 0.3; // High-potential — 30% premium
+    }
+
+    let multiplier = multiplier.clamp(0.55, 4.0);
     ((player.market_value as f64) * multiplier).round() as u64
 }
 
@@ -475,7 +506,44 @@ fn incoming_interest_score(current_date: NaiveDate, player: &domain::player::Pla
         score += 10;
     }
 
+    // V99.3 REALISM-1 C2: Star-player appeal. Without these terms, a
+    // contented star (3-year contract, morale 75, market_value £3M) scores
+    // only +20 — below the 35-point shortlist threshold — so AI clubs NEVER
+    // bid for stars. Real life: most big transfers are for contented stars.
+    if player.ovr >= 80 {
+        score += 30; // World-class — always attracts interest
+    } else if player.ovr >= 75 {
+        score += 25; // Star — attracts elite-club interest
+    } else if player.ovr >= 70 {
+        score += 15; // Quality starter — attracts mid-tier interest
+    }
+
+    // V99.3 REALISM-1 M6: Wonderkid appeal. Young players with high
+    // potential should attract interest even if their current OVR is modest.
+    // Madrid signed Vinicius (18, €45M), Bellingham (19, €103M) — all raw
+    // OVR ~70-75 with huge potential.
+    let age = player_age_years(&player.date_of_birth, current_date);
+    if age <= 21 && player.potential >= player.ovr.saturating_add(10) {
+        score += 30; // Wonderkid — elite potential
+    } else if age <= 24 && player.potential >= 80 {
+        score += 20; // High-potential young player
+    }
+
     score
+}
+
+/// V99.3: Calculate player age in years from date-of-birth string.
+/// Falls back to 30 if the DOB can't be parsed (shouldn't happen with
+/// valid world data, but defensive).
+fn player_age_years(date_of_birth: &str, current_date: NaiveDate) -> i32 {
+    let Ok(dob) = NaiveDate::parse_from_str(date_of_birth, "%Y-%m-%d") else {
+        return 30;
+    };
+    let mut age = current_date.year() - dob.year();
+    if current_date.ordinal() < dob.ordinal() {
+        age -= 1;
+    }
+    age
 }
 
 fn incoming_loan_interest_score(player: &domain::player::Player) -> i32 {
@@ -906,6 +974,12 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         .map(|team| team.id.clone())
         .collect();
     let mut completed_ai_transfers = 0_usize;
+    // V99.3 REALISM-1 M5: Per-buyer transfer count. Previously this was a
+    // single GLOBAL counter, but the check used the CURRENT buyer's reputation.
+    // Once the first elite club made 4 transfers, ALL subsequent elite clubs
+    // were blocked for the day. Now each club gets its own reputation-based cap.
+    let mut completed_per_buyer: std::collections::HashMap<String, usize> =
+        std::collections::HashMap::new();
     let mut moved_player_ids: HashSet<String> = HashSet::new();
     // New incoming offers opened to user players today, tracked to throttle the
     // inbox: at most one new club per player and a hard squad-wide ceiling.
@@ -1011,7 +1085,12 @@ pub fn evaluate_transfer_market(game: &mut Game) {
                 {
                     return false;
                 }
-            } else if completed_ai_transfers >= max_ai_transfers_for_reputation(buyer_team.reputation) {
+            } else if completed_per_buyer
+                .get(&buyer_id)
+                .copied()
+                .unwrap_or(0)
+                >= max_ai_transfers_for_reputation(buyer_team.reputation)
+            {
                 return false;
             }
             // Clubs only chase players that fit their stature and a position they
@@ -1047,7 +1126,11 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         }
 
         if candidate.score <= 60
-            || completed_ai_transfers >= max_ai_transfers_for_reputation(buyer_team.reputation)
+            || completed_per_buyer
+                .get(&buyer_id)
+                .copied()
+                .unwrap_or(0)
+                >= max_ai_transfers_for_reputation(buyer_team.reputation)
         {
             continue;
         }
@@ -1063,12 +1146,183 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         {
             moved_player_ids.insert(candidate.player_id);
             completed_ai_transfers += 1;
+            *completed_per_buyer.entry(buyer_id.clone()).or_insert(0) += 1;
         }
     }
 }
 
 pub fn generate_incoming_transfer_offers(game: &mut Game) {
     evaluate_transfer_market(game);
+    // V99.3 VITAL-1 C2: AI free-agent signing. After the regular transfer
+    // market runs, let AI clubs sign free agents to fill squad gaps.
+    // Without this, the free-agent pool grows monotonically — expired
+    // players become free agents and AI never signs them.
+    ai_sign_free_agents(game);
+}
+
+/// V99.3 VITAL-1 C2: AI free-agent signing.
+///
+/// After the regular transfer market runs, AI clubs with thin squads
+/// (fewer than POSITION_GROUP_SURPLUS_THRESHOLD players in any position
+/// group) sign the strongest eligible free agent for the needed position.
+/// Capped at 1 signing per club per day to prevent hoarding.
+fn ai_sign_free_agents(game: &mut Game) {
+    let current_date = game.clock.current_date.date_naive();
+    let user_team_id = game.manager.team_id.clone();
+
+    // Build a position-group → Vec<player_index> map for free agents.
+    let mut free_agents_by_pos: HashMap<&'static str, Vec<usize>> = HashMap::new();
+    for (index, player) in game.players.iter().enumerate() {
+        if player.team_id.is_some() {
+            continue;
+        }
+        let pos_group = position_group_for(&player.position);
+        free_agents_by_pos.entry(pos_group).or_default().push(index);
+    }
+
+    if free_agents_by_pos.is_empty() {
+        return;
+    }
+
+    // Sort each position group by OVR descending so the strongest FAs are first.
+    for indices in free_agents_by_pos.values_mut() {
+        indices.sort_by(|&a, &b| game.players[b].ovr.cmp(&game.players[a].ovr));
+    }
+
+    // For each AI team, check if they need to sign a free agent.
+    let team_ids: Vec<String> = game
+        .teams
+        .iter()
+        .filter(|t| Some(&t.id) != user_team_id.as_ref())
+        .map(|t| t.id.clone())
+        .collect();
+
+    for team_id in &team_ids {
+        let team = match game.teams.iter().find(|t| &t.id == team_id) {
+            Some(t) => t.clone(),
+            None => continue,
+        };
+
+        // Check if the team has budget for a free agent (wage space).
+        if team.wage_budget <= 0 {
+            continue;
+        }
+
+        // Count players per position group for this team.
+        let mut pos_counts: HashMap<&'static str, usize> = HashMap::new();
+        for player in &game.players {
+            if player.team_id.as_deref() != Some(team_id.as_str()) {
+                continue;
+            }
+            let pg = position_group_for(&player.position);
+            *pos_counts.entry(pg).or_insert(0) += 1;
+        }
+
+        // Find the position group with the fewest players that's below threshold.
+        let threshold = 6; // minimum squad depth per position group
+        let need_pos = ["GK", "DEF", "MID", "FWD"]
+            .iter()
+            .map(|&pg| (pg, *pos_counts.get(pg).unwrap_or(&0)))
+            .min_by_key(|&(_, count)| count)
+            .filter(|&(_, count)| count < threshold)
+            .map(|(pg, _)| pg);
+
+        let Some(need_pg) = need_pos else {
+            continue;
+        };
+
+        // Find the strongest free agent for this position.
+        let candidates = match free_agents_by_pos.get(need_pg) {
+            Some(c) if !c.is_empty() => c.clone(),
+            _ => continue,
+        };
+
+        // Try to sign the first eligible candidate (strongest first).
+        for &fa_index in &candidates {
+            let fa = &game.players[fa_index];
+            // Don't sign if the wage demand exceeds the team's wage budget.
+            if fa.wage as i64 > team.wage_budget {
+                continue;
+            }
+            // Reputation gate — don't sign a player way above the team's level.
+            if fa.ovr as u32 > team.reputation / 10 + 15 {
+                continue;
+            }
+
+            // Sign the free agent.
+            let fa_id = game.players[fa_index].id.clone();
+            if let Err(e) = sign_free_agent_to_team(game, &fa_id, team_id, current_date) {
+                log::warn!("[ai_fa] Failed to sign FA {} to {}: {}", fa_id, team_id, e);
+                continue;
+            }
+            log::info!(
+                "[ai_fa] {} signed free agent {} (OVR {}) to fill {} gap",
+                team.name,
+                game.players[fa_index].full_name,
+                game.players[fa_index].ovr,
+                need_pg
+            );
+            break; // Only 1 signing per club per day
+        }
+    }
+}
+
+/// Sign a free agent to a team. Sets team_id, generates a contract, and
+/// deducts nothing (free agents have no transfer fee).
+fn sign_free_agent_to_team(
+    game: &mut Game,
+    player_id: &str,
+    team_id: &str,
+    current_date: NaiveDate,
+) -> Result<(), String> {
+    use chrono::Datelike;
+
+    let player = game
+        .players
+        .iter_mut()
+        .find(|p| p.id == player_id)
+        .ok_or("player not found")?;
+
+    if player.team_id.is_some() {
+        return Err("player already has a team".to_string());
+    }
+
+    let age = {
+        let dob = NaiveDate::parse_from_str(&player.date_of_birth, "%Y-%m-%d")
+            .map_err(|_| "invalid dob")?;
+        let mut a = current_date.year() - dob.year();
+        if current_date.ordinal() < dob.ordinal() {
+            a -= 1;
+        }
+        a
+    };
+
+    let contract_years = if age <= 22 { 4 } else if age <= 27 { 3 } else { 2 };
+    player.team_id = Some(team_id.to_string());
+    player.contract_end = Some(format!("{}-06-30", current_date.year() + contract_years));
+    // Free agents accept a modest wage — their market_value / 50.
+    player.wage = ((player.market_value / 50) as u32).max(500);
+    player.transfer_listed = false;
+    player.loan_listed = false;
+    player.transfer_offers.clear();
+    player.loan_offers.clear();
+
+    Ok(())
+}
+
+/// Map a domain::Position to a simplified position group for squad-depth checks.
+fn position_group_for(position: &domain::player::Position) -> &'static str {
+    use domain::player::Position::*;
+    match position {
+        Goalkeeper => "GK",
+        RightBack | LeftBack | CenterBack | RightWingBack | LeftWingBack => "DEF",
+        DefensiveMidfielder | CentralMidfielder | AttackingMidfielder
+        | RightMidfielder | LeftMidfielder => "MID",
+        RightWinger | LeftWinger | Striker => "FWD",
+        Defender => "DEF",
+        Midfielder => "MID",
+        Forward => "FWD",
+    }
 }
 
 fn create_incoming_user_offer(

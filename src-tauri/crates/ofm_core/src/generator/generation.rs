@@ -284,9 +284,23 @@ pub(super) fn generate_random_player_from_def(
     } else {
         0.4
     };
-    let base_value = (approx_ovr as f64).powi(2) * 500.0;
+    // V99.3 REALISM-1 C1: Economy re-tune. Was OVR² × 500, which produced
+    // £3.84M for an 80-OVR striker (should be £20-30M) and £4.86M for a
+    // 90-OVR (should be £150M+). The OVR² scaling collapsed the elite gap.
+    // Now OVR⁴ × 0.5 gives:
+    //   60-OVR → £6.5M (squad player)
+    //   70-OVR → £12M (regular starter)
+    //   80-OVR → £20.5M (star)
+    //   90-OVR → £32.8M (world class — still under real-world £150M but
+    //                    much closer; the gap is handled by the not-for-sale
+    //                    multiplier in minimum_acceptable_fee)
+    let base_value = (approx_ovr as f64).powi(4) * 0.5;
     let market_value = (base_value * age_factor) as u64;
-    let wage = (market_value / 200).max(500) as u32;
+    // V99.3 REALISM-1 C4: Wage ratio lowered from 1/200 to 1/50.
+    // Old: 80-OVR (£3.84M) → £19k/yr (£369/wk). Way too low.
+    // New: 80-OVR (£20.5M) → £410k/yr (£7.9k/wk). Still modest but
+    // in the right ballpark for a mid-tier starter.
+    let wage = (market_value / 50).max(500) as u32;
     let contract_years = if age <= 21 {
         rng.random_range(3..6)
     } else if age <= 27 {
@@ -645,8 +659,10 @@ pub(super) fn generate_player_from_def(
     } else {
         0.4
     };
-    let market_value = ((approx_ovr as f64).powi(2) * 500.0 * age_factor) as u64;
-    let wage = (market_value / 200).max(500) as u32;
+    // V99.3 REALISM-1 C1+C4: Same economy re-tune as the main generator
+    // above. OVR⁴ × 0.5 for market value, 1/50 ratio for wage.
+    let market_value = ((approx_ovr as f64).powi(4) * 0.5 * age_factor) as u64;
+    let wage = (market_value / 50).max(500) as u32;
     let contract_years = if age <= 27 {
         rng.random_range(2..6)
     } else {

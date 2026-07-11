@@ -158,19 +158,34 @@ fn default_fitness() -> u8 {
 
 impl PlayerData {
     /// Overall rating (simple mean of core 11 attributes).
+    /// V99.3: Now uses all 19 attributes (was 11 — missing burst, agility,
+    /// distribution, aerial, leadership, commanding, playing_out, aggression,
+    /// teamwork). This makes the engine's OVR consistent with the domain
+    /// layer's `player.ovr` and prevents AI substitution logic from disagreeing
+    /// with the player profile display.
     pub fn overall(&self) -> f64 {
         (self.pace as f64
+            + self.burst as f64
             + self.engine as f64
             + self.power as f64
+            + self.agility as f64
             + self.passing as f64
+            + self.distribution as f64
+            + self.touch as f64
             + self.finishing as f64
             + self.defending as f64
-            + self.touch as f64
+            + self.aerial as f64
             + self.anticipation as f64
             + self.vision as f64
             + self.decisions as f64
-            + self.composure as f64)
-            / 11.0
+            + self.composure as f64
+            + self.leadership as f64
+            + self.aggression as f64
+            + self.teamwork as f64
+            + self.shot_stopping as f64
+            + self.commanding as f64
+            + self.playing_out as f64)
+            / 21.0
     }
 
     /// Effective rating accounting for current condition (0-100).
