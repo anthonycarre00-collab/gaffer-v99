@@ -1383,6 +1383,57 @@ fn create_incoming_user_offer(
         (player.full_name.clone(), interested_clubs)
     };
 
+    // V99.4 T3.5: Tapping Up — when a high-rep club bids for a player
+    // at a lower-rep club, generate "tapped up" news + small morale drop.
+    let owner_rep = game
+        .teams
+        .iter()
+        .find(|t| t.id == candidate.owner_team_id)
+        .map(|t| t.reputation)
+        .unwrap_or(0);
+    let buyer_rep = game
+        .teams
+        .iter()
+        .find(|t| t.id == buyer_id)
+        .map(|t| t.reputation)
+        .unwrap_or(0);
+    let rep_gap = buyer_rep.saturating_sub(owner_rep);
+    if rep_gap >= 200 {
+        // Big club bidding for a smaller club's player = tapping up.
+        let buyer_name_str = buyer_name.to_string();
+        let player_name_str = player_name.clone();
+        let player_id_str = candidate.player_id.clone();
+        let owner_team_id = candidate.owner_team_id.clone();
+
+        // Small morale drop (-3) — player's head is turned.
+        if let Some(player) = game.players.iter_mut().find(|p| p.id == player_id_str) {
+            player.morale = player.morale.saturating_sub(3);
+        }
+
+        // Generate tapping-up news article.
+        game.news.push(domain::news::NewsArticle {
+            id: format!("tapped_up_{}_{}", today, player_id_str),
+            headline: format!("{} circles {}", buyer_name_str, player_name_str),
+            body: format!(
+                "{} have made their interest in {} known with a formal bid. \
+                 The player's head has been turned — will his current club \
+                 be able to keep hold of him?",
+                buyer_name_str, player_name_str
+            ),
+            source: "Transfer Intelligence".to_string(),
+            date: today.to_string(),
+            category: domain::news::NewsCategory::TransferRumour,
+            team_ids: vec![buyer_id.to_string(), owner_team_id],
+            player_ids: vec![player_id_str],
+            match_score: None,
+            read: false,
+            headline_key: None,
+            body_key: None,
+            source_key: None,
+            i18n_params: std::collections::HashMap::new(),
+        });
+    }
+
     // One updating thread per player rather than a fresh message per club, so
     // repeat interest never floods the inbox.
     let message = crate::messages::transfer_interest_digest_message(
