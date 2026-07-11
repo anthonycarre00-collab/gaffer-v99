@@ -16,7 +16,6 @@ use std::collections::HashSet;
 use uuid::Uuid;
 
 const TRANSFER_NEGOTIATION_STALE_DAYS: i64 = 14;
-const MAX_COMPLETED_AI_TRANSFERS_PER_DAY: usize = 2;
 const AWARD_LEADERBOARD_INTEREST_BONUS: i32 = 25;
 
 /// Reputation-scaled AI transfer cap per day. Elite clubs (reputation ≥ 800)
