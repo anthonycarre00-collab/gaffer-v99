@@ -171,7 +171,10 @@ pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
             }
         }
     }
-    bonus
+    // V99.4 T1.6: Cap total trait bonus at 1.15 (was uncapped — could reach
+    // 1.18+ with stacked traits). Star players should make a difference but
+    // not 'carry' a team single-handedly.
+    bonus.min(1.15)
 }
 
 // ---------------------------------------------------------------------------
@@ -194,17 +197,22 @@ pub(crate) fn play_style_modifier(
     if !is_own_phase {
         return 1.0;
     }
+    // V99.4 T1.6: Balance sweep — reduced all play-style modifiers.
+    // Previously Counter gave +18% in attack, HighPress +20% in press.
+    // A well-set-up tactic should give ~5-10% edge, not 18-20%.
+    // Now the strongest bonus is +8% (Counter in attack) and the
+    // biggest penalty is -7% (Attacking in defense).
     match (style, phase) {
-        (PlayStyle::Attacking, PlayStylePhase::Attack) => 1.12,
-        (PlayStyle::Attacking, PlayStylePhase::Defense) => 0.93,
-        (PlayStyle::Defensive, PlayStylePhase::Defense) => 1.12,
-        (PlayStyle::Defensive, PlayStylePhase::Attack) => 0.93,
-        (PlayStyle::Possession, PlayStylePhase::Midfield) => 1.15,
-        (PlayStyle::Possession, PlayStylePhase::Attack) => 0.97,
-        (PlayStyle::Counter, PlayStylePhase::Attack) => 1.18,
-        (PlayStyle::Counter, PlayStylePhase::Midfield) => 0.92,
-        (PlayStyle::HighPress, PlayStylePhase::Press) => 1.20,
-        (PlayStyle::HighPress, PlayStylePhase::Defense) => 0.95,
+        (PlayStyle::Attacking, PlayStylePhase::Attack) => 1.08,
+        (PlayStyle::Attacking, PlayStylePhase::Defense) => 0.95,
+        (PlayStyle::Defensive, PlayStylePhase::Defense) => 1.08,
+        (PlayStyle::Defensive, PlayStylePhase::Attack) => 0.95,
+        (PlayStyle::Possession, PlayStylePhase::Midfield) => 1.10,
+        (PlayStyle::Possession, PlayStylePhase::Attack) => 0.98,
+        (PlayStyle::Counter, PlayStylePhase::Attack) => 1.08,
+        (PlayStyle::Counter, PlayStylePhase::Midfield) => 0.95,
+        (PlayStyle::HighPress, PlayStylePhase::Press) => 1.10,
+        (PlayStyle::HighPress, PlayStylePhase::Defense) => 0.97,
         _ => 1.0,
     }
 }
@@ -431,25 +439,25 @@ pub(crate) fn stability_pressure_modifier(stability: u8, is_pressure_situation: 
     if !is_pressure_situation {
         return 1.0; // No pressure = no modifier
     }
-    // High stability: up to +10% performance under pressure
-    // Low stability: up to -15% performance under pressure
-    // Mid stability (50): neutral
+    // V99.4 T1.6: Balance sweep — tightened stability modifier range.
+    // Was 0.70–1.25 (55% swing). Now 0.85–1.12 (27% swing).
+    // Star players should make a difference but not 'carry' a team.
     if stability >= 70 {
-        1.0 + (stability as f64 - 50.0) / 200.0 // 70→1.10, 100→1.25 (capped at 1.10)
+        1.0 + (stability as f64 - 50.0) / 455.0 // 70→1.044, 100→1.110, capped at 1.12
     } else if stability < 40 {
-        1.0 - (50.0 - stability as f64) / 166.0 // 39→0.94, 20→0.82, 0→0.70
+        1.0 - (50.0 - stability as f64) / 333.0 // 39→0.967, 20→0.909, 0→0.850
     } else {
         1.0 // 40-69: neutral
     }
 }
 
-/// Returns a morale modifier (0.90–1.05) based on player morale.
-/// High morale (70+) gives a small boost. Low morale (<40) gives a penalty.
+/// Returns a morale modifier (0.93–1.04) based on player morale.
+/// V99.4 T1.6: Tightened from 0.90–1.05 to 0.93–1.04.
 pub(crate) fn morale_modifier(morale: u8) -> f64 {
     if morale >= 70 {
-        1.0 + (morale as f64 - 70.0) / 600.0 // 70→1.00, 100→1.05
+        1.0 + (morale as f64 - 70.0) / 750.0 // 70→1.00, 100→1.04
     } else if morale < 40 {
-        1.0 - (40.0 - morale as f64) / 400.0 // 39→0.98, 20→0.93, 0→0.90
+        1.0 - (40.0 - morale as f64) / 571.0 // 39→0.982, 20→0.947, 0→0.930
     } else {
         1.0
     }
