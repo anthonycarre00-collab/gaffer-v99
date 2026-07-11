@@ -779,7 +779,7 @@ fn simulate_sparse_ai_match<F>(game: &mut Game, idx: usize, _on_capture: &mut F)
 where
     F: FnMut(StatsState),
 {
-    let (home_team_id, away_team_id, weather_str, importance) = {
+    let (home_team_id, away_team_id, _weather_str, importance) = {
         let league = game.league.as_ref().unwrap();
         let f = &league.fixtures[idx];
         (

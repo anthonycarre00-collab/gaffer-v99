@@ -37,6 +37,7 @@ pub(crate) struct PlayerSnap {
     pub playing_out: u8,
     pub traits: Vec<String>,
     pub role: PlayerRole,
+    pub partnership_bonus: f64,
 }
 
 impl PlayerSnap {
@@ -68,6 +69,7 @@ impl PlayerSnap {
             playing_out: p.playing_out,
             traits: p.traits.clone(),
             role: p.role,
+            partnership_bonus: p.partnership_bonus,
         }
     }
 
@@ -94,7 +96,7 @@ pub(crate) enum TraitContext {
 /// Compute a multiplicative trait bonus for a specific action context.
 /// Returns a modifier >= 1.0 (bonus) based on relevant traits.
 pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
-    let mut bonus = 1.0;
+    let mut bonus: f64 = 1.0;
     match context {
         TraitContext::Shooting => {
             if snap.has_trait("Sharpshooter") {
