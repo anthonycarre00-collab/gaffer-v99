@@ -1,6 +1,77 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// V99.4 T4.7: Board type — affects transfer budget, wage budget, patience
+/// threshold, and facility investment. Can change over time (new owner).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum BoardType {
+    /// Sugar Daddy — big money, high expectations. Will inject cash but
+    /// expects instant results. Low patience threshold.
+    SugarDaddy,
+    /// Sensible — balanced. Reasonable budgets, moderate patience.
+    #[default]
+    Sensible,
+    /// Penny-Pinching — low budget, patient. Won't spend big but gives
+    /// the manager time to build.
+    PennyPinching,
+    /// Ambitious — medium budget, high expectations. Wants success but
+    /// doesn't have Sugar Daddy money. Medium-low patience.
+    Ambitious,
+}
+
+impl BoardType {
+    /// Returns a multiplier for the wage budget (0.7–1.3).
+    pub fn wage_budget_multiplier(&self) -> f64 {
+        match self {
+            BoardType::SugarDaddy => 1.30,
+            BoardType::Sensible => 1.00,
+            BoardType::PennyPinching => 0.70,
+            BoardType::Ambitious => 1.10,
+        }
+    }
+
+    /// Returns a multiplier for the transfer budget (0.6–1.5).
+    pub fn transfer_budget_multiplier(&self) -> f64 {
+        match self {
+            BoardType::SugarDaddy => 1.50,
+            BoardType::Sensible => 1.00,
+            BoardType::PennyPinching => 0.60,
+            BoardType::Ambitious => 1.20,
+        }
+    }
+
+    /// Returns the patience threshold (number of bad results before
+    /// the board issues a warning). Lower = less patient.
+    pub fn patience_threshold(&self) -> u8 {
+        match self {
+            BoardType::SugarDaddy => 4,  // Quick to fire
+            BoardType::Sensible => 8,
+            BoardType::PennyPinching => 12, // Very patient
+            BoardType::Ambitious => 6,
+        }
+    }
+
+    /// Returns a Gaffer-voice label.
+    pub fn label(&self) -> &str {
+        match self {
+            BoardType::SugarDaddy => "Sugar Daddy",
+            BoardType::Sensible => "Sensible",
+            BoardType::PennyPinching => "Penny-Pinching",
+            BoardType::Ambitious => "Ambitious",
+        }
+    }
+
+    /// Returns a Gaffer-voice description.
+    pub fn description(&self) -> &str {
+        match self {
+            BoardType::SugarDaddy => "Money is no object — but results are expected yesterday.",
+            BoardType::Sensible => "Balanced books, balanced expectations. A proper football club.",
+            BoardType::PennyPinching => "Every penny counts. The board is patient, but don't expect a war chest.",
+            BoardType::Ambitious => "They want success and they want it soon. Medium money, high demands.",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Team {
     pub id: String,
@@ -17,6 +88,9 @@ pub struct Team {
     pub finance: i64,
     pub manager_id: Option<String>,
     pub reputation: u32,
+    /// V99.4 T4.7: Board type — affects budgets, patience, facility investment.
+    #[serde(default)]
+    pub board_type: BoardType,
 
     // Financial breakdown
     pub wage_budget: i64,

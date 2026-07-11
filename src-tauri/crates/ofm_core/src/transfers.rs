@@ -419,7 +419,16 @@ fn minimum_acceptable_fee(
     }
 
     let multiplier = multiplier.clamp(0.55, 4.0);
-    ((player.market_value as f64) * multiplier).round() as u64
+    let fee = ((player.market_value as f64) * multiplier).round() as u64;
+
+    // V99.4 T4.4: Release clause — if the player has a release clause,
+    // the club cannot ask for more than the clause amount. If a bid
+    // meets the clause, the player is automatically allowed to talk.
+    if let Some(clause) = player.release_clause {
+        return fee.min(clause);
+    }
+
+    fee
 }
 
 fn player_move_openness_score(

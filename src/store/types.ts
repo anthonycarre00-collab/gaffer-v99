@@ -258,6 +258,8 @@ export interface PlayerData {
   contract_end: string | null;
   wage: number;
   market_value: number;
+  /** V99.4 T4.4: Release clause amount (null = no clause). */
+  release_clause?: number | null;
   stats: PlayerSeasonStats;
   career: CareerEntry[];
   /** V99.4 T2.1: Career milestone events (debut, first goal, etc.) */

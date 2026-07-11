@@ -534,6 +534,37 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     // wage scale. At 10% it's £1M, still tight but workable.
     team.wage_budget = (team.finance as f64 * 0.10) as i64;
     team.transfer_budget = (team.finance as f64 * 0.15) as i64;
+    // V99.4 T4.7: Assign board type based on reputation.
+    // Elite clubs: more likely Sugar Daddy / Ambitious.
+    // Lower clubs: more likely Penny-Pinching / Sensible.
+    team.board_type = {
+        use domain::team::BoardType;
+        use rand::Rng;
+        let mut rng = rand::rng();
+        if team.reputation >= 750 {
+            match rng.random_range(0..100) {
+                0..=30 => BoardType::SugarDaddy,
+                31..=70 => BoardType::Ambitious,
+                _ => BoardType::Sensible,
+            }
+        } else if team.reputation >= 500 {
+            match rng.random_range(0..100) {
+                0..=15 => BoardType::SugarDaddy,
+                16..=45 => BoardType::Ambitious,
+                46..=85 => BoardType::Sensible,
+                _ => BoardType::PennyPinching,
+            }
+        } else {
+            match rng.random_range(0..100) {
+                0..=10 => BoardType::Ambitious,
+                11..=50 => BoardType::Sensible,
+                _ => BoardType::PennyPinching,
+            }
+        }
+    };
+    // Apply board type budget multipliers.
+    team.wage_budget = (team.wage_budget as f64 * team.board_type.wage_budget_multiplier()) as i64;
+    team.transfer_budget = (team.transfer_budget as f64 * team.board_type.transfer_budget_multiplier()) as i64;
     team.founded_year = rng.random_range(1880..1960);
     team.colors = TeamColors {
         primary: tdef.colors.primary.clone(),

@@ -82,6 +82,11 @@ pub struct Player {
     pub contract_end: Option<String>,
     pub wage: u32, // weekly wage
     pub market_value: u64,
+    /// V99.4 T4.4: Release clause — if a bid meets this amount, the club
+    /// cannot refuse the player permission to talk. None = no clause.
+    /// Higher clause = lower wage demands (player accepts less for security).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub release_clause: Option<u64>,
 
     // Season stats
     pub stats: PlayerSeasonStats,

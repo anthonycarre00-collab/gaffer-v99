@@ -1233,6 +1233,13 @@ pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDat
 
     wage *= importance_wage_multiplier(player);
 
+    // V99.4 T4.4: Release clause wage discount. If the player has a
+    // release clause, they accept a lower wage in exchange for the
+    // security of being able to leave if the clause is met.
+    if player.release_clause.is_some() {
+        wage *= 0.90; // 10% wage discount for having a release clause
+    }
+
     if team.reputation < 40 {
         wage *= 1.05;
     }
