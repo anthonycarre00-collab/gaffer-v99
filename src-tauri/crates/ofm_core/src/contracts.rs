@@ -20,7 +20,11 @@ use std::collections::HashMap;
 const RENEWAL_SESSION_STALE_DAYS: i64 = 14;
 const INSULTING_RENEWAL_BLOCK_DAYS: u64 = 30;
 const MAX_CONTRACT_YEARS: u32 = 5;
-const MARKET_VALUE_TO_WAGE_RATIO: u64 = 200;
+/// V99.3 REALISM-1 C4: Lowered from 200 to 50. With the new OVR⁴ market
+/// value formula, an 80-OVR player has a market value of ~£20.5M. At
+/// 1/50 ratio that's £410k/yr — a realistic mid-tier starter wage.
+/// The old 1/200 ratio produced £19k/yr (£369/wk) — 100× too low.
+const MARKET_VALUE_TO_WAGE_RATIO: u64 = 50;
 const MINIMUM_DEFAULT_WAGE: u64 = 500;
 const ERR_NO_TEAM_ASSIGNED: &str = "be.error.noTeamAssigned";
 const ERR_MANAGED_TEAM_NOT_FOUND: &str = "be.error.managedTeamNotFound";
