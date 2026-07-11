@@ -292,51 +292,65 @@ fn footedness_penalty(player: &Player, slot_position: &Position) -> f64 {
 
 fn weighted_score(player: &Player, position: &Position) -> f64 {
     let attrs = &player.attributes;
+    // V99.3: Fixed doubled-weight bugs (shot_stopping×2 in GK, defending×2
+    // in CB/RB/LB/RWB/LWB/DM) and added the 5 previously-missing attributes:
+    // burst, distribution, agility, commanding, playing_out.
     match position {
+        // Goalkeeper: was shot_stopping×2 (56 total). Now shot_stopping +
+        // commanding + playing_out cover all three Gloves attributes.
         Position::Goalkeeper => weighted_average(&[
             (attrs.shot_stopping, 28),
-            (attrs.shot_stopping, 28),
-            (attrs.aerial, 14),
+            (attrs.commanding, 18),
+            (attrs.aerial, 12),
             (attrs.anticipation, 10),
             (attrs.decisions, 10),
-            (attrs.composure, 5),
-            (attrs.power, 5),
+            (attrs.composure, 8),
+            (attrs.playing_out, 7),
+            (attrs.power, 7),
         ]),
+        // RightBack/LeftBack: was defending×2 (33 total). Replaced second
+        // defending with burst (acceleration for overlapping runs).
         Position::RightBack | Position::LeftBack => weighted_average(&[
             (attrs.pace, 18),
             (attrs.engine, 16),
             (attrs.defending, 17),
-            (attrs.defending, 16),
+            (attrs.burst, 14),
             (attrs.anticipation, 12),
             (attrs.passing, 10),
             (attrs.touch, 6),
-            (attrs.decisions, 5),
+            (attrs.decisions, 7),
         ]),
+        // CenterBack: was defending×2 (42 total). Replaced second defending
+        // with agility (change of direction for recovery runs).
         Position::CenterBack => weighted_average(&[
             (attrs.defending, 24),
-            (attrs.defending, 18),
+            (attrs.agility, 18),
             (attrs.anticipation, 18),
             (attrs.power, 14),
             (attrs.aerial, 12),
             (attrs.decisions, 8),
             (attrs.composure, 6),
         ]),
+        // RightWingBack/LeftWingBack: was defending×2 (26 total). Replaced
+        // second defending with burst (overlapping acceleration).
         Position::RightWingBack | Position::LeftWingBack => weighted_average(&[
             (attrs.pace, 18),
             (attrs.engine, 18),
             (attrs.defending, 14),
-            (attrs.defending, 12),
+            (attrs.burst, 12),
             (attrs.passing, 13),
             (attrs.touch, 11),
             (attrs.vision, 7),
             (attrs.decisions, 7),
         ]),
+        // DefensiveMidfielder: was defending×2 (30 total). Replaced second
+        // defending with distribution (ball-playing DM — pirlo-style).
         Position::DefensiveMidfielder => weighted_average(&[
             (attrs.defending, 18),
             (attrs.anticipation, 18),
             (attrs.decisions, 16),
             (attrs.passing, 14),
-            (attrs.defending, 12),
+            (attrs.distribution, 12),
             (attrs.engine, 10),
             (attrs.vision, 7),
             (attrs.power, 5),
@@ -371,25 +385,30 @@ fn weighted_score(player: &Player, position: &Position) -> f64 {
             (attrs.anticipation, 10),
             (attrs.defending, 8),
         ]),
+        // RightWinger/LeftWinger: added burst (acceleration past defender
+        // in 1v1 situations) by reducing pace slightly — pace covers
+        // top speed, burst covers first 5 yards.
         Position::RightWinger | Position::LeftWinger => weighted_average(&[
-            (attrs.pace, 22),
+            (attrs.pace, 18),
+            (attrs.burst, 12),
             (attrs.touch, 22),
             (attrs.passing, 14),
             (attrs.finishing, 12),
             (attrs.vision, 10),
             (attrs.decisions, 8),
-            (attrs.anticipation, 6),
-            (attrs.engine, 6),
+            (attrs.anticipation, 4),
         ]),
+        // Striker: added burst (first-step acceleration to get behind
+        // defenders) and agility (sharp turns in the box).
         Position::Striker => weighted_average(&[
             (attrs.finishing, 26),
-            (attrs.anticipation, 18),
-            (attrs.decisions, 14),
-            (attrs.pace, 12),
+            (attrs.anticipation, 16),
+            (attrs.decisions, 12),
+            (attrs.burst, 10),
+            (attrs.pace, 10),
             (attrs.touch, 10),
             (attrs.power, 8),
             (attrs.composure, 8),
-            (attrs.aerial, 4),
         ]),
         Position::Defender | Position::Midfielder | Position::Forward => unreachable!(),
     }
@@ -397,12 +416,15 @@ fn weighted_score(player: &Player, position: &Position) -> f64 {
 
 fn critical_penalty(player: &Player, position: &Position) -> f64 {
     let attrs = &player.attributes;
+    // V99.3: Fixed doubled-attr bugs (shot_stopping×2 in GK, defending×2 in
+    // CB/RB/LB). Replaced with the previously-missing attributes so the
+    // penalty actually tests three DISTINCT critical attributes.
     let critical_min = match position {
-        Position::Goalkeeper => attrs.shot_stopping.min(attrs.shot_stopping).min(attrs.anticipation),
+        Position::Goalkeeper => attrs.shot_stopping.min(attrs.commanding).min(attrs.anticipation),
         Position::RightBack | Position::LeftBack => {
-            attrs.defending.min(attrs.defending).min(attrs.anticipation)
+            attrs.defending.min(attrs.pace).min(attrs.anticipation)
         }
-        Position::CenterBack => attrs.defending.min(attrs.defending).min(attrs.anticipation),
+        Position::CenterBack => attrs.defending.min(attrs.anticipation).min(attrs.aerial),
         Position::RightWingBack | Position::LeftWingBack => {
             attrs.pace.min(attrs.engine).min(attrs.defending)
         }
