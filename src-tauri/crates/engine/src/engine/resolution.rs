@@ -422,7 +422,16 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let def_cond = if def_side == Side::Home { ctx.home_condition } else { ctx.away_condition };
 
     let pressure = is_pressure_situation(ctx, minute);
-    let stability_mod = stability_pressure_modifier(shooter.stability, pressure);
+    // V99.4 T1.5: Scale stability modifier by fixture importance pressure.
+    // In a cup final, a clutch keeper (stability 100) performs even better
+    // relative to a flake (stability 0) than in a league match.
+    let pressure_mult = ctx.config.fixture_pressure_multiplier;
+    let stability_mod = if pressure {
+        // Pressure situation: scale the stability modifier by fixture importance.
+        1.0 + (stability_pressure_modifier(shooter.stability, true) - 1.0) * pressure_mult
+    } else {
+        stability_pressure_modifier(shooter.stability, false)
+    };
     let morale_mod = morale_modifier(shooter.morale);
 
     let shoot_rating =
@@ -431,7 +440,11 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
             * att_cond
             * stability_mod
             * morale_mod;
-    let gk_stability_mod = stability_pressure_modifier(goalkeeper.stability, pressure);
+    let gk_stability_mod = if pressure {
+        1.0 + (stability_pressure_modifier(goalkeeper.stability, true) - 1.0) * pressure_mult
+    } else {
+        stability_pressure_modifier(goalkeeper.stability, false)
+    };
     let gk_morale_mod = morale_modifier(goalkeeper.morale);
     let gk_rating =
         (goalkeeper.shot_stopping as f64 + goalkeeper.commanding as f64 + goalkeeper.anticipation as f64)

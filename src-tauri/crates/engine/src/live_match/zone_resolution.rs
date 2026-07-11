@@ -405,11 +405,19 @@ impl LiveMatchState {
         // 100) performed identically to a flake (stability 0) under 89th-
         // minute pressure.
         let pressure = self.is_pressure_situation(minute);
-        let shoot_stability_mod =
-            crate::shared::stability_pressure_modifier(shooter.stability, pressure);
+        // V99.4 T1.5: Scale stability modifier by fixture importance pressure.
+        let pressure_mult = self.config.fixture_pressure_multiplier;
+        let shoot_stability_mod = if pressure {
+            1.0 + (crate::shared::stability_pressure_modifier(shooter.stability, true) - 1.0) * pressure_mult
+        } else {
+            crate::shared::stability_pressure_modifier(shooter.stability, false)
+        };
         let shoot_morale_mod = crate::shared::morale_modifier(shooter.morale);
-        let gk_stability_mod =
-            crate::shared::stability_pressure_modifier(goalkeeper.stability, pressure);
+        let gk_stability_mod = if pressure {
+            1.0 + (crate::shared::stability_pressure_modifier(goalkeeper.stability, true) - 1.0) * pressure_mult
+        } else {
+            crate::shared::stability_pressure_modifier(goalkeeper.stability, false)
+        };
         let gk_morale_mod = crate::shared::morale_modifier(goalkeeper.morale);
 
         let shoot_raw =

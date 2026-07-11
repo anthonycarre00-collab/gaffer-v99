@@ -256,6 +256,84 @@ pub struct Fixture {
     /// Empty string = not yet generated (will default to "clear" at match time).
     #[serde(default)]
     pub weather: String,
+    /// V99.4 T1.5: Fixture importance level — drives news, press conferences,
+    /// and match engine pressure scaling. Default is League for backward compat.
+    #[serde(default = "default_fixture_importance")]
+    pub importance: FixtureImportance,
+}
+
+/// V99.4 T1.5: How important a fixture is — affects news buildup, press
+/// conferences, and match engine pressure modifiers.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum FixtureImportance {
+    Friendly,           // Preseason, friendlies — no pressure
+    #[default]
+    League,             // Standard league match
+    BigLeague,          // Top-6 clash, derby, title race
+    Cup,                // Domestic cup tie
+    Continental,        // Champions League / Europa group+knockout
+    CupFinal,           // Domestic cup final
+    ContinentalFinal,   // Champions League final
+    Massive,            // World Cup final, title decider, relegation 6-pointer
+}
+
+impl FixtureImportance {
+    /// Returns a pressure multiplier for the match engine.
+    /// Higher importance = pressure situations are more intense.
+    /// Used to scale stability_pressure_modifier + leadership_modifier.
+    pub fn pressure_multiplier(&self) -> f64 {
+        match self {
+            FixtureImportance::Friendly => 0.5,
+            FixtureImportance::League => 1.0,
+            FixtureImportance::BigLeague => 1.3,
+            FixtureImportance::Cup => 1.2,
+            FixtureImportance::Continental => 1.4,
+            FixtureImportance::CupFinal => 1.8,
+            FixtureImportance::ContinentalFinal => 2.0,
+            FixtureImportance::Massive => 2.5,
+        }
+    }
+
+    /// Returns a Gaffer-voice label for the fixture.
+    pub fn label(&self) -> &str {
+        match self {
+            FixtureImportance::Friendly => "Friendly",
+            FixtureImportance::League => "League Match",
+            FixtureImportance::BigLeague => "Big Match",
+            FixtureImportance::Cup => "Cup Tie",
+            FixtureImportance::Continental => "Continental Tie",
+            FixtureImportance::CupFinal => "Cup Final",
+            FixtureImportance::ContinentalFinal => "Continental Final",
+            FixtureImportance::Massive => "Massive Match",
+        }
+    }
+
+    /// Returns true if this is a "big game" — affects big-game player traits.
+    pub fn is_big_game(&self) -> bool {
+        matches!(
+            self,
+            FixtureImportance::BigLeague
+                | FixtureImportance::Cup
+                | FixtureImportance::Continental
+                | FixtureImportance::CupFinal
+                | FixtureImportance::ContinentalFinal
+                | FixtureImportance::Massive
+        )
+    }
+
+    /// Returns true if this is a pressure situation where stability matters most.
+    pub fn is_pressure_situation(&self) -> bool {
+        matches!(
+            self,
+            FixtureImportance::CupFinal
+                | FixtureImportance::ContinentalFinal
+                | FixtureImportance::Massive
+        )
+    }
+}
+
+fn default_fixture_importance() -> FixtureImportance {
+    FixtureImportance::League
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

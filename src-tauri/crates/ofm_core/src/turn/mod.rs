@@ -688,7 +688,7 @@ fn simulate_single_match_with_capture<F>(game: &mut Game, idx: usize, on_capture
 where
     F: FnMut(StatsState),
 {
-    let (home_team_id, away_team_id, is_knockout, weather_str) = {
+    let (home_team_id, away_team_id, is_knockout, weather_str, importance) = {
         let league = game.league.as_ref().unwrap();
         let f = &league.fixtures[idx];
         (
@@ -696,6 +696,7 @@ where
             f.away_team_id.clone(),
             league.is_knockout_fixture(&f.id),
             f.weather.clone(),
+            f.importance.clone(),
         )
     };
 
@@ -704,6 +705,8 @@ where
     // V99.4 T1.1: Apply fixture weather to the match config.
     let mut config = engine::MatchConfig::default();
     config.weather = engine::weather_modifiers_for(&weather_str);
+    // V99.4 T1.5: Apply fixture importance pressure multiplier.
+    config.fixture_pressure_multiplier = importance.pressure_multiplier();
     let mut report = engine::simulate(&home_data, &away_data, &config);
     // A level knockout tie must produce a winner: resolve it with a simulated
     // shootout so the home side no longer advances by default on a draw.

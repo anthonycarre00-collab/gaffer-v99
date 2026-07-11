@@ -682,6 +682,11 @@ export default function PreMatchSetup({
  {getWeatherInfo(currentFixture.weather as WeatherCondition).label}
  </p>
  )}
+ {currentFixture?.importance && currentFixture.importance !== "League" && currentFixture.importance !== "Friendly" && (
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-accent-600 dark:text-accent-400 mt-1">
+ {currentFixture.importance.replace(/([A-Z])/g, ' $1').trim()}
+ </p>
+ )}
  </div>
  <button
  onClick={onStart}

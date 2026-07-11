@@ -539,6 +539,8 @@ export interface FixtureData {
   };
   /** V99.4 T1.1: Weather condition for the match (empty = not generated). */
   weather?: string;
+  /** V99.4 T1.5: Fixture importance level. */
+  importance?: string;
 }
 
 export interface CompactMatchEventData {

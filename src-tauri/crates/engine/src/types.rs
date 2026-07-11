@@ -390,6 +390,11 @@ pub struct MatchConfig {
     /// V99.4 T1.1: Weather modifiers for this match. All 1.0 = no effect.
     #[serde(default = "default_weather_modifiers")]
     pub weather: WeatherModifiers,
+    /// V99.4 T1.5: Fixture importance pressure multiplier (1.0 = standard league).
+    /// Scales stability_pressure_modifier + leadership_modifier in the match engine.
+    /// Cup finals = 1.8, Continental finals = 2.0, Massive = 2.5.
+    #[serde(default = "default_fixture_pressure")]
+    pub fixture_pressure_multiplier: f64,
 }
 
 /// V99.4 T1.1: Weather modifiers applied to match simulation.
@@ -422,6 +427,10 @@ impl Default for WeatherModifiers {
 
 fn default_weather_modifiers() -> WeatherModifiers {
     WeatherModifiers::default()
+}
+
+fn default_fixture_pressure() -> f64 {
+    1.0
 }
 
 /// V99.4 T1.1: Resolve a weather condition string into WeatherModifiers.
@@ -504,6 +513,7 @@ impl Default for MatchConfig {
             stoppage_time_max: 4,
             injury_probability: 0.03,
             weather: WeatherModifiers::default(),
+            fixture_pressure_multiplier: 1.0,
         }
     }
 }

@@ -1,9 +1,63 @@
 use chrono::{DateTime, Datelike, Duration, Utc};
 use domain::league::{
     CompetitionFormat, CompetitionRules, CompetitionScope, CompetitionType, Fixture,
-    FixtureCompetition, FixtureStatus, KnockoutRoundState, League, StandingEntry,
+    FixtureCompetition, FixtureImportance, FixtureStatus, KnockoutRoundState, League,
+    StandingEntry,
 };
 use uuid::Uuid;
+
+/// V99.4 T1.5: Derive fixture importance from competition type + team reputations.
+/// Called at fixture creation time to set the importance level.
+fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: u32) -> FixtureImportance {
+    // Cup finals are the biggest domestic games.
+    // Continental finals are the biggest overall.
+    // League matches between top teams are "Big League".
+    // Derbies (same country, high rep) are also "Big League".
+    let avg_rep = (home_rep + away_rep) / 2;
+    let rep_gap = if home_rep > away_rep { home_rep - away_rep } else { away_rep - home_rep };
+
+    match competition {
+        FixtureCompetition::Friendly | FixtureCompetition::PreseasonTournament => {
+            FixtureImportance::Friendly
+        }
+        FixtureCompetition::League => {
+            // Top-6 clash: both teams have reputation >= 700
+            if home_rep >= 700 && away_rep >= 700 {
+                FixtureImportance::BigLeague
+            }
+            // Title race: both teams >= 650 and close in reputation
+            else if home_rep >= 650 && away_rep >= 650 && rep_gap <= 100 {
+                FixtureImportance::BigLeague
+            }
+            // Relegation 6-pointer: both teams <= 350 (bottom half)
+            else if home_rep <= 350 && away_rep <= 350 {
+                FixtureImportance::BigLeague
+            }
+            else {
+                FixtureImportance::League
+            }
+        }
+        FixtureCompetition::Cup => {
+            // Cup final would need stage info — for now, cup ties are "Cup"
+            // unless both teams are elite (which makes it a bigger tie).
+            if avg_rep >= 700 {
+                FixtureImportance::BigLeague
+            } else {
+                FixtureImportance::Cup
+            }
+        }
+        FixtureCompetition::ContinentalClub => {
+            if avg_rep >= 800 {
+                FixtureImportance::Continental
+            } else {
+                FixtureImportance::Cup
+            }
+        }
+        FixtureCompetition::InternationalClub | FixtureCompetition::InternationalNation => {
+            FixtureImportance::Continental
+        }
+    }
+}
 
 /// V99.4 T1.1: Generate a weather condition for a fixture based on its date.
 /// Uses a deterministic seed from the date string so the same fixture always
@@ -158,6 +212,7 @@ pub fn build_round_robin_fixtures_with(
                     status: FixtureStatus::Scheduled,
                     result: None,
                     weather: generate_weather_for_date(&date_str),
+                    importance: FixtureImportance::League,
                 });
             }
             matchday += 1;
@@ -333,6 +388,7 @@ pub fn seed_knockout_round(
                     .format("%Y-%m-%d")
                     .to_string(),
             ),
+            importance: FixtureImportance::Cup,
         });
     }
     cup.knockout_rounds.push(KnockoutRoundState {
@@ -480,6 +536,7 @@ pub fn generate_preseason_friendlies(
                 status: FixtureStatus::Scheduled,
                 result: None,
                 weather: generate_weather_for_date(&date),
+                importance: FixtureImportance::Friendly,
             });
         }
 
@@ -1010,6 +1067,7 @@ mod tests {
             status: FixtureStatus::Scheduled,
             result: None,
             weather: generate_weather_for_date("2026-01-11"),
+            importance: FixtureImportance::Cup,
         });
 
         let mut competitions = vec![league, cup];
