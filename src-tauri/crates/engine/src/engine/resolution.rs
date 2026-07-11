@@ -16,13 +16,16 @@ use super::snap_player;
 /// V99: Get the leadership rating of the team's captain (first player in the
 /// starting XI with the highest leadership). Returns 50 (neutral) if no
 /// captain can be identified.
+/// V99.3 ARCH-1 C3: Exclude sent-off players — a red-carded captain
+/// shouldn't still contribute leadership from the dressing room.
 fn team_captain_leadership(ctx: &MatchContext, side: Side) -> u8 {
     let team = ctx.team(side);
     // The captain is the player with the highest leadership in the starting XI.
     // For the simple engine path we don't track captaincy explicitly, so we
-    // approximate by taking the max leadership across all players.
+    // approximate by taking the max leadership across all non-sent-off players.
     team.players
         .iter()
+        .filter(|p| !ctx.sent_off.contains(&p.id))
         .map(|p| p.leadership)
         .max()
         .unwrap_or(50)

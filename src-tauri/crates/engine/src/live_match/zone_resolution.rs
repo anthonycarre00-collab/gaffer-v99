@@ -3,9 +3,10 @@ use rand::{Rng, RngExt};
 use crate::event::{EventDetail, EventType, MatchEvent};
 use crate::shared::{
     PlayStylePhase, PlayerSnap, TraitContext, burst_modifier, leadership_modifier,
-    play_style_modifier, role_attribute_modifier, stability_pressure_modifier,
-    tactics_buildup_mod, tactics_cross_probability, tactics_defensive_conversion_mod,
-    tactics_foul_modifier, tactics_shape_modifier, tactics_tempo_progression, trait_bonus,
+    morale_modifier, play_style_modifier, role_attribute_modifier,
+    stability_pressure_modifier, tactics_buildup_mod, tactics_cross_probability,
+    tactics_defensive_conversion_mod, tactics_foul_modifier, tactics_shape_modifier,
+    tactics_tempo_progression, trait_bonus,
 };
 use crate::types::{Position, Side, Zone};
 
@@ -42,6 +43,10 @@ impl LiveMatchState {
     ) -> Vec<MatchEvent> {
         let mut events = Vec::new();
         let passer = self.snap_player(att_side, Position::Defender, rng);
+        // V99.3 ARCH-1 C2: Apply morale modifier (buildup doesn't normally
+        // have pressure situations, so no stability mod here — matches the
+        // engine path).
+        let passer_morale_mod = crate::shared::morale_modifier(passer.morale);
         let pass_skill = self.condition_adjusted_skill(
             &passer.id,
             (passer.passing as f64
@@ -49,7 +54,8 @@ impl LiveMatchState {
                 + passer.composure as f64
                 + passer.teamwork as f64)
                 / 4.0,
-        ) * trait_bonus(&passer, TraitContext::Passing);
+        ) * trait_bonus(&passer, TraitContext::Passing)
+            * passer_morale_mod;
         let press = self.effective_press(def_side);
         let ball_zone = self.ball_zone;
 
@@ -110,9 +116,11 @@ impl LiveMatchState {
             + defender.teamwork as f64)
             / 4.0;
         let att_rating = self.condition_adjusted_skill(&attacker.id, att_raw)
-            * trait_bonus(&attacker, TraitContext::Midfield);
+            * trait_bonus(&attacker, TraitContext::Midfield)
+            * crate::shared::morale_modifier(attacker.morale);
         let def_rating = self.condition_adjusted_skill(&defender.id, def_raw)
-            * trait_bonus(&defender, TraitContext::Tackling);
+            * trait_bonus(&defender, TraitContext::Tackling)
+            * crate::shared::morale_modifier(defender.morale);
 
         let att_mod = play_style_modifier(
             self.team_ref(att_side).play_style,
@@ -205,15 +213,18 @@ impl LiveMatchState {
         // V99: Apply burst_modifier to dribbling + leadership_modifier to
         // defending under pressure. Also apply stability + morale modifiers
         // for consistency with the simple engine path.
+        // V99.3 ARCH-1 C2: Added morale_modifier (was missing in live path).
         let captain_leadership = self.team_captain_leadership(def_side);
         let att_rating = self.condition_adjusted_skill(&attacker.id, att_raw)
             * trait_bonus(&attacker, TraitContext::Dribbling)
             * burst_modifier(attacker.burst)
-            * stability_pressure_modifier(attacker.stability, pressure);
+            * stability_pressure_modifier(attacker.stability, pressure)
+            * morale_modifier(attacker.morale);
         let def_rating = self.condition_adjusted_skill(&defender.id, def_raw)
             * trait_bonus(&defender, TraitContext::Tackling)
             * leadership_modifier(captain_leadership, pressure)
-            * stability_pressure_modifier(defender.stability, pressure);
+            * stability_pressure_modifier(defender.stability, pressure)
+            * morale_modifier(defender.morale);
 
         let att_mod = play_style_modifier(
             self.team_ref(att_side).play_style,
@@ -364,16 +375,36 @@ impl LiveMatchState {
         let assister = self.snap_player(att_side, Position::Midfielder, rng);
         let goalkeeper = self.snap_player(def_side, Position::Goalkeeper, rng);
 
+        // V99.3 ARCH-1 C2: Apply stability + morale modifiers to the live
+        // match path. Previously these were ONLY applied in the engine path
+        // (CPU-vs-CPU matches) — the OPPOSITE of intended design. User-played
+        // matches (live) should be where morale and clutch performance matter
+        // most, but they were being ignored. A striker on 100 morale vs 0
+        // morale scored at the same rate; a legendary clutch keeper (stability
+        // 100) performed identically to a flake (stability 0) under 89th-
+        // minute pressure.
+        let pressure = self.is_pressure_situation(minute);
+        let shoot_stability_mod =
+            crate::shared::stability_pressure_modifier(shooter.stability, pressure);
+        let shoot_morale_mod = crate::shared::morale_modifier(shooter.morale);
+        let gk_stability_mod =
+            crate::shared::stability_pressure_modifier(goalkeeper.stability, pressure);
+        let gk_morale_mod = crate::shared::morale_modifier(goalkeeper.morale);
+
         let shoot_raw =
             (shooter.finishing as f64 + shooter.composure as f64 + shooter.decisions as f64) / 3.0;
         let shoot_rating = self.condition_adjusted_skill(&shooter.id, shoot_raw)
-            * trait_bonus(&shooter, TraitContext::Shooting);
+            * trait_bonus(&shooter, TraitContext::Shooting)
+            * shoot_stability_mod
+            * shoot_morale_mod;
         let gk_raw = (goalkeeper.shot_stopping as f64
             + goalkeeper.commanding as f64
             + goalkeeper.anticipation as f64)
             / 3.0;
         let gk_rating = self.condition_adjusted_skill(&goalkeeper.id, gk_raw)
-            * trait_bonus(&goalkeeper, TraitContext::Goalkeeping);
+            * trait_bonus(&goalkeeper, TraitContext::Goalkeeping)
+            * gk_stability_mod
+            * gk_morale_mod;
 
         let accuracy =
             (self.config.shot_accuracy_base + (shoot_rating - 50.0) / 200.0).clamp(0.15, 0.85);
