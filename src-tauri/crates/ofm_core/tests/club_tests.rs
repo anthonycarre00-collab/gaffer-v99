@@ -17,7 +17,8 @@ fn make_team(id: &str, name: &str) -> Team {
     );
     team.finance = 2_000_000;
     team
-}
+            ..Default::default()
+        }
 
 fn make_game() -> Game {
     let date = Utc.with_ymd_and_hms(2025, 6, 16, 12, 0, 0).unwrap();

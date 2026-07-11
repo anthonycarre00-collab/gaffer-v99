@@ -45,6 +45,8 @@ fn mk(id: &str, pos: Position) -> PlayerData {
         playing_out: 50,
         stability: 50,
         morale: 75,
+            ..Default::default()
+        
     }
 }
 
@@ -53,7 +55,9 @@ fn team(id: &str, tactics: TacticsConfig) -> TeamData {
         id: id.to_string(), name: id.to_string(), formation: "4-4-2".to_string(),
         play_style: PlayStyle::Balanced, tactics,
         players: vec![
-            mk(&format!("{id}_gk"), Position::Goalkeeper),
+            mk(&format!("{id
+            ..Default::default()
+        }_gk"), Position::Goalkeeper),
             mk(&format!("{id}_d1"), Position::Defender), mk(&format!("{id}_d2"), Position::Defender),
             mk(&format!("{id}_d3"), Position::Defender), mk(&format!("{id}_d4"), Position::Defender),
             mk(&format!("{id}_m1"), Position::Midfielder), mk(&format!("{id}_m2"), Position::Midfielder),

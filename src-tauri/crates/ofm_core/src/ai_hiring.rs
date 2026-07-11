@@ -509,7 +509,8 @@ mod tests {
             "Test Ground".to_string(),
             20_000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_staff(
         id: &str,
@@ -653,6 +654,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Fixture::default()
             }],

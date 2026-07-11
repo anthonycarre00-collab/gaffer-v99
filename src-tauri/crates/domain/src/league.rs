@@ -493,6 +493,8 @@ impl StandingEntry {
 impl Fixture {
     pub fn counts_for_league_standings(&self) -> bool {
         matches!(self.competition, FixtureCompetition::League)
+            ..Default::default()
+        
     }
 
     /// The team advancing from this knockout fixture once a result is
@@ -586,6 +588,8 @@ impl Default for Fixture {
             competition: FixtureCompetition::League,
             status: FixtureStatus::Scheduled,
             result: None,
+            weather: String::new(),
+            importance: FixtureImportance::League,
         }
     }
 }

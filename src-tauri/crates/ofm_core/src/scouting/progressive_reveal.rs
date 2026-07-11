@@ -391,6 +391,7 @@ mod tests {
             defending: 60, aerial: 60, anticipation: 60, vision: 60,
             decisions: 60, composure: 60, leadership: 60,
             shot_stopping: 60, commanding: 60, playing_out: 60,
+            ..Default::default()
         };
         let mut p = Player::new(
             "p1".to_string(),

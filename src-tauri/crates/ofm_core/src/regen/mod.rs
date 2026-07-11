@@ -97,7 +97,8 @@ pub fn generate_replacement_regen(
     let age_roll: u32 = rng.random_range(0..100);
     let age = if age_roll < 20 {
         16
-    } else if age_roll < 70 {
+            ..Default::default()
+        } else if age_roll < 70 {
         17
     } else if age_roll < 90 {
         18
@@ -330,7 +331,8 @@ fn dummy_team_for_regen(team_id: &str, team_country: &str) -> domain::team::Team
         "Unknown Stadium".to_string(),
         0,
     )
-}
+            ..Default::default()
+        }
 
 // ============================================================================
 // SEASON HOOKS — called from end_of_season.rs
@@ -559,6 +561,7 @@ mod tests {
             defending: 70, aerial: 70, anticipation: 70, vision: 70,
             decisions: 70, composure: 70, leadership: 70,
             shot_stopping: 70, commanding: 70, playing_out: 70,
+            ..Default::default()
         };
         let mut p = Player::new(
             "retiree_1".to_string(),

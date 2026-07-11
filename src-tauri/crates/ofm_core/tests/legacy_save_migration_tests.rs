@@ -8,7 +8,9 @@ use ofm_core::game::Game;
 fn team(id: &str) -> Team {
     Team::new(
         id.to_string(),
-        format!("{id} FC"),
+        format!("{id
+            ..Default::default()
+        } FC"),
         id.to_uppercase(),
         "England".to_string(),
         "Town".to_string(),

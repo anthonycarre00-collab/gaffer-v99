@@ -112,6 +112,8 @@ pub(super) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Ve
         tactics,
         tactics_multiplier,
         captain_id,
+            ..Default::default()
+        
     };
 
     (team_data, bench)
@@ -467,6 +469,8 @@ fn to_engine_player(
         DomainPosition::Midfielder => Position::Midfielder,
         DomainPosition::Forward => Position::Forward,
         _ => Position::Midfielder,
+            ..Default::default()
+        
     };
 
     PlayerData {
@@ -503,7 +507,9 @@ fn to_engine_player(
         shot_stopping: p.attributes.shot_stopping,
         commanding: p.attributes.commanding,
         playing_out: p.attributes.playing_out,
-        traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
+        traits: p.traits.iter().map(|t| format!("{:?
+            ..Default::default()
+        }", t)).collect(),
         role,
     }
 }
@@ -605,7 +611,8 @@ mod tests {
 
     fn mk(id: &str, attr: u8, condition: u8) -> Player {
         mk_pos(id, DomainPos::CenterBack, attr, condition)
-    }
+            ..Default::default()
+        }
 
     fn mk_pos(id: &str, position: DomainPos, attr: u8, condition: u8) -> Player {
         let mut p = Player::new(
@@ -619,7 +626,8 @@ mod tests {
         );
         p.condition = condition;
         p
-    }
+            ..Default::default()
+        }
 
     #[test]
     fn management_quality_maps_reputation_to_unit_range() {

@@ -63,7 +63,8 @@ pub fn load_national_teams(conn: &Connection) -> Result<Vec<NationalTeam>, Strin
                 reputation: row.get::<_, i64>(6).unwrap_or(500) as u32,
                 fixtures: serde_json::from_str::<Vec<Fixture>>(&fixtures_json).unwrap_or_default(),
                 name_key: row.get(8)?,
-            })
+            ..Default::default()
+        })
         })
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
 

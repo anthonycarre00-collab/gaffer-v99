@@ -124,7 +124,7 @@ impl ManagerPersonality {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Manager {
     pub id: String,
     pub first_name: String,
@@ -155,7 +155,8 @@ pub struct Manager {
     /// V99.4 T1.7: Manager personality — drives tactical style, transfers, media.
     #[serde(default = "default_personality")]
     pub personality: ManagerPersonality,
-}
+            ..Default::default()
+        }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ManagerCareerStats {
@@ -221,6 +222,7 @@ impl Manager {
             warning_stage: 0,
             career_stats: ManagerCareerStats::default(),
             career_history: Vec::new(),
+            personality: ManagerPersonality::default(),
         }
     }
 
@@ -288,7 +290,8 @@ mod tests {
             "1980-01-01".to_string(),
             "GB".to_string(),
         )
-    }
+            ..Default::default()
+        }
 
     #[test]
     fn rating_for_fresh_mid_reputation_manager_is_mid_range() {

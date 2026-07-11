@@ -41,13 +41,16 @@ fn make_team(id: &str, name: &str) -> Team {
         "Ground".to_string(),
         20_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_player(id: &str, team_id: Option<&str>) -> Player {
     let mut p = Player::new(
         id.to_string(),
         id.to_string(),
-        format!("Player {id}"),
+        format!("Player {id
+            ..Default::default()
+        }"),
         "2000-01-01".to_string(),
         "GB".to_string(),
         Position::Midfielder,

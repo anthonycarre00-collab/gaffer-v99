@@ -94,7 +94,9 @@ pub fn schedule_national_team_friendlies(
             let home_id = national_teams[*home_idx].id.clone();
             let away_id = national_teams[*away_idx].id.clone();
             let fixture = Fixture {
-                id: format!("ntf-{window_index}-{home_id}-{away_id}"),
+                id: format!("ntf-{window_index
+            ..Default::default()
+        }-{home_id}-{away_id}"),
                 competition_id: INTERNATIONAL_FRIENDLY_COMPETITION_ID.to_string(),
                 matchday: window_index as u32 + 1,
                 date: date.clone(),
@@ -462,7 +464,9 @@ mod tests {
     fn make_player(id: &str, ovr: u8) -> Player {
         let mut player = Player::new(
             id.to_string(),
-            format!("{id} name"),
+            format!("{id
+            ..Default::default()
+        } name"),
             format!("{id} fullname"),
             "2000-01-01".to_string(),
             "ENG".to_string(),
@@ -478,7 +482,9 @@ mod tests {
     fn make_national_team(id: &str, nation: &str, squad: &[&str]) -> NationalTeam {
         let mut team = NationalTeam::new(
             id.to_string(),
-            format!("{nation} National Team"),
+            format!("{nation
+            ..Default::default()
+        } National Team"),
             nation.to_string(),
             None,
         );
@@ -585,6 +591,8 @@ mod tests {
             competition: FixtureCompetition::InternationalNation,
             status: FixtureStatus::Scheduled,
             result: None,
+            ..Default::default()
+        
         });
         let away = make_national_team("nt-bra", "BRA", &["p2"]);
         game.national_teams = vec![home, away];
@@ -615,6 +623,8 @@ mod tests {
             competition: FixtureCompetition::InternationalNation,
             status: FixtureStatus::Scheduled,
             result: None,
+            ..Default::default()
+        
         });
         game.national_teams = vec![home, make_national_team("nt-bra", "BRA", &["p2"])];
 

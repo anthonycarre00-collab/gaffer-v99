@@ -337,6 +337,7 @@ fn row_to_player(row: &rusqlite::Row) -> rusqlite::Result<Player> {
             let json_str: Option<String> = row.get(39).ok().flatten();
             json_str.and_then(|s| serde_json::from_str(&s).ok())
                 .unwrap_or_default()
+            ..Default::default()
         },
         stability_modifier: {
             let val: Option<i32> = row.get(40).ok().flatten();
@@ -408,7 +409,8 @@ mod tests {
                 distribution: 50,
                 commanding: 50,
                 playing_out: 50,
-            },
+            ..Default::default()
+        },
         );
         p.team_id = team_id.map(|s| s.to_string());
         p.wage = 5000;
@@ -567,6 +569,8 @@ mod tests {
             suggested_buy_option_fee: None,
             status: LoanOfferStatus::Accepted,
             date: "2026-08-01".to_string(),
+            ..Default::default()
+        
         });
         player.active_loan = Some(ActiveLoan {
             parent_team_id: "team-parent".to_string(),

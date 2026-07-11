@@ -27,7 +27,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let attrs = PlayerAttributes {
@@ -50,7 +51,8 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
         distribution: 50,
         commanding: 50,
         playing_out: 50,
-    };
+            ..Default::default()
+        };
     let mut p = Player::new(
         id.to_string(),
         name.to_string(),
@@ -83,6 +85,8 @@ fn make_completed_fixture(id: &str, home: &str, away: &str, hg: u8, ag: u8) -> F
             report: None,
             home_penalties: None,
             away_penalties: None,
+            ..Default::default()
+        
         }),
         ..Default::default()
     }
@@ -190,7 +194,8 @@ fn make_club(id: &str, nation: &str, reputation: u32) -> Team {
     team.football_nation = nation.to_string();
     team.reputation = reputation;
     team
-}
+            ..Default::default()
+        }
 
 /// A single-division domestic league with `clubs` listed strongest-first; the
 /// final standings are set so the listed order is the finishing order.
@@ -597,6 +602,8 @@ fn process_end_of_season_reschedules_national_team_windows() {
         competition: FixtureCompetition::InternationalNation,
         status: FixtureStatus::Completed,
         result: None,
+            ..Default::default()
+        
     });
     let mut nt_b = NationalTeam::new("nt-b".into(), "B".into(), "BBB".into(), None);
     nt_b.squad_player_ids = vec!["p2".into()];
@@ -1288,6 +1295,8 @@ fn season_not_complete_with_truncated_completed_fixture_list() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -1307,6 +1316,8 @@ fn season_not_complete_with_truncated_completed_fixture_list() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -1775,7 +1786,9 @@ fn lower_table_finish_receives_expected_prize_money() {
     for i in 3..=10 {
         let team_id = format!("team{}", i);
         game.teams
-            .push(make_team(&team_id, &format!("Team{} FC", i)));
+            .push(make_team(&team_id, &format!("Team {
+            ..Default::default()
+        } FC", i)));
     }
 
     if let Some(league) = &mut game.league {
@@ -1951,7 +1964,9 @@ fn bottom_half_gets_concerned_message() {
     // (user_position > 4 AND user_position > total_teams / 2)
     for i in 3..=10 {
         let tid = format!("team{}", i);
-        game.teams.push(make_team(&tid, &format!("Team{} FC", i)));
+        game.teams.push(make_team(&tid, &format!("Team {
+            ..Default::default()
+        } FC", i)));
     }
     if let Some(league) = &mut game.league {
         let mut standings = Vec::new();
@@ -2044,7 +2059,9 @@ fn high_reputation_bottom_side_loses_reputation() {
     for i in 3..=10 {
         let team_id = format!("team{}", i);
         game.teams
-            .push(make_team(&team_id, &format!("Team{} FC", i)));
+            .push(make_team(&team_id, &format!("Team {
+            ..Default::default()
+        } FC", i)));
     }
 
     game.teams
@@ -2317,7 +2334,9 @@ fn season_end_board_message_top_four_uses_correct_body_key() {
 // ---------------------------------------------------------------------------
 
 fn make_retired_player(id: &str) -> domain::player::Player {
-    use domain::player::{CareerEntry, PlayerAttributes, Position};
+    use domain::player::{CareerEntry, PlayerAttributes, Position
+            ..Default::default()
+        };
     let attrs = PlayerAttributes {
         pace: 55,
         engine: 55,

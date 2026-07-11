@@ -73,7 +73,8 @@ fn gk_attrs() -> PlayerAttributes {
 fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let attrs = if pos == Position::Goalkeeper {
         gk_attrs()
-    } else {
+            ..Default::default()
+        } else {
         default_attrs()
     };
     let mut p = Player::new(
@@ -101,7 +102,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_staff(
     id: &str,
@@ -237,6 +239,8 @@ fn process_day_simulates_due_national_team_fixture() {
         competition: FixtureCompetition::InternationalNation,
         status: FixtureStatus::Scheduled,
         result: None,
+            ..Default::default()
+        
     });
     let mut away = NationalTeam::new("nt-bra".into(), "Brazil".into(), "BRA".into(), None);
     away.squad_player_ids = away_squad;
@@ -286,6 +290,8 @@ fn process_day_routes_world_cup_fixtures_to_the_national_team_engine() {
         competition: FixtureCompetition::InternationalNation,
         status: FixtureStatus::Scheduled,
         result: None,
+            ..Default::default()
+        
     });
     cup.knockout_rounds.push(KnockoutRoundState {
         id: "wc-round-1".to_string(),
@@ -929,7 +935,9 @@ fn apply_match_report_depletes_stamina() {
     for p in &game.players {
         assert!(
             p.condition < 100,
-            "Player {} condition should be depleted after match",
+            "Player {
+            ..Default::default()
+        } condition should be depleted after match",
             p.id
         );
     }
@@ -1716,6 +1724,8 @@ fn make_round_summary_game() -> Game {
                     away_scorers: vec![domain::league::GoalEvent {
                         player_id: "t2_fwd0".to_string(),
                         minute: 77,
+            ..Default::default()
+        
                     }],
                     report: None,
                     home_penalties: None,
@@ -1738,6 +1748,8 @@ fn make_round_summary_game() -> Game {
                         domain::league::GoalEvent {
                             player_id: "t3_fwd0".to_string(),
                             minute: 20,
+            ..Default::default()
+        
                         },
                         domain::league::GoalEvent {
                             player_id: "t3_fwd0".to_string(),

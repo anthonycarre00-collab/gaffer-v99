@@ -299,7 +299,9 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             id.to_string(),
-            format!("Player {id}"),
+            format!("Player {id
+            ..Default::default()
+        }"),
             dob.to_string(),
             "England".to_string(),
             Position::Forward,

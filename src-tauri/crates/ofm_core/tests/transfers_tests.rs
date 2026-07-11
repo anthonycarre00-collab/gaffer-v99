@@ -47,7 +47,9 @@ fn default_attrs() -> PlayerAttributes {
 fn make_player(id: &str) -> Player {
     let mut player = Player::new(
         id.to_string(),
-        format!("{}. Test", id),
+        format!("{
+            ..Default::default()
+        }. Test", id),
         format!("{} Test", id),
         "2000-01-01".to_string(),
         "England".to_string(),
@@ -65,7 +67,8 @@ fn make_user_player(id: &str) -> Player {
     let mut player = make_player(id);
     player.team_id = Some("team-1".to_string());
     player
-}
+            ..Default::default()
+        }
 
 fn make_pending_incoming_offer(id: &str, fee: u64) -> TransferOffer {
     TransferOffer {
@@ -104,6 +107,8 @@ fn make_pending_incoming_loan_offer(
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
         date: "2026-08-01".to_string(),
+            ..Default::default()
+        
     }
 }
 
@@ -122,7 +127,8 @@ fn make_user_team(finance: i64, transfer_budget: i64) -> Team {
     team.wage_budget = 2_000_000;
     team.manager_id = Some("manager-1".to_string());
     team
-}
+            ..Default::default()
+        }
 
 fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
     let mut team = Team::new(
@@ -136,7 +142,8 @@ fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
     );
     team.starting_xi_ids = starting_xi_ids;
     team
-}
+            ..Default::default()
+        }
 
 fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Team {
     let mut team = Team::new(
@@ -145,7 +152,9 @@ fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Tea
         name.chars().take(3).collect(),
         "England".to_string(),
         "Manchester".to_string(),
-        format!("{} Ground", name),
+        format!("{
+            ..Default::default()
+        } Ground", name),
         30_000,
     );
     team.finance = finance;
@@ -1559,6 +1568,8 @@ fn accepting_incoming_loan_offer_moves_user_player_to_borrowing_club() {
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
         date: "2026-08-01".to_string(),
+            ..Default::default()
+        
     });
 
     let mut game = make_game_with_player(player, vec![], 5_000_000, 2_000_000);
@@ -1741,6 +1752,8 @@ fn incoming_loan_offer_rejects_end_date_after_player_contract() {
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
         date: "2026-08-01".to_string(),
+            ..Default::default()
+        
     });
 
     let mut game = make_game_with_player(player, vec![], 5_000_000, 2_000_000);
@@ -2340,6 +2353,8 @@ fn rejecting_pending_offer_succeeds_for_pending_loan_player() {
     player.loan_offers.push(LoanOffer {
         status: LoanOfferStatus::PendingRegistration,
         ..make_pending_incoming_loan_offer("loan-pending-registration", 75, None)
+            ..Default::default()
+        
     });
 
     let mut game = make_game_with_player(player, vec![], 5_000_000, 2_000_000);

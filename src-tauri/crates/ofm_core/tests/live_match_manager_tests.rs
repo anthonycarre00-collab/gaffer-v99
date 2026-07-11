@@ -33,7 +33,9 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let mut p = Player::new(
         id.to_string(),
         name.to_string(),
-        format!("Full {}", name),
+        format!("Full {
+            ..Default::default()
+        }", name),
         "1995-01-01".to_string(),
         "GB".to_string(),
         pos,
@@ -55,7 +57,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 /// Build a full squad of 22 players for a team (4-4-2 formation ready).
 fn make_squad(team_id: &str) -> Vec<Player> {

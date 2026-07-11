@@ -198,7 +198,8 @@ mod tests {
         );
         m.team_id = team_id.map(|s| s.to_string());
         m
-    }
+            ..Default::default()
+        }
 
     fn make_team(id: &str, name: &str) -> Team {
         Team::new(
@@ -210,7 +211,8 @@ mod tests {
             "Stadium".to_string(),
             40_000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_fixture(
         id: &str,
@@ -229,6 +231,8 @@ mod tests {
             competition: FixtureCompetition::default(),
             status,
             result: None,
+            ..Default::default()
+        
         }
     }
 

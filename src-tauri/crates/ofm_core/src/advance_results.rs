@@ -140,7 +140,9 @@ mod tests {
     fn team(id: &str) -> Team {
         Team::new(
             id.to_string(),
-            format!("{id} FC"),
+            format!("{id
+            ..Default::default()
+        } FC"),
             id.to_uppercase(),
             "England".to_string(),
             "Town".to_string(),
@@ -167,6 +169,8 @@ mod tests {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
         }
     }
@@ -259,6 +263,8 @@ mod tests {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
         }
     }

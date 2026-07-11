@@ -393,7 +393,8 @@ mod tests {
             "Test Ground".to_string(),
             20_000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_player(
         id: &str,
@@ -415,7 +416,8 @@ mod tests {
         player.team_id = team_id.map(str::to_string);
         player.stats = stats;
         player
-    }
+            ..Default::default()
+        }
 
     fn make_game(players: Vec<Player>, teams: Vec<Team>) -> Game {
         let clock = GameClock::new(Utc.with_ymd_and_hms(2025, 6, 15, 12, 0, 0).unwrap());
@@ -446,6 +448,7 @@ mod tests {
             losses: 5,
             trophies: 1,
             best_finish: Some(1),
+            ..Default::default()
         };
         manager
     }

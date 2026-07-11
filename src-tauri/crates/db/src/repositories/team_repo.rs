@@ -184,6 +184,7 @@ fn row_to_team(row: &rusqlite::Row) -> rusqlite::Result<Team> {
         colors: TeamColors {
             primary: row.get(21)?,
             secondary: row.get(22)?,
+            ..Default::default()
         },
         kit_pattern: kit_pattern_str.parse().map_err(|_| {
             rusqlite::Error::FromSqlConversionFailure(
@@ -330,7 +331,8 @@ mod tests {
         team.wage_budget = 200_000;
         team.transfer_budget = 500_000;
         team
-    }
+            ..Default::default()
+        }
 
     #[test]
     fn test_upsert_and_load_team() {

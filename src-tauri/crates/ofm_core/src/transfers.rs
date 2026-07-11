@@ -931,6 +931,8 @@ fn upsert_loan_offer(
         suggested_buy_option_fee: None,
         status,
         date: date.to_string(),
+            ..Default::default()
+        
     });
     offer_id
 }
@@ -3867,7 +3869,9 @@ mod tests {
             name[..3].to_string(),
             "England".to_string(),
             "Testville".to_string(),
-            format!("{} Ground", name),
+            format!("{
+            ..Default::default()
+        } Ground", name),
             25_000,
         );
         team.reputation = reputation;

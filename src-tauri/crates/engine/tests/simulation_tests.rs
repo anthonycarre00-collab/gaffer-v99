@@ -39,6 +39,8 @@ fn make_player(id: &str, name: &str, position: Position, skill: u8) -> PlayerDat
         playing_out: 50,
         stability: 50,
         morale: 75,
+            ..Default::default()
+        
     }
 }
 
@@ -50,7 +52,9 @@ fn make_team(id: &str, name: &str, skill: u8, play_style: PlayStyle) -> TeamData
         play_style,
         tactics: TacticsConfig::default(),
         players: vec![
-            make_player(&format!("{id}_gk1"), "GK1", Position::Goalkeeper, skill),
+            make_player(&format!("{id
+            ..Default::default()
+        }_gk1"), "GK1", Position::Goalkeeper, skill),
             make_player(&format!("{id}_def1"), "DEF1", Position::Defender, skill),
             make_player(&format!("{id}_def2"), "DEF2", Position::Defender, skill),
             make_player(&format!("{id}_def3"), "DEF3", Position::Defender, skill),
@@ -536,7 +540,9 @@ fn player_stats_populated() {
     for (player_id, ps) in &report.player_stats {
         assert!(
             ps.rating >= 0.0 && ps.rating <= 10.0,
-            "Player {player_id} rating out of range: {}",
+            "Player {player_id
+            ..Default::default()
+        } rating out of range: {}",
             ps.rating
         );
     }
@@ -934,6 +940,8 @@ fn minimal_team_doesnt_crash() {
             make_player("mid", "MID", Position::Midfielder, 50),
             make_player("fwd", "FWD", Position::Forward, 50),
         ],
+            ..Default::default()
+        
     };
     let normal = make_team("normal", "Normal FC", 60, PlayStyle::Balanced);
     let config = MatchConfig::default();
@@ -977,7 +985,9 @@ fn player_ratings_computed_for_active_players() {
     for (pid, ps) in &report.player_stats {
         assert!(
             ps.rating >= 0.0 && ps.rating <= 10.0,
-            "Player {} has invalid rating: {}",
+            "Player {
+            ..Default::default()
+        } has invalid rating: {}",
             pid,
             ps.rating
         );

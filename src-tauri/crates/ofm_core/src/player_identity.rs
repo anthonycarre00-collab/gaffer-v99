@@ -464,7 +464,9 @@ mod tests {
     fn make_player(id: &str, position: Position, attrs: PlayerAttributes) -> Player {
         Player::new(
             id.to_string(),
-            format!("{}. Test", id),
+            format!("{
+            ..Default::default()
+        }. Test", id),
             format!("{} Test", id),
             "2000-01-01".to_string(),
             "GB".to_string(),
@@ -483,7 +485,8 @@ mod tests {
             "Test Stadium".to_string(),
             25000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_manager() -> Manager {
         Manager::new(
@@ -493,7 +496,8 @@ mod tests {
             "1980-01-01".to_string(),
             "GB".to_string(),
         )
-    }
+            ..Default::default()
+        }
 
     #[test]
     fn upgrade_player_identity_infers_granular_defender_profile() {

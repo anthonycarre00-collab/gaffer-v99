@@ -497,6 +497,7 @@ pub(crate) fn burst_modifier(burst: u8) -> f64 {
 /// Bundle of all modifiers applied to a zone rating computation.
 /// Both resolution paths build this from the same source data, ensuring
 /// no modifier is accidentally dropped from one path but not the other.
+#[allow(dead_code)]
 #[derive(Debug, Clone, Copy, Default)]
 pub(crate) struct ModifierBundle {
     pub trait_bonus: f64,
@@ -521,6 +522,7 @@ pub(crate) struct ModifierBundle {
 ///
 /// The fixture_pressure modifier is applied to the stability component
 /// (not the raw skill) — pressure amplifies the stability effect.
+#[allow(dead_code)]
 pub(crate) fn compute_zone_rating(raw_skill: f64, mods: &ModifierBundle) -> f64 {
     // Scale stability by fixture pressure (cup finals amplify clutch/choke).
     let effective_stability = if mods.fixture_pressure > 1.0 {

@@ -665,6 +665,8 @@ mod event_detail_tests {
             playing_out: 50,
             stability: 50,
             morale: 75,
+            ..Default::default()
+        
         }
     }
 
@@ -676,7 +678,9 @@ mod event_detail_tests {
             play_style: PlayStyle::Balanced,
             tactics: crate::types::TacticsConfig::default(),
             players: vec![
-                make_player(&format!("{id}_gk"), Position::Goalkeeper),
+                make_player(&format!("{id
+            ..Default::default()
+        }_gk"), Position::Goalkeeper),
                 make_player(&format!("{id}_d1"), Position::Defender),
                 make_player(&format!("{id}_d2"), Position::Defender),
                 make_player(&format!("{id}_d3"), Position::Defender),

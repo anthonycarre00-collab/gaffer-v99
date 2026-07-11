@@ -55,7 +55,8 @@ fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     p.morale = 70;
     p.condition = 90;
     p
-}
+            ..Default::default()
+        }
 
 fn make_team(id: &str, name: &str) -> Team {
     Team::new(
@@ -67,7 +68,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_game() -> Game {
     let date = Utc.with_ymd_and_hms(2025, 6, 15, 12, 0, 0).unwrap();
@@ -268,7 +270,9 @@ fn bench_complaint_after_5_missed_matches() {
     // Set up league with 5 completed fixtures (new minimum); p_fwd0 has 0 appearances
     let fixtures: Vec<Fixture> = (0..5)
         .map(|i| Fixture {
-            id: format!("fix{}", i),
+            id: format!("fix{
+            ..Default::default()
+        }", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),
@@ -332,7 +336,9 @@ fn bench_complaint_not_for_gk() {
     let mut game = make_game();
     let fixtures: Vec<Fixture> = (0..5)
         .map(|i| Fixture {
-            id: format!("fix{}", i),
+            id: format!("fix{
+            ..Default::default()
+        }", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),
@@ -382,7 +388,9 @@ fn bench_complaint_not_with_fewer_than_5_fixtures() {
     let mut game = make_game();
     let fixtures: Vec<Fixture> = (0..4)
         .map(|i| Fixture {
-            id: format!("fix{}", i),
+            id: format!("fix{
+            ..Default::default()
+        }", i),
             matchday: i + 1,
             date: format!("2025-06-{:02}", 10 + i),
             home_team_id: "team1".to_string(),

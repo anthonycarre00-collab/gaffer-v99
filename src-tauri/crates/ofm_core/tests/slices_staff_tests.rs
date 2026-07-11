@@ -42,7 +42,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Ground".to_string(),
         20_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_staff(id: &str, team_id: Option<&str>, role: StaffRole) -> Staff {
     let attrs = StaffAttributes {

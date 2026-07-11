@@ -232,7 +232,7 @@ if exist "package.json" (
     echo [OK] package.json found.
 ) else (
     echo [MISSING] package.json not found.
-    echo   Make sure you're running this from the gaffer-v99-main folder.
+    echo   Make sure you're running this from the gaffer folder.
 )
 
 if exist "node_modules" (

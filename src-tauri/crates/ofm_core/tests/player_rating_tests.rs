@@ -67,7 +67,8 @@ fn make_player(position: Position, attrs: PlayerAttributes, dob: &str) -> Player
     );
     p.team_id = Some("team1".to_string());
     p
-}
+            ..Default::default()
+        }
 
 // ---------------------------------------------------------------------------
 // refresh_player_derived

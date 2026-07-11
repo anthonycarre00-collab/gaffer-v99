@@ -159,7 +159,9 @@ mod tests {
             name.to_string(),
             "England".to_string(),
             "Test City".to_string(),
-            format!("{} Ground", name),
+            format!("{
+            ..Default::default()
+        } Ground", name),
             20_000,
         )
     }
@@ -181,6 +183,8 @@ mod tests {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
             ..Default::default()
         }

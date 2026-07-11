@@ -72,7 +72,7 @@ impl BoardType {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Team {
     pub id: String,
     pub name: String,
@@ -147,7 +147,8 @@ pub struct Team {
 
     // History
     pub history: Vec<TeamSeasonRecord>,
-}
+            ..Default::default()
+        }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct MatchRoles {
@@ -441,8 +442,9 @@ pub struct TeamMedia {
     pub logo: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub enum PlayStyle {
+    #[default]
     Balanced,
     Attacking,
     Defensive,
@@ -574,6 +576,7 @@ impl Team {
             match_roles: MatchRoles::default(),
             form: Vec::new(),
             history: Vec::new(),
+            board_type: BoardType::default(),
         }
     }
 

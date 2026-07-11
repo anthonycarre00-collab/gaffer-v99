@@ -96,9 +96,13 @@ pub fn hire_manager(game: &mut Game, team_id: &str, date: &str) -> Result<String
         .teams
         .iter()
         .find(|t| t.id == team_id)
-        .ok_or_else(|| format!("Team {} not found", team_id))?;
+        .ok_or_else(|| format!("Team {
+            ..Default::default()
+        } not found", team_id))?;
     if team.manager_id.is_some() {
-        return Err(format!("Team {} {}", team_id, VACANCY_SUBSTRING));
+        return Err(format!("Team {
+            ..Default::default()
+        } {}", team_id, VACANCY_SUBSTRING));
     }
     let team_name = team.name.clone();
     let manager_id = game.manager.id.clone();
@@ -153,7 +157,9 @@ pub fn hire_manager(game: &mut Game, team_id: &str, date: &str) -> Result<String
     ));
 
     info!(
-        "[job_offers] Manager {} hired at {} (satisfaction reset to 50)",
+        "[job_offers] Manager {
+            ..Default::default()
+        } hired at {} (satisfaction reset to 50)",
         game.manager.full_name(),
         team_name
     );
@@ -191,9 +197,13 @@ pub fn switch_manager_team(
         .teams
         .iter()
         .find(|t| t.id == new_team_id)
-        .ok_or_else(|| format!("Team {} not found", new_team_id))?;
+        .ok_or_else(|| format!("Team {
+            ..Default::default()
+        } not found", new_team_id))?;
     if new_team.manager_id.is_some() {
-        return Err(format!("Team {} is not vacant", new_team_id));
+        return Err(format!("Team {
+            ..Default::default()
+        } is not vacant", new_team_id));
     }
 
     let previous_team_name = game
@@ -225,7 +235,9 @@ pub fn switch_manager_team(
     game.manager.fire(date);
 
     info!(
-        "[job_offers] Manager {} resigning from {} to take new role",
+        "[job_offers] Manager {
+            ..Default::default()
+        } resigning from {} to take new role",
         game.manager.full_name(),
         previous_team_name
     );
@@ -838,7 +850,9 @@ mod tests {
         for i in 4..=10 {
             let mut t = Team::new(
                 format!("team{}", i),
-                format!("Team {}", i),
+                format!("Team {
+            ..Default::default()
+        }", i),
                 format!("T{}", i),
                 "England".to_string(),
                 format!("City{}", i),

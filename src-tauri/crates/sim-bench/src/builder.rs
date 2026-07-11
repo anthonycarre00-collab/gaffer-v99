@@ -13,6 +13,8 @@ pub fn build_team(
     rng: &mut impl Rng,
 ) -> TeamData {
     build_team_with_tactics(id, name, avg_ovr, play_style, formation, TacticsConfig::default(), rng)
+            ..Default::default()
+        
 }
 
 pub fn build_team_with_tactics(
@@ -30,6 +32,8 @@ pub fn build_team_with_tactics(
     players.push(make_player(id, "GK", 1, 1, Position::Goalkeeper, avg_ovr, rng));
     for i in 1..=n_def {
         players.push(make_player(id, "DEF", i, n_def, Position::Defender, avg_ovr, rng));
+            ..Default::default()
+        
     }
     for i in 1..=n_mid {
         players.push(make_player(id, "MID", i, n_mid, Position::Midfielder, avg_ovr, rng));
@@ -41,7 +45,9 @@ pub fn build_team_with_tactics(
     TeamData {
         id: id.to_string(),
         name: name.to_string(),
-        formation: if used_fallback { "4-4-2".to_string() } else { formation.to_string() },
+        formation: if used_fallback { "4-4-2".to_string()
+            ..Default::default()
+         } else { formation.to_string() },
         play_style,
         tactics,
         players,
@@ -129,6 +135,8 @@ fn make_player(
 
     fn noise(base: f64, rng: &mut impl Rng) -> u8 {
         (base + rng.random_range(-10.0f64..10.0f64)).clamp(10.0, 99.0) as u8
+            ..Default::default()
+        
     }
     fn biased(base: f64, offset: f64, rng: &mut impl Rng) -> u8 {
         (base + offset + rng.random_range(-8.0f64..8.0f64)).clamp(10.0, 99.0) as u8
@@ -144,7 +152,9 @@ fn make_player(
     let role = sample_role(position, idx, total_in_position, rng);
 
     PlayerData {
-        id: format!("{team_id}_{pos_label}{idx}"),
+        id: format!("{team_id
+            ..Default::default()
+        }_{pos_label}{idx}"),
         name: format!("{pos_label}{idx}"),
         position,
         ovr: avg_ovr,

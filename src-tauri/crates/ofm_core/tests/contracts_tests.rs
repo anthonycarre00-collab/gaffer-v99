@@ -57,13 +57,16 @@ fn make_player() -> Player {
     player.morale = 75;
     player.market_value = 350_000;
     player
-}
+            ..Default::default()
+        }
 
 fn make_player_with(id: &str, wage: u32, contract_end: &str) -> Player {
     let mut player = make_player();
     player.id = id.to_string();
     player.match_name = id.to_string();
-    player.full_name = format!("Player {}", id);
+    player.full_name = format!("Player {
+            ..Default::default()
+        }", id);
     player.wage = wage;
     player.contract_end = Some(contract_end.to_string());
     player
@@ -74,7 +77,8 @@ fn make_player_with_position(id: &str, position: Position) -> Player {
     player.position = position.clone();
     player.natural_position = position;
     player
-}
+            ..Default::default()
+        }
 
 fn make_team() -> Team {
     let mut team = Team::new(
@@ -90,7 +94,8 @@ fn make_team() -> Team {
     team.reputation = 50;
     team.wage_budget = 50_000;
     team
-}
+            ..Default::default()
+        }
 
 fn make_assistant_manager() -> Staff {
     let mut staff = Staff::new(
@@ -166,7 +171,8 @@ fn make_free_agent() -> Player {
     player.wage = 0;
     player.market_value = 600_000;
     player
-}
+            ..Default::default()
+        }
 
 fn make_free_agent_game() -> Game {
     let mut game = make_game();

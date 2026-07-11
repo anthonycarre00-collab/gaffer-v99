@@ -312,7 +312,9 @@ mod tests {
             let mut player = Player::new(
                 id.to_string(),
                 id.to_uppercase(),
-                format!("Player {}", id),
+                format!("Player {
+            ..Default::default()
+        }", id),
                 "2000-01-01".to_string(),
                 "GB".to_string(),
                 position.clone(),

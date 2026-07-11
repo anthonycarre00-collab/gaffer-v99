@@ -191,7 +191,8 @@ pub fn repair_opening_youth_academies(game: &mut crate::game::Game) -> bool {
 
 pub fn generate_youth_academy_recruit(team: &Team, target_position: Option<&Position>) -> Player {
     generate_youth_academy_recruit_with_nationality(team, target_position, None)
-}
+            ..Default::default()
+        }
 
 pub fn generate_youth_academy_recruit_with_nationality(
     team: &Team,
@@ -214,7 +215,8 @@ pub fn generate_youth_academy_recruit_with_nationality(
     player.transfer_listed = false;
     player.loan_listed = false;
     player
-}
+            ..Default::default()
+        }
 
 /// Generate a senior free-agent player for a national squad. `squad_slot`
 /// follows the standard squad layout (GK 0-1, DEF 2-8, MID 9-15, FWD 16-21)
@@ -234,7 +236,8 @@ pub fn generate_national_team_player(nationality: &str, squad_slot: usize) -> Pl
     player.transfer_listed = false;
     player.loan_listed = false;
     player
-}
+            ..Default::default()
+        }
 
 fn normalize_generated_team(team: &mut Team, players: &mut [Player]) {
     seed_opening_youth_academy(players);
@@ -492,7 +495,8 @@ pub fn generate_world(
 fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     let team_id = if tdef.id.is_empty() {
         Uuid::new_v4().to_string()
-    } else {
+            ..Default::default()
+        } else {
         tdef.id.clone()
     };
     let short_name = if tdef.short_name.is_empty() {
@@ -1210,7 +1214,9 @@ mod tests {
         let (teams, players, _) = generate_world_with(&WorldGenConfig::compact(), None);
         let team_ids: Vec<&str> = teams.iter().map(|t| t.id.as_str()).collect();
         for p in &players {
-            assert!(p.team_id.is_some(), "Player {} has no team", p.full_name);
+            assert!(p.team_id.is_some(), "Player {
+            ..Default::default()
+        } has no team", p.full_name);
             assert!(
                 team_ids.contains(&p.team_id.as_deref().unwrap()),
                 "Player has unknown team"
@@ -1231,7 +1237,9 @@ mod tests {
                 .iter()
                 .filter(|p| p.position == Position::Goalkeeper)
                 .count();
-            assert!(gk >= 2, "Team {} has only {} GK", team.name, gk);
+            assert!(gk >= 2, "Team {
+            ..Default::default()
+        } has only {} GK", team.name, gk);
         }
     }
 
@@ -1461,13 +1469,17 @@ mod tests {
         for p in &players {
             assert!(
                 p.nationality.len() == 2 || p.nationality.len() == 3,
-                "Player {} has invalid nationality code: {}",
+                "Player {
+            ..Default::default()
+        } has invalid nationality code: {}",
                 p.full_name,
                 p.nationality
             );
             assert!(
                 p.nationality.chars().all(|c| c.is_ascii_uppercase()),
-                "Player {} nationality not uppercase: {}",
+                "Player {
+            ..Default::default()
+        } nationality not uppercase: {}",
                 p.full_name,
                 p.nationality
             );
@@ -1559,7 +1571,9 @@ mod tests {
             name[..3].to_string(),
             "England".to_string(),
             "London".to_string(),
-            format!("{name} Ground"),
+            format!("{name
+            ..Default::default()
+        } Ground"),
             25_000,
         );
         team.football_nation = "ENG".to_string();
@@ -1574,7 +1588,9 @@ mod tests {
     ) -> Player {
         let mut player = Player::new(
             id.to_string(),
-            format!("{id} M"),
+            format!("{id
+            ..Default::default()
+        } M"),
             format!("{id} Player"),
             date_of_birth.to_string(),
             "ENG".to_string(),

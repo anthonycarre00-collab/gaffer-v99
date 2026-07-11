@@ -9,7 +9,8 @@ pub struct SaveIndexManager {
     index_path: PathBuf,
     index: SaveIndex,
     index_needs_rebuild: bool,
-}
+            ..Default::default()
+        }
 
 impl SaveIndexManager {
     pub fn init(saves_dir: &Path) -> Result<Self, String> {
@@ -17,6 +18,7 @@ impl SaveIndexManager {
         let (index, index_needs_rebuild) = match load_index(&index_path)? {
             Some(index) => (index, false),
             None => (SaveIndex::new(), true),
+            ..Default::default()
         };
 
         Ok(Self {

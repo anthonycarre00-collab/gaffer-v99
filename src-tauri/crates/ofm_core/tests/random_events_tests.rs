@@ -55,7 +55,8 @@ fn make_player(id: &str, name: &str, team_id: &str) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
     p
-}
+            ..Default::default()
+        }
 
 fn make_team(id: &str, name: &str) -> Team {
     Team::new(
@@ -67,7 +68,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_game() -> Game {
     let clock = GameClock::new(Utc.with_ymd_and_hms(2025, 6, 15, 12, 0, 0).unwrap());
@@ -82,7 +84,9 @@ fn make_game() -> Game {
 
     let team = make_team("team1", "Test FC");
     let players: Vec<Player> = (0..11)
-        .map(|i| make_player(&format!("p{}", i), &format!("Player {}", i), "team1"))
+        .map(|i| make_player(&format!("p{}", i), &format!("Player {
+            ..Default::default()
+        }", i), "team1"))
         .collect();
 
     Game::new(clock, manager, vec![team], players, vec![], vec![])
@@ -295,6 +299,8 @@ fn check_random_events_board_confidence_triggers_on_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -314,6 +320,8 @@ fn check_random_events_board_confidence_triggers_on_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -333,6 +341,8 @@ fn check_random_events_board_confidence_triggers_on_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -389,6 +399,8 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -408,6 +420,8 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -427,6 +441,8 @@ fn check_random_events_board_confidence_no_trigger_without_losses() {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },

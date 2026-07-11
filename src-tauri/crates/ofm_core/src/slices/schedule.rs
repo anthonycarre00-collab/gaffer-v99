@@ -242,6 +242,8 @@ mod tests {
             competition: FixtureCompetition::League,
             status,
             result: None,
+            ..Default::default()
+        
         }
     }
 
@@ -271,6 +273,8 @@ mod tests {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
         }
     }

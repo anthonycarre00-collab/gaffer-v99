@@ -44,12 +44,16 @@ fn make_player(id: &str, name: &str, pos: Position, skill: u8) -> PlayerData {
         playing_out: 50,
         stability: 50,
         morale: 75,
+            ..Default::default()
+        
     }
 }
 
 fn make_team(id: &str, name: &str, skill: u8, style: PlayStyle) -> TeamData {
     let players = vec![
-        make_player(&format!("{}_gk", id), "GK", Position::Goalkeeper, skill),
+        make_player(&format!("{
+            ..Default::default()
+        }_gk", id), "GK", Position::Goalkeeper, skill),
         make_player(&format!("{}_def1", id), "DEF1", Position::Defender, skill),
         make_player(&format!("{}_def2", id), "DEF2", Position::Defender, skill),
         make_player(&format!("{}_def3", id), "DEF3", Position::Defender, skill),
@@ -68,6 +72,8 @@ fn make_team(id: &str, name: &str, skill: u8, style: PlayStyle) -> TeamData {
         play_style: style,
         tactics: TacticsConfig::default(),
         players,
+            ..Default::default()
+        
     }
 }
 
@@ -1319,13 +1325,17 @@ fn make_player_with_traits(
         playing_out: 50,
         stability: 50,
         morale: 75,
+            ..Default::default()
+        
     }
 }
 
 fn make_team_with_traits(id: &str, name: &str, skill: u8, traits: Vec<&str>) -> TeamData {
     let players = vec![
         make_player_with_traits(
-            &format!("{}_gk", id),
+            &format!("{
+            ..Default::default()
+        }_gk", id),
             "GK",
             Position::Goalkeeper,
             skill,
@@ -1409,6 +1419,8 @@ fn make_team_with_traits(id: &str, name: &str, skill: u8, traits: Vec<&str>) -> 
         play_style: PlayStyle::Balanced,
         tactics: TacticsConfig::default(),
         players,
+            ..Default::default()
+        
     }
 }
 

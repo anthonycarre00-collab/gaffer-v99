@@ -25,7 +25,8 @@ use crate::save_load_error::SaveLoadError;
 pub struct SaveManager {
     saves_dir: PathBuf,
     save_index: SaveIndexManager,
-}
+            ..Default::default()
+        }
 
 const SAVE_MANAGER_UNAVAILABLE_ERROR: &str = "be.error.saveManagerUnavailable";
 const SAVE_DELETE_ERROR: &str = "be.error.saveDeleteFailed";
@@ -128,6 +129,7 @@ impl SaveManager {
         Ok(Self {
             saves_dir: saves_dir.to_path_buf(),
             save_index,
+            ..Default::default()
         })
     }
 
@@ -1017,7 +1019,9 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             id.to_uppercase(),
-            format!("Player {}", id),
+            format!("Player {
+            ..Default::default()
+        }", id),
             "2000-01-01".to_string(),
             "GB".to_string(),
             position.clone(),
@@ -1106,7 +1110,9 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             id.to_uppercase(),
-            format!("Player {}", id),
+            format!("Player {
+            ..Default::default()
+        }", id),
             date_of_birth.to_string(),
             "GB".to_string(),
             position,

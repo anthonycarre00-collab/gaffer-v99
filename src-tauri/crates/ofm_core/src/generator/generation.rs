@@ -188,7 +188,9 @@ pub(super) fn generate_random_player_from_def(
     rng: &mut impl Rng,
 ) -> Player {
     let (first_name, last_name) = pick_name_from_def(nationality, names_def, rng);
-    let full_name = format!("{} {}", first_name, last_name);
+    let full_name = format!("{
+            ..Default::default()
+        } {}", first_name, last_name);
     let match_name = last_name.clone();
 
     // Distribute positions: GK:0-1, DEF:2-8, MID:9-15, FWD:16-21
@@ -618,7 +620,9 @@ pub(super) fn generate_player_from_def(
 ) -> Player {
     let nationality = canonicalize_generated_nationality(&def.nationality);
     let (first_name, last_name) = resolve_def_name(def, &nationality, names_def, rng);
-    let full_name = format!("{first_name} {last_name}").trim().to_string();
+    let full_name = format!("{first_name
+            ..Default::default()
+        } {last_name}").trim().to_string();
     let match_name = if last_name.is_empty() {
         full_name.clone()
     } else {
@@ -722,7 +726,9 @@ pub(super) fn generate_random_unemployed_manager(
     let age: u32 = rng.random_range(35..65);
     let birth_year = current_year.saturating_sub(age);
     let dob = format!(
-        "{:04}-{:02}-{:02}",
+        "{:04
+            ..Default::default()
+        }-{:02}-{:02}",
         birth_year,
         rng.random_range(1u32..13u32),
         rng.random_range(1u32..29u32)

@@ -41,7 +41,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Ground".to_string(),
         20_000,
     )
-}
+            ..Default::default()
+        }
 
 struct PlayerSpec<'a> {
     id: &'a str,
@@ -100,7 +101,8 @@ impl<'a> PlayerSpec<'a> {
             p.injury = Some(Injury {
                 name: "knock".to_string(),
                 days_remaining: 5,
-            });
+            ..Default::default()
+        });
         }
         p
     }
@@ -431,7 +433,9 @@ fn pagination_returns_requested_window_and_total() {
     for i in 0..7 {
         let mut spec = PlayerSpec::new(
             Box::leak(format!("p{i}").into_boxed_str()),
-            Box::leak(format!("Player {i}").into_boxed_str()),
+            Box::leak(format!("Player {i
+            ..Default::default()
+        }").into_boxed_str()),
             Some("t1"),
         );
         spec.ovr = 90 - i as u8;

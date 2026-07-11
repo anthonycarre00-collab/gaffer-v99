@@ -317,7 +317,8 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.wage = wage;
         player
-    }
+            ..Default::default()
+        }
 
     fn make_team(id: &str, name: &str, reputation: u32) -> Team {
         let mut team = Team::new(
@@ -331,7 +332,8 @@ mod tests {
         );
         team.reputation = reputation;
         team
-    }
+            ..Default::default()
+        }
 
     fn make_game(user_reputation: u32, season: u32, team_count: usize) -> Game {
         let clock = GameClock::new(Utc.with_ymd_and_hms(2025, 8, 1, 12, 0, 0).unwrap());
@@ -348,7 +350,9 @@ mod tests {
             .map(|idx| {
                 make_team(
                     &format!("team{}", idx),
-                    &format!("Team {}", idx),
+                    &format!("Team {
+            ..Default::default()
+        }", idx),
                     if idx == 1 { user_reputation } else { 500 },
                 )
             })
@@ -553,6 +557,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -572,6 +578,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -642,6 +650,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -661,6 +671,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -736,6 +748,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -755,6 +769,8 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
+            ..Default::default()
+        
                 }),
                 ..Default::default()
             },
@@ -792,7 +808,9 @@ mod tests {
             Fixture {
                 id: id.to_string(),
                 matchday,
-                date: format!("2025-08-{:02}", matchday),
+                date: format!("2025-08-{:02
+            ..Default::default()
+        }", matchday),
                 home_team_id: home_team_id.to_string(),
                 away_team_id: away_team_id.to_string(),
                 competition: FixtureCompetition::League,

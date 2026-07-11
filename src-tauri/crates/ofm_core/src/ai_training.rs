@@ -341,7 +341,8 @@ mod tests {
         p.team_id = Some(team_id.to_string());
         p.condition = condition;
         p
-    }
+            ..Default::default()
+        }
 
     fn make_team(id: &str, play_style: PlayStyle) -> Team {
         let mut t = Team::new(
@@ -358,7 +359,8 @@ mod tests {
         t.training_focus = TrainingFocus::Physical;
         t.training_intensity = TrainingIntensity::Medium;
         t
-    }
+            ..Default::default()
+        }
 
     fn make_manager(team_id: Option<&str>) -> Manager {
         let mut m = Manager::new(
@@ -370,6 +372,7 @@ mod tests {
         );
         if let Some(tid) = team_id {
             m.hire(tid.to_string());
+            ..Default::default()
         }
         m
     }
@@ -645,6 +648,8 @@ mod tests {
             competition: FixtureCompetition::League,
             status: FixtureStatus::Scheduled,
             result: None,
+            ..Default::default()
+        
         };
         let fix2 = Fixture {
             id: "f2".to_string(),
@@ -656,6 +661,8 @@ mod tests {
             competition: FixtureCompetition::League,
             status: FixtureStatus::Scheduled,
             result: None,
+            ..Default::default()
+        
         };
         let team_ids = vec!["ai".to_string()];
         let mut league = League::new("league1".to_string(), "Test".to_string(), 1, &team_ids);

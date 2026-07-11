@@ -1184,7 +1184,9 @@ mod tests {
             name[..3].to_string(),
             "England".to_string(),
             "Testville".to_string(),
-            format!("{} Ground", name),
+            format!("{
+            ..Default::default()
+        } Ground", name),
             22_000,
         );
         team.reputation = 650;

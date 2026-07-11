@@ -105,7 +105,8 @@ pub fn load_manager(conn: &Connection, id: &str) -> Result<Option<Manager>, Stri
                 warning_stage,
                 career_stats,
                 career_history,
-            }))
+            ..Default::default()
+        }))
         }
         Some(Err(_)) => Err(GAME_PERSISTENCE_LOAD_ERROR.to_string()),
         None => Ok(None),
@@ -179,6 +180,7 @@ pub fn load_all_managers(conn: &Connection) -> Result<Vec<Manager>, String> {
             warning_stage,
             career_stats,
             career_history,
+            ..Default::default()
         });
     }
     Ok(managers)
@@ -202,7 +204,8 @@ mod tests {
             "1990-01-15".to_string(),
             "British".to_string(),
         )
-    }
+            ..Default::default()
+        }
 
     #[test]
     fn test_upsert_and_load_manager() {

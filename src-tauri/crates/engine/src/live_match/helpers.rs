@@ -208,6 +208,8 @@ impl LiveMatchState {
         match side {
             Side::Home => &self.home,
             Side::Away => &self.away,
+            ..Default::default()
+        
         }
     }
 
@@ -215,6 +217,8 @@ impl LiveMatchState {
         match side {
             Side::Home => &mut self.home,
             Side::Away => &mut self.away,
+            ..Default::default()
+        
         }
     }
 
@@ -362,6 +366,8 @@ mod commentary_detail_tests {
             playing_out: 50,
             stability: 50,
             morale: 75,
+            ..Default::default()
+        
         }
     }
 
@@ -373,7 +379,9 @@ mod commentary_detail_tests {
             formation: "4-4-2".to_string(),
             play_style: PlayStyle::Balanced,
             players: vec![
-                make_test_player(&format!("{}_gk", id), Position::Goalkeeper),
+                make_test_player(&format!("{
+            ..Default::default()
+        }_gk", id), Position::Goalkeeper),
                 make_test_player(&format!("{}_d1", id), Position::Defender),
                 make_test_player(&format!("{}_d2", id), Position::Defender),
                 make_test_player(&format!("{}_d3", id), Position::Defender),

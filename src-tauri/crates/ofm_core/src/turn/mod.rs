@@ -484,7 +484,8 @@ mod tests {
         team.finance = 5_000_000;
         team.wage_budget = 2_000_000;
         team
-    }
+            ..Default::default()
+        }
 
     fn make_player() -> Player {
         let attrs = PlayerAttributes {
@@ -507,6 +508,7 @@ mod tests {
             distribution: 50,
             commanding: 50,
             playing_out: 50,
+            ..Default::default()
         };
         let mut player = Player::new(
             "player1".to_string(),
@@ -591,6 +593,8 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 domain::team::PlayStyle::Counter => engine::PlayStyle::Counter,
                 domain::team::PlayStyle::HighPress => engine::PlayStyle::HighPress,
                 _ => engine::PlayStyle::Balanced,
+            ..Default::default()
+        
             },
             domain_to_engine_tactics(&t.tactics_phase),
         ),
@@ -647,7 +651,9 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 shot_stopping: p.attributes.shot_stopping,
                 commanding: p.attributes.commanding,
                 playing_out: p.attributes.playing_out,
-                traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
+                traits: p.traits.iter().map(|t| format!("{:?
+            ..Default::default()
+        }", t)).collect(),
                 role: player_roles
                     .and_then(|roles| roles.get(&p.id))
                     .map(domain_to_engine_role)
@@ -678,6 +684,8 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         tactics,
         tactics_multiplier,
         captain_id,
+            ..Default::default()
+        
     }
 }
 

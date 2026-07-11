@@ -625,7 +625,9 @@ mod tests {
     }
 
     fn make_team(index: usize) -> Team {
-        let city = format!("City {}", index + 1);
+        let city = format!("City {
+            ..Default::default()
+        }", index + 1);
         let mut team = Team::new(
             format!("team-{}", index + 1),
             format!("Club {}", index + 1),
@@ -666,9 +668,13 @@ mod tests {
     fn make_player(team_id: &str, index: usize, position: Position, ovr: u8) -> Player {
         let year = 1990 + index as i32;
         let mut player = Player::new(
-            format!("player-{}", index + 1),
+            format!("player-{
+            ..Default::default()
+        }", index + 1),
             format!("P{}", index + 1),
-            format!("Player {}", index + 1),
+            format!("Player {
+            ..Default::default()
+        }", index + 1),
             format!("{}-03-15", year),
             "England".to_string(),
             position.clone(),

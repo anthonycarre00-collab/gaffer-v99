@@ -74,7 +74,7 @@ pub enum PlayerRole {
 // PlayerData — a snapshot of a player for engine consumption
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PlayerData {
     pub id: String,
     pub name: String,
@@ -175,6 +175,8 @@ impl PlayerData {
     /// logic to disagree with the player profile display.
     pub fn overall(&self) -> f64 {
         self.ovr as f64
+            ..Default::default()
+        
     }
 
     /// Effective rating accounting for current condition (0-100).
@@ -283,7 +285,7 @@ pub struct TacticsConfig {
 // TeamData — everything the engine needs to know about one side
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TeamData {
     pub id: String,
     pub name: String,
@@ -312,6 +314,8 @@ impl TeamData {
     /// Count players by position.
     pub fn count_position(&self, pos: Position) -> usize {
         self.players.iter().filter(|p| p.position == pos).count()
+            ..Default::default()
+        
     }
 
     /// Average of a specific attribute among players in the given position.

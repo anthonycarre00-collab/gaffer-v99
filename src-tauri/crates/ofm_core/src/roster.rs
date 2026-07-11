@@ -71,7 +71,8 @@ mod tests {
         player.team_id = team_id.map(|t| t.to_string());
         player.jersey_number = jersey;
         player
-    }
+            ..Default::default()
+        }
 
     fn make_team(id: &str) -> Team {
         Team::new(
@@ -83,7 +84,8 @@ mod tests {
             "Ground".to_string(),
             20_000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_game(players: Vec<Player>) -> Game {
         let clock = GameClock::new(Utc.with_ymd_and_hms(2026, 8, 1, 12, 0, 0).unwrap());

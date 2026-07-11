@@ -149,6 +149,8 @@ impl<'a> MatchContext<'a> {
         match side {
             Side::Home => self.home,
             Side::Away => self.away,
+            ..Default::default()
+        
         }
     }
 

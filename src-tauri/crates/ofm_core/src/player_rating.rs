@@ -513,7 +513,8 @@ mod tests {
                 distribution: 50,
                 commanding: 50,
                 playing_out: 50,
-            },
+            ..Default::default()
+        },
         )
     }
 

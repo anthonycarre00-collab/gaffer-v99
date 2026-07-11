@@ -29,7 +29,8 @@ fn make_team(id: &str, name: &str) -> Team {
     t.finance = 5_000_000;
     t.wage_budget = 2_000_000;
     t
-}
+            ..Default::default()
+        }
 
 fn make_player(id: &str, team_id: &str, wage: u32) -> Player {
     let attrs = PlayerAttributes {
@@ -52,7 +53,8 @@ fn make_player(id: &str, team_id: &str, wage: u32) -> Player {
         distribution: 50,
         commanding: 50,
         playing_out: 50,
-    };
+            ..Default::default()
+        };
     let mut p = Player::new(
         id.to_string(),
         "Player".to_string(),
@@ -868,6 +870,8 @@ fn home_match_generates_income() {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
             ..Default::default()
         }],
@@ -920,6 +924,8 @@ fn away_match_no_income() {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
+            ..Default::default()
+        
             }),
             ..Default::default()
         }],

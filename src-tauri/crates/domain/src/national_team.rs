@@ -17,7 +17,8 @@ pub struct NationalTeam {
     /// translation key rather than rendering `name` raw.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name_key: Option<String>,
-}
+            ..Default::default()
+        }
 
 impl NationalTeam {
     pub fn new(
@@ -36,6 +37,7 @@ impl NationalTeam {
             reputation: 500,
             fixtures: Vec::new(),
             name_key: None,
+            ..Default::default()
         }
     }
 }

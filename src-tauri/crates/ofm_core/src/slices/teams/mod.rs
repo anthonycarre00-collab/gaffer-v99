@@ -65,7 +65,8 @@ pub struct TeamCardTeam {
     pub founded_year: u32,
     pub reputation: u32,
     pub media: TeamCardMedia,
-}
+            ..Default::default()
+        }
 
 #[derive(Debug, Serialize, PartialEq, Eq)]
 pub struct TeamCardColors {

@@ -935,7 +935,9 @@ mod tests {
                 .iter()
                 .filter(|f| f.home_team_id == *team || f.away_team_id == *team)
                 .count();
-            assert_eq!(count, 14, "Team {} plays {} matches", team, count);
+            assert_eq!(count, 14, "Team {
+            ..Default::default()
+        } plays {} matches", team, count);
         }
 
         // 8 standings entries
@@ -962,7 +964,9 @@ mod tests {
                 .iter()
                 .filter(|f| f.home_team_id == *team || f.away_team_id == *team)
                 .count();
-            assert_eq!(count, 30, "Team {} plays {} matches", team, count);
+            assert_eq!(count, 30, "Team {
+            ..Default::default()
+        } plays {} matches", team, count);
         }
 
         // 16 standings entries

@@ -44,12 +44,14 @@ pub struct StateManager {
     pub active_stats: Mutex<Option<StatsState>>,
     pub live_match: Mutex<Option<LiveMatchSession>>,
     pub active_save_id: Mutex<Option<String>>,
-}
+            ..Default::default()
+        }
 
 impl Default for StateManager {
     fn default() -> Self {
         Self::new()
-    }
+            ..Default::default()
+        }
 }
 
 impl StateManager {
@@ -59,6 +61,7 @@ impl StateManager {
             active_stats: Mutex::new(None),
             live_match: Mutex::new(None),
             active_save_id: Mutex::new(None),
+            ..Default::default()
         }
     }
 
@@ -191,7 +194,9 @@ mod tests {
         let mut player = Player::new(
             id.to_string(),
             name.to_string(),
-            format!("Full {}", name),
+            format!("Full {
+            ..Default::default()
+        }", name),
             "1995-01-01".to_string(),
             "GB".to_string(),
             position.clone(),
@@ -213,7 +218,8 @@ mod tests {
             "Stadium".to_string(),
             40_000,
         )
-    }
+            ..Default::default()
+        }
 
     fn make_squad(team_id: &str) -> Vec<Player> {
         let mut players = Vec::new();

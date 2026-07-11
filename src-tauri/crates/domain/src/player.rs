@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Player {
     pub id: String,
     pub match_name: String,
@@ -141,7 +141,8 @@ pub struct Player {
     /// Jersey/squad number (1–99). None means unassigned.
     #[serde(default)]
     pub jersey_number: Option<u8>,
-}
+            ..Default::default()
+        }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PlayerMedia {
@@ -726,7 +727,7 @@ pub enum TransferOfferStatus {
     Withdrawn,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct LoanOffer {
     pub id: String,
     pub from_team_id: String,
@@ -886,6 +887,12 @@ impl Player {
             active_loan: None,
             morale_core: PlayerMoraleCore::default(),
             jersey_number: None,
+            career_events: Vec::new(),
+            partnerships: std::collections::HashMap::new(),
+            release_clause: None,
+            transfer_request_date: None,
+            low_morale_days: 0,
+            fame: PlayerFame::default(),
         }
     }
 

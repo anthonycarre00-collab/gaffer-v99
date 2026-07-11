@@ -53,7 +53,8 @@ fn make_player(id: &str, name: &str, team_id: &str) -> Player {
     p.morale = 75;
     p.condition = 90;
     p
-}
+            ..Default::default()
+        }
 
 fn make_team(id: &str, name: &str) -> Team {
     Team::new(
@@ -65,7 +66,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "Stadium".to_string(),
         40_000,
     )
-}
+            ..Default::default()
+        }
 
 fn make_scout(id: &str, team_id: &str, judging_ability: u8, judging_potential: u8) -> Staff {
     let mut s = Staff::new(

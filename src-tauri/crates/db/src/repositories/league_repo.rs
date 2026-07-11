@@ -189,6 +189,8 @@ pub fn load_league(conn: &Connection) -> Result<Option<League>, String> {
                 competition: parse_fixture_competition(&competition_str),
                 status: parse_fixture_status(&status_str),
                 result: result_json.and_then(|j| serde_json::from_str(&j).ok()),
+            ..Default::default()
+        
             })
         })
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -393,6 +395,8 @@ mod tests {
                     home_scorers: vec![GoalEvent {
                         player_id: "p-010".to_string(),
                         minute: 23,
+            ..Default::default()
+        
                     }],
                     away_scorers: vec![],
                     report: None,
