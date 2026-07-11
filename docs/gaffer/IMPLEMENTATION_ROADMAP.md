@@ -1,9 +1,10 @@
 # Gaffer V99.4+ — Implementation Roadmap
 
 **Created:** 2026-07-12
-**Based on:** GAFFER_V992_MASTER_PLAN.md audit findings + IDEAS.md
-**Current state:** V99.3 complete (DB fix, OVR, economy, transfers, AI contracts, HoF, live-match modifiers, Gaffer Engine, staff retirement, match highlights, weather module, age-tiered wages)
-**Repository:** `gaffer-v99` (main branch, commit `372d11e`)
+**Last updated:** 2026-07-12 (Sprint 1 complete)
+**Based on:** GAFFER_V992_MASTER_PLAN.md audit findings + IDEAS.md + user feedback
+**Current state:** V99.4 Sprint 1 complete (weather, defender goals, transfer requests, AI manager poaching)
+**Repository:** `gaffer-v99` (main branch, commit `d820c63`)
 
 ---
 
@@ -21,9 +22,9 @@ Work through Tier 1 first, then Tier 2, etc. Within each tier, tasks are ordered
 
 ---
 
-## Completed Work (V99.3)
+## Completed Work
 
-### Wave 1 — Foundation Fixes ✅
+### V99.3 — Foundation + Gaffer Engine ✅
 - `09df30a` DB Loading Fix (3 schema mismatches + no silent fallback)
 - `d289b82` OVR Formula (5 missing attrs + doubled-weight bugs)
 - `3a86b3a` Transfer Market (star appeal + not-for-sale + per-buyer cap)
@@ -47,13 +48,190 @@ Work through Tier 1 first, then Tier 2, etc. Within each tier, tasks are ordered
 
 ---
 
+### V99.4 Sprint 1 ✅
+- `37866e3` T1.1 Weather Engine Integration (9 weather types, modifiers in both engine paths)
+- `12f347f` T1.2 Defender/Midfielder Goals (weighted position selection, set-piece vs open play)
+- `faac2d7` T1.3 Transfer Requests (unhappy star players demand to leave after 30 days low morale)
+- `5ed25fc` T1.4 AI Manager Poaching (elite clubs poach from smaller clubs at end-of-season)
+- `d820c63` T2.4 Dead Code Cleanup (removed unused constant + added global transfer cap)
+
+---
+
 ## TIER 1 — High Impact, Do Next
 
-### T1.1 Weather Engine Integration
+### T1.5 Fixture Importance System
 **Priority:** Tier 1
-**Effort:** 2 hours
-**Dependencies:** None (weather module already exists at `src/lib/weather.ts`)
-**Risk:** MEDIUM — touches match engine + fixture creation + pre-match UI
+**Effort:** 3 hours
+**Dependencies:** None
+**Risk:** MEDIUM — new field on Fixture + touches news/press conference/match engine
+
+**What:**
+Add a fixture importance field from "Friendly" to "Massive Cup Final". This value weaves into:
+- News stories (bigger buildup for big games)
+- Press conferences (more questions before finals)
+- Match engine (big-game players / pressure traits matter more in important fixtures)
+
+**Implementation:**
+```rust
+pub enum FixtureImportance {
+    Friendly,           // Preseason, friendlies
+    League,             // Standard league match
+    BigLeague,          // Top-6 clash, derby
+    Cup,                // Domestic cup tie
+    Continental,        // Champions League / Europa
+    CupFinal,           // Domestic cup final
+    ContinentalFinal,   // Champions League final
+    Massive,            // World Cup final, title decider
+}
+```
+- Derive importance from competition type + stage + team reputations
+- Apply to match engine: pressure situations scale with importance
+- Apply to news: bigger buildup for BigLeague+ fixtures
+- Apply to press conferences: more questions + higher stakes for CupFinal+
+
+**Files:**
+- `src-tauri/crates/domain/src/league.rs` — add `importance: FixtureImportance` to Fixture
+- `src-tauri/crates/ofm_core/src/schedule.rs` — derive importance at fixture creation
+- `src-tauri/crates/engine/src/engine/resolution.rs` — scale pressure modifier by importance
+- `src-tauri/crates/ofm_core/src/news.rs` — importance-scaled buildup articles
+- `src-tauri/crates/ofm_core/src/press_conference.rs` — importance-scaled questions
+
+**Acceptance Criteria:**
+- Every fixture has an importance level
+- Big-game players (high stability) perform better in CupFinals
+- Press conferences have more questions before big matches
+- News articles reference the stakes ("title decider", "cup final")
+
+---
+
+### T1.6 Match Engine Balance Sweep
+**Priority:** Tier 1
+**Effort:** 4 hours
+**Dependencies:** T1.5 (Fixture Importance) for pressure scaling
+**Risk:** HIGH — touches core match simulation constants
+
+**What:**
+Comprehensive balance sweep of the match engine to ensure:
+1. Realistic results (goal rates ~2.5/match, scorelines believable)
+2. Star players make a difference but don't "carry" a team alone
+3. Tactics, roles, and formations meaningfully affect outcomes
+4. No single attribute is overpowered or useless
+
+**Balance Targets:**
+- Goals per match: 2.3–2.7 (currently ~2.5 after V99.3 tuning — verify)
+- Home win rate: 45–48% (currently ~48% — verify)
+- Draw rate: 25–28%
+- Star player impact: a 90-OVR player should contribute ~20-30% more than a 70-OVR, not 200% more
+- Tactics impact: a well-set-up tactic should give ~5-10% edge, not 30%+
+- Formation impact: different formations should produce different patterns (more goals from 4-3-3 than 5-4-1)
+
+**Files:**
+- `src-tauri/crates/engine/src/engine/resolution.rs` — review all modifier chains
+- `src-tauri/crates/engine/src/engine/mod.rs` — fatigue + condition scaling
+- `src-tauri/crates/engine/src/shared.rs` — tactics modifiers
+- `src-tauri/crates/engine/src/types.rs` — MatchConfig constants
+- `src-tauri/crates/engine/tests/simulation_tests.rs` — add balance regression tests
+
+**Acceptance Criteria:**
+- 100-match sim produces ~250 goals total (±15)
+- Top team beats bottom team ~70% of time (not 95%)
+- Upsets happen ~15-20% of time (not 5%, not 40%)
+- Changing formation from 4-4-2 to 3-5-2 visibly affects patterns
+- A single 90-OVR player in a 60-OVR squad doesn't make them mid-table
+
+---
+
+### T1.7 AI Manager Personalities
+**Priority:** Tier 1
+**Effort:** 4 hours
+**Dependencies:** None
+**Risk:** MEDIUM — new data model + AI logic
+
+**What:**
+AI managers should have personality/attributes and act differently. A Pep Guardiola type plays possession football and is tactically astute; a Sam Allardyce type is more defensive, physical, and route-one.
+
+**Implementation:**
+```rust
+pub struct ManagerPersonality {
+    pub tactical_preference: TacticalStyle,    // Possession, Direct, Counter, Pressing, Defensive
+    pub tactical_acumen: u8,                    // 0-100 — how well they set up the team
+    pub transfer_philosophy: TransferStyle,     // Youth-focused, Star-signing, Squad-building
+    pub man_management: u8,                     // 0-100 — morale boost
+    pub risk_appetite: u8,                      // 0-100 — attacking vs conservative
+    pub media_personality: MediaStyle,          // Reserved, Outspoken, Charismatic
+}
+
+pub enum TacticalStyle {
+    Possession,    // Guardiola — high-tempo, short passing
+    Direct,        // Allardyce — long ball, physical
+    Counter,       // Mourinho — soak and spring
+    Pressing,      // Klopp — high press, intense
+    Defensive,     // Simeone — low block, compact
+    Balanced,      // Default
+}
+```
+
+- Generate personality when AI manager is created
+- Personality drives: formation choice, play style, training focus, transfer targets, press conference tone
+- Tactical acumen affects how well the team executes the chosen style (modifier on tactics effectiveness)
+- Man management affects morale recovery rate
+
+**Files:**
+- `src-tauri/crates/domain/src/manager.rs` — add `personality: ManagerPersonality` field
+- `src-tauri/crates/ofm_core/src/ai_hiring.rs` — generate personality when creating AI managers
+- `src-tauri/crates/ofm_core/src/ai_training.rs` — personality-driven training focus
+- `src-tauri/crates/ofm_core/src/transfers.rs` — personality-driven transfer targets
+- `src-tauri/crates/engine/src/shared.rs` — tactical_acumen modifier on tactics effectiveness
+- `src-tauri/crates/ofm_core/src/news.rs` — personality-driven press conference tone
+
+**Acceptance Criteria:**
+- AI managers have distinct personalities
+- A "Possession" manager's team plays noticeably different to a "Direct" manager's
+- Tactical acumen affects match results (high-acumen AI is harder to beat)
+- Personality is visible in press conferences + news
+- ~5 tactical styles distributed across AI managers
+
+---
+
+### T1.8 Repository Tidy
+**Priority:** Tier 1
+**Effort:** 1 hour
+**Dependencies:** None
+**Risk:** LOW — file moves + README update only
+
+**What:**
+- Move image files (players_*.csv, etc.) into a `data/` subdirectory
+- Update README.md to reflect "Gaffer" branding (not "OpenFoot Manager")
+- Ensure no deletions of working code/assets
+- Update CLAUDE.md / CONTRIBUTING.md if they reference old names
+
+**Files:**
+- `README.md` — rebrand to Gaffer
+- `players_*.csv` → `data/players_*.csv`
+- `CONTRIBUTING.md` — update references
+- `docs/` — verify all docs use "Gaffer" name
+
+**Acceptance Criteria:**
+- README says "Gaffer" throughout
+- CSV files organised in data/ folder
+- No broken imports/paths
+- Build still works after moves
+
+---
+
+## Previous T1.1–T1.4 (Completed in Sprint 1)
+
+### T1.1 Weather Engine Integration ✅
+**Status:** Complete (commit `37866e3`)
+
+### T1.2 Defender/Midfielder Goals ✅
+**Status:** Complete (commit `12f347f`)
+
+### T1.3 Transfer Requests ✅
+**Status:** Complete (commit `faac2d7`)
+
+### T1.4 AI Manager Poaching ✅
+**Status:** Complete (commit `5ed25fc`)
 
 **What:**
 The weather module (`src/lib/weather.ts`) exists with 9 weather types and modifiers, but is NOT wired into the Rust match engine. Goals:

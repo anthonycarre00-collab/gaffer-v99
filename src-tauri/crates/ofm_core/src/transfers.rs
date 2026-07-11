@@ -17,6 +17,11 @@ use uuid::Uuid;
 
 const TRANSFER_NEGOTIATION_STALE_DAYS: i64 = 14;
 const AWARD_LEADERBOARD_INTEREST_BONUS: i32 = 25;
+/// V99.4: Global circuit breaker — absolute max AI-to-AI transfers per day
+/// across the whole game. Prevents "gazillion unlikely transfers" even if
+/// many clubs have budget + need. Real transfer windows see ~20-30 deals
+/// per day league-wide at peak; we allow up to 30 as a sanity cap.
+const MAX_GLOBAL_AI_TRANSFERS_PER_DAY: usize = 30;
 
 /// Reputation-scaled AI transfer cap per day. Elite clubs (reputation ≥ 800)
 /// are more aggressive — they're the ones who actually strengthen in real
@@ -1130,6 +1135,7 @@ pub fn evaluate_transfer_market(game: &mut Game) {
                 .copied()
                 .unwrap_or(0)
                 >= max_ai_transfers_for_reputation(buyer_team.reputation)
+            || completed_ai_transfers >= MAX_GLOBAL_AI_TRANSFERS_PER_DAY
         {
             continue;
         }
