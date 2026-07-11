@@ -65,7 +65,7 @@ if %errorlevel% neq 0 (
 echo Checking for project files...
 if not exist "package.json" (
     echo [FAILED] package.json not found.
-    echo Make sure you're running this from the gaffer-v99-main folder.
+    echo Make sure you're running this from the gaffer folder.
     echo If you downloaded a ZIP, extract it first.
     pause
     exit /b 1
@@ -143,7 +143,7 @@ if %errorlevel% neq 0 (
 echo Checking for project files...
 if not exist "package.json" (
     echo [FAILED] package.json not found.
-    echo Make sure you're running this from the gaffer-v99-main folder.
+    echo Make sure you're running this from the gaffer folder.
     pause
     exit /b 1
 )
