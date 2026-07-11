@@ -90,6 +90,9 @@ pub struct Player {
     pub career: Vec<CareerEntry>,
     #[serde(default)]
     pub movement_history: Vec<PlayerMovementEntry>,
+    /// V99.4 T2.1: Career event log — milestone moments (debut, first goal, etc.)
+    #[serde(default)]
+    pub career_events: Vec<CareerEvent>,
 
     // Individual training focus override (takes priority over group and team default)
     #[serde(default)]
@@ -512,6 +515,37 @@ pub struct CareerEntry {
     pub appearances: u32,
     pub goals: u32,
     pub assists: u32,
+}
+
+/// V99.4 T2.1: Career event type — milestone moments in a player's career.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum CareerEventType {
+    Debut,
+    FirstGoal,
+    FirstAssist,
+    InternationalCap,
+    TrophyWon,
+    MilestoneAppearance,  // 50th, 100th, 250th, 500th
+    MilestoneGoal,         // 25th, 50th, 100th
+    Transfer,
+    Loan,
+    CaptainAppointment,
+    RecordBreak,
+    GoldenBoot,
+    PlayerOfSeason,
+    YoungPlayerOfSeason,
+}
+
+/// V99.4 T2.1: A single career event — milestone moment in a player's career.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CareerEvent {
+    pub event_type: CareerEventType,
+    pub season: u32,
+    pub date: String,
+    pub team_id: Option<String>,
+    pub team_name: Option<String>,
+    pub description: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

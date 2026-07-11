@@ -260,6 +260,8 @@ export interface PlayerData {
   market_value: number;
   stats: PlayerSeasonStats;
   career: CareerEntry[];
+  /** V99.4 T2.1: Career milestone events (debut, first goal, etc.) */
+  career_events?: CareerEvent[];
   movement_history?: PlayerMovementEntry[];
   transfer_listed: boolean;
   loan_listed: boolean;
@@ -781,4 +783,14 @@ export interface GameStateData {
   available_staff_market_last_activity_date?: string | null;
   extra_translations?: Record<string, Record<string, unknown>>;
   package_lockfile?: Array<{ id: string; version: string; hash: string }>;
+}
+
+// V99.4 T2.1: Career event types
+export interface CareerEvent {
+  event_type: string;
+  season: number;
+  date: string;
+  team_id?: string | null;
+  team_name?: string | null;
+  description: string;
 }

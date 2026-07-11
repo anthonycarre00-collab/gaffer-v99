@@ -408,8 +408,15 @@ fn apply_player_stats(
     home_team_id: &str,
     away_team_id: &str,
 ) {
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let season = game.clock.current_date.year() as u32;
+
     for player in game.players.iter_mut() {
         if let Some(ps) = report.player_stats.get(&player.id) {
+            // V99.4 T2.1: Track career events before stats are incremented.
+            let prev_appearances = player.stats.appearances;
+            let prev_goals = player.stats.goals;
+
             player.stats.appearances += 1;
             player.stats.goals += ps.goals as u32;
             player.stats.assists += ps.assists as u32;
@@ -444,6 +451,63 @@ fn apply_player_stats(
                 };
                 if conceded_zero {
                     player.stats.clean_sheets += 1;
+                }
+            }
+
+            // V99.4 T2.1: Record career events.
+            let team_name = player.team_id.as_deref().and_then(|tid| {
+                game.teams.iter().find(|t| t.id == tid).map(|t| t.name.clone())
+            });
+
+            // Debut
+            if prev_appearances == 0 {
+                player.career_events.push(domain::player::CareerEvent {
+                    event_type: domain::player::CareerEventType::Debut,
+                    season,
+                    date: today.clone(),
+                    team_id: player.team_id.clone(),
+                    team_name: team_name.clone(),
+                    description: format!("Made his debut for {}.", team_name.as_deref().unwrap_or("his club")),
+                });
+            }
+
+            // First goal
+            if prev_goals == 0 && player.stats.goals > 0 {
+                player.career_events.push(domain::player::CareerEvent {
+                    event_type: domain::player::CareerEventType::FirstGoal,
+                    season,
+                    date: today.clone(),
+                    team_id: player.team_id.clone(),
+                    team_name: team_name.clone(),
+                    description: format!("Scored his first goal for {}.", team_name.as_deref().unwrap_or("his club")),
+                });
+            }
+
+            // Milestone appearances (50, 100, 250, 500)
+            for milestone in [50, 100, 250, 500] {
+                if prev_appearances < milestone && player.stats.appearances >= milestone as u32 {
+                    player.career_events.push(domain::player::CareerEvent {
+                        event_type: domain::player::CareerEventType::MilestoneAppearance,
+                        season,
+                        date: today.clone(),
+                        team_id: player.team_id.clone(),
+                        team_name: team_name.clone(),
+                        description: format!("Reached {} appearances for {}.", milestone, team_name.as_deref().unwrap_or("his club")),
+                    });
+                }
+            }
+
+            // Milestone goals (25, 50, 100)
+            for milestone in [25, 50, 100] {
+                if prev_goals < milestone && player.stats.goals >= milestone as u32 {
+                    player.career_events.push(domain::player::CareerEvent {
+                        event_type: domain::player::CareerEventType::MilestoneGoal,
+                        season,
+                        date: today.clone(),
+                        team_id: player.team_id.clone(),
+                        team_name: team_name.clone(),
+                        description: format!("Reached {} goals for {}.", milestone, team_name.as_deref().unwrap_or("his club")),
+                    });
                 }
             }
         }
