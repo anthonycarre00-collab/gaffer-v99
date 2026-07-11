@@ -206,8 +206,68 @@ where
     crate::job_offers::check_job_offers(game);
 
     debug!("[turn] process_day {}: complete, advancing clock", today);
+
+    // V99.3 PERF-1 C2: Prune old messages + news to prevent unbounded growth.
+    // After 5 seasons at ~365 days × (5 articles + 3 messages + match reports)
+    // → tens of thousands of items, every one serialized on every game.clone()
+    // and every setGameState. Daily pruning keeps the collections bounded.
+    prune_old_messages_and_news(game);
+
     game.clock.advance_days(1);
     crate::season_context::refresh_game_context(game);
+}
+
+/// V99.3 PERF-1 C2: Prune old read messages and news articles.
+///
+/// - Messages: keep unread indefinitely, prune read messages older than 365 days.
+/// - News: keep unread indefinitely, prune read news older than 730 days (2 seasons).
+///
+/// This prevents the save file from growing without bound and keeps the
+/// daily dedup-HashSet construction fast (O(remaining) instead of O(all-time)).
+fn prune_old_messages_and_news(game: &mut Game) {
+    let today = game.clock.current_date.date_naive();
+    let message_cutoff = today - chrono::Duration::days(365);
+    let news_cutoff = today - chrono::Duration::days(730);
+
+    let before_msgs = game.messages.len();
+    let before_news = game.news.len();
+
+    // Prune read messages older than 365 days. Unread messages are always kept.
+    game.messages.retain(|msg| {
+        if !msg.read {
+            return true;
+        }
+        // Parse the message date; if it can't be parsed, keep it (defensive).
+        match chrono::NaiveDate::parse_from_str(&msg.date, "%Y-%m-%d") {
+            Ok(date) => date >= message_cutoff,
+            Err(_) => true,
+        }
+    });
+
+    // Prune read news older than 730 days. Unread news is always kept.
+    game.news.retain(|article| {
+        if !article.read {
+            return true;
+        }
+        match chrono::NaiveDate::parse_from_str(&article.date, "%Y-%m-%d") {
+            Ok(date) => date >= news_cutoff,
+            Err(_) => true,
+        }
+    });
+
+    let pruned_msgs = before_msgs - game.messages.len();
+    let pruned_news = before_news - game.news.len();
+    if pruned_msgs > 0 || pruned_news > 0 {
+        debug!(
+            "[turn] Pruned {} old messages ({} → {}) and {} old news ({} → {})",
+            pruned_msgs,
+            before_msgs,
+            game.messages.len(),
+            pruned_news,
+            before_news,
+            game.news.len(),
+        );
+    }
 }
 
 /// Called after a live match finishes to complete the day:

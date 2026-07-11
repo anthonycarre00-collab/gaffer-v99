@@ -392,13 +392,21 @@ pub struct MatchConfig {
 impl Default for MatchConfig {
     fn default() -> Self {
         Self {
-            home_advantage: 1.08,
+            // V99.3 REALISM-1 M8: Home advantage 1.08 → 1.12. Real EPL
+            // home-win/away-win ratio is ~1.64×; 1.08 was slightly low.
+            home_advantage: 1.12,
             shot_accuracy_base: 0.35,
-            goal_conversion_base: 0.36,
+            // V99.3 REALISM-1 M1: Goal conversion 0.36 → 0.30. Was producing
+            // ~3.0 goals/match; real-world average is ~2.5. The 0.06 drop
+            // should bring it closer to the target.
+            goal_conversion_base: 0.30,
             fatigue_per_minute: 0.20,
             foul_probability: 0.40,
-            yellow_card_probability: 0.11,
-            red_card_probability: 0.04,
+            // V99.3 REALISM-1 M2: Card probabilities reduced. Was producing
+            // ~4.4 yellows + ~0.18 reds per match; real-world is ~3.5
+            // yellows + ~0.13 reds (1 red every 7-8 matches).
+            yellow_card_probability: 0.085,
+            red_card_probability: 0.025,
             penalty_probability: 0.50,
             stoppage_time_max: 4,
             injury_probability: 0.03,
