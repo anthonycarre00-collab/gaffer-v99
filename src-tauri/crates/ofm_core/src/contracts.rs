@@ -592,11 +592,33 @@ pub fn offer_free_agent_contract(
     let cooled_off = cool_stale_renewal_session(&mut game.players[player_index], current_date);
     let today = current_date.format("%Y-%m-%d").to_string();
     let round = next_renewal_round(&game.players[player_index], Some(today.as_str()));
-    let expected_wage = expected_wage(&game.players[player_index], &team, current_date);
+    let expected_wage_raw = expected_wage(&game.players[player_index], &team, current_date);
     let expected_years = expected_contract_years(&game.players[player_index], current_date);
     let reference_wage = reference_player_wage(&game.players[player_index]);
     let player_age = player_age_on(current_date, &game.players[player_index].date_of_birth);
     let minimum_wage = minimum_acceptable_wage(reference_wage, player_age);
+
+    // V99.4 T3.2: Check club appeal — players can refuse to sign for
+    // clubs they don't want to join (too small, wrong level, etc.)
+    let appeal = club_appeal_score(&game.players[player_index], &team);
+    if appeal < 30 {
+        return Ok(renewal_outcome(
+            RenewalDecision::Rejected,
+            None,
+            None,
+            RenewalSessionStatus::Stalled,
+            false,
+            cooled_off,
+            Some(RenewalFeedback {
+                stage: ContractWarningStage::Stalled,
+                message: "He's not interested in joining this club. \
+                    The player doesn't see this as a step forward in his career.".to_string(),
+            }),
+        ));
+    }
+    // Appeal 30-50: demand 20% wage premium
+    let appeal_premium = if appeal < 50 { 1.20 } else { 1.00 };
+    let expected_wage = ((expected_wage_raw as f32) * appeal_premium as f32) as u32;
 
     if offer.contract_years == 0 || offer.contract_years > MAX_CONTRACT_YEARS {
         return Ok(renewal_outcome(
@@ -1156,6 +1178,42 @@ fn backend_text_with_param(key: &str, param_name: &str, param_value: &str) -> St
     message.push('=');
     message.push_str(param_value);
     message
+}
+
+/// V99.4 T3.2: Calculate a player's club-appeal score (0-100).
+///
+/// Factors:
+/// - Base: 50
+/// - +15 if club reputation >= 700 (elite club appeal)
+/// - -15 if club reputation < 300 (small club)
+/// - +10 if player's former team is a rival of this club (forbidden fruit)
+/// - -10 if player's morale is very high at current club (happy where he is)
+///
+/// Returns a score. Below 30 = player refuses to sign. 30-50 = demands
+/// 20% wage premium. Above 50 = normal.
+pub fn club_appeal_score(player: &Player, team: &Team) -> i32 {
+    let mut score: i32 = 50;
+
+    // Club reputation
+    if team.reputation >= 700 {
+        score += 15; // Elite club — players want to join
+    } else if team.reputation >= 500 {
+        score += 5;  // Good club
+    } else if team.reputation < 300 {
+        score -= 15; // Small club — less appealing
+    }
+
+    // If player is happy at his current club, he's less keen to move
+    if player.morale >= 80 {
+        score -= 10;
+    }
+
+    // Star players (OVR >= 80) prefer bigger clubs
+    if player.ovr >= 80 && team.reputation < 600 {
+        score -= 15; // Star won't drop to a smaller club
+    }
+
+    score.clamp(0, 100)
 }
 
 pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDate) -> u32 {
