@@ -257,6 +257,34 @@ pub fn apply_ai_training_policies(game: &mut Game, weekday_num: u32) {
         if let Some(team) = game.teams.iter_mut().find(|t| t.id == team_id) {
             team.training_focus = focus;
             team.training_intensity = intensity;
+
+            // V99.4 T2.5: Youth development focus override.
+            // Youth players (age <= 21, SquadRole::Youth) get a rotated
+            // training focus that cycles through all 5 focuses evenly,
+            // instead of the team's style-biased cycle. This ensures
+            // varied attribute development for AI youth prospects.
+            let all_focuses = [
+                domain::team::TrainingFocus::Physical,
+                domain::team::TrainingFocus::Technical,
+                domain::team::TrainingFocus::Tactical,
+                domain::team::TrainingFocus::Defending,
+                domain::team::TrainingFocus::Attacking,
+            ];
+            // Use the current day of the year to rotate youth focus.
+            // This gives each youth player a different focus each day,
+            // cycling through all 5 over 5 days.
+            let day_of_year = (weekday_num as usize) % 5;
+            let youth_focus = all_focuses[day_of_year].clone();
+            // Apply to youth players on this team.
+            let youth_team_id = team.id.clone();
+            for player in &mut game.players {
+                if player.team_id.as_deref() == Some(&youth_team_id)
+                    && player.squad_role == domain::player::SquadRole::Youth
+                    && player.injury.is_none()
+                {
+                    player.training_focus = Some(youth_focus.clone());
+                }
+            }
         }
     }
 }

@@ -94,6 +94,15 @@ pub(super) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Ve
     });
     let bench = bench_domain.into_iter().map(|p| convert_player(p, None)).collect();
 
+    // V99.4 T3.4: Pass captain_id + tactics_multiplier to the engine.
+    let captain_id = team.and_then(|t| t.match_roles.captain.clone());
+    let tactics_multiplier = game
+        .managers
+        .iter()
+        .find(|m| m.team_id.as_deref() == Some(team_id))
+        .map(|m| m.personality.tactics_effectiveness_multiplier())
+        .unwrap_or(1.0);
+
     let team_data = TeamData {
         id: team_id.to_string(),
         name,
@@ -101,6 +110,8 @@ pub(super) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Ve
         play_style,
         players: starting_xi,
         tactics,
+        tactics_multiplier,
+        captain_id,
     };
 
     (team_data, bench)

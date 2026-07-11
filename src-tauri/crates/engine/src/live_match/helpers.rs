@@ -69,8 +69,18 @@ impl LiveMatchState {
     /// V99: Get the leadership rating of the team's captain — the player with
     /// the highest leadership in the starting XI. Returns 50 (neutral) if no
     /// captain can be identified.
+    /// V99.4 T3.4: Respect the user-designated captain if set and on pitch.
     pub(super) fn team_captain_leadership(&self, side: Side) -> u8 {
         let team = self.team_ref(side);
+        // V99.4 T3.4: If a captain is designated, use their leadership.
+        if let Some(captain_id) = &team.captain_id {
+            if let Some(captain) = team.players.iter().find(|p| &p.id == captain_id) {
+                if !self.sent_off.contains(captain_id) {
+                    return captain.leadership;
+                }
+            }
+        }
+        // Fallback: max leadership among non-sent-off players.
         team.players
             .iter()
             .filter(|p| !self.sent_off.contains(&p.id))

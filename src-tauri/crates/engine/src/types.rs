@@ -308,6 +308,11 @@ pub struct TeamData {
     /// more effective. Set from the AI manager's personality.
     #[serde(default = "default_tactics_mult")]
     pub tactics_multiplier: f64,
+    /// V99.4 T3.4: User-designated captain's player ID. The engine uses
+    /// this player's leadership for the captain modifier (instead of just
+    /// picking max leadership). None = fall back to max leadership.
+    #[serde(default)]
+    pub captain_id: Option<String>,
 }
 
 fn default_tactics_mult() -> f64 {

@@ -636,6 +636,9 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         .map(|m| m.personality.tactics_effectiveness_multiplier())
         .unwrap_or(1.0);
 
+    // V99.4 T3.4: Pass the user-designated captain ID to the engine.
+    let captain_id = team.and_then(|t| t.match_roles.captain.clone());
+
     engine::TeamData {
         id: team_id.to_string(),
         name,
@@ -644,6 +647,7 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         players,
         tactics,
         tactics_multiplier,
+        captain_id,
     }
 }
 

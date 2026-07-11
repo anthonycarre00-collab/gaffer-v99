@@ -406,4 +406,35 @@ impl Game {
             .iter_mut()
             .find(|competition| competition.id == competition_id)
     }
+
+    /// V99.4 T2.3: Build a team_id → Vec<player_index> index.
+    ///
+    /// This avoids 6+ subsystems doing full-world player scans per match.
+    /// Build once at the start of a tick, then look up the two teams'
+    /// player indices in O(1) instead of scanning all ~5,000 players.
+    ///
+    /// The index is a snapshot — it must be rebuilt if player.team_id
+    /// changes (transfers, loans, regens, retirements) during the tick.
+    pub fn team_player_index(&self) -> std::collections::HashMap<String, Vec<usize>> {
+        let mut index: std::collections::HashMap<String, Vec<usize>> =
+            std::collections::HashMap::new();
+        for (i, player) in self.players.iter().enumerate() {
+            if let Some(team_id) = &player.team_id {
+                index.entry(team_id.clone()).or_default().push(i);
+            }
+        }
+        index
+    }
+
+    /// V99.4 T2.3: Get player indices for a specific team.
+    /// Convenience method — builds the full index each call, so prefer
+    /// `team_player_index()` + direct lookup if calling for multiple teams.
+    pub fn player_indices_for_team(&self, team_id: &str) -> Vec<usize> {
+        self.players
+            .iter()
+            .enumerate()
+            .filter(|(_, p)| p.team_id.as_deref() == Some(team_id))
+            .map(|(i, _)| i)
+            .collect()
+    }
 }

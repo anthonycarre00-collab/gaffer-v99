@@ -44,11 +44,18 @@ fn pick_shooter_position<R: Rng>(rng: &mut R, is_set_piece: bool) -> Position {
 /// captain can be identified.
 /// V99.3 ARCH-1 C3: Exclude sent-off players — a red-carded captain
 /// shouldn't still contribute leadership from the dressing room.
+/// V99.4 T3.4: Respect the user-designated captain if set and on pitch.
 fn team_captain_leadership(ctx: &MatchContext, side: Side) -> u8 {
     let team = ctx.team(side);
-    // The captain is the player with the highest leadership in the starting XI.
-    // For the simple engine path we don't track captaincy explicitly, so we
-    // approximate by taking the max leadership across all non-sent-off players.
+    // V99.4 T3.4: If a captain is designated, use their leadership (if on pitch + not sent off).
+    if let Some(captain_id) = &team.captain_id {
+        if let Some(captain) = team.players.iter().find(|p| &p.id == captain_id) {
+            if !ctx.sent_off.contains(captain_id) {
+                return captain.leadership;
+            }
+        }
+    }
+    // Fallback: max leadership among non-sent-off players.
     team.players
         .iter()
         .filter(|p| !ctx.sent_off.contains(&p.id))
