@@ -1096,6 +1096,10 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
     convert_retired_players_to_candidates(game);
     crate::generator::replenish_manager_and_scout_market(game);
 
+    // V99.4 T1.4: AI manager poaching — elite clubs can poach managers from
+    // smaller clubs at end-of-season. Creates dynamic managerial movement.
+    crate::ai_hiring::process_ai_manager_poaching(game);
+
     // 6. Update manager career stats
     if let Some(standing) = &user_standing {
         let total_matches = standing.won + standing.drawn + standing.lost;

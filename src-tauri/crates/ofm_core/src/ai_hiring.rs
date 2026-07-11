@@ -259,6 +259,108 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
     game.sync_user_manager_record();
 }
 
+/// V99.4 T1.4: AI manager poaching.
+///
+/// Elite clubs (reputation >= 700) can poach managers from smaller clubs
+/// (reputation gap >= 150). The poached manager moves to the bigger club,
+/// leaving their old club vacant (filled by existing process_vacant_ai_clubs).
+///
+/// Called at end-of-season to allow managerial movement between seasons.
+pub fn process_ai_manager_poaching(game: &mut Game) {
+    let user_manager_id = if game.manager_id.is_empty() {
+        game.manager.id.clone()
+    } else {
+        game.manager_id.clone()
+    };
+
+    // Collect elite clubs with vacant manager slots (reputation >= 700).
+    let elite_vacant_teams: Vec<(String, String, u32)> = game
+        .teams
+        .iter()
+        .filter(|t| t.manager_id.is_none() && t.reputation >= 700)
+        .map(|t| (t.id.clone(), t.name.clone(), t.reputation))
+        .collect();
+
+    if elite_vacant_teams.is_empty() {
+        return;
+    }
+
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+
+    // For each elite vacant club, try to poach a manager from a smaller club.
+    for (team_id, team_name, team_rep) in &elite_vacant_teams {
+        // Find AI managers at clubs with reputation <= (elite_rep - 150).
+        let poach_threshold = team_rep.saturating_sub(150);
+        let candidates: Vec<(usize, String, String, String)> = game
+            .managers
+            .iter()
+            .enumerate()
+            .filter(|(_, m)| m.id != user_manager_id && m.team_id.is_some())
+            .filter_map(|(idx, m)| {
+                let mgr_team_id = m.team_id.as_ref()?;
+                let mgr_team = game.teams.iter().find(|t| &t.id == mgr_team_id)?;
+                if mgr_team.reputation <= poach_threshold {
+                    Some((idx, m.id.clone(), m.full_name(), mgr_team_id.clone()))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        if candidates.is_empty() {
+            continue;
+        }
+
+        // Pick the first candidate.
+        let (_mgr_idx, mgr_id, mgr_name, old_team_id) = &candidates[0];
+
+        // Move the manager to the elite club.
+        if let Some(mgr) = game.managers.iter_mut().find(|m| &m.id == mgr_id) {
+            mgr.team_id = Some(team_id.clone());
+        }
+
+        // Set the elite club's manager_id.
+        if let Some(team) = game.teams.iter_mut().find(|t| &t.id == team_id) {
+            team.manager_id = Some(mgr_id.clone());
+        }
+
+        // Clear the old club's manager_id (creates a vacancy).
+        if let Some(team) = game.teams.iter_mut().find(|t| &t.id == old_team_id) {
+            team.manager_id = None;
+        }
+
+        // Generate a news article.
+        game.news.push(domain::news::NewsArticle {
+            id: format!("manager_poach_{}_{}", today, team_id),
+            headline: format!("{} appointed at {}", mgr_name, team_name),
+            body: format!(
+                "{} has been appointed as the new manager of {}, \
+                 leaving his previous post. The club moved quickly to \
+                 secure his services.",
+                mgr_name, team_name
+            ),
+            source: "League Wire".to_string(),
+            date: today.clone(),
+            category: domain::news::NewsCategory::ManagerialChange,
+            team_ids: vec![team_id.clone(), old_team_id.clone()],
+            player_ids: vec![],
+            match_score: None,
+            read: false,
+            headline_key: None,
+            body_key: None,
+            source_key: None,
+            i18n_params: std::collections::HashMap::new(),
+        });
+
+        log::info!(
+            "[ai_poach] {} moved from {} to {}",
+            mgr_name,
+            old_team_id,
+            team_name
+        );
+    }
+}
+
 pub fn update_ai_manager_satisfaction(game: &mut Game) {
     let user_manager_id = if game.manager_id.is_empty() {
         game.manager.id.clone()
