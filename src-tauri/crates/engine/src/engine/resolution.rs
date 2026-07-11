@@ -103,7 +103,8 @@ fn resolve_buildup<R: Rng>(
     };
 
     let success_chance = (pass_skill * 1.3 * buildup_mod * playing_out_mod)
-        / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press);
+        / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press)
+        * ctx.config.weather.pass_success;
     if rng.random_range(0.0..1.0f64) < success_chance {
         ctx.emit(
             MatchEvent::new(minute, EventType::PassCompleted, att_side, ball_zone)
@@ -430,7 +431,8 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let def_line_mod = tactics_defensive_conversion_mod(&ctx.team(def_side).tactics);
     let conversion =
         (ctx.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 150.0)
-            .clamp(0.10, 0.70);
+            .clamp(0.10, 0.70)
+            * ctx.config.weather.goal_conversion;
 
     if rng.random_range(0.0..1.0f64) < conversion {
         ctx.emit(

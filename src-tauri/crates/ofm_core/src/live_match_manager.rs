@@ -234,7 +234,9 @@ pub fn create_live_match(
     let home_auto_selection = auto_select_set_pieces(game, &home_starter_ids);
     let away_auto_selection = auto_select_set_pieces(game, &away_starter_ids);
 
-    let config = MatchConfig::default();
+    // V99.4 T1.1: Apply fixture weather to the live match config.
+    let mut config = MatchConfig::default();
+    config.weather = crate::engine::weather_modifiers_for(&fixture.weather);
 
     let mut match_state = LiveMatchState::new(
         home_xi,

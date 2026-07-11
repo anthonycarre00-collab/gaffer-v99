@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FixtureData, GameStateData } from "../../store/gameStore";
 import { getFixtureDisplayLabel } from "../../lib/helpers";
 import { shortOvrLabel, interpretOvr } from "../../lib/gafferEngine";
+import { getWeatherInfo, weatherCommentaryLine, type WeatherCondition } from "../../lib/weather";
 import { MatchSnapshot, EnginePlayerData, FORMATIONS, PLAY_STYLES } from "./types";
 import PreMatchLineup, { parseFormationNeeds, POSITION_KEY_STATS, statColor, starterOvrColor, getStatVal } from "./PreMatchLineup";
 import { condColor } from "../../lib/playerConditionDisplay";
@@ -675,6 +676,12 @@ export default function PreMatchSetup({
  <p className="text-2xl font-heading font-bold text-gray-400 dark:text-gray-600">
  VS
  </p>
+ {currentFixture?.weather && currentFixture.weather !== "clear" && currentFixture.weather !== "" && (
+ <p className="text-xs text-gray-500 dark:text-gray-400 mt-1" title={weatherCommentaryLine(currentFixture.weather as WeatherCondition)}>
+ {getWeatherInfo(currentFixture.weather as WeatherCondition).icon}{" "}
+ {getWeatherInfo(currentFixture.weather as WeatherCondition).label}
+ </p>
+ )}
  </div>
  <button
  onClick={onStart}

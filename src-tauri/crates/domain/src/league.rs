@@ -252,6 +252,10 @@ pub struct Fixture {
     pub competition: FixtureCompetition,
     pub status: FixtureStatus,
     pub result: Option<MatchResult>,
+    /// V99.4 T1.1: Weather condition for the match (generated at fixture creation).
+    /// Empty string = not yet generated (will default to "clear" at match time).
+    #[serde(default)]
+    pub weather: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

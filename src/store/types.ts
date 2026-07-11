@@ -535,6 +535,8 @@ export interface FixtureData {
     home_penalties?: number | null;
     away_penalties?: number | null;
   };
+  /** V99.4 T1.1: Weather condition for the match (empty = not generated). */
+  weather?: string;
 }
 
 export interface CompactMatchEventData {

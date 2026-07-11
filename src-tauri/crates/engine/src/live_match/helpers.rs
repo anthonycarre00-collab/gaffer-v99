@@ -16,9 +16,11 @@ use super::{LiveMatchState, SetPieceTakers};
 impl LiveMatchState {
     pub(super) fn deplete_stamina_tick(&mut self) {
         let base_rate = self.config.fatigue_per_minute;
+        // V99.4 T1.1: Apply weather fatigue modifier (heat increases fatigue).
+        let weather_fatigue = self.config.weather.fatigue;
         // Aggressive pressing tires a side faster; neutral (Medium) is ×1.0.
-        let home_rate = base_rate * tactics_pressing_fatigue(&self.home.tactics);
-        let away_rate = base_rate * tactics_pressing_fatigue(&self.away.tactics);
+        let home_rate = base_rate * tactics_pressing_fatigue(&self.home.tactics) * weather_fatigue;
+        let away_rate = base_rate * tactics_pressing_fatigue(&self.away.tactics) * weather_fatigue;
         // Iterate over all on-pitch players, each with their team's fatigue rate.
         let players = self
             .home

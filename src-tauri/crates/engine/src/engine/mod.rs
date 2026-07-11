@@ -211,8 +211,9 @@ fn simulate_minute<R: Rng>(ctx: &mut MatchContext, minute: u8, rng: &mut R) {
     let base_depletion = ctx.config.fatigue_per_minute / 100.0;
     let home_pressing_mod = shared::tactics_pressing_fatigue(&ctx.home.tactics);
     let away_pressing_mod = shared::tactics_pressing_fatigue(&ctx.away.tactics);
-    let home_depletion = base_depletion * home_pressing_mod;
-    let away_depletion = base_depletion * away_pressing_mod;
+    // V99.4 T1.1: Apply weather fatigue modifier (heat increases fatigue).
+    let home_depletion = base_depletion * home_pressing_mod * ctx.config.weather.fatigue;
+    let away_depletion = base_depletion * away_pressing_mod * ctx.config.weather.fatigue;
     ctx.home_condition = (ctx.home_condition - home_depletion).max(0.70_f64.min(ctx.home_condition));
     ctx.away_condition = (ctx.away_condition - away_depletion).max(0.70_f64.min(ctx.away_condition));
 

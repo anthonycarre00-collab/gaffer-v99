@@ -72,7 +72,8 @@ impl LiveMatchState {
         };
 
         let success_chance = (pass_skill * 1.3 * buildup_mod * playing_out_mod)
-            / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press);
+            / (pass_skill * 1.3 * buildup_mod * playing_out_mod + press)
+            * self.config.weather.pass_success;
         if rng.random_range(0.0..1.0f64) < success_chance {
             let evt = MatchEvent::new(minute, EventType::PassCompleted, att_side, ball_zone)
                 .with_player(&passer.id);
@@ -438,7 +439,8 @@ impl LiveMatchState {
 
         let def_line_mod = tactics_defensive_conversion_mod(&self.team_ref(def_side).tactics);
         let conversion = (self.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 150.0)
-            .clamp(0.10, 0.70);
+            .clamp(0.10, 0.70)
+            * self.config.weather.goal_conversion;
 
         if rng.random_range(0.0..1.0f64) < conversion {
             let context = self.goal_context(att_side);

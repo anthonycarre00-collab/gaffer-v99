@@ -387,6 +387,99 @@ pub struct MatchConfig {
     pub stoppage_time_max: u8,
     /// Probability of an injury per foul event.
     pub injury_probability: f64,
+    /// V99.4 T1.1: Weather modifiers for this match. All 1.0 = no effect.
+    #[serde(default = "default_weather_modifiers")]
+    pub weather: WeatherModifiers,
+}
+
+/// V99.4 T1.1: Weather modifiers applied to match simulation.
+/// Each modifier is a multiplier (1.0 = no effect).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WeatherModifiers {
+    /// Multiplier for pass success rate. Rain: ~0.95
+    pub pass_success: f64,
+    /// Multiplier for cross accuracy. Wind: ~0.90
+    pub cross_accuracy: f64,
+    /// Multiplier for fatigue rate. Heat: ~1.25
+    pub fatigue: f64,
+    /// Multiplier for long ball effectiveness. Fog: ~1.15
+    pub long_ball: f64,
+    /// Multiplier for goal conversion. Heavy rain: ~0.92
+    pub goal_conversion: f64,
+}
+
+impl Default for WeatherModifiers {
+    fn default() -> Self {
+        Self {
+            pass_success: 1.0,
+            cross_accuracy: 1.0,
+            fatigue: 1.0,
+            long_ball: 1.0,
+            goal_conversion: 1.0,
+        }
+    }
+}
+
+fn default_weather_modifiers() -> WeatherModifiers {
+    WeatherModifiers::default()
+}
+
+/// V99.4 T1.1: Resolve a weather condition string into WeatherModifiers.
+/// Matches the frontend weather.ts module.
+pub fn weather_modifiers_for(condition: &str) -> WeatherModifiers {
+    match condition {
+        "clear" | "cloudy" | "" => WeatherModifiers::default(),
+        "rain" => WeatherModifiers {
+            pass_success: 0.95,
+            cross_accuracy: 0.92,
+            fatigue: 1.05,
+            long_ball: 1.05,
+            goal_conversion: 0.97,
+        },
+        "heavy_rain" => WeatherModifiers {
+            pass_success: 0.88,
+            cross_accuracy: 0.85,
+            fatigue: 1.10,
+            long_ball: 1.10,
+            goal_conversion: 0.92,
+        },
+        "snow" => WeatherModifiers {
+            pass_success: 0.90,
+            cross_accuracy: 0.88,
+            fatigue: 1.15,
+            long_ball: 1.08,
+            goal_conversion: 0.90,
+        },
+        "fog" => WeatherModifiers {
+            pass_success: 0.93,
+            cross_accuracy: 0.90,
+            fatigue: 1.0,
+            long_ball: 1.15,
+            goal_conversion: 1.0,
+        },
+        "hot" => WeatherModifiers {
+            pass_success: 0.98,
+            cross_accuracy: 0.98,
+            fatigue: 1.25,
+            long_ball: 1.0,
+            goal_conversion: 1.02,
+        },
+        "cold" => WeatherModifiers {
+            pass_success: 0.97,
+            cross_accuracy: 0.97,
+            fatigue: 1.08,
+            long_ball: 1.03,
+            goal_conversion: 0.98,
+        },
+        "windy" => WeatherModifiers {
+            pass_success: 0.96,
+            cross_accuracy: 0.88,
+            fatigue: 1.03,
+            long_ball: 1.08,
+            goal_conversion: 0.98,
+        },
+        _ => WeatherModifiers::default(),
+    }
 }
 
 impl Default for MatchConfig {
@@ -410,6 +503,7 @@ impl Default for MatchConfig {
             penalty_probability: 0.50,
             stoppage_time_max: 4,
             injury_probability: 0.03,
+            weather: WeatherModifiers::default(),
         }
     }
 }

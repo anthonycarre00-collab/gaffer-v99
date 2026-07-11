@@ -1,9 +1,55 @@
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Datelike, Duration, Utc};
 use domain::league::{
     CompetitionFormat, CompetitionRules, CompetitionScope, CompetitionType, Fixture,
     FixtureCompetition, FixtureStatus, KnockoutRoundState, League, StandingEntry,
 };
 use uuid::Uuid;
+
+/// V99.4 T1.1: Generate a weather condition for a fixture based on its date.
+/// Uses a deterministic seed from the date string so the same fixture always
+/// gets the same weather. Matches the frontend weather.ts logic:
+/// - Winter (Dec-Feb): favours snow, fog, cold, heavy_rain
+/// - Summer (Jun-Aug): favours hot, clear
+/// - Spring/Autumn: favours rain, wind, cloudy
+fn generate_weather_for_date(date_str: &str) -> String {
+    // Parse the month from the ISO date string.
+    let month = date_str.get(5..7).and_then(|m| m.parse::<u32>().ok()).unwrap_or(6);
+
+    // Deterministic seed from the date string.
+    let seed: u64 = date_str.bytes().fold(0u64, |acc, b| acc.wrapping_mul(31).wrapping_add(b as u64));
+    let r = (seed % 100) as f64 / 100.0;
+
+    // Winter: Dec(12), Jan(1), Feb(2)
+    if month == 12 || month <= 2 {
+        if r < 0.15 { "snow".to_string() }
+        else if r < 0.30 { "fog".to_string() }
+        else if r < 0.45 { "cold".to_string() }
+        else if r < 0.60 { "heavy_rain".to_string() }
+        else if r < 0.75 { "rain".to_string() }
+        else if r < 0.90 { "cloudy".to_string() }
+        else { "clear".to_string() }
+    }
+    // Summer: Jun(6), Jul(7), Aug(8)
+    else if month >= 6 && month <= 8 {
+        if r < 0.20 { "hot".to_string() }
+        else if r < 0.50 { "clear".to_string() }
+        else if r < 0.70 { "cloudy".to_string() }
+        else if r < 0.85 { "rain".to_string() }
+        else if r < 0.95 { "windy".to_string() }
+        else { "heavy_rain".to_string() }
+    }
+    // Spring/Autumn: Mar-May, Sep-Nov
+    else {
+        if r < 0.25 { "rain".to_string() }
+        else if r < 0.35 { "cloudy".to_string() }
+        else if r < 0.50 { "clear".to_string() }
+        else if r < 0.60 { "windy".to_string() }
+        else if r < 0.70 { "fog".to_string() }
+        else if r < 0.80 { "cold".to_string() }
+        else if r < 0.90 { "heavy_rain".to_string() }
+        else { "cloudy".to_string() }
+    }
+}
 
 /// Generate a full double round-robin schedule (home & away) for the given teams.
 /// Matchdays are spaced 7 days apart starting from `start_date`.
@@ -111,6 +157,7 @@ pub fn build_round_robin_fixtures_with(
                     competition: fixture_competition.clone(),
                     status: FixtureStatus::Scheduled,
                     result: None,
+                    weather: generate_weather_for_date(&date_str),
                 });
             }
             matchday += 1;
@@ -281,6 +328,11 @@ pub fn seed_knockout_round(
             competition: fixture_competition.clone(),
             status: FixtureStatus::Scheduled,
             result: None,
+            weather: generate_weather_for_date(
+                &(start_date + Duration::days((pair_index / mpd) as i64))
+                    .format("%Y-%m-%d")
+                    .to_string(),
+            ),
         });
     }
     cup.knockout_rounds.push(KnockoutRoundState {
@@ -427,6 +479,7 @@ pub fn generate_preseason_friendlies(
                 competition: FixtureCompetition::Friendly,
                 status: FixtureStatus::Scheduled,
                 result: None,
+                weather: generate_weather_for_date(&date),
             });
         }
 
@@ -956,6 +1009,7 @@ mod tests {
             competition: FixtureCompetition::Cup,
             status: FixtureStatus::Scheduled,
             result: None,
+            weather: generate_weather_for_date("2026-01-11"),
         });
 
         let mut competitions = vec![league, cup];
