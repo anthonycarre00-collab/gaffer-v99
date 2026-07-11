@@ -13,6 +13,7 @@
 
 use crate::game::Game;
 use crate::generator::generate_youth_academy_recruit_with_nationality;
+use chrono::Datelike;
 use domain::player::{Player, Position, SquadRole};
 use rand::Rng;
 
@@ -435,6 +436,67 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
         all_new_regens.extend(regens);
     }
 
+    // V99.3 VITAL-1 M5: Generate inbox messages for the user's team's
+    // academy intake. Previously regens were pushed silently — the user's
+    // squad grew 3-5 youth/year with no notification.
+    if let Some(user_team_id) = &game.manager.team_id {
+        let user_intake: Vec<&domain::player::Player> = all_new_regens
+            .iter()
+            .filter(|r| r.team_id.as_deref() == Some(user_team_id.as_str()))
+            .collect();
+        if !user_intake.is_empty() {
+            let team_name = game
+                .teams
+                .iter()
+                .find(|t| &t.id == user_team_id)
+                .map(|t| t.name.clone())
+                .unwrap_or_default();
+            let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+            let body = if user_intake.len() == 1 {
+                format!(
+                    "The academy has produced a new prospect: {}, a {}-year-old {}. \
+                     Have a look at him in the squad screen.",
+                    user_intake[0].full_name,
+                    player_age(&user_intake[0].date_of_birth, _season),
+                    format!("{:?}", user_intake[0].position).to_lowercase(),
+                )
+            } else {
+                let names: Vec<&str> = user_intake.iter().map(|p| p.match_name.as_str()).collect();
+                format!(
+                    "The academy has produced {} new prospects this year: {}. \
+                     Have a look at them in the squad screen.",
+                    user_intake.len(),
+                    names.join(", "),
+                )
+            };
+            game.messages.push(domain::message::InboxMessage {
+                id: format!("academy_intake_{}_{}", today, user_team_id),
+                subject: format!("Academy Intake — {}", team_name),
+                body,
+                sender: "Academy Director".to_string(),
+                sender_role: "Staff".to_string(),
+                date: today,
+                category: domain::message::MessageCategory::Training,
+                priority: domain::message::MessagePriority::Normal,
+                context: domain::message::MessageContext {
+                    team_id: Some(user_team_id.clone()),
+                    team_name: Some(team_name),
+                    player_id: user_intake.first().map(|p| p.id.clone()),
+                    fixture_id: None,
+                    match_result: None,
+                    ..Default::default()
+                },
+                actions: vec![],
+                read: false,
+                subject_key: None,
+                body_key: None,
+                sender_key: None,
+                sender_role_key: None,
+                i18n_params: std::collections::HashMap::new(),
+            });
+        }
+    }
+
     // Add initial relationships for academy intake too
     for regen in &mut all_new_regens {
         if let Some(team_id) = &regen.team_id {
@@ -458,6 +520,14 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
     for regen in all_new_regens {
         game.players.push(regen);
     }
+}
+
+/// V99.3: Simple age calculation for message formatting.
+fn player_age(date_of_birth: &str, season: u32) -> u32 {
+    if let Ok(dob) = chrono::NaiveDate::parse_from_str(date_of_birth, "%Y-%m-%d") {
+        return season.saturating_sub(dob.year() as u32);
+    }
+    17
 }
 
 /// Clear ScoutingKnowledge entries for retired players.
