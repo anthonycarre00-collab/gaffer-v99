@@ -64,6 +64,10 @@ pub fn refresh_player_derived(player: &mut Player, current_year: u32) {
     player.ovr = ovr;
     player.potential = potential;
     player.traits = traits;
+
+    // V99.4 T4.1: Derive player fame from OVR + age + career trophies.
+    let trophies = player.career.iter().map(|c| c.goals).filter(|&g| g > 0).count() as u32;
+    player.fame = domain::player::PlayerFame::derive(ovr, age as i32, trophies);
 }
 
 /// Returns `true` when a player qualifies as a wonderkid: they are at or below

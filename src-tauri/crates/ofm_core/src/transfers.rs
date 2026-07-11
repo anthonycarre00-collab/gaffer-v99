@@ -523,13 +523,8 @@ fn incoming_interest_score(current_date: NaiveDate, player: &domain::player::Pla
     // contented star (3-year contract, morale 75, market_value £3M) scores
     // only +20 — below the 35-point shortlist threshold — so AI clubs NEVER
     // bid for stars. Real life: most big transfers are for contented stars.
-    if player.ovr >= 80 {
-        score += 30; // World-class — always attracts interest
-    } else if player.ovr >= 75 {
-        score += 25; // Star — attracts elite-club interest
-    } else if player.ovr >= 70 {
-        score += 15; // Quality starter — attracts mid-tier interest
-    }
+    // V99.4 T4.1: Now uses PlayerFame tier for more granular appeal.
+    score += player.fame.transfer_interest_bonus();
 
     // V99.3 REALISM-1 M6: Wonderkid appeal. Young players with high
     // potential should attract interest even if their current OVR is modest.
@@ -608,6 +603,28 @@ fn suggested_loan_buy_option_fee(player: &domain::player::Player) -> Option<u64>
     Some(round_transfer_fee(
         ((player.market_value as f64) * multiplier).round() as u64,
     ))
+}
+
+/// V99.4 T4.5: Suggested loan fee — one-time payment to the parent club.
+/// Typically 10-20% of market value for season-long loans.
+fn suggested_loan_fee(player: &domain::player::Player) -> u64 {
+    if player.market_value == 0 {
+        return 0;
+    }
+    let pct = if player.ovr >= 75 { 0.20 } else { 0.10 };
+    round_transfer_fee(((player.market_value as f64) * pct).round() as u64)
+}
+
+/// V99.4 T4.5: Suggested play-time guarantee based on player's squad role.
+/// Young players need guaranteed minutes; established players don't.
+fn suggested_playtime_guarantee(player: &domain::player::Player) -> u8 {
+    if player.ovr >= 75 {
+        0 // Stars don't need guarantees — they'll play anyway
+    } else if player.ovr >= 65 {
+        30 // Squad players: at least 30% of games
+    } else {
+        50 // Young/fringe players: at least 50% of games
+    }
 }
 
 fn default_loan_end_date(

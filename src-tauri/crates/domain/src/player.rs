@@ -77,6 +77,10 @@ pub struct Player {
     /// Player's ceiling rating (1–99). Set at generation; higher than ovr for young players.
     #[serde(default)]
     pub potential: u8,
+    /// V99.4 T4.1: Player fame tier — drives AI transfer interest, contract demands,
+    /// media coverage, and fan morale. Derived from OVR + career achievements.
+    #[serde(default)]
+    pub fame: PlayerFame,
 
     // Contract & value
     pub contract_end: Option<String>,
@@ -527,6 +531,112 @@ pub struct CareerEntry {
     pub assists: u32,
 }
 
+/// V99.4 T4.1: Player fame tier — drives AI transfer interest, contract demands,
+/// media coverage, and fan morale. Derived from OVR + career achievements.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum PlayerFame {
+    #[default]
+    Unknown,        // OVR < 55 — nobody knows who this is
+    Prospect,       // OVR 55-64 + age <= 21 — hot prospect
+    Known,          // OVR 65-69 — established squad player
+    Established,    // OVR 70-74 — regular starter, recognised name
+    Star,           // OVR 75-79 — star player, fans love him
+    WorldClass,     // OVR 80-84 — world-class, known globally
+    Legend,         // OVR 85+ OR multiple trophies — legendary status
+}
+
+impl PlayerFame {
+    /// Derive fame from OVR, age, and career trophies.
+    pub fn derive(ovr: u8, age: i32, trophies: u32) -> Self {
+        // Legends: OVR 85+ OR 3+ trophies at any age
+        if ovr >= 85 || trophies >= 3 {
+            return PlayerFame::Legend;
+        }
+        // World class: OVR 80-84
+        if ovr >= 80 {
+            return PlayerFame::WorldClass;
+        }
+        // Star: OVR 75-79
+        if ovr >= 75 {
+            return PlayerFame::Star;
+        }
+        // Prospect: young + decent OVR
+        if age <= 21 && ovr >= 55 {
+            return PlayerFame::Prospect;
+        }
+        // Established: OVR 70-74
+        if ovr >= 70 {
+            return PlayerFame::Established;
+        }
+        // Known: OVR 65-69
+        if ovr >= 65 {
+            return PlayerFame::Known;
+        }
+        // Prospect: young even if low OVR
+        if age <= 21 {
+            return PlayerFame::Prospect;
+        }
+        PlayerFame::Unknown
+    }
+
+    /// Returns a Gaffer-voice label.
+    pub fn label(&self) -> &str {
+        match self {
+            PlayerFame::Unknown => "Unknown",
+            PlayerFame::Prospect => "Prospect",
+            PlayerFame::Known => "Known",
+            PlayerFame::Established => "Established",
+            PlayerFame::Star => "Star",
+            PlayerFame::WorldClass => "World Class",
+            PlayerFame::Legend => "Legend",
+        }
+    }
+
+    /// Returns a Gaffer-voice description.
+    pub fn description(&self) -> &str {
+        match self {
+            PlayerFame::Unknown => "Nobody knows his name. Yet.",
+            PlayerFame::Prospect => "One for the future — the lads at the academy rate him.",
+            PlayerFame::Known => "Does a job. The fans know what they're getting.",
+            PlayerFame::Established => "Proper player. Earns his corn every week.",
+            PlayerFame::Star => "The main man. Bums on seats because of him.",
+            PlayerFame::WorldClass => "World-class. Would walk into any side on the planet.",
+            PlayerFame::Legend => "Legendary status. They'll talk about him for years.",
+        }
+    }
+
+    /// Returns a wage demand multiplier — more famous players demand more.
+    pub fn wage_multiplier(&self) -> f64 {
+        match self {
+            PlayerFame::Unknown => 0.80,
+            PlayerFame::Prospect => 0.90,
+            PlayerFame::Known => 1.00,
+            PlayerFame::Established => 1.10,
+            PlayerFame::Star => 1.25,
+            PlayerFame::WorldClass => 1.50,
+            PlayerFame::Legend => 1.75,
+        }
+    }
+
+    /// Returns an AI transfer interest bonus — more famous players attract more bids.
+    pub fn transfer_interest_bonus(&self) -> i32 {
+        match self {
+            PlayerFame::Unknown => 0,
+            PlayerFame::Prospect => 10,
+            PlayerFame::Known => 5,
+            PlayerFame::Established => 15,
+            PlayerFame::Star => 25,
+            PlayerFame::WorldClass => 35,
+            PlayerFame::Legend => 40,
+        }
+    }
+
+    /// Returns true if the player is "famous" — attracts media attention.
+    pub fn is_famous(&self) -> bool {
+        matches!(self, PlayerFame::Star | PlayerFame::WorldClass | PlayerFame::Legend)
+    }
+}
+
 /// V99.4 T2.1: Career event type — milestone moments in a player's career.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -644,6 +754,16 @@ pub struct LoanOffer {
     pub status: LoanOfferStatus,
     #[serde(default = "default_loan_offer_date")]
     pub date: String,
+    /// V99.4 T4.5: One-time loan fee paid to the parent club.
+    #[serde(default)]
+    pub loan_fee: u64,
+    /// V99.4 T4.5: If true, the parent club can recall the player in January.
+    #[serde(default)]
+    pub recall_clause: bool,
+    /// V99.4 T4.5: Minimum percentage of games the player must start (0-100).
+    /// If the borrowing club fails to meet this, the player can leave early.
+    #[serde(default)]
+    pub playtime_guarantee_pct: u8,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

@@ -532,8 +532,13 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     // wage ratio). With the old 6%, a £10M-finance club had a £600k wage
     // budget — not enough to pay even a single 80-OVR star under the new
     // wage scale. At 10% it's £1M, still tight but workable.
-    team.wage_budget = (team.finance as f64 * 0.10) as i64;
-    team.transfer_budget = (team.finance as f64 * 0.15) as i64;
+    // V99.4 Sprint 6 BALANCE FIX: Wage budget raised from 10% to 25% of finance.
+    // The old 10% gave a £50M-finance club only £5M wage budget — but a 25-man
+    // squad at avg OVR 62 costs £4.5M/yr. Top-tier squads (avg OVR 75+) cost
+    // £9.5M+/yr. At 25%, a £50M club gets £12.5M — enough for a mid-tier squad.
+    // Elite clubs (finance £200M+) get £50M+ which covers star wages.
+    team.wage_budget = (team.finance as f64 * 0.25) as i64;
+    team.transfer_budget = (team.finance as f64 * 0.20) as i64;
     // V99.4 T4.7: Assign board type based on reputation.
     // Elite clubs: more likely Sugar Daddy / Ambitious.
     // Lower clubs: more likely Penny-Pinching / Sensible.

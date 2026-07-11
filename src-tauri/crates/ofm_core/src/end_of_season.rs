@@ -1048,7 +1048,9 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
                 // negative envelope would still be rejected by
                 // `make_transfer_bid`, but showing "€-1.2M transfer budget"
                 // in the UI reads worse than a hard zero.
-                team.transfer_budget = ((team.finance as f64 * 0.15) as i64).max(0);
+                // V99.4 Sprint 6: Match the new 20% transfer budget ratio.
+                team.transfer_budget = ((team.finance as f64 * 0.20) as i64).max(0);
+                team.wage_budget = ((team.finance as f64 * 0.25) as i64).max(0);
             }
         }
 

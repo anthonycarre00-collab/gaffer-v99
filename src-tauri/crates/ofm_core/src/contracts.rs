@@ -1319,6 +1319,9 @@ pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDat
 
     wage *= importance_wage_multiplier(player);
 
+    // V99.4 T4.1: Fame wage multiplier — famous players demand more.
+    wage *= player.fame.wage_multiplier() as f32;
+
     // V99.4 T4.4: Release clause wage discount. If the player has a
     // release clause, they accept a lower wage in exchange for the
     // security of being able to leave if the clause is met.

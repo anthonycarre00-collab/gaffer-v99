@@ -260,6 +260,8 @@ export interface PlayerData {
   market_value: number;
   /** V99.4 T4.4: Release clause amount (null = no clause). */
   release_clause?: number | null;
+  /** V99.4 T4.1: Player fame tier. */
+  fame?: string;
   stats: PlayerSeasonStats;
   career: CareerEntry[];
   /** V99.4 T2.1: Career milestone events (debut, first goal, etc.) */
@@ -338,6 +340,12 @@ export interface LoanOfferData {
     | "Rejected"
     | "Withdrawn";
   date: string;
+  /** V99.4 T4.5: One-time loan fee paid to parent club. */
+  loan_fee?: number;
+  /** V99.4 T4.5: If true, parent club can recall in January. */
+  recall_clause?: boolean;
+  /** V99.4 T4.5: Minimum % of games the player must start. */
+  playtime_guarantee_pct?: number;
 }
 
 export interface ActiveLoanData {
