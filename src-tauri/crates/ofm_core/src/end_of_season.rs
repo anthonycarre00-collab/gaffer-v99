@@ -927,6 +927,14 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
     // 2. Compute the user's division's awards before resetting stats
     let awards = compute_division_season_awards(game, league);
 
+    // V99.3 VITAL-1 C3+M4: Record live-season awards + rivalries into the
+    // world history archive. Previously these were only recorded during
+    // generate_past_world_history at game start — the Hall of Fame was
+    // frozen after that, and live-season rivalries were never created.
+    // Now every live season appends to the archive.
+    crate::history_generation::record_historical_awards(game, season, &awards);
+    crate::history_generation::update_historical_rivalries(game, season, &final_standings);
+
     // 3. Build summary
     let user_position = final_standings
         .iter()
