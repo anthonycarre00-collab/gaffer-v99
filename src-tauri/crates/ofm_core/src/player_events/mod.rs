@@ -304,4 +304,106 @@ pub fn check_player_events(game: &mut Game) {
 
     game.messages.extend(new_messages);
     generate_contract_concern_messages(game, true);
+
+    // V99.4 T1.3: Check for transfer requests from unhappy star players.
+    check_transfer_requests(game, &today);
+}
+
+/// V99.4 T1.3: Check if any players want to request a transfer.
+///
+/// A player requests a transfer when:
+/// - OVR >= 70 (good enough to attract interest elsewhere)
+/// - Morale < 25 for 30+ consecutive days
+/// - Not already transfer-listed by the user
+/// - Not already has an active transfer request
+///
+/// When triggered:
+/// - Player is auto-transfer-listed
+/// - Inbox message generated ("X wants to leave")
+/// - User can refuse → player stays but loses 5 morale/week
+pub fn check_transfer_requests(game: &mut Game, today: &str) {
+    let user_team_id = match game.manager.team_id.clone() {
+        Some(id) => id,
+        None => return,
+    };
+
+    let mut new_requests: Vec<(String, String)> = Vec::new(); // (player_id, player_name)
+
+    for player in &mut game.players {
+        // Only check players on the user's team.
+        if player.team_id.as_deref() != Some(&user_team_id) {
+            continue;
+        }
+        // Skip if already has a transfer request or is already transfer-listed.
+        if player.transfer_request_date.is_some() || player.transfer_listed {
+            // Still track low_morale_days so the user knows the situation
+            // isn't improving.
+            if player.morale < 25 {
+                player.low_morale_days = player.low_morale_days.saturating_add(1);
+            } else {
+                player.low_morale_days = 0;
+            }
+            continue;
+        }
+        // Only star players (OVR >= 70) request transfers.
+        if player.ovr < 70 {
+            player.low_morale_days = 0;
+            continue;
+        }
+
+        // Track consecutive low-morale days.
+        if player.morale < 25 {
+            player.low_morale_days = player.low_morale_days.saturating_add(1);
+        } else {
+            player.low_morale_days = 0;
+        }
+
+        // After 30 days of low morale, request a transfer.
+        if player.low_morale_days >= 30 {
+            player.transfer_request_date = Some(today.to_string());
+            player.transfer_listed = true;
+            new_requests.push((player.id.clone(), player.match_name.clone()));
+        }
+    }
+
+    // Generate inbox messages for each new transfer request.
+    for (player_id, player_name) in new_requests {
+        let msg_id = format!("transfer_request_{}_{}", today, player_id);
+        // Check for duplicate.
+        if game.messages.iter().any(|m| m.id == msg_id) {
+            continue;
+        }
+
+        game.messages.push(InboxMessage {
+            id: msg_id,
+            subject: format!("{} wants to leave", player_name),
+            body: format!(
+                "{} has been unhappy for over a month now, and he's had enough. \
+                 He's requested a transfer and has been placed on the transfer \
+                 list. You can try to improve his morale, or accept his request \
+                 and look for a buyer.",
+                player_name
+            ),
+            sender: "Assistant Manager".to_string(),
+            sender_role: "Staff".to_string(),
+            date: today.to_string(),
+            category: domain::message::MessageCategory::PlayerMorale,
+            priority: domain::message::MessagePriority::High,
+            context: domain::message::MessageContext {
+                team_id: Some(user_team_id.clone()),
+                team_name: None,
+                player_id: Some(player_id.clone()),
+                fixture_id: None,
+                match_result: None,
+                ..Default::default()
+            },
+            actions: vec![],
+            read: false,
+            subject_key: None,
+            body_key: None,
+            sender_key: None,
+            sender_role_key: None,
+            i18n_params: std::collections::HashMap::new(),
+        });
+    }
 }

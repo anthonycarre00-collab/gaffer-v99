@@ -263,6 +263,8 @@ export interface PlayerData {
   movement_history?: PlayerMovementEntry[];
   transfer_listed: boolean;
   loan_listed: boolean;
+  /** V99.4 T1.3: Date the player requested a transfer (null = no request). */
+  transfer_request_date?: string | null;
   transfer_offers: TransferOfferData[];
   loan_offers?: LoanOfferData[];
   active_loan?: ActiveLoanData | null;

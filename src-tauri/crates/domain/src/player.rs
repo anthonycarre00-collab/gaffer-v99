@@ -100,6 +100,14 @@ pub struct Player {
     pub transfer_listed: bool,
     #[serde(default)]
     pub loan_listed: bool,
+    /// V99.4 T1.3: If the player has requested a transfer, this is the date
+    /// the request was made. None = no active request.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transfer_request_date: Option<String>,
+    /// V99.4 T1.3: Consecutive days morale has been below 25. Used to trigger
+    /// transfer requests after 30 days of low morale.
+    #[serde(default)]
+    pub low_morale_days: u32,
     #[serde(default)]
     pub transfer_offers: Vec<TransferOffer>,
     #[serde(default)]
