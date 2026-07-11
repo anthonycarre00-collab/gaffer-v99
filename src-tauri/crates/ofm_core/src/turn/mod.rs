@@ -175,6 +175,13 @@ where
         // Narrative: decay old memories, check for resurfacing
         game.memory_store.weekly_decay(&today);
 
+        // V99.3 VITAL-1 M1: Memory resurfacing. The narrative engine records
+        // memories but never resurfaces them — check_resurfacing was only
+        // called from tests. Now we check the user's team + squad weekly
+        // and generate news articles when memories resurface, so stories
+        // actually get told instead of sitting in the memory store forever.
+        surface_narrative_memories(game, &today);
+
         // Media: shift pundit forms
         let mut rng = rand::rng();
         game.media_engine.weekly_update(&mut rng);
@@ -268,6 +275,124 @@ fn prune_old_messages_and_news(game: &mut Game) {
             game.news.len(),
         );
     }
+}
+
+/// V99.3 VITAL-1 M1: Surface narrative memories for the user's team + squad.
+///
+/// The narrative engine records memories (breakout performances, rivalries,
+comebacks, slumps) but `check_resurfacing` was only called from tests —
+/// memories were never resurfaced in production. This weekly pass checks
+/// the user's team + each squad member for resurfacing candidates and
+/// generates a news article when a memory resurfaces, so stories actually
+/// get told instead of sitting in the memory store forever.
+///
+/// Uses the existing 12-week cooldown (COOLDOWN_DAYS) to prevent the same
+/// memory from resurfacing too frequently.
+fn surface_narrative_memories(game: &mut Game, today: &str) {
+    use domain::news::{NewsArticle, NewsCategory};
+
+    // Collect entity IDs to check: user's team + user's squad players.
+    let user_team_id = match &game.manager.team_id {
+        Some(id) => id.clone(),
+        None => return,
+    };
+
+    let mut entity_ids = vec![user_team_id.clone()];
+    for player in &game.players {
+        if player.team_id.as_deref() == Some(&user_team_id) {
+            entity_ids.push(player.id.clone());
+        }
+    }
+
+    // V99.3: First pass — collect (entity_id, memory_id, description) tuples
+    // from resurfacing candidates. This is an immutable borrow of memory_store.
+    let mut resurfaced: Vec<(String, String, String)> = Vec::new();
+    for entity_id in &entity_ids {
+        let candidates = game
+            .memory_store
+            .resurfacing_candidates(entity_id, today, 0.3);
+        for memory in candidates.iter().take(1) {
+            // Only surface 1 per entity per week to avoid spam.
+            resurfaced.push((
+                entity_id.clone(),
+                memory.id.clone(),
+                memory.description.clone(),
+            ));
+        }
+    }
+
+    if resurfaced.is_empty() {
+        return;
+    }
+
+    // Pre-compute entity names (immutable borrow of teams + players).
+    let team_names: std::collections::HashMap<String, String> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.name.clone()))
+        .collect();
+    let player_names: std::collections::HashMap<String, String> = game
+        .players
+        .iter()
+        .map(|p| (p.id.clone(), p.full_name.clone()))
+        .collect();
+
+    // Second pass — mark memories as resurfaced + generate news articles.
+    // This is a mutable borrow of memory_store + news.
+    for (entity_id, memory_id, description) in &resurfaced {
+        // Mark the memory as resurfaced (sets 12-week cooldown).
+        if let Some(memory) = game.memory_store.get_memory_mut(memory_id) {
+            if let Ok(date) = chrono::NaiveDate::parse_from_str(today, "%Y-%m-%d") {
+                let until = date + chrono::Duration::days(84); // 12 weeks
+                memory.resurface(&until.format("%Y-%m-%d").to_string());
+            }
+        }
+
+        // Resolve entity name.
+        let entity_name = if entity_id == &user_team_id {
+            team_names.get(entity_id).cloned().unwrap_or_else(|| "The club".to_string())
+        } else {
+            player_names.get(entity_id).cloned().unwrap_or_else(|| "A player".to_string())
+        };
+
+        let headline = format!("Throwback: {}", description);
+        let body = format!(
+            "Looking back — {} and the moment that still gets talked about: \"{}\". \
+             The fans haven't forgotten.",
+            entity_name, description
+        );
+
+        game.news.push(NewsArticle {
+            id: format!("narrative_resurface_{}_{}", today, entity_id),
+            headline,
+            body,
+            source: "The Football Herald".to_string(),
+            date: today.to_string(),
+            category: NewsCategory::Editorial,
+            team_ids: if entity_id == &user_team_id {
+                vec![user_team_id.clone()]
+            } else {
+                vec![]
+            },
+            player_ids: if entity_id != &user_team_id {
+                vec![entity_id.clone()]
+            } else {
+                vec![]
+            },
+            match_score: None,
+            read: false,
+            headline_key: None,
+            body_key: None,
+            source_key: None,
+            i18n_params: std::collections::HashMap::new(),
+        });
+    }
+
+    debug!(
+        "[turn] Surfaced {} narrative memories on {}",
+        resurfaced.len(),
+        today
+    );
 }
 
 /// Called after a live match finishes to complete the day:
