@@ -93,6 +93,11 @@ pub struct Player {
     /// V99.4 T2.1: Career event log — milestone moments (debut, first goal, etc.)
     #[serde(default)]
     pub career_events: Vec<CareerEvent>,
+    /// V99.4 T2.2: Partnership goal counts — keyed by partner player ID.
+    /// Tracks combined goals (scorer + assister) for each partnership.
+    /// When a partnership exceeds 20+ goals, the match engine applies a +2% boost.
+    #[serde(default)]
+    pub partnerships: std::collections::HashMap<String, u32>,
 
     // Individual training focus override (takes priority over group and team default)
     #[serde(default)]

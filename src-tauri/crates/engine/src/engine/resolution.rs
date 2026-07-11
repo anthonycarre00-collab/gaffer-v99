@@ -450,7 +450,8 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
             * trait_bonus(&shooter, TraitContext::Shooting)
             * att_cond
             * stability_mod
-            * morale_mod;
+            * morale_mod
+            * shooter.partnership_bonus; // V99.4 T2.2: +0-2% for established partnerships
     let gk_stability_mod = if pressure {
         1.0 + (stability_pressure_modifier(goalkeeper.stability, true) - 1.0) * pressure_mult
     } else {

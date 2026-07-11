@@ -142,6 +142,16 @@ pub struct PlayerData {
 
     #[serde(default)]
     pub role: PlayerRole,
+
+    /// V99.4 T2.2: Partnership bonus multiplier (1.0 = no bonus, up to 1.02).
+    /// Computed from the player's goal+assist partnerships with teammates.
+    /// When a partnership exceeds 20+ combined goals, apply +2% boost.
+    #[serde(default = "default_partnership_bonus")]
+    pub partnership_bonus: f64,
+}
+
+fn default_partnership_bonus() -> f64 {
+    1.0
 }
 
 fn default_engine_attr() -> u8 {

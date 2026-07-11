@@ -624,6 +624,8 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                     .and_then(|roles| roles.get(&p.id))
                     .map(domain_to_engine_role)
                     .unwrap_or(engine::PlayerRole::Standard),
+                // V99.4 T2.2: Compute partnership bonus from goal combinations.
+                partnership_bonus: compute_partnership_bonus(p, team_id),
             }
         })
         .collect();
@@ -648,6 +650,26 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
         tactics,
         tactics_multiplier,
         captain_id,
+    }
+}
+
+/// V99.4 T2.2: Compute a player's partnership bonus based on their goal
+/// combinations with teammates. Returns 1.0 (no bonus) to 1.02 (max bonus).
+///
+/// - 20+ combined goals with any teammate: +2%
+/// - 10+ combined goals with any teammate: +1%
+/// - Takes the best partnership (doesn't stack)
+fn compute_partnership_bonus(player: &domain::player::Player, _team_id: &str) -> f64 {
+    if player.partnerships.is_empty() {
+        return 1.0;
+    }
+    let max_partnership = player.partnerships.values().copied().max().unwrap_or(0);
+    if max_partnership >= 20 {
+        1.02
+    } else if max_partnership >= 10 {
+        1.01
+    } else {
+        1.0
     }
 }
 

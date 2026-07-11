@@ -425,7 +425,8 @@ impl LiveMatchState {
         let shoot_rating = self.condition_adjusted_skill(&shooter.id, shoot_raw)
             * trait_bonus(&shooter, TraitContext::Shooting)
             * shoot_stability_mod
-            * shoot_morale_mod;
+            * shoot_morale_mod
+            * shooter.partnership_bonus; // V99.4 T2.2: +0-2% for established partnerships
         let gk_raw = (goalkeeper.shot_stopping as f64
             + goalkeeper.commanding as f64
             + goalkeeper.anticipation as f64)

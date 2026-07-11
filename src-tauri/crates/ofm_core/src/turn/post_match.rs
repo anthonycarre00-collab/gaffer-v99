@@ -512,6 +512,29 @@ fn apply_player_stats(
             }
         }
     }
+
+    // V99.4 T2.2: Track goal+assist partnerships.
+    // For each goal in the report, if there's a scorer + assister,
+    // increment their partnership count.
+    let goal_details: Vec<(String, Option<String>)> = report
+        .goals
+        .iter()
+        .map(|g| (g.scorer_id.clone(), g.assist_id.clone()))
+        .collect();
+    for (scorer_id, assister_id) in &goal_details {
+        if let Some(assister_id) = assister_id {
+            if scorer_id != assister_id {
+                // Increment scorer's partnership with assister.
+                if let Some(scorer) = game.players.iter_mut().find(|p| &p.id == scorer_id) {
+                    *scorer.partnerships.entry(assister_id.clone()).or_insert(0) += 1;
+                }
+                // Increment assister's partnership with scorer.
+                if let Some(assister) = game.players.iter_mut().find(|p| &p.id == assister_id) {
+                    *assister.partnerships.entry(scorer_id.clone()).or_insert(0) += 1;
+                }
+            }
+        }
+    }
 }
 
 fn resolve_post_match_promises(
