@@ -24,7 +24,7 @@ impl LiveMatchState {
         let zone = self.ball_zone;
 
         if zone.is_box_for(att_side) {
-            self.resolve_shot(minute, att_side, rng)
+            self.resolve_shot(minute, att_side, rng, false)
         } else if zone == Zone::attacking_third(att_side) {
             self.resolve_attacking_third(minute, att_side, def_side, rng)
         } else if zone == Zone::Midfield {
@@ -257,7 +257,14 @@ impl LiveMatchState {
                     .with_player(&winger_id);
                 self.events.push(cross_evt.clone());
                 events.push(cross_evt);
-                let header = self.snap_player(att_side, Position::Forward, rng);
+                // V99.4 T1.2: Crosses can be met by defenders and midfielders too.
+                let header_pos = {
+                    let roll = rng.random_range(0.0..1.0f64);
+                    if roll < 0.20 { Position::Defender }
+                    else if roll < 0.50 { Position::Midfielder }
+                    else { Position::Forward }
+                };
+                let header = self.snap_player(att_side, header_pos, rng);
                 let def_header = self.snap_player(def_side, Position::Defender, rng);
                 let aerial_att = header.aerial as f64;
                 let aerial_def = def_header.aerial as f64;
@@ -270,7 +277,7 @@ impl LiveMatchState {
                     self.events.push(hdr_evt.clone());
                     events.push(hdr_evt);
                     self.ball_zone = Zone::attacking_box(att_side);
-                    let shot_events = self.resolve_shot(minute, att_side, rng);
+                    let shot_events = self.resolve_shot(minute, att_side, rng, true);
                     events.extend(shot_events);
                 } else {
                     // V99: Emit HeaderLost event.
@@ -336,7 +343,8 @@ impl LiveMatchState {
         events
     }
 
-    fn resolve_shot<R: Rng>(&mut self, minute: u8, att_side: Side, rng: &mut R) -> Vec<MatchEvent> {
+    /// V99.4 T1.2: is_set_piece affects shooter position selection.
+    fn resolve_shot<R: Rng>(&mut self, minute: u8, att_side: Side, rng: &mut R, is_set_piece: bool) -> Vec<MatchEvent> {
         let mut events = Vec::new();
         let def_side = att_side.opposite();
         let zone = Zone::attacking_box(att_side);
@@ -372,7 +380,19 @@ impl LiveMatchState {
             // Foul but no penalty: advantage played, shot continues
         }
 
-        let shooter = self.snap_player(att_side, Position::Forward, rng);
+        // V99.4 T1.2: Pick shooter position based on weighted probabilities.
+        let shooter_pos = {
+            let roll = rng.random_range(0.0..1.0f64);
+            if is_set_piece {
+                if roll < 0.30 { Position::Defender }
+                else if roll < 0.60 { Position::Midfielder }
+                else { Position::Forward }
+            } else {
+                if roll < 0.20 { Position::Midfielder }
+                else { Position::Forward }
+            }
+        };
+        let shooter = self.snap_player(att_side, shooter_pos, rng);
         let assister = self.snap_player(att_side, Position::Midfielder, rng);
         let goalkeeper = self.snap_player(def_side, Position::Goalkeeper, rng);
 

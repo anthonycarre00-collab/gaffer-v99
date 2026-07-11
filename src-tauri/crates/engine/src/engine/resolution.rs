@@ -13,6 +13,32 @@ use super::MatchContext;
 use super::fouls::{self, maybe_foul};
 use super::snap_player;
 
+/// V99.4 T1.2: Pick a shooter position based on weighted probabilities.
+/// Open play: 80% Forward, 20% Midfielder.
+/// Set piece (corner/free kick): 40% Forward, 30% Midfielder, 30% Defender.
+/// Real football: defenders score ~10-15% (mostly from set pieces),
+/// midfielders ~25-30%, forwards ~55-60%.
+fn pick_shooter_position<R: Rng>(rng: &mut R, is_set_piece: bool) -> Position {
+    let roll = rng.random_range(0.0..1.0f64);
+    if is_set_piece {
+        // Set piece: 30% Defender, 30% Midfielder, 40% Forward
+        if roll < 0.30 {
+            Position::Defender
+        } else if roll < 0.60 {
+            Position::Midfielder
+        } else {
+            Position::Forward
+        }
+    } else {
+        // Open play: 20% Midfielder, 80% Forward
+        if roll < 0.20 {
+            Position::Midfielder
+        } else {
+            Position::Forward
+        }
+    }
+}
+
 /// V99: Get the leadership rating of the team's captain (first player in the
 /// starting XI with the highest leadership). Returns 50 (neutral) if no
 /// captain can be identified.
@@ -54,7 +80,7 @@ pub(super) fn resolve_action<R: Rng>(ctx: &mut MatchContext, minute: u8, rng: &m
     let zone = ctx.ball_zone;
 
     if zone.is_box_for(att_side) {
-        resolve_shot(ctx, minute, att_side, rng);
+        resolve_shot(ctx, minute, att_side, rng, false);
         // resolve_shot manages ball_zone and possession for all outcomes
     } else if zone == Zone::attacking_third(att_side) {
         resolve_attacking_third(ctx, minute, att_side, def_side, rng);
@@ -283,7 +309,15 @@ fn resolve_attacking_third<R: Rng>(
             ctx.emit(
                 MatchEvent::new(minute, EventType::Cross, att_side, zone).with_player(&attacker.id),
             );
-            let header = snap_player(ctx, att_side, Position::Forward, rng);
+            // V99.4 T1.2: Crosses can be met by defenders and midfielders too.
+            // 50% Forward, 30% Midfielder, 20% Defender.
+            let header_pos = {
+                let roll = rng.random_range(0.0..1.0f64);
+                if roll < 0.20 { Position::Defender }
+                else if roll < 0.50 { Position::Midfielder }
+                else { Position::Forward }
+            };
+            let header = snap_player(ctx, att_side, header_pos, rng);
             let def_header = snap_player(ctx, def_side, Position::Defender, rng);
             let aerial_att = header.aerial as f64;
             let aerial_def = def_header.aerial as f64;
@@ -296,7 +330,7 @@ fn resolve_attacking_third<R: Rng>(
                         .with_secondary(&def_header.id),
                 );
                 ctx.ball_zone = Zone::attacking_box(att_side);
-                resolve_shot(ctx, minute, att_side, rng);
+                resolve_shot(ctx, minute, att_side, rng, true);
             } else {
                 // V99: Emit HeaderLost event for the attacker.
                 ctx.emit(
@@ -352,7 +386,10 @@ fn resolve_attacking_third<R: Rng>(
     }
 }
 
-fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng: &mut R) {
+/// V99.4 T1.2: is_set_piece affects shooter position selection.
+/// Set pieces (after cross/corner): 30% DEF, 30% MID, 40% FWD.
+/// Open play: 20% MID, 80% FWD.
+fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng: &mut R, is_set_piece: bool) {
     let def_side = att_side.opposite();
     let zone = Zone::attacking_box(att_side);
 
@@ -377,7 +414,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
         // Foul but no penalty: advantage played, shot continues
     }
 
-    let shooter = snap_player(ctx, att_side, Position::Forward, rng);
+    let shooter = snap_player(ctx, att_side, pick_shooter_position(rng, is_set_piece), rng);
     let assister = snap_player(ctx, att_side, Position::Midfielder, rng);
     let goalkeeper = snap_player(ctx, def_side, Position::Goalkeeper, rng);
 
