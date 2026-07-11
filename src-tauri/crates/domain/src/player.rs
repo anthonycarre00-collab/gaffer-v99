@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Player {
@@ -106,7 +106,11 @@ pub struct Player {
     pub loan_offers: Vec<LoanOffer>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub active_loan: Option<ActiveLoan>,
-    #[serde(default)]
+    /// V99.3: bundled world DBs may have `"morale_core": null` for players
+    /// generated before the morale-core system existed. Treat null as
+    /// `Default::default()` so those DBs load cleanly instead of failing
+    /// the entire world parse with a cryptic serde error.
+    #[serde(default, deserialize_with = "deserialize_default_from_null")]
     pub morale_core: PlayerMoraleCore,
 
     /// Jersey/squad number (1–99). None means unassigned.
@@ -433,6 +437,19 @@ impl Default for PlayerMoraleCore {
             renewal_state: None,
         }
     }
+}
+
+/// V99.3: Deserialize helper that treats `null` in JSON as `Default::default()`
+/// for non-Option fields. Used on `Player::morale_core` so bundled world DBs
+/// that have `"morale_core": null` (generated before the morale-core system
+/// existed) load cleanly instead of failing the entire world parse.
+pub fn deserialize_default_from_null<'de, D, T>(deserializer: D) -> Result<T, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de> + Default,
+{
+    let opt = Option::<T>::deserialize(deserializer)?;
+    Ok(opt.unwrap_or_default())
 }
 
 fn default_transfer_offer_status() -> TransferOfferStatus {

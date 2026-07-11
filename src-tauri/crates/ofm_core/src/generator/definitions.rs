@@ -152,7 +152,9 @@ pub(super) fn default_teams_definition() -> TeamsDefinition {
 #[serde(rename_all = "camelCase")]
 pub enum WorldDataKind {
     #[default]
+    #[serde(alias = "RosterBaseline", alias = "roster_baseline")]
     RosterBaseline,
+    #[serde(alias = "HistoricalSnapshot", alias = "historical_snapshot")]
     HistoricalSnapshot,
 }
 

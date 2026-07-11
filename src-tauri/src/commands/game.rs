@@ -234,33 +234,55 @@ fn load_world_data(
 ) -> Result<ofm_core::generator::WorldData, String> {
     match world_source {
         None | Some("random") => {
-            // Gaffer V99.2: ALWAYS prefer the bundled real-world database
-            // (FIFA 22 roster, 5,324 players, 184 teams, 21 competitions) over
-            // procedural generation. Only fall back to generation if the file
-            // is genuinely missing (e.g. corrupted install).
-            if let Some(bundled_path) = resolve_bundled_world_path(app_handle) {
-                log::info!("[world] Loading bundled world database: {:?}", bundled_path);
-                match ofm_core::generator::load_world_from_path(&bundled_path) {
-                    Ok(world) => {
-                        log::info!(
-                            "[world] Bundled world loaded: {} teams, {} players, {} staff",
-                            world.teams.len(),
-                            world.players.len(),
-                            world.staff.len()
-                        );
-                        return Ok(world);
-                    }
-                    Err(e) => {
-                        log::warn!(
-                            "[world] Failed to load bundled world ({}), falling back to random",
-                            e
-                        );
-                        // fall through to generation
+            // Gaffer V99.3: ALWAYS prefer the bundled real-world database
+            // (5,324 players, 184 teams, 21 competitions) over procedural
+            // generation. If the bundled DB EXISTS but FAILS to load, we
+            // return the error instead of silently falling through to
+            // procedural generation — the silent fallback was the root cause
+            // of the "game loads made-up players" bug.
+            match resolve_bundled_world_path(app_handle) {
+                Some(bundled_path) => {
+                    log::info!("[world] Loading bundled world database: {:?}", bundled_path);
+                    match ofm_core::generator::load_world_from_path(&bundled_path) {
+                        Ok(world) => {
+                            log::info!(
+                                "[world] Bundled world loaded OK: {} teams, {} players, {} staff, {} competitions",
+                                world.teams.len(),
+                                world.players.len(),
+                                world.staff.len(),
+                                world.competitions.len()
+                            );
+                            Ok(world)
+                        }
+                        Err(e) => {
+                            // V99.3: HARD ERROR — do not fall through to
+                            // procedural generation. The bundled DB exists
+                            // but failed to parse; the user needs to see the
+                            // actual error so we can fix the schema mismatch.
+                            log::error!(
+                                "[world] CRITICAL: Bundled world DB exists at {:?} but failed to load: {}",
+                                bundled_path,
+                                e
+                            );
+                            Err(format!(
+                                "be.error.worldBundledLoadFailed: {:?} — {}",
+                                bundled_path, e
+                            ))
+                        }
                     }
                 }
+                None => {
+                    // V99.3: This should NEVER happen in a packaged build
+                    // (the DB is bundled as a Tauri resource). If it does,
+                    // it means the install is broken. Log loudly and fall
+                    // back to procedural generation ONLY as a last resort.
+                    log::error!(
+                        "[world] CRITICAL: No bundled world database found! \
+                         Falling back to procedural generation as last resort."
+                    );
+                    Ok(ofm_core::generator::generate_world_data(None))
+                }
             }
-            log::info!("[world] Generating random world (bundled DB unavailable)");
-            Ok(ofm_core::generator::generate_world_data(None))
         }
         Some(source) => load_world_data_from_source(source),
     }

@@ -197,9 +197,17 @@ fn validate_embedded_definitions(world: &WorldData) -> Result<(), String> {
 }
 
 /// Parse a JSON string into a `WorldData`.
+///
+/// V99.3: Surfaces the ACTUAL serde error so we can diagnose load failures
+/// instead of silently falling through to procedural generation. The
+/// generic `be.error.worldParseFailed` string is kept as a prefix so
+/// frontend i18n still recognises the error category, but the real serde
+/// message is appended after a colon.
 pub fn load_world_from_json(json: &str) -> Result<WorldData, String> {
-    let world: WorldData =
-        serde_json::from_str(json).map_err(|_| WORLD_PARSE_FAILED_ERROR.to_string())?;
+    let world: WorldData = serde_json::from_str(json).map_err(|e| {
+        log::error!("[world] JSON parse failed: {}", e);
+        format!("{}: {}", WORLD_PARSE_FAILED_ERROR, e)
+    })?;
     let world = normalize_world(world);
     validate_embedded_definitions(&world)?;
     Ok(world)
@@ -271,13 +279,23 @@ fn load_world_from_manifest_path(path: &Path, manifest: WorldManifestV2) -> Resu
 }
 
 pub fn load_world_from_path(path: &Path) -> Result<WorldData, String> {
-    let json = std::fs::read_to_string(path).map_err(|_| WORLD_PARSE_FAILED_ERROR.to_string())?;
+    let json = std::fs::read_to_string(path).map_err(|e| {
+        log::error!("[world] Failed to read file {:?}: {}", path, e);
+        format!("{}: {}", WORLD_PARSE_FAILED_ERROR, e)
+    })?;
+    log::info!(
+        "[world] Read {} bytes from {:?}, parsing...",
+        json.len(),
+        path
+    );
     if let Ok(manifest) = serde_json::from_str::<WorldManifestV2>(&json)
         && manifest.format_version >= 2
         && !manifest.shards.teams.is_empty()
     {
+        log::info!("[world] Detected manifest v2 format, loading shards");
         return load_world_from_manifest_path(path, manifest);
     }
+    log::info!("[world] Loading as flat JSON (v1 format)");
     load_world_from_json(&json)
 }
 
