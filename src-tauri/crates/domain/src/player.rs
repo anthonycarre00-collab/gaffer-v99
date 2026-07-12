@@ -798,12 +798,42 @@ pub struct ActiveLoan {
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PlayerTrait {
-    Speedster, Explosive, Workhorse, Powerhouse, Twisty,
-    Orchestrator, Predator, VelvetTouch, BallWinner, Rock, SetPieceSpecialist,
-    Leader, CoolHead, Visionary,
-    SafeHands, CatReflexes, Commander,
-    CompleteForward, EngineRoom,
+    Speedster,
+    Explosive,
+    #[serde(alias = "Engine")]
+    Workhorse,
+    #[serde(alias = "Strength")]
+    Powerhouse,
+    #[serde(alias = "Dribbler")]
+    Twisty,
+    #[serde(alias = "Playmaker")]
+    Orchestrator,
+    #[serde(alias = "Clinical Finisher", alias = "Distance Shooter")]
+    Predator,
+    VelvetTouch,
+    #[serde(alias = "Tackling")]
+    BallWinner,
+    #[serde(alias = "Complete Defender", alias = "Aerial Threat")]
+    Rock,
+    #[serde(alias = "FK Specialist", alias = "Crosser")]
+    SetPieceSpecialist,
+    Leader,
+    CoolHead,
+    #[serde(alias = "Tactician")]
+    Visionary,
+    #[serde(alias = "Acrobat")]
+    SafeHands,
+    CatReflexes,
+    Commander,
+    #[serde(alias = "Complete Forward", alias = "Complete Midfielder")]
+    CompleteForward,
+    EngineRoom,
+    #[serde(alias = "Poacher")]
     Wonderkid,
+    // Legacy FIFA traits that don't have a direct Gaffer equivalent —
+    // mapped to the closest variant so the DB loads without error.
+    // These are consumed by serde but won't be re-serialized (the enum
+    // serializes to the canonical Gaffer name).
 }
 
 /// Derive traits from the Gaffer 19-attribute schema.
