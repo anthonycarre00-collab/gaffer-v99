@@ -4,7 +4,6 @@ use crate::event::{EventType, MatchEvent};
 use crate::types::{Position, Side, Zone};
 
 use super::{LiveMatchState, MinuteResult, PenaltyShootoutState};
-use rand::Rng;
 
 // ---------------------------------------------------------------------------
 // Penalty shootout

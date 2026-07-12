@@ -2,8 +2,6 @@ use crate::game::Game;
 use crate::season_awards::compute_division_season_awards;
 use chrono::{DateTime, Datelike, Duration, Utc};
 use domain::league::{
-use chrono::Datelike;
-use std::collections::HashMap;
     BerthRule, CompetitionFormat, CompetitionScope, CompetitionType, FixtureStatus, League,
     StandingEntry,
 };

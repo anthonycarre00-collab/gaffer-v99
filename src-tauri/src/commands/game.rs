@@ -6,8 +6,6 @@ use chrono::{DateTime, Datelike, Duration, TimeZone, Utc};
 
 use db::{save_index::SaveEntry, save_manager::SaveManager};
 use domain::league::{
-use chrono::Datelike;
-use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, League,
 };
 use domain::manager::Manager;

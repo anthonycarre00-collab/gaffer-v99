@@ -13,7 +13,6 @@
 
 use crate::game::{RevealTier, ScoutingKnowledge};
 use domain::player::{Player, PlayerAttributes, Position};
-use rand::Rng;
 use std::collections::HashMap;
 
 /// All 19 Gaffer attribute names, in canonical order.

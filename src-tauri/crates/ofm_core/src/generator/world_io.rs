@@ -1,5 +1,4 @@
 use super::definitions::{
-use std::collections::HashMap;
     WorldData, WorldDatabaseInfo, WorldManifestV2, WorldRegionDefinition, WorldShardRefs,
 };
 use std::path::{Path, PathBuf};

@@ -2,7 +2,6 @@ use rand::{Rng, RngExt};
 
 use crate::event::{EventType, MatchEvent};
 use crate::shared::{
-use rand::Rng;
     tactics_break_speed_counter, tactics_counter_press_rewin, tactics_pressing_contest,
     tactics_tempo_retention,
 };

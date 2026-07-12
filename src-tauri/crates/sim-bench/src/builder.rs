@@ -1,6 +1,5 @@
 use engine::{PlayerData, PlayerRole, PlayStyle, Position, TacticsConfig, TeamData};
 use rand::{Rng, RngExt};
-use rand::Rng;
 
 /// Build a synthetic team with per-attribute values centered on `avg_ovr`.
 /// Formation is parsed as "4-3-3" → 4 DEF, 3 MID, 3 FWD (plus 1 GK always).

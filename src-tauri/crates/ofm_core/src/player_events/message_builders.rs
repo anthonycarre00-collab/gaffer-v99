@@ -1,7 +1,6 @@
 use domain::message::*;
 use rand::RngExt;
 use std::collections::HashMap;
-use rand::Rng;
 
 /// Helper to build a HashMap<String, String> from key-value pairs.
 fn params(pairs: &[(&str, &str)]) -> HashMap<String, String> {

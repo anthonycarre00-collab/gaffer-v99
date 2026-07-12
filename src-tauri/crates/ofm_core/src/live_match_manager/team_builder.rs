@@ -1,6 +1,5 @@
 use crate::game::Game;
 use crate::player_rating::{
-use std::collections::HashMap;
     effective_rating_for_assignment, formation_slots, natural_ovr, positional_fit_for_assignment,
 };
 use domain::player::Position as DomainPosition;

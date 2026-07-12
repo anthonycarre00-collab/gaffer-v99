@@ -3,7 +3,6 @@ use domain::league::FixtureCompetition;
 use domain::news::*;
 use rand::RngExt;
 use serde::Serialize;
-use rand::Rng;
 
 #[derive(Serialize)]
 struct MatchReportScorerParam<'a> {

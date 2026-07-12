@@ -11,7 +11,6 @@ use chrono::Datelike;
 use domain::message::*;
 use rand::RngExt;
 use std::collections::HashMap;
-use rand::Rng;
 
 fn params(pairs: &[(&str, &str)]) -> HashMap<String, String> {
     pairs

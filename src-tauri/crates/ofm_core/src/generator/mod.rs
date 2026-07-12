@@ -30,7 +30,6 @@ use uuid::Uuid;
 
 use chrono::Datelike;
 use generation::*;
-use std::collections::HashMap;
 
 const MAX_OPENING_EXPIRING_CONTRACTS: usize = 2;
 const MIN_OPENING_RUNWAY_WEEKS: i64 = 16;
@@ -546,7 +545,6 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
     // Lower clubs: more likely Penny-Pinching / Sensible.
     team.board_type = {
         use domain::team::BoardType;
-        use rand::Rng;
         let mut rng = rand::rng();
         if team.reputation >= 750 {
             match rng.random_range(0..100) {

@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tauri::State;
-use rand::Rng;
 
 pub use crate::application::live_match::FinishLiveMatchResponse;
 use crate::application::live_match::{

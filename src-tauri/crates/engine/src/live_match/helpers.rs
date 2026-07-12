@@ -2,7 +2,6 @@ use rand::{Rng, RngExt};
 
 use crate::event::{DangerBand, FoulSeverity, GoalContext, SaveQuality};
 use crate::shared::{
-use rand::Rng;
     PlayStylePhase, PlayerSnap, home_mod, play_style_modifier, tactics_pressing_fatigue,
     tactics_pressing_press,
 };

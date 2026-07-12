@@ -1,8 +1,6 @@
 use crate::game::Game;
 use crate::messages;
 use domain::league::{
-use rand::Rng;
-use std::collections::HashMap;
     CompactMatchEvent, CompactMatchReport, CompactTeamMatchStats, FixtureStatus, GoalEvent,
     MatchResult,
 };

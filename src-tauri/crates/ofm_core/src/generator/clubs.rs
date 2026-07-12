@@ -11,7 +11,6 @@ use rand::{Rng, RngExt};
 use std::collections::HashSet;
 
 use super::definitions::{TeamColorsDef, TeamDef};
-use rand::Rng;
 
 /// Naming conventions drive the club-name patterns used for a nation, giving
 /// each footballing culture its own flavour (United/City vs CF/Real vs Calcio…).

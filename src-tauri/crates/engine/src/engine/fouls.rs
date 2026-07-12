@@ -6,7 +6,6 @@ use crate::types::{Position, Side, Zone};
 
 use super::MatchContext;
 use super::snap_player;
-use rand::Rng;
 
 /// `fouled_snap` is the player who was fouled; `fouler_snap` committed the foul.
 /// `fouling_side` is the side that committed the foul.

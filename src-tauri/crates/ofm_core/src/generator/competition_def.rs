@@ -12,8 +12,6 @@ use chrono::{DateTime, Datelike, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use domain::league::{
-use chrono::Datelike;
-use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, League, StandingEntry,
 };
 use domain::team::Team;

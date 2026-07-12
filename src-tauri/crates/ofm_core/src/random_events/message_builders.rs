@@ -1,7 +1,6 @@
 use super::{action, params};
 use domain::message::*;
 use rand::RngExt;
-use rand::Rng;
 
 // ---------------------------------------------------------------------------
 // Message builders

@@ -1,7 +1,6 @@
 use crate::game::Game;
 use chrono::Days;
 use domain::player::{
-use rand::Rng;
     ContractExitIntent, ContractRenewalState, Player, PlayerPromise, PlayerPromiseKind,
     RecentTreatmentMemory, RenewalSessionOutcome, RenewalSessionStatus,
 };

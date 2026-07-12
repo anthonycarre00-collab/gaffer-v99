@@ -812,7 +812,6 @@ mod tests {
     use domain::player::{Player, PlayerAttributes, Position};
     use domain::team::Team;
     use engine::{GoalDetail, MatchReport, Side, TeamStats};
-    use std::collections::HashMap;
 
     fn make_team(id: &str, name: &str) -> Team {
         Team::new(

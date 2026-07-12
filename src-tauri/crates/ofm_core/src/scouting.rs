@@ -8,7 +8,6 @@ pub use progressive_reveal::{
 };
 
 use crate::game::{
-use rand::Rng;
     Game, RevealTier, ScoutingAssignment, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
 };
 use domain::message::*;

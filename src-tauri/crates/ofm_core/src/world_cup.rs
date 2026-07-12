@@ -7,9 +7,6 @@ use std::collections::{BTreeMap, HashMap};
 
 use chrono::{DateTime, Datelike, Utc};
 use domain::league::{
-use rand::Rng;
-use chrono::Datelike;
-use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, FixtureStatus,
     GroupState, League, MatchResult, StandingEntry,
 };
