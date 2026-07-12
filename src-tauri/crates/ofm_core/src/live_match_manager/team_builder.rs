@@ -509,7 +509,10 @@ fn to_engine_player(
         traits: p.traits.iter().map(|t| format!("{:?
         }", t)).collect(),
         role,
+            ..Default::default()
+        
     },
+    ..Default::default()
             ..Default::default()
         
 }

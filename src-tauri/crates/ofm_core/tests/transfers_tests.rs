@@ -58,7 +58,8 @@ fn make_player(id: &str) -> Player {
     player.contract_end = Some("2028-06-30".to_string());
     player.market_value = 1_000_000;
     player.morale = 70;
-    player
+    player,
+    ..Default::default()
 }
 
 fn make_user_player(id: &str) -> Player {
@@ -158,7 +159,8 @@ fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Tea
     );
     team.finance = finance;
     team.transfer_budget = transfer_budget;
-    team
+    team,
+    ..Default::default()
 }
 
 fn make_game_with_player(

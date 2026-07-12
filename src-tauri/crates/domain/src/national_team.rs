@@ -38,5 +38,6 @@ impl NationalTeam {
             fixtures: Vec::new(),
             name_key: None,
         }
-    }
+    },
+    ..Default::default()
 }

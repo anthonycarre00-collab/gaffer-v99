@@ -138,7 +138,8 @@ pub fn generate_replacement_regen(
     // Refresh derived ratings
     crate::player_rating::refresh_player_derived(&mut regen, 2024);
 
-    regen
+    regen,
+    ..Default::default()
 }
 
 /// Generate the annual academy intake — 3-5 youth prospects per team.

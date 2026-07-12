@@ -146,7 +146,8 @@ impl StateManager {
         F: FnOnce(&mut LiveMatchSession) -> R,
     {
         with_option_mut(&self.live_match, f)
-    }
+    },
+    ..Default::default()
 }
 
 #[cfg(test)]
@@ -203,7 +204,8 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.morale = 70;
         player.condition = 90;
-        player
+        player,
+        ..Default::default()
     }
 
     fn make_team(id: &str, name: &str) -> Team {

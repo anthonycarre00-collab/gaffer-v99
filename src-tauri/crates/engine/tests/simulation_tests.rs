@@ -52,8 +52,7 @@ fn make_team(id: &str, name: &str, skill: u8, play_style: PlayStyle) -> TeamData
         play_style,
         tactics: TacticsConfig::default(),
         players: vec![
-            make_player(&format!("{id
-        }_gk1"), "GK1", Position::Goalkeeper, skill),
+            make_player(&format!("{id}_gk1"), "GK1", Position::Goalkeeper, skill),
             make_player(&format!("{id}_def1"), "DEF1", Position::Defender, skill),
             make_player(&format!("{id}_def2"), "DEF2", Position::Defender, skill),
             make_player(&format!("{id}_def3"), "DEF3", Position::Defender, skill),
@@ -65,9 +64,8 @@ fn make_team(id: &str, name: &str, skill: u8, play_style: PlayStyle) -> TeamData
             make_player(&format!("{id}_fwd1"), "FWD1", Position::Forward, skill),
             make_player(&format!("{id}_fwd2"), "FWD2", Position::Forward, skill),
         ],
-    },
-            ..Default::default()
-        
+        ..Default::default()
+    }
 }
 
 fn seeded_rng(seed: u64) -> StdRng {

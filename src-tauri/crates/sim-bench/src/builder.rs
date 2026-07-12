@@ -12,7 +12,8 @@ pub fn build_team(
     formation: &str,
     rng: &mut impl Rng,
 ) -> TeamData {
-    build_team_with_tactics(id, name, avg_ovr, play_style, formation, TacticsConfig::default(), rng)
+    build_team_with_tactics(id, name, avg_ovr, play_style, formation, TacticsConfig::default(), rng),
+    ..Default::default()
 }
 
 pub fn build_team_with_tactics(

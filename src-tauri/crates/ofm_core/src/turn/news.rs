@@ -822,7 +822,8 @@ mod tests {
             "Test City".to_string(),
             format!("{} Ground", name),
             20_000,
-        )
+        ),
+        ..Default::default()
     }
 
     fn make_manager() -> Manager {
@@ -905,7 +906,8 @@ mod tests {
             default_attrs(),
         );
         player.team_id = Some(team_id.to_string());
-        player
+        player,
+        ..Default::default()
     }
 
     fn make_report(goals: Vec<GoalDetail>, home_goals: u8, away_goals: u8) -> MatchReport {

@@ -641,7 +641,8 @@ mod tests {
         );
         team.reputation = 520 + (index as u32 * 55);
         team.finance = 1_500_000 + (index as i64 * 250_000);
-        team
+        team,
+        ..Default::default()
     }
 
     fn make_staff(team_id: &str, index: usize) -> Staff {
@@ -677,7 +678,8 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.ovr = ovr;
         player.potential = (ovr + 6).min(99);
-        player
+        player,
+        ..Default::default()
     }
 
     fn make_game() -> Game {

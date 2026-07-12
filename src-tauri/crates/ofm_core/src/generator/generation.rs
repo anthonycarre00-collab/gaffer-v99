@@ -350,7 +350,8 @@ pub(super) fn generate_random_player_from_def(
 
     player.jersey_number = jersey_number_for_slot(index);
 
-    player
+    player,
+    ..Default::default()
 }
 
 fn jersey_number_for_slot(index: usize) -> Option<u8> {
@@ -708,7 +709,8 @@ pub(super) fn generate_player_from_def(
     };
     player.potential = generate_potential(temp_ovr, age);
     refresh_player_derived(&mut player, current_year);
-    player
+    player,
+    ..Default::default()
 }
 
 /// Generate a random unemployed manager (no team) using the provided name pool.

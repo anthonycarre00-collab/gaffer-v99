@@ -658,7 +658,8 @@ impl SaveManager {
         // Clear league (will be regenerated)
         game.league = None;
         Ok(game)
-    }
+    },
+    ..Default::default()
 }
 
 pub(crate) fn canonicalize_game_starting_xi_ids(game: &mut Game) -> bool {
@@ -1047,7 +1048,8 @@ mod tests {
         player.footedness = footedness;
         player.weak_foot = 1;
         player.team_id = Some("team-001".to_string());
-        player
+        player,
+        ..Default::default()
     }
 
     fn sample_game_with_side_specific_starting_xi(mirrored: bool) -> Game {
@@ -1134,7 +1136,8 @@ mod tests {
         );
         player.team_id = Some("team-001".to_string());
         player.squad_role = SquadRole::Senior;
-        player
+        player,
+        ..Default::default()
     }
 
     fn sample_opening_save_without_youth_academy() -> Game {

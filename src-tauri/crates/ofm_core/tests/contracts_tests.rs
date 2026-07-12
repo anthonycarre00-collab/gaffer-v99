@@ -68,7 +68,8 @@ fn make_player_with(id: &str, wage: u32, contract_end: &str) -> Player {
     player.full_name = format!("Player {}", id);
     player.wage = wage;
     player.contract_end = Some(contract_end.to_string());
-    player
+    player,
+    ..Default::default()
 }
 
 fn make_player_with_position(id: &str, position: Position) -> Player {

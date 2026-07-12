@@ -161,7 +161,8 @@ mod tests {
             "Test City".to_string(),
             format!("{} Ground", name),
             20_000,
-        )
+        ),
+        ..Default::default()
     }
 
     fn make_fixture(id: &str, date: &str, status: FixtureStatus, matchday: u32) -> Fixture {

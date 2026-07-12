@@ -470,7 +470,8 @@ mod tests {
             "GB".to_string(),
             position,
             attrs,
-        )
+        ),
+        ..Default::default()
     }
 
     fn make_team() -> Team {
