@@ -546,6 +546,8 @@ fn build_team(
         play_style,
         players,
         tactics: engine::TacticsConfig::default(),
+        captain_id: None,
+        tactics_multiplier: 1.0,
     }
 }
 
@@ -646,6 +648,7 @@ fn make_player(
             };
             choices[rng.random_range(0..choices.len())]
         },
+        partnership_bonus: 0.0,
     }
 }
 
