@@ -321,7 +321,7 @@ fn round_goal_counts(fixtures: &[&Fixture]) -> HashMap<String, u32> {
             continue;
         };
 
-        for scorer in result.home_goalsrs.iter().chain(result.away_goalsrs.iter()) {
+        for scorer in result.home_scorers.iter().chain(result.away_scorers.iter()) {
             *counts.entry(scorer.player_id.clone()).or_insert(0) += 1;
         }
     }

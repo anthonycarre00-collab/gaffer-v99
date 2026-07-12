@@ -139,7 +139,7 @@ mod tests {
         let result = fixture.result.as_ref().expect("fixture should have a result");
         // Cheap path: scoreline only, no per-minute report.
         assert!(result.report.is_none());
-        assert!(result.home_goalsrs.is_empty());
+        assert!(result.home_scorers.is_empty());
 
         // Both clubs recorded exactly one played match in the standings.
         let total_played: u32 = competition.standings.iter().map(|entry| entry.played).sum();
