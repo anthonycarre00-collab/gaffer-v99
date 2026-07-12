@@ -1066,7 +1066,7 @@ fn rival_interest_msg(player_id: &str) -> InboxMessage {
             label_key: None,
         }],
         context: MessageContext {
-            player_id: Some(player_id.to_string())
+            player_id: Some(player_id.to_string()),
             ..Default::default()
         },
         subject_key: None,

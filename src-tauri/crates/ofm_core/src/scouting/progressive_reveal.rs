@@ -284,7 +284,7 @@ pub fn get_or_create_knowledge<'a>(
     player_id: &str,
 ) -> &'a mut ScoutingKnowledge {
     scouting_knowledge.entry(player_id.to_string())
-        .or_insert_with(|| ScoutingKnowledge::new(player_id))
+        .or_insert_with(|| ScoutingKnowledge::new(player_id)),
         ..Default::default()
 }
 

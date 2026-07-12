@@ -1,5 +1,4 @@
 use serde::{Deserialize, Deserializer, Serialize};
-use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Player {

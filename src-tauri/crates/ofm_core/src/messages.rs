@@ -115,7 +115,7 @@ pub fn staff_advice_message(team_name: &str, team_id: &str, date: &str) -> Inbox
         },
     ))
     .with_context(MessageContext {
-        team_id: Some(team_id.to_string())
+        team_id: Some(team_id.to_string()),
         ..Default::default()
     })
     .with_i18n(
@@ -144,7 +144,7 @@ pub fn board_expectations_message(team_name: &str, team_id: &str, date: &str) ->
         ActionType::Acknowledge,
     ))
     .with_context(MessageContext {
-        team_id: Some(team_id.to_string())
+        team_id: Some(team_id.to_string()),
         ..Default::default()
     })
     .with_i18n(

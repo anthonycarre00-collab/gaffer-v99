@@ -124,7 +124,7 @@ fn inject_player_message(game: &mut Game, msg_id: &str, player_id: &str, action_
         "2025-06-15".to_string(),
     )
     .with_context(MessageContext {
-        player_id: Some(player_id.to_string())
+        player_id: Some(player_id.to_string()),
         ..Default::default()
     })
     .with_action(MessageAction {

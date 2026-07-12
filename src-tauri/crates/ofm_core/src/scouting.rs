@@ -458,7 +458,6 @@ fn build_youth_recruitment_report(
         youth_search_objective: Some(format!("{:?}", objective)),
         youth_prospects: Some(prospects.to_vec()),
         ..MessageContext::default()
-        ..Default::default()
     });
 
     let mut i18n_params = params(&[
@@ -696,7 +695,6 @@ pub fn apply_youth_recruitment_response(
                     youth_search_objective,
                     youth_prospects: Some(vec![prospect]),
                     ..MessageContext::default()
-                    ..Default::default()
                 })
                 .with_i18n(
                     "be.msg.youthRecruitmentShortlist.subject",

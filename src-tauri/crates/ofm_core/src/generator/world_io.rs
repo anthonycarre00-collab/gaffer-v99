@@ -349,7 +349,6 @@ pub fn export_world_package(world: &WorldData, manifest_path: &Path) -> Result<S
         compatibility: Some(super::definitions::WorldDataMetadata {
             format_version: 2,
             ..normalized.metadata.clone()
-            ..Default::default()
         }),
     };
     write_json(manifest_path, &manifest)?;

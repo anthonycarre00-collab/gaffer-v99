@@ -33,7 +33,6 @@ pub struct GroupStageConfig {
     /// Maximum fixtures scheduled on the same day within a single knockout
     /// round. Mirrors `CompetitionRules::knockout_matches_per_day`.
     pub knockout_matches_per_day: u32,
-    ..Default::default()
 }
 
 impl Default for GroupStageConfig {
@@ -48,7 +47,6 @@ impl Default for GroupStageConfig {
             knockout_matches_per_day: 1,
         }
     }
-    ..Default::default()
 }
 
 fn fixture_competition_for(kind: &CompetitionType) -> FixtureCompetition {

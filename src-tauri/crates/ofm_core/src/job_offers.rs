@@ -739,7 +739,7 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string())
+            team_id: Some("team2".to_string()),
             ..Default::default()
         })
         .with_action(MessageAction {
@@ -906,7 +906,7 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string())
+            team_id: Some("team2".to_string()),
             ..Default::default()
         })
         .with_action(MessageAction {
@@ -963,7 +963,7 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string())
+            team_id: Some("team2".to_string()),
             ..Default::default()
         })
         .with_action(MessageAction {
@@ -1090,7 +1090,7 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team1".to_string())
+            team_id: Some("team1".to_string()),
             ..Default::default()
         })
         .with_action(MessageAction {
@@ -1366,7 +1366,7 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string())
+            team_id: Some("team2".to_string()),
             ..Default::default()
         })
         .with_action(MessageAction {

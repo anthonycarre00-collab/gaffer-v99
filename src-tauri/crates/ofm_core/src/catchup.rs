@@ -146,7 +146,6 @@ mod tests {
             rules: CompetitionRules {
                 format: CompetitionFormat::Knockout,
                 ..CompetitionRules::default()
-                ..Default::default()
             },
             fixtures: vec![Fixture {
                 id: "fix-1".to_string(),

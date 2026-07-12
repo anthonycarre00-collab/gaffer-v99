@@ -49,7 +49,6 @@ pub struct CompetitionRules {
     /// like the World Cup where multiple matches happen on the same day.
     #[serde(default = "default_knockout_matches_per_day")]
     pub knockout_matches_per_day: u32,
-    ..Default::default()
 }
 
 fn default_knockout_matches_per_day() -> u32 { 1 }
@@ -67,7 +66,6 @@ impl Default for CompetitionRules {
             knockout_matches_per_day: 1,
         }
     }
-    ..Default::default()
 }
 
 /// One group of a group-and-knockout competition: a mini league table whose

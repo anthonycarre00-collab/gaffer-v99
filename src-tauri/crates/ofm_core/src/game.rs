@@ -126,7 +126,6 @@ pub struct ScoutingKnowledge {
     pub known_condition: Option<u8>,
     pub known_morale: Option<u8>,
     pub known_injury: Option<String>,
-    ..Default::default()
 }
 
 impl ScoutingKnowledge {
@@ -135,7 +134,6 @@ impl ScoutingKnowledge {
             player_id: player_id.to_string(),
         }
     }
-    ..Default::default()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
