@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "./context/ThemeContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { i18nReady } from "./i18n";
 import App from "./App";
 
@@ -22,9 +23,11 @@ const root = ReactDOM.createRoot(rootElement);
 function renderApp() {
   root.render(
     <React.StrictMode>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </ErrorBoundary>
     </React.StrictMode>,
   );
 }

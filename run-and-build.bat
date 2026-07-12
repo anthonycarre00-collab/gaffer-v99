@@ -289,10 +289,12 @@ echo ================================================================
 echo CLEARING BUILD CACHE
 echo ================================================================
 echo.
-echo This deletes the Rust build cache (target/ directory).
+echo This deletes BOTH the Rust build cache (target/) AND the Vite
+echo dependency cache (node_modules/.vite/).
 echo Use this if:
 echo   - Builds are stuck or hanging
 echo   - You get strange compile errors
+echo   - You see a blank white screen after the game launches
 echo   - You want a completely fresh build
 echo.
 echo WARNING: After clearing, the next build will take the full
@@ -304,12 +306,21 @@ if /i not "%confirm%"=="Y" goto menu
 if exist "src-tauri\target" (
     echo Deleting src-tauri\target...
     rmdir /S /Q "src-tauri\target"
-    echo [OK] Build cache cleared.
+    echo [OK] Rust build cache cleared.
 ) else (
-    echo [INFO] No build cache found — nothing to clear.
+    echo [INFO] No Rust build cache found.
+)
+
+if exist "node_modules\.vite" (
+    echo Deleting node_modules\.vite...
+    rmdir /S /Q "node_modules\.vite"
+    echo [OK] Vite dependency cache cleared.
+) else (
+    echo [INFO] No Vite cache found.
 )
 
 echo.
+echo [DONE] All caches cleared. Run option 1 to start the game.
 pause
 goto menu
 
