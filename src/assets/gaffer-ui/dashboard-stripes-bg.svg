@@ -1,0 +1,20 @@
+<!--
+  Gaffer UI — Dashboard Content Background
+  A very subtle pitch-stripe pattern (mowed grass effect).
+  Applied to the dashboard content area behind cards.
+  48x48, tiles seamlessly.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="stripe-light" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.015" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.025" />
+    </linearGradient>
+    <linearGradient id="stripe-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.01" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.02" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="24" fill="url(#stripe-light)" />
+  <rect y="24" width="48" height="24" fill="url(#stripe-dark)" />
+</svg>

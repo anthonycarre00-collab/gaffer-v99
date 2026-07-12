@@ -1,0 +1,14 @@
+<!--
+  Gaffer UI — Card Header Texture
+  Subtle diagonal hatch pattern on brass-tinted background.
+  Applied via CSS background-image on Card headers for depth.
+  Tiles seamlessly.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <defs>
+    <pattern id="hatch" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#c9972e" stroke-width="0.3" opacity="0.08" />
+    </pattern>
+  </defs>
+  <rect width="80" height="80" fill="url(#hatch)" />
+</svg>

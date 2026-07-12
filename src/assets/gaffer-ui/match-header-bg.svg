@@ -1,0 +1,39 @@
+<!--
+  Gaffer UI — Match Day Header Background
+  A stylised stadium floodlight beam pattern on dark pitch-green.
+  Used as a CSS background-image on the match header bar.
+  Tiles horizontally, fades at edges.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="120" viewBox="0 0 1200 120" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="flood-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#062018" />
+      <stop offset="50%" stop-color="#0d3b25" />
+      <stop offset="100%" stop-color="#1a5d3a" />
+    </linearGradient>
+    <linearGradient id="beam1" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#e8c25a" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#e8c25a" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="beam2" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="120" fill="url(#flood-bg)" />
+  <!-- Floodlight beams (4 pylons) -->
+  <polygon points="150,0 100,120 200,120" fill="url(#beam1)" />
+  <polygon points="130,0 80,120 180,120" fill="url(#beam2)" />
+  <polygon points="450,0 400,120 500,120" fill="url(#beam1)" />
+  <polygon points="430,0 380,120 480,120" fill="url(#beam2)" />
+  <polygon points="750,0 700,120 800,120" fill="url(#beam1)" />
+  <polygon points="730,0 680,120 780,120" fill="url(#beam2)" />
+  <polygon points="1050,0 1000,120 1100,120" fill="url(#beam1)" />
+  <polygon points="1030,0 980,120 1080,120" fill="url(#beam2)" />
+  <!-- Pylon dots -->
+  <circle cx="150" cy="8" r="3" fill="#e8c25a" opacity="0.6" />
+  <circle cx="450" cy="8" r="3" fill="#e8c25a" opacity="0.6" />
+  <circle cx="750" cy="8" r="3" fill="#e8c25a" opacity="0.6" />
+  <circle cx="1050" cy="8" r="3" fill="#e8c25a" opacity="0.6" />
+</svg>
