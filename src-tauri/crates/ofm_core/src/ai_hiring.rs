@@ -229,9 +229,9 @@ fn recent_loss_to_user_penalty(game: &Game, team_id: &str) -> i32 {
         }
 
         if fixture.home_team_id == team_id {
-            result.home_score < result.away_score
+            result.home_goals < result.away_goals
         } else {
-            result.away_score < result.home_score
+            result.away_goals < result.home_goals
         }
     });
 

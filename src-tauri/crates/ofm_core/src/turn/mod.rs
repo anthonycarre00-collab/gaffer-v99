@@ -831,7 +831,10 @@ where
         // Update standings.
         if let Some(fixture) = league.fixtures.get(idx) {
             if let Some(result) = &fixture.result {
-                update_standings_from_result(league, &fixture.home_team_id, &fixture.away_team_id, result);
+                let home_id = fixture.home_team_id.clone();
+                let away_id = fixture.away_team_id.clone();
+                let result_clone = result.clone();
+                update_standings_from_result(league, &home_id, &away_id, &result_clone);
             }
         }
     }
@@ -891,12 +894,12 @@ fn update_standings_from_result(
     for standing in &mut league.standings {
         if standing.team_id == home_team_id {
             standing.played += 1;
-            standing.goals_for += result.home_score as u32;
-            standing.goals_against += result.away_score as u32;
-            if result.home_score > result.away_score {
+            standing.goals_for += result.home_goals as u32;
+            standing.goals_against += result.away_goals as u32;
+            if result.home_goals > result.away_goals {
                 standing.won += 1;
                 standing.points += 3;
-            } else if result.home_score == result.away_score {
+            } else if result.home_goals == result.away_goals {
                 standing.drawn += 1;
                 standing.points += 1;
             } else {
@@ -904,12 +907,12 @@ fn update_standings_from_result(
             }
         } else if standing.team_id == away_team_id {
             standing.played += 1;
-            standing.goals_for += result.away_score as u32;
-            standing.goals_against += result.home_score as u32;
-            if result.away_score > result.home_score {
+            standing.goals_for += result.away_goals as u32;
+            standing.goals_against += result.home_goals as u32;
+            if result.away_goals > result.home_goals {
                 standing.won += 1;
                 standing.points += 3;
-            } else if result.away_score == result.home_score {
+            } else if result.away_goals == result.home_goals {
                 standing.drawn += 1;
                 standing.points += 1;
             } else {

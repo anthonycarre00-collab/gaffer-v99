@@ -233,9 +233,11 @@ fn apply_staff_retirement(game: &mut Game, current_date: NaiveDate, _season: u32
             .as_deref()
             .and_then(|tid| game.teams.iter().find(|t| t.id == tid))
             .map(|t| t.name.clone());
+        let staff_dob = staff.date_of_birth.clone();
+        let staff_team_id = staff.team_id.clone();
 
         // Remove from team if employed.
-        if let Some(team_id) = &staff.team_id {
+        if let Some(team_id) = &staff_team_id {
             if let Some(team) = game.teams.iter_mut().find(|t| &t.id == team_id) {
                 // Team doesn't store explicit staff IDs, but the staff's
                 // team_id will be cleared when we remove it from game.staff.
@@ -249,7 +251,7 @@ fn apply_staff_retirement(game: &mut Game, current_date: NaiveDate, _season: u32
             "[aging] Staff {}{} retired at age {} (season {})",
             staff_name,
             team_name.map(|n| format!(" ({})", n)).unwrap_or_default(),
-            current_date.year() - NaiveDate::parse_from_str(&staff.date_of_birth, "%Y-%m-%d").map(|d| d.year()).unwrap_or(1970),
+            current_date.year() - NaiveDate::parse_from_str(&staff_dob, "%Y-%m-%d").map(|d| d.year()).unwrap_or(1970),
             _season,
         );
 
@@ -257,7 +259,7 @@ fn apply_staff_retirement(game: &mut Game, current_date: NaiveDate, _season: u32
 
         // Generate a news article for notable staff retirements
         // (only if they were employed by a team).
-        if staff.team_id.is_some() {
+        if staff_team_id.is_some() {
             let today = current_date.format("%Y-%m-%d").to_string();
             game.news.push(domain::news::NewsArticle {
                 id: format!("staff_retirement_{}_{}", today, staff_id),

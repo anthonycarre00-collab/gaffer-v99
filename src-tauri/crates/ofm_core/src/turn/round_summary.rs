@@ -107,8 +107,8 @@ pub fn build_round_summary(
                 home_team_name: team_name(game, &fixture.home_team_id),
                 away_team_id: fixture.away_team_id.clone(),
                 away_team_name: team_name(game, &fixture.away_team_id),
-                home_goals: result.home_score,
-                away_goals: result.away_score,
+                home_goals: result.home_goals,
+                away_goals: result.away_goals,
             })
         })
         .collect();
@@ -179,7 +179,7 @@ fn build_notable_upset(game: &Game, fixtures: &[&Fixture]) -> Option<NotableUpse
             // has a winner, so it can be a giant-killing upset.
             let decided_by_penalties =
                 result.home_penalties.is_some() && result.away_penalties.is_some();
-            if result.home_score == result.away_score && !decided_by_penalties {
+            if result.home_goals == result.away_goals && !decided_by_penalties {
                 return None;
             }
 
@@ -234,8 +234,8 @@ fn build_notable_upset(game: &Game, fixtures: &[&Fixture]) -> Option<NotableUpse
                 underdog_team_name,
                 underdog_strength,
                 strength_gap: (favorite_strength - underdog_strength).abs(),
-                home_goals: result.home_score,
-                away_goals: result.away_score,
+                home_goals: result.home_goals,
+                away_goals: result.away_goals,
             })
         })
         .max_by(|left, right| {
@@ -321,7 +321,7 @@ fn round_goal_counts(fixtures: &[&Fixture]) -> HashMap<String, u32> {
             continue;
         };
 
-        for scorer in result.home_scorers.iter().chain(result.away_scorers.iter()) {
+        for scorer in result.home_goalsrs.iter().chain(result.away_goalsrs.iter()) {
             *counts.entry(scorer.player_id.clone()).or_insert(0) += 1;
         }
     }

@@ -132,6 +132,7 @@ impl ScoutingKnowledge {
     pub fn new(player_id: &str) -> Self {
         Self {
             player_id: player_id.to_string(),
+            ..Default::default()
         }
     }
 }

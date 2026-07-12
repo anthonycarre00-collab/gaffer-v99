@@ -1,5 +1,6 @@
 use crate::game::Game;
 use crate::messages;
+use chrono::Datelike;
 use domain::league::{
     CompactMatchEvent, CompactMatchReport, CompactTeamMatchStats, FixtureStatus, GoalEvent,
     MatchResult,
@@ -133,14 +134,14 @@ pub fn apply_match_report_with_capture<F>(
                 .iter_mut()
                 .find(|e| e.team_id == home_team_id)
             {
-                entry.record_result(result.home_score, result.away_score);
+                entry.record_result(result.home_goals, result.away_goals);
             }
             if let Some(entry) = league
                 .standings
                 .iter_mut()
                 .find(|e| e.team_id == away_team_id)
             {
-                entry.record_result(result.away_score, result.home_score);
+                entry.record_result(result.away_goals, result.home_goals);
             }
         }
 

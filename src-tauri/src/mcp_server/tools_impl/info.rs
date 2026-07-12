@@ -46,8 +46,8 @@ pub fn info_game_summary(ctx: Arc<McpContext>) -> Result<String, String> {
             if fixture.home_team_id != team_id && fixture.away_team_id != team_id { continue; }
             if let Some(ref result) = fixture.result {
                 let is_home = fixture.home_team_id == team_id;
-                let our_goals = if is_home { result.home_score } else { result.away_score };
-                let their_goals = if is_home { result.away_score } else { result.home_score };
+                let our_goals = if is_home { result.home_goals } else { result.away_goals };
+                let their_goals = if is_home { result.away_goals } else { result.home_goals };
                 recent.push(if our_goals > their_goals {
                     "W".to_string()
                 } else if our_goals < their_goals {
@@ -284,7 +284,7 @@ pub fn info_fixtures(ctx: Arc<McpContext>) -> Result<String, String> {
 
         let entry = if f.status == domain::league::FixtureStatus::Completed {
             if let Some(ref result) = f.result {
-                format!("| {} | {} - {} | {} | MD{} |", f.date, result.home_score, result.away_score, format!("{} vs {}", home_name, away_name), f.matchday)
+                format!("| {} | {} - {} | {} | MD{} |", f.date, result.home_goals, result.away_goals, format!("{} vs {}", home_name, away_name), f.matchday)
             } else {
                 format!("| {} | - | {} | MD{} |", f.date, format!("{} vs {}", home_name, away_name), f.matchday)
             }
@@ -581,8 +581,8 @@ pub fn info_match_preview(ctx: Arc<McpContext>) -> Result<String, String> {
     for f in opponent_results.iter().rev().take(5) {
         if let Some(ref result) = f.result {
             let is_opp_home = f.home_team_id == *opponent_id;
-            let opp_goals = if is_opp_home { result.home_score } else { result.away_score };
-            let other_goals = if is_opp_home { result.away_score } else { result.home_score };
+            let opp_goals = if is_opp_home { result.home_goals } else { result.away_goals };
+            let other_goals = if is_opp_home { result.away_goals } else { result.home_goals };
             let marker = if opp_goals > other_goals { "W" } else if opp_goals < other_goals { "L" } else { "D" };
             form.push_str(&format!("{} ", marker));
         }
@@ -724,8 +724,8 @@ pub fn info_team_profile(ctx: Arc<McpContext>, team_id: String) -> Result<String
         for f in recent.iter().rev().take(5) {
             if let Some(ref result) = f.result {
                 let is_home = f.home_team_id == team_id;
-                let our_goals = if is_home { result.home_score } else { result.away_score };
-                let their_goals = if is_home { result.away_score } else { result.home_score };
+                let our_goals = if is_home { result.home_goals } else { result.away_goals };
+                let their_goals = if is_home { result.away_goals } else { result.home_goals };
                 let marker = if our_goals > their_goals { "W" } else if our_goals < their_goals { "L" } else { "D" };
                 form.push_str(&format!("{} ", marker));
             }
