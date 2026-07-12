@@ -1,6 +1,7 @@
 use domain::team::{
-    Facilities, FinancialTransaction, PlayStyle, PlayerRole, Sponsorship, TacticsPhaseSettings,
-    Team, TeamColors, TeamMedia, TrainingFocus, TrainingIntensity, TrainingSchedule,
+    BoardType, Facilities, FinancialTransaction, PlayStyle, PlayerRole, Sponsorship,
+    TacticsPhaseSettings, Team, TeamColors, TeamMedia, TrainingFocus, TrainingIntensity,
+    TrainingSchedule,
 };
 use rusqlite::{Connection, params};
 
@@ -248,6 +249,7 @@ fn row_to_team(row: &rusqlite::Row) -> rusqlite::Result<Team> {
         },
         form: serde_json::from_str(&form_json).unwrap_or_default(),
         history: serde_json::from_str(&history_json).unwrap_or_default(),
+        board_type: BoardType::default(),
     })
 }
 
