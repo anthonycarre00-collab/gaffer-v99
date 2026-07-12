@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::time::Instant;
 
 use engine::{
+use rand::Rng;
     simulate_with_rng, EventType, GoalSource, MatchConfig, MatchReport, PlayStyle, PlayerData,
     PlayerRole, Position, TeamData,
 };

@@ -2,7 +2,7 @@
   "app": {
     "name": "Gaffer",
     "publisher": "Sturdy Robot",
-    "version": "v0.3.0-beta"
+    "version": "v0.3.0-dev.4 (V99.4r4)"
   },
   "menu": {
     "newGame": "New Career",

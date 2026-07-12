@@ -12,6 +12,8 @@ use chrono::{DateTime, Datelike, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use domain::league::{
+use chrono::Datelike;
+use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, League, StandingEntry,
 };
 use domain::team::Team;
@@ -831,6 +833,7 @@ fn build_competition(
                 matchday_gap_days: 7,
                 qualifiers_per_group: def.format.qualifiers_per_group.unwrap_or(2),
                 best_third_qualifiers: def.format.best_third_qualifiers.unwrap_or(0),
+                ..Default::default()
             };
             let mut cup = crate::group_stage::generate_group_knockout_cup_with(
                 &def.name,

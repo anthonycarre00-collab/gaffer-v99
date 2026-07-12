@@ -12,6 +12,8 @@ use domain::message::InboxMessage;
 use rand::RngExt;
 
 use message_builders::{
+use rand::Rng;
+use std::collections::HashMap;
     bench_complaint_message, contract_concern_message, happy_player_message, low_morale_message,
     takeover_contract_review_message,
 };
@@ -395,6 +397,7 @@ pub fn check_transfer_requests(game: &mut Game, today: &str) {
                 player_id: Some(player_id.clone()),
                 fixture_id: None,
                 match_result: None,
+                ..Default::default()
             },
             actions: vec![],
             read: false,

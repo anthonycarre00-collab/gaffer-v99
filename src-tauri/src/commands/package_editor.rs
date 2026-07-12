@@ -226,8 +226,7 @@ mod tests {
     fn test_meta() -> WorldMetaDef {
         WorldMetaDef {
             id: "round-trip-test".to_string(),
-            name: "Round Trip".to_string(),
-            ..Default::default()
+            name: "Round Trip".to_string()
         }
     }
 

@@ -103,8 +103,7 @@ fn make_pending_incoming_loan_offer(
         suggested_end_date: None,
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
-        date: "2026-08-01".to_string(),
-            ..Default::default()
+        date: "2026-08-01".to_string()
         
     }
 }
@@ -1560,8 +1559,7 @@ fn accepting_incoming_loan_offer_moves_user_player_to_borrowing_club() {
         suggested_end_date: None,
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
-        date: "2026-08-01".to_string(),
-            ..Default::default()
+        date: "2026-08-01".to_string()
         
     });
 
@@ -1744,8 +1742,7 @@ fn incoming_loan_offer_rejects_end_date_after_player_contract() {
         suggested_end_date: None,
         suggested_buy_option_fee: None,
         status: LoanOfferStatus::Pending,
-        date: "2026-08-01".to_string(),
-            ..Default::default()
+        date: "2026-08-01".to_string()
         
     });
 
@@ -2345,8 +2342,7 @@ fn rejecting_pending_offer_succeeds_for_pending_loan_player() {
     ));
     player.loan_offers.push(LoanOffer {
         status: LoanOfferStatus::PendingRegistration,
-        ..make_pending_incoming_loan_offer("loan-pending-registration", 75, None),
-            ..Default::default()
+        ..make_pending_incoming_loan_offer("loan-pending-registration", 75, None)
         
         
     });

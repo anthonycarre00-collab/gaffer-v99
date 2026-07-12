@@ -479,8 +479,8 @@ mod tests {
         assert_eq!(loaded.fixtures[1].competition, FixtureCompetition::Friendly);
         assert!(loaded.fixtures[1].result.is_some());
         let result = loaded.fixtures[1].result.as_ref().unwrap();
-        assert_eq!(result.home_goals, 2);
-        assert_eq!(result.away_goals, 1);
+        assert_eq!(result.home_score, 2);
+        assert_eq!(result.away_score, 1);
     }
 
     #[test]

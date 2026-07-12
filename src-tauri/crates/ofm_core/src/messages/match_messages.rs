@@ -1,6 +1,7 @@
 use super::{action, params};
 use domain::message::*;
 use rand::RngExt;
+use rand::Rng;
 
 pub fn pre_match_message(
     fixture_id: &str,
@@ -49,6 +50,7 @@ pub fn pre_match_message(
     .with_context(MessageContext {
         fixture_id: Some(fixture_id.to_string()),
         team_id: Some(opponent_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.preMatch.subject",
@@ -131,6 +133,7 @@ pub fn match_result_message(
             home_goals,
             away_goals,
         }),
+        ..Default::default()
     })
     .with_i18n(
         &format!("be.msg.matchResult.subject.{}", outcome.to_lowercase()),

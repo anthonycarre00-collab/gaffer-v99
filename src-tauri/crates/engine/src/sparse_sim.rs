@@ -20,6 +20,7 @@
 
 use rand::{Rng, RngExt};
 use crate::types::{PlayerData, TeamData};
+use rand::Rng;
 
 /// Sparse match event — just the bare minimum for news + stats.
 #[derive(Debug, Clone)]

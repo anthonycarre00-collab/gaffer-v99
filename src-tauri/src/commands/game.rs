@@ -6,6 +6,8 @@ use chrono::{DateTime, Datelike, Duration, TimeZone, Utc};
 
 use db::{save_index::SaveEntry, save_manager::SaveManager};
 use domain::league::{
+use chrono::Datelike;
+use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, League,
 };
 use domain::manager::Manager;
@@ -3365,6 +3367,7 @@ competitions:
                 kind: WorldDataKind::HistoricalSnapshot,
                 base_year: Some(2031),
                 snapshot_date: Some("2031-11-20T00:00:00Z".to_string()),
+                ..Default::default()
             },
             extra_translations: std::collections::HashMap::new(),
             build_notices: Vec::new(),

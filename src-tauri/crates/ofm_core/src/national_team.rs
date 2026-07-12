@@ -15,6 +15,8 @@ use domain::player::Player;
 use rand::{Rng, RngExt};
 
 use crate::game::Game;
+use rand::Rng;
+use chrono::Datelike;
 
 /// Synthetic competition id used to tag national-team friendly fixtures.
 pub const INTERNATIONAL_FRIENDLY_COMPETITION_ID: &str = "international-friendlies";

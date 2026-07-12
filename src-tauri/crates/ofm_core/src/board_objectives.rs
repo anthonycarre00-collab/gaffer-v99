@@ -811,8 +811,7 @@ mod tests {
                     report: None,
                     home_penalties: None,
                     away_penalties: None,
-                }),
-            ..Default::default()
+                })
         
             }
         };

@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tauri::State;
+use rand::Rng;
 
 pub use crate::application::live_match::FinishLiveMatchResponse;
 use crate::application::live_match::{
@@ -646,8 +647,8 @@ mod tests {
             .get_game(|g| g.league.as_ref().unwrap().fixtures[1].result.clone())
             .unwrap()
             .expect("result still present");
-        assert_eq!(restored_result.home_goals, first_result.home_goals);
-        assert_eq!(restored_result.away_goals, first_result.away_goals);
+        assert_eq!(restored_result.home_score, first_result.home_score);
+        assert_eq!(restored_result.away_score, first_result.away_score);
     }
 
     fn make_knockout_cup(fixture_date: &str) -> League {
@@ -659,6 +660,7 @@ mod tests {
             rules: CompetitionRules {
                 format: CompetitionFormat::Knockout,
                 ..CompetitionRules::default()
+                ..Default::default()
             },
             fixtures: vec![Fixture {
                 id: "cupfix1".to_string(),

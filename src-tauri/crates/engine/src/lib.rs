@@ -19,5 +19,6 @@ pub use report::{GoalDetail, GoalSource, MatchReport, PlayerMatchStats, TeamStat
 pub use types::{
     BreakSpeed, CounterPressDuration, DefensiveLine, DefensiveShape, MarkingStyle, MatchConfig,
     PlayStyle, PlayerData, PlayerRole, Position, PressingIntensity, Side, TacticsBuildUpStyle,
-    TacticsConfig, TacticsPitchWidth, Tempo, TeamData, Zone,
+    TacticsConfig, TacticsPitchWidth, Tempo, TeamData, WeatherModifiers, Zone,
+    weather_modifiers_for,
 };

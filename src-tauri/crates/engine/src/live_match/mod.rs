@@ -12,6 +12,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::event::MatchEvent;
 use crate::report::MatchReport;
 use crate::types::{MatchConfig, PlayStyle, PlayerData, PlayerRole, Side, TeamData, Zone};
+use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // MatchPhase — tracks where we are in the match lifecycle

@@ -102,6 +102,7 @@ pub fn check_squad_fitness_warnings(game: &mut Game) {
             })
             .with_context(MessageContext {
                 team_id: Some(user_team_id),
+                ..Default::default()
             })
             .with_i18n(
                 "be.msg.fitness.critical.subject",
@@ -161,6 +162,7 @@ pub fn check_squad_fitness_warnings(game: &mut Game) {
             })
             .with_context(MessageContext {
                 team_id: Some(user_team_id),
+                ..Default::default()
             })
             .with_i18n(
                 "be.msg.fitness.warning.subject",

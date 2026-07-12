@@ -3,6 +3,8 @@ use chrono::{Datelike, NaiveDate};
 use domain::player::Player;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
+use chrono::Datelike;
+use std::collections::HashMap;
 
 const MIN_ATTRIBUTE: u8 = 1;
 const MAX_ATTRIBUTE: u8 = 99;
@@ -191,7 +193,7 @@ pub fn apply_seasonal_aging(game: &mut Game, current_date: NaiveDate, season: u3
 /// `generate_missing_team_staff` + `replenish_available_staff_market`
 /// functions that run later in the end-of-season pipeline.
 fn apply_staff_retirement(game: &mut Game, current_date: NaiveDate, _season: u32) {
-    use rand::Rng;
+    use rand::{Rng, RngExt};
 
     let mut rng = rand::rng();
     let mut retired_indices: Vec<usize> = Vec::new();

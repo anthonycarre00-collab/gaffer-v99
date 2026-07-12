@@ -1,5 +1,6 @@
 use domain::player::{Footedness, Player, PlayerTrait, Position};
 use rand::RngExt;
+use rand::Rng;
 
 const WONDERKID_MAX_AGE: u32 = 20;
 const WONDERKID_MIN_POTENTIAL: u8 = 90;

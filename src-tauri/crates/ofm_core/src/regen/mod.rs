@@ -16,6 +16,7 @@ use crate::generator::generate_youth_academy_recruit_with_nationality;
 use chrono::Datelike;
 use domain::player::{Player, Position, SquadRole};
 use rand::Rng;
+use std::collections::HashMap;
 
 /// Position-appropriate potential bands for regens.
 /// Returns (min, max) potential for a given position group.
@@ -138,8 +139,7 @@ pub fn generate_replacement_regen(
     // Refresh derived ratings
     crate::player_rating::refresh_player_derived(&mut regen, 2024);
 
-    regen,
-    ..Default::default()
+    regen
 }
 
 /// Generate the annual academy intake — 3-5 youth prospects per team.
@@ -485,6 +485,7 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
                     player_id: user_intake.first().map(|p| p.id.clone()),
                     fixture_id: None,
                     match_result: None,
+                    ..Default::default()
                 },
                 actions: vec![],
                 read: false,

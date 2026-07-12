@@ -47,8 +47,7 @@ fn project_team_data(team: &Team) -> TeamCardTeam {
         country: team.country.clone(),
         colors: TeamCardColors {
             primary: team.colors.primary.clone(),
-            secondary: team.colors.secondary.clone(),
-            ..Default::default()
+            secondary: team.colors.secondary.clone()
         },
         formation: team.formation.clone(),
         play_style: play_style_name(&team.play_style),

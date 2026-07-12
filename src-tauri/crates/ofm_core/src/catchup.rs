@@ -8,6 +8,7 @@
 use chrono::{DateTime, NaiveDate, Utc};
 use domain::league::{FixtureStatus, League, MatchResult};
 use domain::player::Player;
+use std::collections::HashMap;
 
 const CATCHUP_XI: usize = 11;
 
@@ -145,6 +146,7 @@ mod tests {
             rules: CompetitionRules {
                 format: CompetitionFormat::Knockout,
                 ..CompetitionRules::default()
+                ..Default::default()
             },
             fixtures: vec![Fixture {
                 id: "fix-1".to_string(),

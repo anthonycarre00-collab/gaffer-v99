@@ -2,6 +2,7 @@ use rand::{Rng, RngExt};
 
 use crate::live_match::{LiveMatchState, MatchCommand, MatchPhase};
 use crate::types::{PlayStyle, PlayerData, PlayerRole, Position, Side, Zone};
+use rand::Rng;
 
 // ---------------------------------------------------------------------------
 // AiPersonality — determines decision-making style

@@ -76,8 +76,7 @@ impl ServerHandler for OfmMcpHandler {
     {
         let tools = self.tool_router.list_all();
         std::future::ready(Ok(rmcp::model::ListToolsResult {
-            tools,
-            ..Default::default()
+            tools
         }))
     }
 

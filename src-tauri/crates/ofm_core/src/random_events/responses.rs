@@ -2,6 +2,7 @@ use crate::game::Game;
 use domain::team::{Sponsorship, SponsorshipBonusCriterion};
 use rand::RngExt;
 use std::collections::HashMap;
+use rand::Rng;
 
 pub struct RandomEventResponseEffect {
     pub message: String,

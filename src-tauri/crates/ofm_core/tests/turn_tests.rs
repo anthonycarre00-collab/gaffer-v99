@@ -745,7 +745,7 @@ fn simulate_other_matches_settles_knockout_draws_with_shootout() {
             .result
             .as_ref()
             .expect("fixture should have a result");
-        if result.home_goals == result.away_goals {
+        if result.home_score == result.away_score {
             saw_draw = true;
             let home_pens = result.home_penalties.expect("level knockout needs pens");
             let away_pens = result.away_penalties.expect("level knockout needs pens");
@@ -780,8 +780,8 @@ fn apply_match_report_updates_fixture_status() {
     let fixture = &game.league.as_ref().unwrap().fixtures[0];
     assert_eq!(fixture.status, FixtureStatus::Completed);
     let result = fixture.result.as_ref().unwrap();
-    assert_eq!(result.home_goals, 2);
-    assert_eq!(result.away_goals, 1);
+    assert_eq!(result.home_score, 2);
+    assert_eq!(result.away_score, 1);
     let persisted_report = result
         .report
         .as_ref()
@@ -805,8 +805,8 @@ fn apply_match_report_persists_shootout_score() {
 
     let fixture = &game.league.as_ref().unwrap().fixtures[0];
     let result = fixture.result.as_ref().unwrap();
-    assert_eq!(result.home_goals, 1);
-    assert_eq!(result.away_goals, 1);
+    assert_eq!(result.home_score, 1);
+    assert_eq!(result.away_score, 1);
     assert_eq!(result.home_penalties, Some(3));
     assert_eq!(result.away_penalties, Some(4));
     assert!(!result.advancing_is_home());

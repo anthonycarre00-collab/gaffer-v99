@@ -6,6 +6,8 @@ use uuid::Uuid;
 
 use super::definitions::NamesDefinition;
 use crate::player_rating::{generate_potential, refresh_player_derived};
+use rand::Rng;
+use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // Helper functions for world generation

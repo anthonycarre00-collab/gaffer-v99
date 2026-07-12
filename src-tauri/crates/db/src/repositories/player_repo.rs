@@ -569,8 +569,7 @@ mod tests {
             suggested_end_date: None,
             suggested_buy_option_fee: None,
             status: LoanOfferStatus::Accepted,
-            date: "2026-08-01".to_string(),
-            ..Default::default()
+            date: "2026-08-01".to_string()
         
         });
         player.active_loan = Some(ActiveLoan {

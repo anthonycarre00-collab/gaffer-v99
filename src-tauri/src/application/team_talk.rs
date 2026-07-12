@@ -2,6 +2,7 @@ use ofm_core::game::Game;
 use ofm_core::player_events::{pick_response_band, ResponseBandWeights, ResponseOutcomeBand};
 use rand::rngs::StdRng;
 use rand::{RngExt, SeedableRng};
+use rand::Rng;
 
 fn team_talk_action_key(tone: &str, context: &str) -> String {
     format!("team_talk:{}:{}", tone, context)

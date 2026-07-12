@@ -5,6 +5,7 @@ use chrono::{Datelike, Duration, NaiveDate};
 use domain::league::{Fixture, FixtureStatus, League, StandingEntry, TransferRumour};
 use rand::seq::SliceRandom;
 use std::collections::{HashMap, HashSet};
+use chrono::Datelike;
 
 const MAX_WEEKLY_TRANSFER_RUMOURS: usize = 2;
 const TRANSFER_RUMOUR_RETENTION_DAYS: i64 = 28;
@@ -67,7 +68,7 @@ fn matchday_results(game: &Game, fixtures: &[&Fixture]) -> Vec<(String, u8, Stri
             let (home_goals, away_goals) = fixture
                 .result
                 .as_ref()
-                .map(|result| (result.home_goals, result.away_goals))
+                .map(|result| (result.home_score, result.away_score))
                 .unwrap_or((0, 0));
             (
                 team_name(game, &fixture.home_team_id),
@@ -574,7 +575,7 @@ fn preseason_unbeaten_teams(game: &Game) -> Vec<String> {
             .entry(fixture.home_team_id.clone())
             .or_insert((0, 0));
         home_record.0 += 1;
-        if result.home_goals < result.away_goals {
+        if result.home_score < result.away_score {
             home_record.1 += 1;
         }
 
@@ -582,7 +583,7 @@ fn preseason_unbeaten_teams(game: &Game) -> Vec<String> {
             .entry(fixture.away_team_id.clone())
             .or_insert((0, 0));
         away_record.0 += 1;
-        if result.away_goals < result.home_goals {
+        if result.away_score < result.home_score {
             away_record.1 += 1;
         }
     }

@@ -1,6 +1,7 @@
 use domain::message::*;
 use rand::RngExt;
 use std::collections::HashMap;
+use rand::Rng;
 
 /// Helper to build a HashMap<String, String> from key-value pairs.
 fn params(pairs: &[(&str, &str)]) -> HashMap<String, String> {
@@ -74,6 +75,7 @@ pub(crate) fn low_morale_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.moraleCrisis.subject",
@@ -126,6 +128,7 @@ pub(crate) fn bench_complaint_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.benchComplaint.subject",
@@ -178,6 +181,7 @@ pub(crate) fn happy_player_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.happyPlayer.subject",
@@ -232,6 +236,7 @@ pub(crate) fn contract_concern_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.contractConcern.subject",

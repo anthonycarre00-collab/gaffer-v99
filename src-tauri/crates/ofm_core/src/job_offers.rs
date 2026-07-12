@@ -5,6 +5,7 @@ use log::info;
 use rand::RngExt;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use rand::Rng;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JobOpportunity {
@@ -356,6 +357,7 @@ fn send_job_offer(game: &mut Game, opportunity: &JobOpportunity, _rng: &mut impl
     .with_context(MessageContext {
         team_id: Some(opportunity.team_id.clone()),
         team_name: Some(opportunity.team_name.clone()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.jobOffer.subject",
@@ -738,7 +740,8 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string()),
+            team_id: Some("team2".to_string())
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team2".to_string(),
@@ -904,7 +907,8 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string()),
+            team_id: Some("team2".to_string())
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team2".to_string(),
@@ -960,7 +964,8 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string()),
+            team_id: Some("team2".to_string())
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team2".to_string(),
@@ -1021,6 +1026,7 @@ mod tests {
         )
         .with_context(MessageContext {
             team_id: Some("team3".to_string()),
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team3".to_string(),
@@ -1085,7 +1091,8 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team1".to_string()),
+            team_id: Some("team1".to_string())
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team1".to_string(),
@@ -1360,7 +1367,8 @@ mod tests {
             "2026-11-01".to_string(),
         )
         .with_context(MessageContext {
-            team_id: Some("team2".to_string()),
+            team_id: Some("team2".to_string())
+            ..Default::default()
         })
         .with_action(MessageAction {
             id: "respond_team2".to_string(),

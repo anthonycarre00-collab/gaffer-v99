@@ -6,6 +6,7 @@ use domain::news::*;
 use rand::{Rng, RngExt};
 use serde::Serialize;
 use std::collections::HashMap;
+use rand::Rng;
 
 /// Helper to build a HashMap<String, String> from key-value pairs.
 fn params(pairs: &[(&str, &str)]) -> HashMap<String, String> {

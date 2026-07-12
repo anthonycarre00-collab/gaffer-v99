@@ -1,6 +1,7 @@
 use super::{action, params};
 use domain::message::*;
 use rand::RngExt;
+use rand::Rng;
 
 // ---------------------------------------------------------------------------
 // Message builders
@@ -86,6 +87,7 @@ pub(super) fn training_injury_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.trainingInjury.subject",
@@ -129,6 +131,7 @@ pub(super) fn media_story_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         if is_positive {

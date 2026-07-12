@@ -47,6 +47,7 @@ pub struct RelationshipEdge {
     /// Clique IDs this pair belongs to together (if any).
     #[serde(default)]
     pub shared_cliques: Vec<String>,
+    ..Default::default()
 }
 
 fn default_volatility() -> f32 {
@@ -64,6 +65,7 @@ impl Default for RelationshipEdge {
             shared_cliques: Vec::new(),
         }
     }
+    ..Default::default()
 }
 
 impl RelationshipEdge {
@@ -127,6 +129,7 @@ impl RelationshipEdge {
             self.narrative_tags.push(tag.to_string());
         }
     }
+    ..Default::default()
 }
 
 // ---------------------------------------------------------------------------

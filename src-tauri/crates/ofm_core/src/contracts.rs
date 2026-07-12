@@ -617,10 +617,14 @@ pub fn offer_free_agent_contract(
                 RenewalSessionStatus::Stalled,
                 false,
                 cooled_off,
-                Some(RenewalFeedback {
-                    stage: ContractWarningStage::Stalled,
-                    message: "He's not interested in joining this club. \
-                        The player doesn't see this as a step forward in his career.".to_string(),
+                Some(NegotiationFeedback {
+                    mood: domain::negotiation::NegotiationMood::Tense,
+                    headline_key: "be.msg.contractRenewal.appealTooLow".to_string(),
+                    detail_key: None,
+                    tension: 80,
+                    patience: 20,
+                    round: 0,
+                    params: std::collections::HashMap::new(),
                 }),
             ));
         }
@@ -1067,7 +1071,7 @@ fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
 
     // Compute team average OVR for each AI team (to filter out players who
     // are no longer good enough).
-    let mut team_avg_ovr: HashMap<String, f64> = HashMap::new();
+    let mut team_avg_ovr: HashMap<String, (u32, u32)> = HashMap::new();
     for player in &game.players {
         if let Some(team_id) = &player.team_id {
             team_avg_ovr

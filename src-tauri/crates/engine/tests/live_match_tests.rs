@@ -69,8 +69,7 @@ fn make_team(id: &str, name: &str, skill: u8, style: PlayStyle) -> TeamData {
         formation: "4-4-2".to_string(),
         play_style: style,
         tactics: TacticsConfig::default(),
-        players,
-            ..Default::default()
+        players
         
     }
 }

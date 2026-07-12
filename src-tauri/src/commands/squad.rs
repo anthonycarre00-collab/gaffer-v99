@@ -7,6 +7,7 @@ use ofm_core::game::Game;
 use ofm_core::state::StateManager;
 
 use crate::commands::util::mutate_active_game;
+use std::collections::HashMap;
 
 fn parse_squad_role(squad_role: &str) -> Option<domain::player::SquadRole> {
     match squad_role {

@@ -2,6 +2,7 @@ use crate::game::Game;
 use chrono::NaiveDate;
 use domain::manager::{Manager, ManagerCareerEntry};
 use domain::staff::{Staff, StaffRole};
+use std::collections::HashMap;
 
 const BASE_AI_MANAGER_SATISFACTION: i32 = 50;
 const AI_MANAGER_REPLACEMENT_DELAY_DAYS: u32 = 7;
@@ -78,7 +79,7 @@ fn create_seeded_manager(
 /// defensive managers (Allardyce, Pulis).
 fn generate_random_personality(team_reputation: u32) -> domain::manager::ManagerPersonality {
     use domain::manager::{MediaStyle, TacticalStyle, TransferPhilosophy};
-    use rand::Rng;
+    use rand::{Rng, RngExt};
     let mut rng = rand::rng();
 
     // Tactical style: weighted by club reputation.
@@ -229,9 +230,9 @@ fn recent_loss_to_user_penalty(game: &Game, team_id: &str) -> i32 {
         }
 
         if fixture.home_team_id == team_id {
-            result.home_goals < result.away_goals
+            result.home_score < result.away_score
         } else {
-            result.away_goals < result.home_goals
+            result.away_score < result.home_score
         }
     });
 
@@ -832,6 +833,7 @@ mod tests {
             )
             .with_context(MessageContext {
                 team_id: Some("team2".to_string()),
+                ..Default::default()
             })
             .with_action(MessageAction {
                 id: "respond_team2".to_string(),

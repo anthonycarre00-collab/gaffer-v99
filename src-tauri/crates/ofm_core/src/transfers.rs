@@ -1,4 +1,5 @@
 use crate::contract_wage_policy::{
+use std::collections::HashMap;
     renewal_wage_policy_error_message, wage_policy_allows_projection,
 };
 use crate::finances::calc_annual_wages;

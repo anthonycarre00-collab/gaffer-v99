@@ -72,6 +72,7 @@ pub fn export_world_database_internal(
             kind: ofm_core::generator::WorldDataKind::HistoricalSnapshot,
             base_year: Some(game.clock.start_date.year()),
             snapshot_date: Some(game.clock.current_date.to_rfc3339()),
+            ..Default::default()
         },
         extra_translations: game.extra_translations.clone(),
         build_notices: Vec::new(),

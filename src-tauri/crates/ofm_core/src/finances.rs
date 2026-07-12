@@ -2,6 +2,9 @@ use crate::game::Game;
 use chrono::{Datelike, NaiveDate};
 use domain::message::*;
 use domain::team::{
+use rand::Rng;
+use chrono::Datelike;
+use std::collections::HashMap;
     FinancialTransaction, FinancialTransactionKind, Sponsorship, SponsorshipBonusCriterion, Team,
 };
 use rand::RngExt;

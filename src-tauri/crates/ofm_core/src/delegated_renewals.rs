@@ -1,5 +1,6 @@
 use crate::contract_wage_policy::renewal_wage_policy_allows;
 use crate::contracts::{
+use std::collections::HashMap;
     ContractWarningStage, DelegatedRenewalCase, DelegatedRenewalOptions, DelegatedRenewalReport,
     DelegatedRenewalResultStatus, contract_warning_stage, expected_contract_years, expected_wage,
     has_active_manager_block, has_let_expire_intent, round_up_to_nearest_thousand,
@@ -344,5 +345,6 @@ fn delegated_renewal_report_message(
                 })
                 .collect(),
         }),
+        ..Default::default()
     })
 }

@@ -124,7 +124,8 @@ fn inject_player_message(game: &mut Game, msg_id: &str, player_id: &str, action_
         "2025-06-15".to_string(),
     )
     .with_context(MessageContext {
-        player_id: Some(player_id.to_string()),
+        player_id: Some(player_id.to_string())
+        ..Default::default()
     })
     .with_action(MessageAction {
         id: action_id.to_string(),
@@ -285,8 +286,7 @@ fn bench_complaint_after_5_missed_matches() {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
-            }),
-            ..Default::default()
+            })
         }),
         .collect();
     let league = League {
@@ -345,8 +345,7 @@ fn bench_complaint_not_for_gk() {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
-            }),
-            ..Default::default()
+            })
         }),
         .collect();
     game.league = Some(League {
@@ -394,8 +393,7 @@ fn bench_complaint_not_with_fewer_than_5_fixtures() {
                 report: None,
                 home_penalties: None,
                 away_penalties: None,
-            }),
-            ..Default::default()
+            })
         }),
         .collect();
     game.league = Some(League {

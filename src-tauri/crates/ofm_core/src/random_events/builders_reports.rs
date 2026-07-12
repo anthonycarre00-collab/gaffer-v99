@@ -1,6 +1,7 @@
 use super::{action, params};
 use domain::message::*;
 use rand::RngExt;
+use rand::Rng;
 
 fn option(id: &str, label_key: &str, description_key: &str) -> ActionOption {
     ActionOption {
@@ -201,6 +202,7 @@ pub(super) fn rival_interest_message(
     ))
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
+        ..Default::default()
     })
     .with_i18n(
         "be.msg.rivalInterest.subject",

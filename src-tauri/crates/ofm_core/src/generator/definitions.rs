@@ -170,6 +170,7 @@ pub struct WorldDataMetadata {
     pub base_year: Option<i32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub snapshot_date: Option<String>,
+    ..Default::default()
 }
 
 impl Default for WorldDataMetadata {
@@ -182,6 +183,7 @@ impl Default for WorldDataMetadata {
             snapshot_date: None,
         }
     }
+    ..Default::default()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]

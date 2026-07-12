@@ -4,6 +4,7 @@ use domain::league::{
     FixtureCompetition, FixtureImportance, FixtureStatus, KnockoutRoundState, League,
     StandingEntry,
 };
+use std::collections::HashMap;
 use uuid::Uuid;
 
 /// V99.4 T1.5: Derive fixture importance from competition type + team reputations.
@@ -17,7 +18,9 @@ fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: 
     let rep_gap = if home_rep > away_rep { home_rep - away_rep } else { away_rep - home_rep };
 
     match competition {
-        FixtureCompetition::Friendly | FixtureCompetition::PreseasonTournament => {
+        FixtureCompetition::Friendly
+        | FixtureCompetition::FriendlyCup
+        | FixtureCompetition::PreseasonTournament => {
             FixtureImportance::Friendly
         }
         FixtureCompetition::League => {
@@ -323,6 +326,7 @@ pub fn generate_knockout_cup(
     cup.rules = CompetitionRules {
         format: CompetitionFormat::Knockout,
         counts_in_season_flow: true,
+        ..Default::default()
     };
     cup.standings.clear();
     seed_knockout_round(

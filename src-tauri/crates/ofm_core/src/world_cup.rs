@@ -7,6 +7,9 @@ use std::collections::{BTreeMap, HashMap};
 
 use chrono::{DateTime, Datelike, Utc};
 use domain::league::{
+use rand::Rng;
+use chrono::Datelike;
+use std::collections::HashMap;
     CompetitionFormat, CompetitionScope, CompetitionType, FixtureCompetition, FixtureStatus,
     GroupState, League, MatchResult, StandingEntry,
 };
@@ -472,6 +475,7 @@ pub fn schedule_world_cup_with_field(
             knockout_round_gap_days: KNOCKOUT_GAP_DAYS,
             max_concurrent_matches_per_day: Some(4),
             knockout_matches_per_day: 4,
+            ..Default::default()
         },
     );
     // Sort after every club competition in browsing lists.

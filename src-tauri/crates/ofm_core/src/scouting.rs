@@ -8,6 +8,7 @@ pub use progressive_reveal::{
 };
 
 use crate::game::{
+use rand::Rng;
     Game, RevealTier, ScoutingAssignment, YouthScoutingAssignment, YouthScoutingObjective, YouthScoutingRegion,
 };
 use domain::message::*;
@@ -458,6 +459,7 @@ fn build_youth_recruitment_report(
         youth_search_objective: Some(format!("{:?}", objective)),
         youth_prospects: Some(prospects.to_vec()),
         ..MessageContext::default()
+        ..Default::default()
     });
 
     let mut i18n_params = params(&[
@@ -695,6 +697,7 @@ pub fn apply_youth_recruitment_response(
                     youth_search_objective,
                     youth_prospects: Some(vec![prospect]),
                     ..MessageContext::default()
+                    ..Default::default()
                 })
                 .with_i18n(
                     "be.msg.youthRecruitmentShortlist.subject",
@@ -943,6 +946,7 @@ fn build_scout_report(
     .with_context(MessageContext {
         player_id: Some(player_id.to_string()),
         scout_report: Some(report_data),
+        ..Default::default()
     })
     .with_i18n("be.msg.scoutReport.subject", "be.msg.scoutReport.body", {
         let mut p = params(&[("player", player_name), ("scout", scout_name)]);

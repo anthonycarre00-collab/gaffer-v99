@@ -40,8 +40,8 @@ pub fn time_advance(ctx: Arc<McpContext>) -> Result<String, String> {
                 output.push_str(&format!(
                     "| {} | {} - {} | {} |\n",
                     result.home_team_name,
-                    result.home_goals,
-                    result.away_goals,
+                    result.home_score,
+                    result.away_score,
                     result.away_team_name,
                 ));
             }
@@ -52,8 +52,8 @@ pub fn time_advance(ctx: Arc<McpContext>) -> Result<String, String> {
                     for result in &round_summary.completed_results {
                         if result.home_team_id == *team_id || result.away_team_id == *team_id {
                             let is_home = result.home_team_id == *team_id;
-                            let our_goals = if is_home { result.home_goals } else { result.away_goals };
-                            let their_goals = if is_home { result.away_goals } else { result.home_goals };
+                            let our_goals = if is_home { result.home_score } else { result.away_score };
+                            let their_goals = if is_home { result.away_score } else { result.home_score };
                             let opponent = if is_home { &result.away_team_name } else { &result.home_team_name };
                             let venue = if is_home { "H" } else { "A" };
                             let result_text = if our_goals > their_goals {

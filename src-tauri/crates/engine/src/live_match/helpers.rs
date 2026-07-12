@@ -2,6 +2,7 @@ use rand::{Rng, RngExt};
 
 use crate::event::{DangerBand, FoulSeverity, GoalContext, SaveQuality};
 use crate::shared::{
+use rand::Rng;
     PlayStylePhase, PlayerSnap, home_mod, play_style_modifier, tactics_pressing_fatigue,
     tactics_pressing_press,
 };
@@ -387,8 +388,7 @@ mod commentary_detail_tests {
                 make_test_player(&format!("{}_f1", id), Position::Forward),
                 make_test_player(&format!("{}_f2", id), Position::Forward),
             ],
-            tactics: crate::types::TacticsConfig::default(),
-            ..Default::default()
+            tactics: crate::types::TacticsConfig::default()
         
         };
         LiveMatchState::new(

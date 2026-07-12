@@ -2,6 +2,7 @@ use rand::{Rng, RngExt};
 
 use crate::event::{EventType, MatchEvent};
 use crate::shared::{
+use rand::Rng;
     PlayStylePhase, TraitContext, burst_modifier, home_mod, leadership_modifier, morale_modifier,
     play_style_modifier, role_attribute_modifier, stability_pressure_modifier, tactics_buildup_mod,
     tactics_cross_probability, tactics_defensive_conversion_mod, tactics_foul_modifier,

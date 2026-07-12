@@ -33,6 +33,7 @@ pub struct GroupStageConfig {
     /// Maximum fixtures scheduled on the same day within a single knockout
     /// round. Mirrors `CompetitionRules::knockout_matches_per_day`.
     pub knockout_matches_per_day: u32,
+    ..Default::default()
 }
 
 impl Default for GroupStageConfig {
@@ -47,6 +48,7 @@ impl Default for GroupStageConfig {
             knockout_matches_per_day: 1,
         }
     }
+    ..Default::default()
 }
 
 fn fixture_competition_for(kind: &CompetitionType) -> FixtureCompetition {
@@ -195,6 +197,7 @@ fn build_group_cup(
         group_matchday_gap_days: config.matchday_gap_days.max(1) as u32,
         knockout_round_gap_days: config.knockout_round_gap_days,
         knockout_matches_per_day: config.knockout_matches_per_day,
+        ..Default::default()
     };
     cup.standings.clear();
     cup.groups = groups
@@ -282,14 +285,14 @@ pub fn process_completed_fixture(league: &mut League, fixture_index: usize) {
             .iter_mut()
             .find(|entry| entry.team_id == home_team_id)
         {
-            entry.record_result(result.home_goals, result.away_goals);
+            entry.record_result(result.home_score, result.away_score);
         }
         if let Some(entry) = group
             .standings
             .iter_mut()
             .find(|entry| entry.team_id == away_team_id)
         {
-            entry.record_result(result.away_goals, result.home_goals);
+            entry.record_result(result.away_score, result.home_score);
         }
     }
 
@@ -561,6 +564,7 @@ mod tests {
                 matchday_gap_days: 3,
                 qualifiers_per_group: 2,
                 best_third_qualifiers: 2,
+                ..Default::default()
             },
         );
 

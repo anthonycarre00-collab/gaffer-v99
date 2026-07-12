@@ -7,6 +7,8 @@ use crate::event::{EventType, MatchEvent};
 use crate::report::MatchReport;
 use crate::shared::{self, PlayerSnap};
 use crate::types::{MatchConfig, PlayerData, Position, Side, TeamData, Zone};
+use rand::Rng;
+use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // MatchEngine — the core minute-by-minute simulator

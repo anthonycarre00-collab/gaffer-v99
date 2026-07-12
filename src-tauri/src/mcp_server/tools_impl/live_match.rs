@@ -5,6 +5,7 @@ use std::sync::Arc;
 use crate::mcp_server::context::McpContext;
 use crate::mcp_server::tools_impl::helpers::require_game;
 use crate::mcp_server::formatting::translate_error;
+use std::collections::HashMap;
 
 /// Format a match event as a readable string.
 fn fmt_event(event: &engine::MatchEvent) -> String {

@@ -175,6 +175,9 @@ fn competition_type_str(c: &FixtureCompetition) -> &'static str {
         FixtureCompetition::InternationalClub => "InternationalClub",
         FixtureCompetition::InternationalNation => "InternationalNation",
         FixtureCompetition::Friendly => "Friendly",
+        FixtureCompetition::FriendlyCup => "Friendly",
+        FixtureCompetition::FriendlyCup => "Friendly",
+        FixtureCompetition::FriendlyCup => "Friendly",
         FixtureCompetition::FriendlyCup => "FriendlyCup",
         FixtureCompetition::PreseasonTournament => "PreseasonTournament",
     }

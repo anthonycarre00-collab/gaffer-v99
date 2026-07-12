@@ -237,7 +237,7 @@ pub fn create_live_match(
     // V99.4 T1.1: Apply fixture weather to the live match config.
     // V99.4 T1.5: Apply fixture importance pressure multiplier.
     let mut config = MatchConfig::default();
-    config.weather = crate::engine::weather_modifiers_for(&fixture.weather);
+    config.weather = engine::weather_modifiers_for(&fixture.weather);
     config.fixture_pressure_multiplier = fixture.importance.pressure_multiplier();
 
     let mut match_state = LiveMatchState::new(

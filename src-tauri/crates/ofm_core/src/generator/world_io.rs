@@ -1,4 +1,5 @@
 use super::definitions::{
+use std::collections::HashMap;
     WorldData, WorldDatabaseInfo, WorldManifestV2, WorldRegionDefinition, WorldShardRefs,
 };
 use std::path::{Path, PathBuf};
@@ -269,6 +270,7 @@ fn load_world_from_manifest_path(path: &Path, manifest: WorldManifestV2) -> Resu
         metadata: manifest.compatibility.unwrap_or_else(|| super::definitions::WorldDataMetadata {
             format_version: manifest.format_version,
             world_id: manifest.world_id,
+            ..Default::default()
         }),
         extra_translations: std::collections::HashMap::new(),
         build_notices: Vec::new(),
@@ -348,6 +350,7 @@ pub fn export_world_package(world: &WorldData, manifest_path: &Path) -> Result<S
         compatibility: Some(super::definitions::WorldDataMetadata {
             format_version: 2,
             ..normalized.metadata.clone()
+            ..Default::default()
         }),
     };
     write_json(manifest_path, &manifest)?;
@@ -777,6 +780,7 @@ mod tests {
             kind: crate::generator::WorldDataKind::HistoricalSnapshot,
             base_year: Some(2028),
             snapshot_date: Some("2028-08-15T00:00:00Z".to_string()),
+            ..Default::default()
         };
 
         let json = export_world_to_json(&world).unwrap();

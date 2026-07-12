@@ -30,6 +30,7 @@ use uuid::Uuid;
 
 use chrono::Datelike;
 use generation::*;
+use std::collections::HashMap;
 
 const MAX_OPENING_EXPIRING_CONTRACTS: usize = 2;
 const MIN_OPENING_RUNWAY_WEEKS: i64 = 16;
@@ -213,8 +214,7 @@ pub fn generate_youth_academy_recruit_with_nationality(
     player.squad_role = SquadRole::Youth;
     player.transfer_listed = false;
     player.loan_listed = false;
-    player,
-            ..Default::default()
+    player
         
         }
 
@@ -1606,8 +1606,7 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.ovr = 62;
         player.potential = 68;
-        player,
-            ..Default::default()
+        player
         
     }
 

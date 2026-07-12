@@ -6,6 +6,7 @@
 
 use domain::player::{Injury, Player};
 use rand::{Rng, RngExt};
+use rand::Rng;
 
 /// i18n keys for minor match injuries. These mirror the training-ground injury
 /// pool so the UI renders them with existing translations.

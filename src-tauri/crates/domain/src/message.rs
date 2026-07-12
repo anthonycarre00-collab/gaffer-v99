@@ -111,6 +111,7 @@ pub struct MessageContext {
     pub scout_report: Option<ScoutReportData>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delegated_renewal_report: Option<DelegatedRenewalReportData>,
+    ..Default::default()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -269,8 +269,8 @@ fn match_result_has_context_with_score() {
     );
     assert_eq!(msg.context.fixture_id.as_deref(), Some("f1"));
     let result = msg.context.match_result.as_ref().unwrap();
-    assert_eq!(result.home_goals, 3);
-    assert_eq!(result.away_goals, 1);
+    assert_eq!(result.home_score, 3);
+    assert_eq!(result.away_score, 1);
 }
 
 #[test]

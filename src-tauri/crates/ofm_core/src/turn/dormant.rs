@@ -173,7 +173,7 @@ mod tests {
                 .result
                 .as_ref()
                 .expect("fixture should have a result");
-            if result.home_goals == result.away_goals {
+            if result.home_score == result.away_score {
                 saw_draw = true;
                 let home_pens = result.home_penalties.expect("level knockout needs pens");
                 let away_pens = result.away_penalties.expect("level knockout needs pens");
