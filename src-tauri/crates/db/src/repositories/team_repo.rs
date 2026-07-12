@@ -330,9 +330,7 @@ mod tests {
         team.finance = 5_000_000;
         team.wage_budget = 200_000;
         team.transfer_budget = 500_000;
-        team,
-            ..Default::default()
-        
+        team
         }
 
     #[test]

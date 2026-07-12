@@ -326,9 +326,7 @@ mod tests {
             },
         );
         player.team_id = Some("team1".to_string());
-        player,
-            ..Default::default()
-        
+        player
     }
 
     fn make_game(players: Vec<Player>) -> Game {

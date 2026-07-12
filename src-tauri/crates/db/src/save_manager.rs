@@ -1046,8 +1046,7 @@ mod tests {
         player.footedness = footedness;
         player.weak_foot = 1;
         player.team_id = Some("team-001".to_string());
-        player,
-        ..Default::default()
+        player
     }
 
     fn sample_game_with_side_specific_starting_xi(mirrored: bool) -> Game {
@@ -1134,8 +1133,7 @@ mod tests {
         );
         player.team_id = Some("team-001".to_string());
         player.squad_role = SquadRole::Senior;
-        player,
-        ..Default::default()
+        player
     }
 
     fn sample_opening_save_without_youth_academy() -> Game {

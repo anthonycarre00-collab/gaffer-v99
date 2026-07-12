@@ -610,10 +610,8 @@ mod tests {
     }
 
     fn mk(id: &str, attr: u8, condition: u8) -> Player {
-        mk_pos(id, DomainPos::CenterBack, attr, condition),
-            ..Default::default()
-        
-        }
+        mk_pos(id, DomainPos::CenterBack, attr, condition)
+    }
 
     fn mk_pos(id: &str, position: DomainPos, attr: u8, condition: u8) -> Player {
         let mut p = Player::new(
@@ -626,9 +624,7 @@ mod tests {
             attrs(attr),
         );
         p.condition = condition;
-        p,
-            ..Default::default()
-        
+        p
         }
 
     #[test]

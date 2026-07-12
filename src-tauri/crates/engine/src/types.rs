@@ -177,7 +177,6 @@ impl PlayerData {
     /// logic to disagree with the player profile display.
     pub fn overall(&self) -> f64 {
         self.ovr as f64
-        
     }
 
     /// Effective rating accounting for current condition (0-100).
@@ -315,7 +314,6 @@ impl TeamData {
     /// Count players by position.
     pub fn count_position(&self, pos: Position) -> usize {
         self.players.iter().filter(|p| p.position == pos).count()
-        
     }
 
     /// Average of a specific attribute among players in the given position.

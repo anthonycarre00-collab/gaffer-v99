@@ -3876,8 +3876,7 @@ mod tests {
         team.finance = 5_000_000;
         team.transfer_budget = 5_000_000;
         team.wage_budget = 2_000_000;
-        team,
-        ..Default::default()
+        team
     }
 
     fn sample_attributes() -> PlayerAttributes {

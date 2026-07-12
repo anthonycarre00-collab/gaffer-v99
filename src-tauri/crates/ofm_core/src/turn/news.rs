@@ -834,9 +834,7 @@ mod tests {
             "England".to_string(),
         );
         manager.hire("team1".to_string());
-        manager,
-            ..Default::default()
-        
+        manager
         }
 
     fn make_fixture(
@@ -905,8 +903,7 @@ mod tests {
             default_attrs(),
         );
         player.team_id = Some(team_id.to_string());
-        player,
-        ..Default::default()
+        player
     }
 
     fn make_report(goals: Vec<GoalDetail>, home_goals: u8, away_goals: u8) -> MatchReport {
@@ -992,10 +989,8 @@ mod tests {
         game.teams
             .iter_mut()
             .find(|team| team.id == team_id)
-            .unwrap(),
-            ..Default::default()
-        
-        }
+            .unwrap()
+    }
 
     fn reset_to_preseason(game: &mut Game) {
         let league = game.league.as_mut().unwrap();

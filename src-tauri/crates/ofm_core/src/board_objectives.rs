@@ -316,9 +316,7 @@ mod tests {
         );
         player.team_id = Some(team_id.to_string());
         player.wage = wage;
-        player,
-            ..Default::default()
-        
+        player
         }
 
     fn make_team(id: &str, name: &str, reputation: u32) -> Team {
@@ -332,9 +330,7 @@ mod tests {
             20_000,
         );
         team.reputation = reputation;
-        team,
-            ..Default::default()
-        
+        team
         }
 
     fn make_game(user_reputation: u32, season: u32, team_count: usize) -> Game {

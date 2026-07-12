@@ -474,9 +474,7 @@ mod tests {
         player.ovr = ovr;
         player.condition = 100;
         player.fitness = 80;
-        player,
-            ..Default::default()
-        
+        player
     }
 
     fn make_national_team(id: &str, nation: &str, squad: &[&str]) -> NationalTeam {
@@ -487,9 +485,7 @@ mod tests {
             None,
         );
         team.squad_player_ids = squad.iter().map(|s| s.to_string()).collect();
-        team,
-            ..Default::default()
-        
+        team
     }
 
     fn empty_game() -> Game {

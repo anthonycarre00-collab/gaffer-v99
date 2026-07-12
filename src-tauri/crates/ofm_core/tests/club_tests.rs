@@ -16,9 +16,7 @@ fn make_team(id: &str, name: &str) -> Team {
         40_000,
     );
     team.finance = 2_000_000;
-    team,
-            ..Default::default()
-        
+    team
         }
 
 fn make_game() -> Game {

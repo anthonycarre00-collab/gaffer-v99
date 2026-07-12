@@ -190,10 +190,8 @@ pub fn repair_opening_youth_academies(game: &mut crate::game::Game) -> bool {
 }
 
 pub fn generate_youth_academy_recruit(team: &Team, target_position: Option<&Position>) -> Player {
-    generate_youth_academy_recruit_with_nationality(team, target_position, None),
-            ..Default::default()
-        
-        }
+    generate_youth_academy_recruit_with_nationality(team, target_position, None)
+}
 
 pub fn generate_youth_academy_recruit_with_nationality(
     team: &Team,
@@ -237,9 +235,7 @@ pub fn generate_national_team_player(nationality: &str, squad_slot: usize) -> Pl
     player.wage = 0;
     player.transfer_listed = false;
     player.loan_listed = false;
-    player,
-            ..Default::default()
-        
+    player
         }
 
 fn normalize_generated_team(team: &mut Team, players: &mut [Player]) {
@@ -588,9 +584,7 @@ fn build_team(tdef: &TeamDef, rng: &mut impl rand::Rng) -> domain::team::Team {
             team.kit_pattern = pattern;
         }
     }
-    team,
-            ..Default::default()
-        
+    team
 }
 
 /// Build a club with a full generated squad (22 players) and staff, normalised
@@ -1571,9 +1565,7 @@ mod tests {
             25_000,
         );
         team.football_nation = "ENG".to_string();
-        team,
-            ..Default::default()
-        
+        team
     }
 
     fn make_import_player(

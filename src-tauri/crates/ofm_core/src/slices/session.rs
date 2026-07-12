@@ -197,9 +197,7 @@ mod tests {
             "EN".to_string(),
         );
         m.team_id = team_id.map(|s| s.to_string());
-        m,
-            ..Default::default()
-        
+        m
         }
 
     fn make_team(id: &str, name: &str) -> Team {

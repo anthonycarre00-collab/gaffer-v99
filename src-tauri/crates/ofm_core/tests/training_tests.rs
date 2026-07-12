@@ -49,8 +49,7 @@ fn make_player(id: &str, name: &str, team_id: &str, dob: &str) -> Player {
     p.team_id = Some(team_id.to_string());
     p.morale = 70;
     p.condition = 80;
-    p,
-    ..Default::default()
+    p
 }
 
 fn make_team(id: &str, name: &str) -> Team {

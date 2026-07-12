@@ -57,9 +57,7 @@ fn make_player(id: &str, team_id: Option<&str>, ovr: u8, value: u64) -> Player {
     p.team_id = team_id.map(String::from);
     p.ovr = ovr;
     p.market_value = value;
-    p,
-            ..Default::default()
-        
+    p
 }
 
 fn make_domestic_league(

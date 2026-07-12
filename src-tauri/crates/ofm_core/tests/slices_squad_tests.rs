@@ -54,9 +54,7 @@ fn make_player(id: &str, team_id: Option<&str>) -> Player {
         default_attrs(),
     );
     p.team_id = team_id.map(String::from);
-    p,
-            ..Default::default()
-        
+    p
 }
 
 fn make_game(teams: Vec<Team>, players: Vec<Player>) -> Game {

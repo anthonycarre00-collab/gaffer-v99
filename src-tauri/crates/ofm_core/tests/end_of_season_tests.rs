@@ -190,9 +190,7 @@ fn make_club(id: &str, nation: &str, reputation: u32) -> Team {
     let mut team = make_team(id, id);
     team.football_nation = nation.to_string();
     team.reputation = reputation;
-    team,
-            ..Default::default()
-        
+    team
         }
 
 /// A single-division domestic league with `clubs` listed strongest-first; the
@@ -2353,9 +2351,7 @@ fn make_retired_player(id: &str) -> domain::player::Player {
         goals: 5,
         assists: 8,
     });
-    p,
-            ..Default::default()
-        
+    p
 }
 
 #[test]

@@ -493,7 +493,6 @@ impl StandingEntry {
 impl Fixture {
     pub fn counts_for_league_standings(&self) -> bool {
         matches!(self.competition, FixtureCompetition::League)
-        
     }
 
     /// The team advancing from this knockout fixture once a result is

@@ -102,9 +102,7 @@ impl<'a> PlayerSpec<'a> {
                 days_remaining: 5,
         });
         }
-        p,
-            ..Default::default()
-        
+        p
     }
 }
 

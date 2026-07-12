@@ -132,7 +132,6 @@ fn make_player(
 
     fn noise(base: f64, rng: &mut impl Rng) -> u8 {
         (base + rng.random_range(-10.0f64..10.0f64)).clamp(10.0, 99.0) as u8
-        
     }
     fn biased(base: f64, offset: f64, rng: &mut impl Rng) -> u8 {
         (base + offset + rng.random_range(-8.0f64..8.0f64)).clamp(10.0, 99.0) as u8

@@ -58,16 +58,13 @@ fn make_player(id: &str) -> Player {
     player.contract_end = Some("2028-06-30".to_string());
     player.market_value = 1_000_000;
     player.morale = 70;
-    player,
-    ..Default::default()
+    player
 }
 
 fn make_user_player(id: &str) -> Player {
     let mut player = make_player(id);
     player.team_id = Some("team-1".to_string());
-    player,
-            ..Default::default()
-        
+    player
         }
 
 fn make_pending_incoming_offer(id: &str, fee: u64) -> TransferOffer {
@@ -126,9 +123,7 @@ fn make_user_team(finance: i64, transfer_budget: i64) -> Team {
     team.transfer_budget = transfer_budget;
     team.wage_budget = 2_000_000;
     team.manager_id = Some("manager-1".to_string());
-    team,
-            ..Default::default()
-        
+    team
         }
 
 fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
@@ -142,9 +137,7 @@ fn make_seller_team(starting_xi_ids: Vec<String>) -> Team {
         28_000,
     );
     team.starting_xi_ids = starting_xi_ids;
-    team,
-            ..Default::default()
-        
+    team
         }
 
 fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Team {
@@ -159,8 +152,7 @@ fn make_ai_team(id: &str, name: &str, finance: i64, transfer_budget: i64) -> Tea
     );
     team.finance = finance;
     team.transfer_budget = transfer_budget;
-    team,
-    ..Default::default()
+    team
 }
 
 fn make_game_with_player(

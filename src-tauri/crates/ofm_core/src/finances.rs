@@ -1191,8 +1191,7 @@ mod tests {
         team.finance = -25_000;
         team.wage_budget = 400_000;
         team.transfer_budget = 500_000;
-        team,
-        ..Default::default()
+        team
     }
 
     fn make_game() -> Game {

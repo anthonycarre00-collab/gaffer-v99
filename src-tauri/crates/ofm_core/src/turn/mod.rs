@@ -308,7 +308,7 @@ fn prune_old_messages_and_news(game: &mut Game) {
 /// V99.3 VITAL-1 M1: Surface narrative memories for the user's team + squad.
 ///
 /// The narrative engine records memories (breakout performances, rivalries,
-comebacks, slumps) but `check_resurfacing` was only called from tests —
+/// comebacks, slumps) but `check_resurfacing` was only called from tests —
 /// memories were never resurfaced in production. This weekly pass checks
 /// the user's team + each squad member for resurfacing candidates and
 /// generates a news article when a memory resurfaces, so stories actually
@@ -483,9 +483,7 @@ mod tests {
         );
         team.finance = 5_000_000;
         team.wage_budget = 2_000_000;
-        team,
-            ..Default::default()
-        
+        team
         }
 
     fn make_player() -> Player {

@@ -70,9 +70,7 @@ mod tests {
         );
         player.team_id = team_id.map(|t| t.to_string());
         player.jersey_number = jersey;
-        player,
-            ..Default::default()
-        
+        player
         }
 
     fn make_team(id: &str) -> Team {

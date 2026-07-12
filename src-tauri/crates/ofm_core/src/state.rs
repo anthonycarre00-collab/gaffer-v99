@@ -201,8 +201,7 @@ mod tests {
         player.team_id = Some(team_id.to_string());
         player.morale = 70;
         player.condition = 90;
-        player,
-        ..Default::default()
+        player
     }
 
     fn make_team(id: &str, name: &str) -> Team {

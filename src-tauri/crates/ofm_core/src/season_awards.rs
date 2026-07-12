@@ -449,9 +449,7 @@ mod tests {
             trophies: 1,
             best_finish: Some(1),
         };
-        manager,
-            ..Default::default()
-        
+        manager
     }
 
     #[test]

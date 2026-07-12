@@ -66,9 +66,7 @@ fn make_player(position: Position, attrs: PlayerAttributes, dob: &str) -> Player
         attrs,
     );
     p.team_id = Some("team1".to_string());
-    p,
-            ..Default::default()
-        
+    p
         }
 
 // ---------------------------------------------------------------------------

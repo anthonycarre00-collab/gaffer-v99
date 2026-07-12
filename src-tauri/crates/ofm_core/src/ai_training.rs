@@ -340,9 +340,7 @@ mod tests {
         );
         p.team_id = Some(team_id.to_string());
         p.condition = condition;
-        p,
-            ..Default::default()
-        
+        p
         }
 
     fn make_team(id: &str, play_style: PlayStyle) -> Team {
@@ -359,9 +357,7 @@ mod tests {
         t.training_schedule = TrainingSchedule::Balanced;
         t.training_focus = TrainingFocus::Physical;
         t.training_intensity = TrainingIntensity::Medium;
-        t,
-            ..Default::default()
-        
+        t
         }
 
     fn make_manager(team_id: Option<&str>) -> Manager {
@@ -375,9 +371,7 @@ mod tests {
         if let Some(tid) = team_id {
             m.hire(tid.to_string());
         }
-        m,
-            ..Default::default()
-        
+        m
     }
 
     fn make_game_with_two_teams(
