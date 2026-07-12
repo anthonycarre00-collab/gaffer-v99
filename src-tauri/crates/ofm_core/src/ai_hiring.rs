@@ -2,7 +2,6 @@ use crate::game::Game;
 use chrono::NaiveDate;
 use domain::manager::{Manager, ManagerCareerEntry};
 use domain::staff::{Staff, StaffRole};
-use std::collections::HashMap;
 
 const BASE_AI_MANAGER_SATISFACTION: i32 = 50;
 const AI_MANAGER_REPLACEMENT_DELAY_DAYS: u32 = 7;
@@ -79,7 +78,7 @@ fn create_seeded_manager(
 /// defensive managers (Allardyce, Pulis).
 fn generate_random_personality(team_reputation: u32) -> domain::manager::ManagerPersonality {
     use domain::manager::{MediaStyle, TacticalStyle, TransferPhilosophy};
-    use rand::{Rng, RngExt};
+    use rand::RngExt;
     let mut rng = rand::rng();
 
     // Tactical style: weighted by club reputation.

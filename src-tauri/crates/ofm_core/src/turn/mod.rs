@@ -16,7 +16,6 @@ use domain::league::FixtureStatus;
 use domain::player::Position as DomainPosition;
 use domain::stats::StatsState;
 use log::{debug, info};
-use std::collections::HashMap;
 
 // Re-export public items
 pub use news::generate_matchday_news;

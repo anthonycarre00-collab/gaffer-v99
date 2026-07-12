@@ -12,7 +12,7 @@ use crate::player_rating::refresh_player_derived;
 use domain::player::{Player, PlayerAttributes};
 use domain::staff::{CoachingSpecialization, StaffRole};
 use domain::team::{TrainingFocus, TrainingIntensity, TrainingSchedule};
-use std::collections::HashMap;
+use rand::Rng;
 
 /// Computed coaching quality for a team's staff.
 pub struct TeamCoachingBonus {

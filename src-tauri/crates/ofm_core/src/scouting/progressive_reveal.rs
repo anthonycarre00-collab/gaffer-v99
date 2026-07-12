@@ -13,7 +13,7 @@
 
 use crate::game::{RevealTier, ScoutingKnowledge};
 use domain::player::{Player, PlayerAttributes, Position};
-use std::collections::HashMap;
+use rand::Rng;
 
 /// All 19 Gaffer attribute names, in canonical order.
 pub const ALL_ATTRIBUTE_NAMES: [&str; 19] = [
@@ -284,8 +284,7 @@ pub fn get_or_create_knowledge<'a>(
     player_id: &str,
 ) -> &'a mut ScoutingKnowledge {
     scouting_knowledge.entry(player_id.to_string())
-        .or_insert_with(|| ScoutingKnowledge::new(player_id)),
-        ..Default::default()
+        .or_insert_with(|| ScoutingKnowledge::new(player_id))
 }
 
 /// Auto-reveal scouting knowledge for players the manager should already

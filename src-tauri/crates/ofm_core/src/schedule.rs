@@ -1,10 +1,9 @@
-use chrono::{DateTime, Datelike, Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 use domain::league::{
     CompetitionFormat, CompetitionRules, CompetitionScope, CompetitionType, Fixture,
     FixtureCompetition, FixtureImportance, FixtureStatus, KnockoutRoundState, League,
     StandingEntry,
 };
-use std::collections::HashMap;
 use uuid::Uuid;
 
 /// V99.4 T1.5: Derive fixture importance from competition type + team reputations.

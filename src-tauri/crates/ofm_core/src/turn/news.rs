@@ -5,7 +5,6 @@ use chrono::{Datelike, Duration, NaiveDate};
 use domain::league::{Fixture, FixtureStatus, League, StandingEntry, TransferRumour};
 use rand::seq::SliceRandom;
 use std::collections::{HashMap, HashSet};
-use chrono::Datelike;
 
 const MAX_WEEKLY_TRANSFER_RUMOURS: usize = 2;
 const TRANSFER_RUMOUR_RETENTION_DAYS: i64 = 28;

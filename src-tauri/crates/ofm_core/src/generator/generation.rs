@@ -6,7 +6,6 @@ use uuid::Uuid;
 
 use super::definitions::NamesDefinition;
 use crate::player_rating::{generate_potential, refresh_player_derived};
-use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // Helper functions for world generation
@@ -351,8 +350,7 @@ pub(super) fn generate_random_player_from_def(
 
     player.jersey_number = jersey_number_for_slot(index);
 
-    player,
-    ..Default::default()
+    player
 }
 
 fn jersey_number_for_slot(index: usize) -> Option<u8> {
@@ -709,8 +707,7 @@ pub(super) fn generate_player_from_def(
     };
     player.potential = generate_potential(temp_ovr, age);
     refresh_player_derived(&mut player, current_year);
-    player,
-    ..Default::default()
+    player
 }
 
 /// Generate a random unemployed manager (no team) using the provided name pool.
@@ -743,7 +740,5 @@ pub(super) fn generate_random_unemployed_manager(
     mgr.reputation = reputation;
     mgr.satisfaction = 50;
     mgr.fan_approval = 50;
-    mgr,
-            ..Default::default()
-        
+    mgr
 }

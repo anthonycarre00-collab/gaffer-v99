@@ -15,7 +15,7 @@ use crate::game::Game;
 use crate::generator::generate_youth_academy_recruit_with_nationality;
 use chrono::Datelike;
 use domain::player::{Player, Position, SquadRole};
-use std::collections::HashMap;
+use rand::Rng;
 
 /// Position-appropriate potential bands for regens.
 /// Returns (min, max) potential for a given position group.

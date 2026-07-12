@@ -8,7 +8,6 @@
 use chrono::{DateTime, NaiveDate, Utc};
 use domain::league::{FixtureStatus, League, MatchResult};
 use domain::player::Player;
-use std::collections::HashMap;
 
 const CATCHUP_XI: usize = 11;
 

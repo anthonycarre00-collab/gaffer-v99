@@ -12,7 +12,7 @@ use domain::player::{
 };
 use domain::season::TransferWindowStatus;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use uuid::Uuid;
 
 const TRANSFER_NEGOTIATION_STALE_DAYS: i64 = 14;

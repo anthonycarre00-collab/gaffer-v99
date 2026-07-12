@@ -18,7 +18,6 @@ use domain::player::{PlayerAttributes, Position};
 use domain::staff::{CoachingSpecialization, StaffAttributes, StaffRole};
 
 use super::{CompetitionDefinition, NamePool, NamesDefinition, TeamDef};
-use std::collections::HashMap;
 
 // ---------------------------------------------------------------------------
 // Authoring structs for the entity types a package can contain

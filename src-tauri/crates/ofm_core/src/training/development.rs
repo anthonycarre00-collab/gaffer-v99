@@ -11,6 +11,7 @@
 
 use domain::player::{Player, Position};
 use domain::team::TrainingFocus;
+use rand::Rng;
 
 // ============================================================================
 // 1. STABILITY PRESSURE — regression under pressure
