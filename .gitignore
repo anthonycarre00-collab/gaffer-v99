@@ -47,3 +47,10 @@ test-world.json
 # trigger the file watcher and restart the app)
 /src-tauri/data/*.ofm
 /src-tauri/databases/*.ofm
+
+# Mobile icon folders — this is a desktop-only Tauri app. `tauri icon`
+# regenerates iOS/Android icons by default; ignore them so they don't get
+# committed. The desktop icons (32x32, 128x128, icon.icns, icon.ico, Square*.png,
+# StoreLogo.png) are tracked manually above.
+/src-tauri/icons/ios/
+/src-tauri/icons/android/
