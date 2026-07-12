@@ -73,6 +73,7 @@ impl BoardType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct Team {
     pub id: String,
     pub name: String,

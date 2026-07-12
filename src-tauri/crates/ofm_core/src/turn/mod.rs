@@ -853,7 +853,6 @@ where
                 engine::sparse_sim::SparseEventType::RedCard => {
                     player.stats.red_cards += 1;
                 }
-                _ => {}
             }
         }
         if let Some(secondary_id) = &event.secondary_player_id {

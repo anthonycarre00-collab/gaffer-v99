@@ -238,7 +238,7 @@ fn apply_staff_retirement(game: &mut Game, current_date: NaiveDate, _season: u32
 
         // Remove from team if employed.
         if let Some(team_id) = &staff_team_id {
-            if let Some(team) = game.teams.iter_mut().find(|t| &t.id == team_id) {
+            if let Some(_team) = game.teams.iter_mut().find(|t| &t.id == team_id) {
                 // Team doesn't store explicit staff IDs, but the staff's
                 // team_id will be cleared when we remove it from game.staff.
                 // The next time staff are loaded, this team will simply have

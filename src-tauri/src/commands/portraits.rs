@@ -516,6 +516,7 @@ fn load_sources() -> Result<Vec<PortraitSource>, String> {
         .collect()
 }
 
+#[allow(dead_code)]
 fn select_source(sources: &'static [PortraitSource], seed: u64) -> &'static PortraitSource {
     let mut state = seed ^ 0x7283_7f41_2bcb_901du64;
     &sources[(next_u64(&mut state) as usize) % sources.len()]

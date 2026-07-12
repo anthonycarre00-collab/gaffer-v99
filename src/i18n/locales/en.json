@@ -2,7 +2,7 @@
   "app": {
     "name": "Gaffer",
     "publisher": "Sturdy Robot",
-    "version": "v0.3.0-dev.11 (V99.4r11)"
+    "version": "v0.3.0-dev.12 (V99.5)"
   },
   "menu": {
     "newGame": "New Career",
@@ -52,7 +52,8 @@
     "searchNationalities": "Search nationalities...",
     "chooseWorld": "Pick Your World",
     "placeholderFirst": "e.g. José",
-    "placeholderLast": "e.g. Mourinho"
+    "placeholderLast": "e.g. Mourinho",
+    "advancedOptions": "Advanced Options"
   },
   "validation": {
     "required": "{{field}} is required",
@@ -1884,6 +1885,10 @@
     "clearSavesDesc": "Permanently delete all saved games",
     "clear": "Clear",
     "savesCleared": "Saves cleared!",
+    "advanced": "Advanced",
+    "worldEditor": "World Editor",
+    "worldEditorDesc": "Create and edit custom world databases",
+    "open": "Open",
     "about": "About",
     "matchModes": {
       "live": "Go to the Field",

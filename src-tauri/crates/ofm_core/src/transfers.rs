@@ -607,6 +607,8 @@ fn suggested_loan_buy_option_fee(player: &domain::player::Player) -> Option<u64>
 
 /// V99.4 T4.5: Suggested loan fee — one-time payment to the parent club.
 /// Typically 10-20% of market value for season-long loans.
+/// TODO: Wire into AI loan offer generation.
+#[allow(dead_code)]
 fn suggested_loan_fee(player: &domain::player::Player) -> u64 {
     if player.market_value == 0 {
         return 0;
@@ -617,6 +619,8 @@ fn suggested_loan_fee(player: &domain::player::Player) -> u64 {
 
 /// V99.4 T4.5: Suggested play-time guarantee based on player's squad role.
 /// Young players need guaranteed minutes; established players don't.
+/// TODO: Wire into AI loan offer generation.
+#[allow(dead_code)]
 fn suggested_playtime_guarantee(player: &domain::player::Player) -> u8 {
     if player.ovr >= 75 {
         0 // Stars don't need guarantees — they'll play anyway

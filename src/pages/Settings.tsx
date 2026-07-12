@@ -20,6 +20,8 @@ import {
  Type,
  Maximize,
  Minimize,
+ Package,
+ ChevronRight,
 } from "lucide-react";
 
 const CURRENCY_OPTIONS = [
@@ -425,6 +427,22 @@ export default function Settings() {
  )}
  </SettingRow>
  </div>
+ </Section>
+
+ {/* ─── Advanced ─── */}
+ <Section title={t("settings.advanced")} icon={<Package className="w-5 h-5" />}>
+ <SettingRow
+ label={t("settings.worldEditor")}
+ description={t("settings.worldEditorDesc")}
+ >
+ <button
+ onClick={() => navigate("/world-editor")}
+ className="flex items-center gap-2 px-4 py-2 rounded bg-primary-500/10 text-primary-600 dark:text-primary-300 hover:bg-primary-500/20 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+ >
+ {t("settings.open")}
+ <ChevronRight className="w-4 h-4" />
+ </button>
+ </SettingRow>
  </Section>
 
  {/* ─── About ─── */}

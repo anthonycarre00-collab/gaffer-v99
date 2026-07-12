@@ -1,6 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -13,10 +12,6 @@ import type {
  CareerStartPhase,
  CreateManagerFormData,
 } from "../components/menu/CreateManagerForm";
-import type {
- PackageInfo,
- PackageIssue,
-} from "../components/menu/WorldSelect";
 import type { ManagerProfile } from "../components/menu/types";
 import { applyExtraTranslations } from "../lib/extraTranslations";
 import { resolveBackendError } from "../utils/backendI18n";
@@ -27,7 +22,6 @@ import {
  PlusCircle,
  ChevronRight,
  Power,
- Package,
 } from "lucide-react";
 
 const DISCORD_INVITE_URL = "https://discord.gg/2CXaesaukT";
@@ -56,7 +50,7 @@ const ProfileSaveConfirm = lazy(
  () => import("../components/menu/ProfileSaveConfirm"),
 );
 const SavesList = lazy(() => import("../components/menu/SavesList"));
-const PackageBuildStep = lazy(() => import("../components/menu/PackageBuildStep"));
+// PackageBuildStep removed — V99.5: dead code, packages flow bypassed for bundled DB
 const GenerationStep = lazy(() => import("../components/menu/WorldSelect"));
 
 interface SaveEntry {
@@ -289,7 +283,7 @@ export default function MainMenu() {
  const setGameState = useGameStore((state) => state.setGameState);
  const { t } = useTranslation();
 
- const [menuState, setMenuState] = useState<"main" | "create" | "packages" | "generation" | "load">("main");
+ const [menuState, setMenuState] = useState<"main" | "create" | "generation" | "load">("main");
  const [showProfileConfirm, setShowProfileConfirm] = useState(false);
  const [saves, setSaves] = useState<SaveEntry[]>([]);
  const [isLoadingSaves, setIsLoadingSaves] = useState(false);
@@ -312,11 +306,7 @@ export default function MainMenu() {
  Partial<Record<keyof CreateManagerFormData, string>>
  >({});
 
- // Installed packages state
- const [installedPackages, setInstalledPackages] = useState<PackageInfo[]>([]);
- const [activePackageIds, setActivePackageIds] = useState<string[]>([]);
- const [isInstallingPackage, setIsInstallingPackage] = useState(false);
- const [packageStackErrors, setPackageStackErrors] = useState<PackageIssue[]>([]);
+ // History depth state (used by GenerationStep)
  const [historyDepthYears, setHistoryDepthYears] = useState(
  initialHistoryDepthYears,
  );
@@ -469,61 +459,6 @@ export default function MainMenu() {
  };
 
 
- const loadInstalledPackages = async () => {
- try {
- const pkgs = await invoke<PackageInfo[]>("list_installed_packages");
- // Tauri commands can resolve to null; never let installedPackages become
- // null or downstream `.filter` calls (here and in PackageBuildStep) throw.
- setInstalledPackages(pkgs ?? []);
- } catch (err) {
- console.error("Failed to list packages:", err);
- }
- };
-
- useEffect(() => {
- if (menuState === "packages") {
- void loadInstalledPackages();
- }
- }, [menuState]);
-
- const handleInstallPackage = async () => {
- const selected = await open({
- filters: [{ name: "OFM Package", extensions: ["ofm"] }],
- multiple: false,
- title: t("worldSelect.installPackage"),
- });
- if (typeof selected !== "string") return;
- setIsInstallingPackage(true);
- try {
- await invoke<PackageInfo>("install_package", { path: selected });
- await loadInstalledPackages();
- } catch (err) {
- console.error("Failed to install package:", err);
- alert(resolveBackendError(err));
- } finally {
- setIsInstallingPackage(false);
- }
- };
-
- const handleUninstallPackage = async (id: string) => {
- try {
- await invoke("uninstall_package", { id });
- setInstalledPackages((prev) => prev.filter((p) => p.id !== id));
- setActivePackageIds((prev) => prev.filter((pid) => pid !== id));
- setPackageStackErrors([]);
- } catch (err) {
- console.error("Failed to uninstall package:", err);
- alert(resolveBackendError(err));
- }
- };
-
- const handleTogglePackage = (id: string) => {
- setActivePackageIds((prev) =>
- prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id],
- );
- setPackageStackErrors([]);
- };
-
  const handleStartGame = async () => {
  const startupOptions = buildStartupOptions(formData, historyDepthYears);
  if (!startupOptions) {
@@ -543,7 +478,6 @@ export default function MainMenu() {
  dob: formData.dob,
  nationality: formData.nationality,
  startupOptions,
- packageIds: activePackageIds.length > 0 ? activePackageIds : undefined,
  });
  applyExtraTranslations(game.extra_translations);
  setGameState(game);
@@ -622,9 +556,9 @@ export default function MainMenu() {
  form.dob !== profile.date_of_birth ||
  form.nationality !== profile.nationality;
 
- const proceedToPackages = () => {
+ const proceedToGeneration = () => {
  setShowProfileConfirm(false);
- setMenuState("packages");
+ setMenuState("generation");
  };
 
  const handleUpdateProfile = async () => {
@@ -644,13 +578,13 @@ export default function MainMenu() {
  } catch (error) {
  console.error("Failed to update manager profile:", error);
  }
- proceedToPackages();
+ proceedToGeneration();
  };
 
  const handleSaveAsNewProfile = () => {
  void autoSaveProfile(true);
  setLoadedProfile(null);
- proceedToPackages();
+ proceedToGeneration();
  };
 
  const handleDeleteProfile = async (id: string) => {
@@ -754,19 +688,6 @@ export default function MainMenu() {
  </button>
 
  <button
- onClick={() => navigate("/world-editor")}
- className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
- >
- <div className="flex items-center gap-3">
- <Package className="w-6 h-6 text-accent-500 dark:text-accent-400" />
- <span className="font-heading font-bold text-lg uppercase tracking-wide">
- {t("menu.worldEditor")}
- </span>
- </div>
- <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-70 group-hover:translate-x-0.5 transition-all text-accent-500" />
- </button>
-
- <button
  onClick={() => navigate("/settings", { state: { from: "/" } })}
  className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-600 shadow-sm"
  >
@@ -825,31 +746,13 @@ export default function MainMenu() {
  loadedProfile={loadedProfile}
  onUpdate={() => { void handleUpdateProfile(); }}
  onSaveNew={() => { void handleSaveAsNewProfile(); }}
- onSkip={proceedToPackages}
+ onSkip={proceedToGeneration}
  onClose={() => setShowProfileConfirm(false)}
  />
  </Suspense>
  )}
 
- {/* Step 2a: Build Your World (package selection) */}
- {menuState === "packages" && (
- <Suspense fallback={<MenuPanelFallback />}>
- <PackageBuildStep
- installedPackages={installedPackages}
- activePackageIds={activePackageIds}
- isInstallingPackage={isInstallingPackage}
- packageStackErrors={packageStackErrors}
- onTogglePackage={handleTogglePackage}
- onInstallPackage={handleInstallPackage}
- onUninstallPackage={handleUninstallPackage}
- onNext={() => setMenuState("generation")}
- onBack={() => setMenuState("create")}
- onClose={() => setMenuState("main")}
- />
- </Suspense>
- )}
-
- {/* Step 2b: Generation & Completion */}
+ {/* Step 2: Generation & Completion */}
  {menuState === "generation" && (
  <Suspense fallback={<MenuPanelFallback />}>
  <GenerationStep
@@ -859,9 +762,9 @@ export default function MainMenu() {
  historyDepthYears={historyDepthYears}
  onChangeHistoryDepthYears={setHistoryDepthYears}
  onStart={handleStartGame}
- onBack={() => setMenuState("packages")}
+ onBack={() => setMenuState("create")}
  onClose={() => setMenuState("main")}
- activePackages={installedPackages.filter((p) => activePackageIds.includes(p.id))}
+ activePackages={[]}
  />
  </Suspense>
  )}

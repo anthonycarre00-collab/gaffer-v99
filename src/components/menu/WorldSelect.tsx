@@ -1,7 +1,7 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui";
-import { X, ChevronRight, Globe, Users, ArrowLeft, Loader2, Trophy, Package } from "lucide-react";
+import { X, ChevronRight, ArrowLeft, Loader2, ChevronDown } from "lucide-react";
 import type { CareerStartPhase } from "./CreateManagerForm";
 
 // ---------------------------------------------------------------------------
@@ -117,18 +117,16 @@ export default function GenerationStep({
  onStart,
  onBack,
  onClose,
- activePackages,
+ activePackages: _activePackages,
 }: GenerationStepProps) {
  const { t } = useTranslation();
  const historyDepthLabelId = useId();
+ const [showAdvanced, setShowAdvanced] = useState(false);
 
- const hasActiveDatabases = activePackages.some((p) => p.packageType === "database");
-
- // Coverage totals across active database packages
- const dbPackages = activePackages.filter((p) => p.packageType === "database");
- const totalTeams = dbPackages.reduce((s, p) => s + p.teamCount, 0);
- const totalPlayers = dbPackages.reduce((s, p) => s + p.playerCount, 0);
- const totalCompetitions = dbPackages.reduce((s, p) => s + p.competitionCount, 0);
+ // V99.5: activePackages is always [] now (packages flow removed).
+ // hasActiveDatabases is always false → history depth is always shown.
+ // We keep the prop for API compatibility but ignore its value.
+ const hasActiveDatabases = false;
 
  return (
  <div className="flex flex-col gap-4">
@@ -154,7 +152,7 @@ export default function GenerationStep({
  </button>
  </div>
 
- <StepIndicator current={3} />
+ <StepIndicator current={2} />
 
  {/* Summary card */}
  <div className="rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600 dark:border-navy-600 dark:bg-navy-700/60 dark:text-gray-200">
@@ -178,40 +176,20 @@ export default function GenerationStep({
  </p>
  </div>
 
- {/* Database packages — coverage summary */}
- {hasActiveDatabases && (
- <div className="rounded border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
- <p className="font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 mb-2">
- {t("generation.coverage")}
- </p>
- <div className="flex items-center gap-3 flex-wrap mb-2">
- <span className="text-[10px] font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1">
- <Globe className="w-3 h-3" />{t("worldSelect.teams", { count: totalTeams })}
- </span>
- <span className="text-[10px] font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1">
- <Users className="w-3 h-3" />{t("worldSelect.players", { count: totalPlayers })}
- </span>
- <span className="text-[10px] font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1">
- <Trophy className="w-3 h-3" />{t("worldSelect.competitions", { count: totalCompetitions })}
- </span>
- </div>
- <div className="flex flex-wrap gap-1.5">
- {dbPackages.map((p) => (
- <span
- key={p.id}
- className="inline-flex items-center gap-1 text-[10px] font-heading uppercase tracking-wider rounded-full bg-primary-500/10 px-2 py-0.5 text-primary-600 dark:text-primary-300"
+ {/* Advanced options — history depth (collapsible) */}
+ <div className="rounded border border-gray-200 dark:border-navy-600">
+ <button
+ type="button"
+ onClick={() => setShowAdvanced(!showAdvanced)}
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
  >
- <Package className="w-2.5 h-2.5" />
- {p.name || p.id}
- </span>
- ))}
- </div>
- </div>
- )}
-
- {/* History depth — only for random world */}
- {!hasActiveDatabases && (
- <div className="rounded border border-gray-200 bg-white p-3 text-sm dark:border-navy-600 dark:bg-navy-700/60">
+ {t("createManager.advancedOptions")}
+ <ChevronDown
+ className={`h-4 w-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+ />
+ </button>
+ {showAdvanced && (
+ <div className="border-t border-gray-200 p-3 dark:border-navy-600">
  <div className="flex items-start justify-between gap-3">
  <div>
  <p
@@ -263,6 +241,7 @@ export default function GenerationStep({
  </div>
  </div>
  )}
+ </div>
 
  <Button
  variant="primary"

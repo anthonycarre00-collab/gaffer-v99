@@ -1,7 +1,7 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, DatePicker, Select } from "../ui";
-import { AlertCircle, ChevronRight, X } from "lucide-react";
+import { AlertCircle, ChevronRight, ChevronDown, X } from "lucide-react";
 import ManagerProfileList from "./ManagerProfileList";
 import type { ManagerProfile } from "./types";
 
@@ -89,6 +89,7 @@ export default function CreateManagerForm({
  onSubmit,
 }: CreateManagerFormProps) {
  const { t, i18n } = useTranslation();
+ const [showAdvanced, setShowAdvanced] = useState(false);
 
  return (
  <form onSubmit={onSubmit} className="flex flex-col gap-4">
@@ -194,7 +195,20 @@ export default function CreateManagerForm({
  ) : null}
  </div>
 
- <div className="flex gap-3">
+ {/* Advanced options — collapsible */}
+ <div className="rounded border border-gray-200 dark:border-navy-600">
+ <button
+ type="button"
+ onClick={() => setShowAdvanced(!showAdvanced)}
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+ >
+ {t("createManager.advancedOptions")}
+ <ChevronDown
+ className={`h-4 w-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+ />
+ </button>
+ {showAdvanced && (
+ <div className="flex gap-3 border-t border-gray-200 p-3 dark:border-navy-600">
  <div className="flex-1" id="create-manager-field-startYear">
  <label
  htmlFor="create-manager-start-year"
@@ -254,6 +268,8 @@ export default function CreateManagerForm({
  </p>
  ) : null}
  </div>
+ </div>
+ )}
  </div>
 
  <Suspense

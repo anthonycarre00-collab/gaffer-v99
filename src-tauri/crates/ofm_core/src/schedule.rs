@@ -8,6 +8,8 @@ use uuid::Uuid;
 
 /// V99.4 T1.5: Derive fixture importance from competition type + team reputations.
 /// Called at fixture creation time to set the importance level.
+/// TODO: Wire into fixture creation sites (currently hardcoded per competition type).
+#[allow(dead_code)]
 fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: u32) -> FixtureImportance {
     // Cup finals are the biggest domestic games.
     // Continental finals are the biggest overall.
