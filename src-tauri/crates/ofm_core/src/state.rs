@@ -50,8 +50,7 @@ pub struct StateManager {
 impl Default for StateManager {
     fn default() -> Self {
         Self::new()
-        },
-            ..Default::default()
+        }
         
 }
 
@@ -146,8 +145,7 @@ impl StateManager {
         F: FnOnce(&mut LiveMatchSession) -> R,
     {
         with_option_mut(&self.live_match, f)
-    },
-    ..Default::default()
+    }
 }
 
 #[cfg(test)]

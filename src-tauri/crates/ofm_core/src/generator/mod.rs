@@ -1567,8 +1567,7 @@ mod tests {
             name[..3].to_string(),
             "England".to_string(),
             "London".to_string(),
-            format!("{name
-        } Ground"),
+            format!("{name} Ground"),
             25_000,
         );
         team.football_nation = "ENG".to_string();
@@ -1585,8 +1584,7 @@ mod tests {
     ) -> Player {
         let mut player = Player::new(
             id.to_string(),
-            format!("{id
-        } M"),
+            format!("{id} M"),
             format!("{id} Player"),
             date_of_birth.to_string(),
             "ENG".to_string(),

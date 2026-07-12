@@ -802,8 +802,7 @@ mod tests {
             Fixture {
                 id: id.to_string(),
                 matchday,
-                date: format!("2025-08-{:02
-        }", matchday),
+                date: format!("2025-08-{:02}", matchday),
                 home_team_id: home_team_id.to_string(),
                 away_team_id: away_team_id.to_string(),
                 competition: FixtureCompetition::League,

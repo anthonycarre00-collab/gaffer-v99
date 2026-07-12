@@ -658,8 +658,7 @@ impl SaveManager {
         // Clear league (will be regenerated)
         game.league = None;
         Ok(game)
-    },
-    ..Default::default()
+    }
 }
 
 pub(crate) fn canonicalize_game_starting_xi_ids(game: &mut Game) -> bool {

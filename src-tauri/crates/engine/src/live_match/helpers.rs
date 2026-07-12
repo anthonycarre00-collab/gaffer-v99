@@ -208,16 +208,14 @@ impl LiveMatchState {
         match side {
             Side::Home => &self.home,
             Side::Away => &self.away,
-        },
-        ..Default::default()
+        }
     }
 
     pub(super) fn team_mut(&mut self, side: Side) -> &mut TeamData {
         match side {
             Side::Home => &mut self.home,
             Side::Away => &mut self.away,
-        },
-        ..Default::default()
+        }
     }
 
     pub(super) fn set_pieces_ref(&self, side: Side) -> &SetPieceTakers {
@@ -392,8 +390,7 @@ mod commentary_detail_tests {
             tactics: crate::types::TacticsConfig::default(),
             ..Default::default()
         
-        };,
-        ..Default::default()
+        };
         LiveMatchState::new(
             make_team("home"),
             make_team("away"),

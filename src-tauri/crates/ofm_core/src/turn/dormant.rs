@@ -73,8 +73,7 @@ mod tests {
     fn make_team(id: &str) -> Team {
         Team::new(
             id.to_string(),
-            format!("{id
-        } FC"),
+            format!("{id} FC"),
             id.to_uppercase(),
             "England".to_string(),
             "Town".to_string(),

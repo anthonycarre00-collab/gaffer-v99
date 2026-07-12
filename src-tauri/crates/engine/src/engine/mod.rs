@@ -149,8 +149,7 @@ impl<'a> MatchContext<'a> {
         match side {
             Side::Home => self.home,
             Side::Away => self.away,
-        },
-        ..Default::default()
+        }
     }
 
     pub(crate) fn add_goal(&mut self, side: Side) {

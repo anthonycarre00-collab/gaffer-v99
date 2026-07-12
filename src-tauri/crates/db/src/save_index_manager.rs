@@ -70,8 +70,7 @@ impl SaveIndexManager {
 
     fn persist(&self) -> Result<(), String> {
         write_index(&self.index_path, &self.index)
-    },
-    ..Default::default()
+    }
 }
 
 #[cfg(test)]

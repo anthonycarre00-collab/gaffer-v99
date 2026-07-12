@@ -651,8 +651,7 @@ fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
                 shot_stopping: p.attributes.shot_stopping,
                 commanding: p.attributes.commanding,
                 playing_out: p.attributes.playing_out,
-                traits: p.traits.iter().map(|t| format!("{:?
-        }", t)).collect(),
+                traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
                 role: player_roles
                     .and_then(|roles| roles.get(&p.id))
                     .map(domain_to_engine_role)

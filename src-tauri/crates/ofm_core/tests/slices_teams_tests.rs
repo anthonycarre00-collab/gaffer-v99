@@ -49,8 +49,7 @@ fn make_team(id: &str, name: &str, country: &str, city: &str) -> Team {
 fn make_player(id: &str, team_id: Option<&str>, ovr: u8, value: u64) -> Player {
     let mut p = Player::new(
         id.to_string(),
-        format!("{id
-        } short"),
+        format!("{id} short"),
         format!("{id} full"),
         "2000-01-01".to_string(),
         "GB".to_string(),

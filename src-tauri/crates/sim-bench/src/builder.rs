@@ -148,8 +148,7 @@ fn make_player(
     let role = sample_role(position, idx, total_in_position, rng);
 
     PlayerData {
-        id: format!("{team_id
-        }_{pos_label}{idx}"),
+        id: format!("{team_id}_{pos_label}{idx}"),
         name: format!("{pos_label}{idx}"),
         position,
         ovr: avg_ovr,

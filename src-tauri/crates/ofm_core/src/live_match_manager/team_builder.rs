@@ -506,14 +506,11 @@ fn to_engine_player(
         shot_stopping: p.attributes.shot_stopping,
         commanding: p.attributes.commanding,
         playing_out: p.attributes.playing_out,
-        traits: p.traits.iter().map(|t| format!("{:?
-        }", t)).collect(),
+        traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
         role,
             ..Default::default()
         
-    },
-    ..Default::default()
-            ..Default::default()
+    }
         
 }
 

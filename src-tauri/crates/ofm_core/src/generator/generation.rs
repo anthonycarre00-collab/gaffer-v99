@@ -619,8 +619,7 @@ pub(super) fn generate_player_from_def(
 ) -> Player {
     let nationality = canonicalize_generated_nationality(&def.nationality);
     let (first_name, last_name) = resolve_def_name(def, &nationality, names_def, rng);
-    let full_name = format!("{first_name
-        } {last_name}").trim().to_string();
+    let full_name = format!("{first_name} {last_name}").trim().to_string();
     let match_name = if last_name.is_empty() {
         full_name.clone()
     } else {

@@ -435,8 +435,7 @@ fn pagination_returns_requested_window_and_total() {
     for i in 0..7 {
         let mut spec = PlayerSpec::new(
             Box::leak(format!("p{i}").into_boxed_str()),
-            Box::leak(format!("Player {i
-        }").into_boxed_str()),
+            Box::leak(format!("Player {i}").into_boxed_str()),
             Some("t1"),
         );
         spec.ovr = 90 - i as u8;
