@@ -104,10 +104,8 @@ mod tests {
             "ENG".to_string(),
             Position::Midfielder,
             attrs(stamina),
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     #[test]
     fn apply_match_wear_depletes_condition_by_minutes_and_stamina() {

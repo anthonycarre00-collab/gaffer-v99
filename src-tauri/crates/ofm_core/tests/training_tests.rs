@@ -62,10 +62,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 fn make_staff(id: &str, team_id: &str, role: StaffRole, coaching: u8, physio: u8) -> Staff {
     let mut s = Staff::new(

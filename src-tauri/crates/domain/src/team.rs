@@ -147,7 +147,7 @@ pub struct Team {
 
     // History
     pub history: Vec<TeamSeasonRecord>,
-        }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct MatchRoles {
@@ -392,7 +392,7 @@ pub struct TrainingGroup {
     pub player_ids: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TeamColors {
     pub primary: String,
     pub secondary: String,

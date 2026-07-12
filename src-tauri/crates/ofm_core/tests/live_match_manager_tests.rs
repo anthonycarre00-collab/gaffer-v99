@@ -56,10 +56,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 /// Build a full squad of 22 players for a team (4-4-2 formation ready).
 fn make_squad(team_id: &str) -> Vec<Player> {

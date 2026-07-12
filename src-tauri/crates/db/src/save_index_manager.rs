@@ -9,8 +9,7 @@ pub struct SaveIndexManager {
     index_path: PathBuf,
     index: SaveIndex,
     index_needs_rebuild: bool,
-            ..Default::default()
-        }
+}
 
 impl SaveIndexManager {
     pub fn init(saves_dir: &Path) -> Result<Self, String> {

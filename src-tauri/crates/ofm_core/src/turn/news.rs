@@ -822,8 +822,7 @@ mod tests {
             "Test City".to_string(),
             format!("{} Ground", name),
             20_000,
-        ),
-        ..Default::default()
+        )
     }
 
     fn make_manager() -> Manager {

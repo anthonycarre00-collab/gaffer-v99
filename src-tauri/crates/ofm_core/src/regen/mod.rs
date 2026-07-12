@@ -330,10 +330,8 @@ fn dummy_team_for_regen(team_id: &str, team_country: &str) -> domain::team::Team
         "Unknown".to_string(),
         "Unknown Stadium".to_string(),
         0,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 // ============================================================================
 // SEASON HOOKS — called from end_of_season.rs

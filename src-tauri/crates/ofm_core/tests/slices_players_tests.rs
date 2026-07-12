@@ -40,10 +40,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "City".to_string(),
         "Ground".to_string(),
         20_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 struct PlayerSpec<'a> {
     id: &'a str,

@@ -25,8 +25,7 @@ use crate::save_load_error::SaveLoadError;
 pub struct SaveManager {
     saves_dir: PathBuf,
     save_index: SaveIndexManager,
-            ..Default::default()
-        }
+}
 
 const SAVE_MANAGER_UNAVAILABLE_ERROR: &str = "be.error.saveManagerUnavailable";
 const SAVE_DELETE_ERROR: &str = "be.error.saveDeleteFailed";

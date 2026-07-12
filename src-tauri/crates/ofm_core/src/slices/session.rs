@@ -211,10 +211,8 @@ mod tests {
             "London".to_string(),
             "Stadium".to_string(),
             40_000,
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     fn make_fixture(
         id: &str,

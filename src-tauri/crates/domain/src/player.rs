@@ -141,7 +141,7 @@ pub struct Player {
     /// Jersey/squad number (1–99). None means unassigned.
     #[serde(default)]
     pub jersey_number: Option<u8>,
-        }
+}
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PlayerMedia {
@@ -218,7 +218,7 @@ pub enum SquadRole {
 }
 
 // GAFFER PHASE 1 — 19-attribute Body/Ball/Head/Gloves schema
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PlayerAttributes {
     pub pace: u8,
     #[serde(default = "default_attr", alias = "acceleration")]
@@ -362,8 +362,9 @@ pub struct RecentTreatmentMemory {
     pub times_recently_used: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub enum PlayerPromiseKind {
+    #[default]
     PlayingTime,
 }
 
@@ -766,8 +767,9 @@ pub struct LoanOffer {
     pub playtime_guarantee_pct: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub enum LoanOfferStatus {
+    #[default]
     Pending,
     PendingRegistration,
     Accepted,

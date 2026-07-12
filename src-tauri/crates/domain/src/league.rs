@@ -336,8 +336,9 @@ fn default_fixture_importance() -> FixtureImportance {
     FixtureImportance::League
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub enum FixtureStatus {
+    #[default]
     Scheduled,
     InProgress,
     Completed,

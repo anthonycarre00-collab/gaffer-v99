@@ -68,10 +68,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 fn make_game() -> Game {
     let date = Utc.with_ymd_and_hms(2025, 6, 15, 12, 0, 0).unwrap();

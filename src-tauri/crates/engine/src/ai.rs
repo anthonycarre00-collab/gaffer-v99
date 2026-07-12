@@ -7,9 +7,10 @@ use crate::types::{PlayStyle, PlayerData, PlayerRole, Position, Side, Zone};
 // AiPersonality — determines decision-making style
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub enum AiPersonality {
     /// Safe play: subs early for fatigue, incremental style changes.
+    #[default]
     Pragmatist,
     /// Bold: can trigger formation changes after minute 60 when losing.
     Visionary,

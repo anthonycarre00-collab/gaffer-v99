@@ -470,8 +470,7 @@ mod tests {
             "GB".to_string(),
             position,
             attrs,
-        ),
-        ..Default::default()
+        )
     }
 
     fn make_team() -> Team {
@@ -483,10 +482,8 @@ mod tests {
             "London".to_string(),
             "Test Stadium".to_string(),
             25000,
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     fn make_manager() -> Manager {
         Manager::new(
@@ -495,10 +492,8 @@ mod tests {
             "Manager".to_string(),
             "1980-01-01".to_string(),
             "GB".to_string(),
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     #[test]
     fn upgrade_player_identity_infers_granular_defender_profile() {

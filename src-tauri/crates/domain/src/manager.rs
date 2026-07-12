@@ -155,7 +155,7 @@ pub struct Manager {
     /// V99.4 T1.7: Manager personality — drives tactical style, transfers, media.
     #[serde(default = "default_personality")]
     pub personality: ManagerPersonality,
-        }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ManagerCareerStats {
@@ -288,10 +288,8 @@ mod tests {
             "Manager".to_string(),
             "1980-01-01".to_string(),
             "GB".to_string(),
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     #[test]
     fn rating_for_fresh_mid_reputation_manager_is_mid_range() {

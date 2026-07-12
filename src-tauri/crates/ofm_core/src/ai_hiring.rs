@@ -508,10 +508,8 @@ mod tests {
             "Testville".to_string(),
             "Test Ground".to_string(),
             20_000,
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     fn make_staff(
         id: &str,

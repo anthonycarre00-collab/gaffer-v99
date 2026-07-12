@@ -44,8 +44,7 @@ pub struct StateManager {
     pub active_stats: Mutex<Option<StatsState>>,
     pub live_match: Mutex<Option<LiveMatchSession>>,
     pub active_save_id: Mutex<Option<String>>,
-            ..Default::default()
-        }
+}
 
 impl Default for StateManager {
     fn default() -> Self {
@@ -215,10 +214,8 @@ mod tests {
             "London".to_string(),
             "Stadium".to_string(),
             40_000,
-        ),
-            ..Default::default()
-        
-        }
+        )
+    }
 
     fn make_squad(team_id: &str) -> Vec<Player> {
         let mut players = Vec::new();

@@ -14,9 +14,7 @@ fn team(id: &str) -> Team {
         "Town".to_string(),
         "Ground".to_string(),
         20_000,
-    ),
-            ..Default::default()
-        
+    )
 }
 
 /// A save written before the multi-competition system: `league` populated,

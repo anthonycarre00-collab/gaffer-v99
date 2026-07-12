@@ -26,10 +26,8 @@ fn make_team(id: &str, name: &str) -> Team {
         "London".to_string(),
         "Stadium".to_string(),
         40_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 fn make_player(id: &str, name: &str, team_id: &str, pos: Position) -> Player {
     let attrs = PlayerAttributes {

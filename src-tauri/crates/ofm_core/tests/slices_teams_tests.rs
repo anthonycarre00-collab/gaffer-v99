@@ -41,10 +41,8 @@ fn make_team(id: &str, name: &str, country: &str, city: &str) -> Team {
         city.to_string(),
         "Ground".to_string(),
         20_000,
-    ),
-            ..Default::default()
-        
-        }
+    )
+}
 
 fn make_player(id: &str, team_id: Option<&str>, ovr: u8, value: u64) -> Player {
     let mut p = Player::new(

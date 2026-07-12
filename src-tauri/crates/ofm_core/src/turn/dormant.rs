@@ -79,9 +79,7 @@ mod tests {
             "Town".to_string(),
             "Ground".to_string(),
             20_000,
-        ),
-            ..Default::default()
-        
+        )
     }
 
     fn make_dormant_game(today: &str) -> Game {
