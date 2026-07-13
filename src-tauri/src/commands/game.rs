@@ -495,37 +495,14 @@ fn build_game_from_world_data(
             game.competitions = competitions;
             game.extra_translations = extra_translations;
 
-            // NE-1: Re-derive all player traits from attributes.
-            //
-            // The bundled DB contains legacy FIFA trait names (Dribbler, Playmaker,
-            // Poacher, etc.) that were mapped to Gaffer variants via serde aliases.
-            // However, these mappings are semantically incorrect and only 12% of
-            // players have traits in the DB. The compute_traits() function derives
-            // Gaffer-native traits from the 19-attribute schema, which is complete
-            // for all 5,324 players. This replaces FIFA traits with correct ones
-            // and produces traits for 29% of players (2.5x more than the DB).
-            //
-            // We call refresh_player_derived() which recomputes OVR, potential,
-            // traits, and fame. The DB already has correct OVR/potential values,
-            // but refresh_player_derived is idempotent — it will produce the same
-            // OVR/potential while replacing traits with Gaffer-native ones.
+            log::info!("[world] NE-1: Re-deriving traits for {} players", game.players.len());
             let world_start_year = game.clock.start_date.format("%Y").to_string().parse::<u32>().unwrap_or(2024);
             for player in game.players.iter_mut() {
                 ofm_core::player_rating::refresh_player_derived(player, world_start_year);
             }
+            log::info!("[world] NE-1 done");
 
-            // NE-2: Fix team wage budgets.
-            //
-            // The bundled DB sets wage_budget = £500,000/week for ALL teams
-            // regardless of club size. But elite squads cost £3-4M/week, meaning
-            // every club starts 4-7x over budget. This causes immediate financial
-            // crisis and board complaints on day one.
-            //
-            // Fix: set wage_budget to 115% of the squad's total weekly wages,
-            // giving each club a realistic budget with ~15% headroom for new
-            // signings. This is calculated per-team by summing player wages.
-            //
-            // Build a team_id → squad_wages map for O(1) lookup.
+            log::info!("[world] NE-2/4: Fixing wage + transfer budgets for {} teams", game.teams.len());
             let mut team_wage_totals: std::collections::HashMap<String, i64> = std::collections::HashMap::new();
             for player in &game.players {
                 if let Some(ref team_id) = player.team_id {
@@ -534,41 +511,23 @@ fn build_game_from_world_data(
             }
             for team in game.teams.iter_mut() {
                 let squad_wages = team_wage_totals.get(&team.id).copied().unwrap_or(0);
-                // 115% of squad wages — gives ~15% headroom for new signings
                 team.wage_budget = (squad_wages * 115) / 100;
-
-                // NE-4: Fix transfer budget.
-                //
-                // The DB sets transfer_budget = £5,000,000 for all teams. Scale
-                // by reputation (300-900 range): 300 rep = £0, 900 rep = £150M.
-                // Formula: (reputation - 300) * 250,000
-                //   rep 650 (mid-table): £87.5M
-                //   rep 800 (elite):     £125M
-                //   rep 880 (top):       £145M
                 team.transfer_budget = ((team.reputation as i64 - 300) * 250_000).max(0);
             }
+            log::info!("[world] NE-2/4 done");
 
-            // Build the league/division foundations *before* generating history so
-            // each club's past seasons are attributed to its real ~20-team
-            // division. Otherwise history runs with no competitions and treats the
-            // whole world as one mega-league (≈880-match seasons).
+            log::info!("[world] Building competition foundations...");
             ensure_multi_competition_foundations(&mut game);
-            apply_generated_past_history(&mut game, startup_options);
+            log::info!("[world] Competition foundations done ({} competitions, {} national teams)",
+                game.competitions.len(), game.national_teams.len());
 
-            // NE-3/NE-5: Seed AI managers from staff with personalities + correct reputation scale.
-            //
-            // The bundled DB has 0 Game.managers — only Manager-role Staff entries.
-            // seed_ai_managers converts these staff into Manager entities, assigning
-            // each a random personality (V99.4 T1.7) via generate_random_personality().
-            //
-            // The staff→manager conversion in create_seeded_manager (ai_hiring.rs:60)
-            // sets manager.reputation = team.reputation. Team reputations in the DB
-            // are already on the 300-900 scale (e.g. PSG=800, Man City=880), so no
-            // additional scaling is needed — the conversion is correct.
-            //
-            // Without this call, AI managers don't exist during team selection or
-            // the first matchday. They only get seeded on the first save/reload.
+            log::info!("[world] Applying past history (depth={})", startup_options.history_depth_years);
+            apply_generated_past_history(&mut game, startup_options);
+            log::info!("[world] Past history done");
+
+            log::info!("[world] NE-3: Seeding AI managers...");
             ofm_core::ai_hiring::seed_ai_managers(&mut game);
+            log::info!("[world] NE-3 done ({} managers)", game.managers.len());
 
             (game, StatsState::default())
         }
