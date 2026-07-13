@@ -9,10 +9,18 @@ const USER_RIVALRY_SATISFACTION_PENALTY: i32 = 10;
 const USER_RIVALRY_LOOKBACK_DAYS: i64 = 14;
 
 fn manager_seed_staff<'a>(staff: &'a [Staff], team_id: &str) -> Option<&'a Staff> {
+    // NE-3: Prefer Manager-role staff (e.g. Luis Enrique at PSG) when creating
+    // the AI Manager entity. Fall back to AssistantManager, then any staff member.
     staff
         .iter()
         .filter(|member| member.team_id.as_deref() == Some(team_id))
-        .find(|member| member.role == StaffRole::AssistantManager)
+        .find(|member| member.role == StaffRole::Manager)
+        .or_else(|| {
+            staff
+                .iter()
+                .filter(|member| member.team_id.as_deref() == Some(team_id))
+                .find(|member| member.role == StaffRole::AssistantManager)
+        })
         .or_else(|| {
             staff
                 .iter()

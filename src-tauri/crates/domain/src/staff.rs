@@ -30,6 +30,7 @@ pub struct Staff {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum StaffRole {
+    Manager,
     AssistantManager,
     Coach,
     Scout,

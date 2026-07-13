@@ -400,6 +400,12 @@ pub(super) fn generate_random_staff_from_def(
     );
 
     let attributes = match &role {
+        StaffRole::Manager => StaffAttributes {
+            coaching: rng.random_range(60..95),
+            judging_ability: rng.random_range(55..90),
+            judging_potential: rng.random_range(45..85),
+            physiotherapy: rng.random_range(20..50),
+        },
         StaffRole::AssistantManager => StaffAttributes {
             coaching: rng.random_range(50..90),
             judging_ability: rng.random_range(50..85),

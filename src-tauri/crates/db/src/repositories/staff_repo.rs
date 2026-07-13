@@ -46,6 +46,7 @@ pub fn upsert_staff_list(conn: &Connection, staff: &[Staff]) -> Result<(), Strin
 
 fn parse_role(s: &str) -> StaffRole {
     match s {
+        "Manager" => StaffRole::Manager,
         "AssistantManager" => StaffRole::AssistantManager,
         "Coach" => StaffRole::Coach,
         "Scout" => StaffRole::Scout,
