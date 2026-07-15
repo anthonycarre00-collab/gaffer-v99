@@ -119,12 +119,34 @@ struct TeamSnapshot {
 
 fn snapshot_team(game: &Game, team_id: &str, weekday_num: u32) -> TeamSnapshot {
     let team = game.teams.iter().find(|t| t.id == team_id);
-    let (play_style, schedule) = team
+    let (team_play_style, schedule) = team
         .map(|t| (t.play_style.clone(), t.training_schedule.clone()))
         .unwrap_or((
             PlayStyle::Balanced,
             domain::team::TrainingSchedule::Balanced,
         ));
+
+    // P1-6: Use the AI manager's preferred play style (from their personality)
+    // instead of the team's generic play_style. This makes Guardiola-style
+    // managers train teams differently from Allardyce-style managers.
+    // Fall back to the team's play_style if no manager personality is found.
+    let play_style = game
+        .managers
+        .iter()
+        .find(|m| m.team_id.as_deref() == Some(team_id))
+        .map(|m| {
+            // Map TacticalStyle → PlayStyle for training cycle selection
+            use domain::manager::TacticalStyle;
+            match m.personality.tactical_style {
+                TacticalStyle::Possession => PlayStyle::Possession,
+                TacticalStyle::Direct => PlayStyle::Attacking,
+                TacticalStyle::Counter => PlayStyle::Counter,
+                TacticalStyle::Pressing => PlayStyle::HighPress,
+                TacticalStyle::Defensive => PlayStyle::Defensive,
+                TacticalStyle::Balanced => team_play_style.clone(),
+            }
+        })
+        .unwrap_or(team_play_style);
 
     let is_training_day = schedule.is_training_day(weekday_num);
 
