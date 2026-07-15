@@ -1243,11 +1243,11 @@ pub fn club_appeal_score(player: &Player, team: &Team) -> i32 {
 
     // V99.4 Sprint 6: Age factor — veterans (32+) more willing to drop down
     // for guaranteed playing time. Young players (21-) more ambitious.
-    // Age is computed lazily from DOB — we don't have current_date here,
-    // so we approximate from the contract_end year.
+    // P1-5: Use the real current year instead of hardcoded 2026.
     if let Some(dob_str) = player.date_of_birth.get(0..4) {
         if let Ok(birth_year) = dob_str.parse::<i32>() {
-            let approx_age = 2026 - birth_year; // approximate
+            let current_year = chrono::Utc::now().year();
+            let approx_age = current_year - birth_year;
             if approx_age >= 33 {
                 score += 10; // Veterans will drop for playing time
             } else if approx_age <= 21 {

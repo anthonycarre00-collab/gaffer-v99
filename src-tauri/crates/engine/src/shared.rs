@@ -95,11 +95,14 @@ pub(crate) enum TraitContext {
 
 /// Compute a multiplicative trait bonus for a specific action context.
 /// Returns a modifier >= 1.0 (bonus) based on relevant traits.
+/// P1-4: Fixed all trait names to match the PlayerTrait enum variants.
+/// Previously used old FIFA names (Sharpshooter, Dribbler, Playmaker, etc.)
+/// that never matched, making 11 of 20 trait bonuses inert.
 pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
     let mut bonus: f64 = 1.0;
     match context {
         TraitContext::Shooting => {
-            if snap.has_trait("Sharpshooter") {
+            if snap.has_trait("Predator") {
                 bonus *= 1.08;
             }
             if snap.has_trait("CoolHead") {
@@ -110,18 +113,18 @@ pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
             }
         }
         TraitContext::Dribbling => {
-            if snap.has_trait("Dribbler") {
+            if snap.has_trait("Twisty") {
                 bonus *= 1.08;
             }
             if snap.has_trait("Speedster") {
                 bonus *= 1.04;
             }
-            if snap.has_trait("Agile") {
+            if snap.has_trait("Explosive") {
                 bonus *= 1.04;
             }
         }
         TraitContext::Passing => {
-            if snap.has_trait("Playmaker") {
+            if snap.has_trait("Orchestrator") {
                 bonus *= 1.08;
             }
             if snap.has_trait("Visionary") {
@@ -138,7 +141,7 @@ pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
             if snap.has_trait("Rock") {
                 bonus *= 1.05;
             }
-            if snap.has_trait("Tank") {
+            if snap.has_trait("Powerhouse") {
                 bonus *= 1.04;
             }
         }
@@ -149,12 +152,13 @@ pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
             if snap.has_trait("CatReflexes") {
                 bonus *= 1.06;
             }
-            if snap.has_trait("AerialDominance") {
+            if snap.has_trait("Commander") {
                 bonus *= 1.04;
             }
         }
         TraitContext::Foul => {
-            if snap.has_trait("HotHead") {
+            // Explosive = volatile temperament, more likely to commit bad fouls
+            if snap.has_trait("Explosive") {
                 bonus *= 1.25;
             }
             if snap.has_trait("CoolHead") {
@@ -162,14 +166,11 @@ pub(crate) fn trait_bonus(snap: &PlayerSnap, context: TraitContext) -> f64 {
             }
         }
         TraitContext::Midfield => {
-            if snap.has_trait("Engine") {
+            if snap.has_trait("EngineRoom") {
                 bonus *= 1.06;
             }
-            if snap.has_trait("TeamPlayer") {
+            if snap.has_trait("Workhorse") {
                 bonus *= 1.04;
-            }
-            if snap.has_trait("Tireless") {
-                bonus *= 1.03;
             }
         }
     }
