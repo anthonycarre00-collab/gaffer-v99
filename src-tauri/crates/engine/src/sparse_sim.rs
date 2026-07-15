@@ -54,18 +54,28 @@ pub struct SparseMatchResult {
 
 /// Simulate a match sparsely — produces a scoreline + scorers + cards
 /// without running the full per-minute engine.
+///
+/// P2-1: Now accepts weather and fixture_pressure modifiers that affect
+/// goal expectations. Bad weather reduces scoring; high-pressure fixtures
+/// slightly increase it (more attacking intent in big games).
 pub fn simulate_sparse_match<R: Rng>(
     home: &TeamData,
     away: &TeamData,
     rng: &mut R,
+    weather_goal_conversion: f64,
+    fixture_pressure: f64,
 ) -> SparseMatchResult {
     let home_strength = club_strength(home);
     let away_strength = club_strength(away);
 
     // Poisson xG from strength differential.
     let edge = (home_strength - away_strength) / 10.0;
-    let home_xg = (1.3 + 0.25 * edge).clamp(0.2, 4.0);
-    let away_xg = (1.1 - 0.25 * edge).clamp(0.2, 4.0);
+    // P2-1: Apply weather (reduces scoring) and fixture pressure (slightly
+    // increases scoring in big games as teams push for results).
+    let weather_mod = weather_goal_conversion.max(0.7).min(1.1); // clamp to sane range
+    let pressure_mod = fixture_pressure.clamp(0.9, 1.15); // big games = slightly more goals
+    let home_xg = ((1.3 + 0.25 * edge) * weather_mod * pressure_mod).clamp(0.2, 4.0);
+    let away_xg = ((1.1 - 0.25 * edge) * weather_mod * pressure_mod).clamp(0.2, 4.0);
 
     let home_goals = sample_goals(home_xg, rng);
     let away_goals = sample_goals(away_xg, rng);

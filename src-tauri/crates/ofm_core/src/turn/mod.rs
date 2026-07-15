@@ -783,7 +783,7 @@ fn simulate_sparse_ai_match<F>(game: &mut Game, idx: usize, _on_capture: &mut F)
 where
     F: FnMut(StatsState),
 {
-    let (home_team_id, away_team_id, _weather_str, importance) = {
+    let (home_team_id, away_team_id, weather_str, importance) = {
         let league = game.league.as_ref().unwrap();
         let f = &league.fixtures[idx];
         (
@@ -797,8 +797,18 @@ where
     let home_data = build_engine_team(game, &home_team_id);
     let away_data = build_engine_team(game, &away_team_id);
 
+    // P2-1: Pass weather and fixture pressure to sparse sim.
+    let weather_mods = engine::weather_modifiers_for(&weather_str);
+    let pressure_mult = importance.pressure_multiplier();
+
     let mut rng = rand::rng();
-    let result = engine::sparse_sim::simulate_sparse_match(&home_data, &away_data, &mut rng);
+    let result = engine::sparse_sim::simulate_sparse_match(
+        &home_data,
+        &away_data,
+        &mut rng,
+        weather_mods.goal_conversion,
+        pressure_mult,
+    );
 
     // Apply the result to the fixture.
     let today = game.clock.current_date.format("%Y-%m-%d").to_string();
