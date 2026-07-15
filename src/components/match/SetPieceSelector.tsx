@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PlayerData } from "../../store/gameStore";
 import { getAttributeValueClassName } from "../../lib/playerAttributeDisplay";
+import { shortAttrLabel } from "../../lib/attributeInterpretation";
+import { shortOvrLabel } from "../../lib/gafferEngine";
 import { normalisePosition } from "../squad/SquadTab.helpers";
 import { Badge } from "../ui";
 import { ArrowUpDown, Check } from "lucide-react";
@@ -148,7 +150,12 @@ export default function SetPieceSelector({
  </div>
  {currentStats && (
  <div className="hidden flex-wrap items-center justify-end gap-2 md:flex">
- {currentStats.stats.map((s) => (
+ {currentStats.stats.map((s) => {
+ const attrKey = getStatAttributeKey(s.label);
+ const gafferLabel = attrKey
+ ? shortAttrLabel(attrKey as "pace" | "finishing" | "passing" | "vision" | "composure" | "leadership" | "teamwork", s.value)
+ : String(s.value);
+ return (
  <span
  key={s.label}
  title={getTranslatedStatLabel(s.label)}
@@ -158,10 +165,11 @@ export default function SetPieceSelector({
  {getTranslatedStatLabel(s.label)}
  </span>
  <span className={getAttributeValueClassName(s.value)}>
- {s.value}
+ {gafferLabel}
  </span>
  </span>
- ))}
+ );
+ })}
  </div>
  )}
  <ArrowUpDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -194,9 +202,10 @@ export default function SetPieceSelector({
  {getTranslatedPositionAbbreviation(p.position)}
  </Badge>
  <span
- className={`w-7 shrink-0 text-right text-xs font-mono font-mono font-bold tabular-nums ${getAttributeValueClassName(p.spStats.score)}`}
+ className={`w-20 shrink-0 text-right text-xs font-heading font-bold ${getAttributeValueClassName(p.spStats.score)}`}
+ title={`${p.spStats.score}`}
  >
- {p.spStats.score}
+ {shortOvrLabel(p.spStats.score, p.position)}
  </span>
  </button>
  );

@@ -322,7 +322,7 @@ input[type="number"] {
 
 /* ===== Stadium background for main menu ===== */
 .stadium-bg {
-  background-image: url('../assets/stadium-night-bg.png');
+  background-image: url('/src/assets/stadium-night-bg.png');
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
@@ -330,7 +330,7 @@ input[type="number"] {
 
 /* ===== Leather texture for sidebar ===== */
 .leather-texture {
-  background-image: url('../assets/texture-leather-dark.png');
+  background-image: url('/src/assets/texture-leather-dark.png');
   background-size: 256px;
   background-repeat: repeat;
   background-blend-mode: soft-light;
@@ -338,7 +338,7 @@ input[type="number"] {
 
 /* ===== Awards ceremony background ===== */
 .awards-bg {
-  background-image: url('../assets/awards-bg.png');
+  background-image: url('/src/assets/awards-bg.png');
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
@@ -346,7 +346,7 @@ input[type="number"] {
 
 /* ===== Tactics board texture ===== */
 .tactics-board-bg {
-  background-image: url('../assets/texture-tactics-board.png');
+  background-image: url('/src/assets/texture-tactics-board.png');
   background-size: 512px;
   background-repeat: repeat;
   background-blend-mode: soft-light;
@@ -354,7 +354,7 @@ input[type="number"] {
 
 /* ===== Pitch grass texture ===== */
 .pitch-grass-bg {
-  background-image: url('../assets/texture-pitch-grass.png');
+  background-image: url('/src/assets/texture-pitch-grass.png');
   background-size: 512px;
   background-repeat: repeat;
   background-blend-mode: soft-light;
@@ -467,7 +467,7 @@ input[type="number"] {
 
 /* Increase the contrast of existing textures so they're actually visible */
 .stadium-bg {
-  background-image: url('../assets/stadium-night-bg.png');
+  background-image: url('/src/assets/stadium-night-bg.png');
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
@@ -478,7 +478,7 @@ input[type="number"] {
     /* subtle hex pattern overlay */
     repeating-linear-gradient(60deg, rgba(212, 166, 74, 0.03) 0, rgba(212, 166, 74, 0.03) 1px, transparent 1px, transparent 24px),
     repeating-linear-gradient(-60deg, rgba(212, 166, 74, 0.03) 0, rgba(212, 166, 74, 0.03) 1px, transparent 1px, transparent 24px),
-    url('../assets/texture-tactics-board.png');
+    url('/src/assets/texture-tactics-board.png');
   background-size: 48px 48px, 48px 48px, 512px;
   background-repeat: repeat, repeat, repeat;
   background-blend-mode: soft-light, soft-light, soft-light;
@@ -487,7 +487,7 @@ input[type="number"] {
 .pitch-grass-bg {
   background-image:
     repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 24px, rgba(0, 0, 0, 0.04) 24px, rgba(0, 0, 0, 0.04) 48px),
-    url('../assets/texture-pitch-grass.png');
+    url('/src/assets/texture-pitch-grass.png');
   background-size: 48px 48px, 512px;
   background-repeat: repeat, repeat;
   background-blend-mode: soft-light, soft-light;
@@ -504,36 +504,35 @@ input[type="number"] {
 
 /* Inbox/desk tab — subtle paper texture for the desk aesthetic */
 .inbox-paper-bg {
-  background-image: url('../assets/gaffer-ui/inbox-paper-texture.svg');
+  background-image: url('/src/assets/gaffer-ui/inbox-paper-texture.svg');
   background-size: 200px;
   background-repeat: repeat;
-  background-blend-mode: overlay;
 }
 
 /* Player profile hero card — stadium floodlight gradient */
 .player-hero-bg {
-  background-image: url('../assets/gaffer-ui/player-hero-bg.svg');
+  background-image: url('/src/assets/gaffer-ui/player-hero-bg.svg');
   background-size: cover;
   background-position: center;
 }
 
 /* Transfer market — subtle document texture */
 .transfer-market-bg {
-  background-image: url('../assets/gaffer-ui/transfer-market-bg.svg');
+  background-image: url('/src/assets/gaffer-ui/transfer-market-bg.svg');
   background-size: 300px;
   background-repeat: repeat;
 }
 
 /* Scouting dossier — aged paper feel */
 .scouting-dossier-bg {
-  background-image: url('../assets/gaffer-ui/scouting-dossier-texture.svg');
+  background-image: url('/src/assets/gaffer-ui/scouting-dossier-texture.svg');
   background-size: 200px;
   background-repeat: repeat;
 }
 
 /* Card header texture — adds depth to card tops */
 .gaffer-card-header {
-  background-image: url('../assets/gaffer-ui/card-header-texture.svg');
+  background-image: url('/src/assets/gaffer-ui/card-header-texture.svg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -542,21 +541,21 @@ input[type="number"] {
    Uses background-color blending instead of opacity to avoid
    greyout of child elements. */
 .dashboard-stripes-bg {
-  background-image: url('../assets/gaffer-ui/dashboard-stripes-bg.svg');
+  background-image: url('/src/assets/gaffer-ui/dashboard-stripes-bg.svg');
   background-size: 400px;
   background-repeat: repeat;
-  background-color: rgb(249 250 251 / 0.5);
 }
 
 /* Post-match hero — dramatic stadium atmosphere */
 .postmatch-hero-bg {
-  background-image: url('../assets/gaffer-ui/postmatch-hero-bg.svg');
+  background-image: url('/src/assets/gaffer-ui/postmatch-hero-bg.svg');
   background-size: cover;
   background-position: center;
 }
 
-/* Dark-mode adjustments — use reduced background visibility without opacity */
+/* Dark-mode adjustments — disable textures (don't render well on dark) */
 .dark .inbox-paper-bg { background-image: none; }
 .dark .transfer-market-bg { background-image: none; }
 .dark .scouting-dossier-bg { background-image: none; }
 .dark .dashboard-stripes-bg { background-image: none; }
+.dark .player-hero-bg { background-image: none; }
