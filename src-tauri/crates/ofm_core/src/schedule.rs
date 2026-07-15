@@ -8,9 +8,8 @@ use uuid::Uuid;
 
 /// V99.4 T1.5: Derive fixture importance from competition type + team reputations.
 /// Called at fixture creation time to set the importance level.
-/// TODO: Wire into fixture creation sites (currently hardcoded per competition type).
-#[allow(dead_code)]
-fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: u32) -> FixtureImportance {
+/// P1-3: Now public and called via apply_fixture_importance() post-generation.
+pub fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: u32) -> FixtureImportance {
     // Cup finals are the biggest domestic games.
     // Continental finals are the biggest overall.
     // League matches between top teams are "Big League".
@@ -60,6 +59,36 @@ fn derive_importance(competition: &FixtureCompetition, home_rep: u32, away_rep: 
         FixtureCompetition::InternationalClub | FixtureCompetition::InternationalNation => {
             FixtureImportance::Continental
         }
+    }
+}
+
+/// P1-3: Apply smart fixture importance to all scheduled fixtures in a competition.
+///
+/// Called after fixtures are generated (which hardcodes League/Cup/Friendly).
+/// This overrides those with reputation-aware importance levels:
+/// - Top-6 league clashes → BigLeague (pressure multiplier 1.5)
+/// - Elite cup ties → BigLeague
+/// - Continental matches with elite teams → Continental (1.8)
+/// - International matches → Continental (1.8)
+///
+/// `team_reputations` maps team_id → reputation (300-900 scale).
+pub fn apply_fixture_importance(
+    competition: &mut League,
+    team_reputations: &std::collections::HashMap<String, u32>,
+) {
+    for fixture in competition.fixtures.iter_mut() {
+        if fixture.status != FixtureStatus::Scheduled {
+            continue;
+        }
+        let home_rep = team_reputations.get(&fixture.home_team_id).copied().unwrap_or(500);
+        let away_rep = team_reputations.get(&fixture.away_team_id).copied().unwrap_or(500);
+        fixture.importance = derive_importance(&fixture.competition, home_rep, away_rep);
+    }
+    // Also apply to knockout round fixtures
+    for round in competition.knockout_rounds.iter_mut() {
+        // Knockout round fixtures are stored in the main fixtures vec, so they're
+        // already covered above. No additional work needed.
+        let _ = round; // suppress unused warning
     }
 }
 

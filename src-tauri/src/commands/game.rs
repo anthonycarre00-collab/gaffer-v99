@@ -1181,11 +1181,22 @@ fn finalize_brazil_state_competition(competition: &mut League) {
 fn build_foundation_competitions(game: &Game) -> Vec<League> {
     let game_start = game.clock.start_date;
     let season = preseason_league_year(&game.clock);
+
+    // P1-3: Build team reputation lookup for smart fixture importance.
+    let team_reputations: std::collections::HashMap<String, u32> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.reputation))
+        .collect();
+
     build_foundation_competition_plan(game, game_start)
         .iter()
         .filter_map(|(def, start)| {
             let mut competition =
                 ofm_core::generator::build_explicit_competition(def, season, *start)?;
+            // P1-3: Apply reputation-aware fixture importance (overrides
+            // hardcoded League/Cup/Friendly with BigLeague/Continental etc.)
+            ofm_core::schedule::apply_fixture_importance(&mut competition, &team_reputations);
             // FM-style: if this competition's season already began before the game
             // anchor date, simulate the missing matchdays so the player joins a
             // living in-progress season rather than a blank table.
@@ -1206,6 +1217,12 @@ fn build_foundation_competitions(game: &Game) -> Vec<League> {
 
 fn rebuild_competitions_for_management_date(game: &mut Game, management_date: DateTime<Utc>) {
     let players = &game.players;
+    // P1-3: Build team reputation lookup for smart fixture importance
+    let team_reputations: std::collections::HashMap<String, u32> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.reputation))
+        .collect();
     for competition in &mut game.competitions {
         // International tournaments (the World Cup and its qualifying) own a fixed
         // calendar tied to the cup year, not the club's hemisphere. Re-anchoring
@@ -1236,6 +1253,8 @@ fn rebuild_competitions_for_management_date(game: &mut Game, management_date: Da
         if is_mid_season {
             ofm_core::catchup::simulate_past_fixtures(competition, players, management_date);
         }
+        // P1-3: Apply smart fixture importance after regeneration
+        ofm_core::schedule::apply_fixture_importance(competition, &team_reputations);
     }
 
     let existing: std::collections::HashSet<String> = game
