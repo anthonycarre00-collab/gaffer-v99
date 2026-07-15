@@ -2,7 +2,7 @@
   "app": {
     "name": "Gaffer",
     "publisher": "Sturdy Robot",
-    "version": "v0.3.0-dev.23 (V99.7)"
+    "version": "v0.3.0-dev.24 (V99.7)"
   },
   "menu": {
     "newGame": "New Career",
@@ -2558,11 +2558,11 @@
         "Dragged wide! That's a bad miss — he knows it too."
       ],
       "tackle": [
-        "Crunching tackle! That's how you win the ball back!",
-        "He's won it cleanly! A defender's tackle.",
-        "Rock solid at the back — nobody's getting past him today.",
-        "Big tackle! That's lifted the whole team!",
-        "Reads it perfectly and wins the ball. Class defending."
+        "Crunching tackle from {{player}} — that's how you win it back!",
+        "{{player}} wins it cleanly — proper defender's tackle.",
+        "Big tackle from {{player}} — that's lifted the whole team!",
+        "{{player}} reads it and wins the ball. Class.",
+        "Hard but fair from {{player}} — sets the tone."
       ],
       "card": [
         "Yellow card. Reckless challenge — he can have no complaints.",
@@ -2643,13 +2643,6 @@
         "{{player}} arcs it towards the back post — good delivery.",
         "Into the mixer from {{player}} — the big lads are up.",
         "{{player}} hangs up a cross — begging to be attacked."
-      ],
-      "tackle": [
-        "Crunching tackle from {{player}} — that's how you win it back!",
-        "{{player}} wins it cleanly — proper defender's tackle.",
-        "Big tackle from {{player}} — that's lifted the whole team!",
-        "{{player}} reads it and wins the ball. Class.",
-        "Hard but fair from {{player}} — sets the tone."
       ],
       "interception": [
         "{{player}} cuts it out — reads the danger perfectly.",
@@ -3601,17 +3594,26 @@
           "homeWin": {
             "0": "{{home}} {{homeGoals}} - {{awayGoals}} {{away}}: Hosts Triumph",
             "1": "{{home}} Edge Past {{away}} in Matchday {{matchday}}",
-            "2": "Clinical {{home}} See Off {{away}}"
+            "2": "Clinical {{home}} See Off {{away}}",
+            "3": "{{home}} Rout {{away}} in One-Sided Affair",
+            "4": "No Way Through for {{away}} as {{home}} Dominate",
+            "5": "{{home}} Make It Count at Home Against {{away}}"
           },
           "awayWin": {
             "0": "{{home}} {{homeGoals}} - {{awayGoals}} {{away}}: Visitors Strike",
             "1": "{{away}} Stun {{home}} on the Road",
-            "2": "Away Day Delight for {{away}}"
+            "2": "Away Day Delight for {{away}}",
+            "3": "{{away}} Walk Away With the Points at {{home}}",
+            "4": "Shock for {{home}} as {{away}} Pick Them Apart",
+            "5": "{{away}} Silence the Home Crowd With Clinical Display"
           },
           "draw": {
             "0": "{{home}} {{homeGoals}} - {{awayGoals}} {{away}}: Honours Even",
             "1": "{{home}} and {{away}} Share the Spoils",
-            "2": "Stalemate at {{home}}'s Ground"
+            "2": "Stalemate at {{home}}'s Ground",
+            "3": "Neither Side Can Find a Winner at {{home}}",
+            "4": "Points Shared as {{home}} and {{away}} Cancel Each Other Out",
+            "5": "Frustration for Both Sides in Goalless Stalemate"
           }
         },
         "body0": "In Matchday {{matchday}} action, the match ended {{home}} {{homeGoals}} - {{awayGoals}} {{away}}. The result could have implications on the league standings as the season progresses.\n\nGoals: {{scorers}}",

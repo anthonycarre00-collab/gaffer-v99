@@ -601,7 +601,7 @@ export default function Dashboard(): JSX.Element {
  <FiredModal />
 
  {/* Main Content Area */}
- <main className="flex-1 flex flex-col h-screen overflow-hidden">
+ <main className="flex-1 flex flex-col h-screen overflow-hidden dashboard-stripes-bg">
  <DashboardHeader
  activeTabLabel={activeTabLabel}
  currentDate={currentDate}

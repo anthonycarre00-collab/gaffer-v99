@@ -829,13 +829,15 @@ export default function TacticsTab({
  tacticName={activeTactic?.name}
  />
 
- {/* V99: Sub-tab navigation */}
+ {/* V99.7-7: Sub-tab navigation — removed "Set Pieces" tab since set pieces
+     are always visible in the right panel alongside the Phase Blueprint.
+     Three tabs: Pitch (formation + roles), Selection (squad management),
+     Style (playing style + guidance). */}
  <div className="flex gap-1 border-b border-gray-200 dark:border-navy-600">
  {([
  { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
  { id: "selection", label: t("tactics.subTabs.selection", { defaultValue: "Selection" }) },
  { id: "style", label: t("tactics.subTabs.style", { defaultValue: "Style" }) },
- { id: "setPieces", label: t("tactics.subTabs.setPieces", { defaultValue: "Set Pieces" }) },
  ] as const).map((tab) => (
  <button
  key={tab.id}
@@ -876,17 +878,17 @@ export default function TacticsTab({
  tacticLibrary={tacticLibrary}
  />
 
- {/* V99.2: Tab-conditional layout — tighter gaps (gap-4 vs gap-5) and
-     wider center column for the pitch. Style tab now uses a 2-column
-     layout with style guidance on the left and phase blueprint on the right
-     (no longer leaves the right side empty). */}
+ {/* V99.7-7: Tab-conditional layout — wider center column for the pitch
+     (was 260px_1fr_280px, now 240px_1fr_300px for pitch tab to give the
+     formation pitch more room). Style tab uses 2-column with guidance
+     on left and blueprint on right. */}
  <div className={`grid grid-cols-1 gap-4 xl:items-start ${
  activeSubTab === "pitch"
- ? "xl:grid-cols-[260px_1fr_280px]"
+ ? "xl:grid-cols-[240px_1fr_300px]"
  : activeSubTab === "selection"
- ? "xl:grid-cols-[1fr_280px]"
+ ? "xl:grid-cols-[1fr_300px]"
  : activeSubTab === "style"
- ? "xl:grid-cols-[1fr_320px]"
+ ? "xl:grid-cols-[1fr_340px]"
  : "xl:grid-cols-1"
  }`}>
  {/* Left: player list — shown in pitch + selection tabs */}
@@ -975,8 +977,9 @@ export default function TacticsTab({
  />
  )}
 
- {/* Right: roles + phase blueprint — shown in pitch + style + setPieces tabs */}
- {(activeSubTab === "pitch" || activeSubTab === "style" || activeSubTab === "setPieces") && (
+ {/* V99.7-7: Right panel — Phase Blueprint + Set Pieces + Roles.
+     Shown on pitch + style tabs (setPieces tab was removed). */}
+ {(activeSubTab === "pitch" || activeSubTab === "style") && (
  <TacticsRightPanel
  allSquad={roster}
  matchRoles={team.match_roles}

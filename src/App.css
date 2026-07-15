@@ -497,3 +497,69 @@ input[type="number"] {
 .dark .stadium-bg { opacity: 0.4; }
 .dark .tactics-board-bg { opacity: 0.6; }
 .dark .pitch-grass-bg { opacity: 0.5; }
+
+/* V99.7-10: Additional texture classes for UI makeover.
+   These use the SVG textures in src/assets/gaffer-ui/ that were
+   created but never wired into CSS. */
+
+/* Inbox/desk tab — subtle paper texture for the desk aesthetic */
+.inbox-paper-bg {
+  background-image: url('../assets/gaffer-ui/inbox-paper-texture.svg');
+  background-size: 200px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+}
+
+/* Player profile hero card — stadium floodlight gradient */
+.player-hero-bg {
+  background-image: url('../assets/gaffer-ui/player-hero-bg.svg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Transfer market — subtle document texture */
+.transfer-market-bg {
+  background-image: url('../assets/gaffer-ui/transfer-market-bg.svg');
+  background-size: 300px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+/* Scouting dossier — aged paper feel */
+.scouting-dossier-bg {
+  background-image: url('../assets/gaffer-ui/scouting-dossier-texture.svg');
+  background-size: 200px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+/* Card header texture — adds depth to card tops */
+.gaffer-card-header {
+  background-image: url('../assets/gaffer-ui/card-header-texture.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* Dashboard stripes — subtle background pattern for the workspace */
+.dashboard-stripes-bg {
+  background-image: url('../assets/gaffer-ui/dashboard-stripes-bg.svg');
+  background-size: 400px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+  opacity: 0.3;
+}
+
+/* Post-match hero — dramatic stadium atmosphere */
+.postmatch-hero-bg {
+  background-image: url('../assets/gaffer-ui/postmatch-hero-bg.svg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Dark-mode adjustments for new textures */
+.dark .inbox-paper-bg { opacity: 0.3; }
+.dark .transfer-market-bg { opacity: 0.4; }
+.dark .scouting-dossier-bg { opacity: 0.3; }
+.dark .dashboard-stripes-bg { opacity: 0.15; }

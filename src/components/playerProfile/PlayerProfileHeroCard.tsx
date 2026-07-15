@@ -66,7 +66,7 @@ export default function PlayerProfileHeroCard({
 
  return (
  <Card accent="primary" className="mb-5">
- <div className="bg-linear-to-r p-8 rounded-t-xl">
+ <div className="player-hero-bg p-8 rounded-t-xl">
  <div className="flex items-start gap-6">
  <PlayerAvatar
  player={player}

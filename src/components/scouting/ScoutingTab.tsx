@@ -201,7 +201,7 @@ export default function ScoutingTab({
  };
 
  return (
- <div className="flex flex-col gap-5">
+ <div className="flex flex-col gap-5 scouting-dossier-bg">
  {/* Header */}
  <div className="flex items-center gap-3">
  <ScanSearch className="w-5 h-5 text-primary-500" />
