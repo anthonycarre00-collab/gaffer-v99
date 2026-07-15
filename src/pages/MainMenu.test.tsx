@@ -140,37 +140,7 @@ vi.mock("../components/menu/SavesList", () => ({
   ),
 }));
 
-vi.mock("../components/menu/PackageBuildStep", () => ({
-  default: ({
-    onNext,
-    onTogglePackage,
-    onInstallPackage,
-    installedPackages,
-  }: {
-    onNext: () => void;
-    onTogglePackage: (id: string) => void;
-    onInstallPackage: () => void;
-    installedPackages: Array<{ id: string }>;
-  }) => (
-    <div data-testid="package-build-step">
-      {installedPackages.map((pkg) => (
-        <button
-          key={pkg.id}
-          type="button"
-          onClick={() => onTogglePackage(pkg.id)}
-        >
-          {`toggle-${pkg.id}`}
-        </button>
-      ))}
-      <button type="button" onClick={onInstallPackage}>
-        install-package
-      </button>
-      <button type="button" onClick={onNext}>
-        package-next
-      </button>
-    </div>
-  ),
-}));
+// PackageBuildStep removed in V99.5 — mock deleted along with the component
 
 vi.mock("../components/menu/WorldSelect", () => ({
   default: ({
