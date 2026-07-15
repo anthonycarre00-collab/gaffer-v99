@@ -412,21 +412,28 @@ const POSITION_ATTRIBUTE_OVERRIDES: Record<string, Partial<Record<AttributeKey, 
  aerial: { short: "Claiming", description: "Comes for crosses and claims the ball under pressure." },
  pace: { short: "Off the Line", description: "How quick he is off his line to sweep up." },
  burst: { short: "Reactions", description: "First-step reactions to shots — getting down quickly." },
+ touch: { short: "Ball Control", description: "Control under pressure when claiming back-passes." },
+ passing: { short: "Distribution", description: "How accurately he starts attacks from the back." },
  },
  Defender: {
- // Defenders' finishing is a nice-to-have but not critical
  finishing: { short: "For Set Pieces", description: "Useful at set pieces — not relied upon in open play." },
+ pace: { short: "Recovery Pace", description: "Can he catch a striker if caught up the pitch?" },
+ burst: { short: "First Step", description: "How quickly he closes down attackers." },
+ touch: { short: "Ball Playing", description: "Composed on the ball when playing out from the back." },
  },
  Midfielder: {
- // Midfielders' aerial is mainly for defensive headers
  aerial: { short: "Aerial Duels", description: "Wins his share of headers in midfield battles." },
+ finishing: { short: "Arriving Late", description: "Can he finish when he gets into the box?" },
+ defending: { short: "Ball Winning", description: "Tackles and intercepts in the middle of the park." },
  },
  Forward: {
- // Forwards' defending is press-and-harass, not block-and-tackle
  defending: { short: "Pressing", description: "Pressing from the front — harries defenders into mistakes." },
  shot_stopping: { short: "N/A", description: "Not his job — he's at the other end." },
  commanding: { short: "N/A", description: "Not his role." },
  playing_out: { short: "N/A", description: "Not his role." },
+ aerial: { short: "In the Box", description: "How dangerous he is from crosses and set pieces." },
+ pace: { short: "In Behind", description: "Can he get in behind the defensive line?" },
+ passing: { short: "Link-up", description: "How well he combines with teammates in the final third." },
  },
 };
 

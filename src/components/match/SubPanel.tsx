@@ -8,7 +8,8 @@ import {
 import { getPlayerName } from "./helpers";
 import { FormationPitch } from "./FormationPitch";
 import { condBgColor, condColor } from "../../lib/playerConditionDisplay";
-import { shortOvrLabel, interpretOvr } from "../../lib/gafferEngine";
+import { shortOvrLabel, interpretOvr, interpretCondition } from "../../lib/gafferEngine";
+import { shortAttrLabel } from "../../lib/attributeInterpretation";
 import { Badge, Select } from "../ui";
 import {
  RefreshCw,
@@ -424,9 +425,10 @@ export function SubPanel({
  />
  </div>
  <span
- className={`w-7 text-right font-heading text-xs tabular-nums ${condColor(p.condition)}`}
+ className={`w-16 text-right font-heading text-xs ${condColor(p.condition)}`}
+ title={interpretCondition(Math.round(p.condition)).description}
  >
- {Math.round(p.condition)}
+ {interpretCondition(Math.round(p.condition)).short}
  </span>
  </div>
  </td>
@@ -545,9 +547,10 @@ export function SubPanel({
  />
  </div>
  <span
- className={`w-7 text-right font-heading text-xs tabular-nums ${condColor(p.condition)}`}
+ className={`w-16 text-right font-heading text-xs ${condColor(p.condition)}`}
+ title={interpretCondition(Math.round(p.condition)).description}
  >
- {Math.round(p.condition)}
+ {interpretCondition(Math.round(p.condition)).short}
  </span>
  </div>
  </td>
@@ -669,9 +672,9 @@ export function SubPanel({
  </button>
  </div>
  </div>
- {/* Attribute comparison bars — V99.3: OVR uses Gaffer label,
-     individual attributes keep raw numbers since they're genuine
-     stat comparisons the manager needs to see exactly. */}
+ {/* V99.7-4: Attribute comparison bars — all use Gaffer-voice labels,
+     no raw numbers shown. The bar widths still use the underlying values
+     for visual comparison, but the text shows interpretation tiers. */}
  <div className="grid grid-cols-2 gap-x-4">
  <CompareBar
  label="OVR"
@@ -684,26 +687,36 @@ export function SubPanel({
  label="PAC"
  valA={selectedPlayer.pace}
  valB={comparedPlayer.pace}
+ displayA={shortAttrLabel("pace", selectedPlayer.pace)}
+ displayB={shortAttrLabel("pace", comparedPlayer.pace)}
  />
  <CompareBar
  label="PAS"
  valA={selectedPlayer.passing}
  valB={comparedPlayer.passing}
+ displayA={shortAttrLabel("passing", selectedPlayer.passing)}
+ displayB={shortAttrLabel("passing", comparedPlayer.passing)}
  />
  <CompareBar
  label="SHO"
  valA={selectedPlayer.shooting}
  valB={comparedPlayer.shooting}
+ displayA={shortAttrLabel("finishing", selectedPlayer.shooting)}
+ displayB={shortAttrLabel("finishing", comparedPlayer.shooting)}
  />
  <CompareBar
  label="TAC"
  valA={selectedPlayer.tackling}
  valB={comparedPlayer.tackling}
+ displayA={shortAttrLabel("defending", selectedPlayer.tackling)}
+ displayB={shortAttrLabel("defending", comparedPlayer.tackling)}
  />
  <CompareBar
  label="COND"
  valA={Math.round(selectedPlayer.condition)}
  valB={Math.round(comparedPlayer.condition)}
+ displayA={interpretCondition(Math.round(selectedPlayer.condition)).short}
+ displayB={interpretCondition(Math.round(comparedPlayer.condition)).short}
  />
  </div>
  </div>

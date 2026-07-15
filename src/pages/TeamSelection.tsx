@@ -18,6 +18,7 @@ import {
 } from "../store/gameStore";
 import { countryName } from "../lib/countries";
 import { formatVal, getActiveCompetitions, getPlayerOvr } from "../lib/helpers";
+import { shortOvrLabel } from "../lib/gafferEngine";
 import { buildRegionLabel, inferRegionId } from "../lib/teamRegions";
 import { competitionDisplayName } from "../lib/competitionName";
 import { Badge, Card, CardBody, Checkbox, Select, TeamLocation, TeamLogo, ThemeToggle } from "../components/ui";
@@ -919,8 +920,8 @@ export default function TeamSelection() {
  icon={<Star className="h-3.5 w-3.5" />}
  label={t("teamSelect.avgOvr")}
  value={
- <span className="font-heading text-lg font-bold text-primary-500">
- {avgOvr}
+ <span className="font-heading text-lg font-bold text-primary-500" title={`${avgOvr}`}>
+ {shortOvrLabel(avgOvr, "Midfielder")}
  </span>
  }
  />
@@ -965,7 +966,7 @@ export default function TeamSelection() {
  <DetailTile
  icon={<Shield className="h-4 w-4" />}
  label={t("teamSelect.overall")}
- value={String(getTeamAvgOvr(selectedTeam.id))}
+ value={shortOvrLabel(getTeamAvgOvr(selectedTeam.id), "Midfielder")}
  />
  <DetailTile
  icon={<Users className="h-4 w-4" />}
