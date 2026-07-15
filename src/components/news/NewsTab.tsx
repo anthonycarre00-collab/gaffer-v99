@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { GameStateData, NewsArticle } from "../../store/gameStore";
 import {
- Newspaper,
- Trophy,
  BarChart3,
  TrendingUp,
  ArrowLeftRight,
@@ -23,10 +21,11 @@ import { fetchNewsFeed, type NewsFeed } from "../../services/newsService";
 import { isNewsArticleVisible } from "../../utils/newsVisibility";
 import { formatMatchDate as fmtMatchDate } from "../../lib/helpers";
 import { spinHeadline, spinClassName } from "../../lib/newsSpinner";
+import { NewspaperIcon as GafferNewspaperIcon, TrophyRibbonsIcon as GafferTrophyIcon } from "../ui/icons/GafferIcons";
 
 const CAT_ICONS: Record<string, React.ReactNode> = {
- MatchReport: <Newspaper className="w-4 h-4" />,
- LeagueRoundup: <Trophy className="w-4 h-4" />,
+ MatchReport: <GafferNewspaperIcon size={16} />,
+ LeagueRoundup: <GafferTrophyIcon size={16} />,
  StandingsUpdate: <BarChart3 className="w-4 h-4" />,
  TransferRumour: <TrendingUp className="w-4 h-4" />,
  TransferRoundup: <ArrowLeftRight className="w-4 h-4" />,
@@ -167,7 +166,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  if (sortedNews.length === 0) {
  return (
  <div className="text-center py-16">
- <Newspaper className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
+ <GafferNewspaperIcon size={48} className="text-gray-300 dark:text-navy-600 mx-auto mb-3" />
  <p className="text-gray-500 dark:text-gray-400 text-sm">
  {t("news.noNews")}
  </p>

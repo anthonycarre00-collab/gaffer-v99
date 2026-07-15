@@ -6,22 +6,26 @@ import {
  MailIcon,
  SettingsIcon,
  CrosshairIcon,
- Dumbbell,
- DollarSign,
- Eye,
  TrophyIcon,
  GlobeIcon,
  ClipboardIcon,
  UserCog,
  Building2,
  LogOut,
- GraduationCap,
  PanelLeftClose,
  PanelLeftOpen,
  StarIcon,
- TrendingUp,
  User,
 } from "../ui/icons";
+// Gaffer custom icons — football-specific replacements for generic lucide icons
+import {
+ ConesIcon as GafferConesIcon,
+ BinocularsIcon as GafferBinocularsIcon,
+ AcademyGateIcon as GafferAcademyIcon,
+ WageSlipIcon as GafferWageIcon,
+ TransferDocIcon as GafferTransferIcon,
+ TrophyRibbonsIcon as GafferTrophyIcon,
+} from "../ui/icons/GafferIcons";
 
 interface DashboardSidebarProps {
  activeTab: string;
@@ -121,16 +125,16 @@ export default function DashboardSidebar({
  const clubItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
  { icon: <UsersIcon />, label: t("dashboard.squad"), tab: "Squad" },
  { icon: <CrosshairIcon />, label: t("dashboard.tactics"), tab: "Tactics" },
- { icon: <Dumbbell />, label: t("dashboard.training"), tab: "Training" },
+ { icon: <GafferConesIcon />, label: t("dashboard.training"), tab: "Training" },
  { icon: <UserCog />, label: t("dashboard.staff"), tab: "Staff" },
- { icon: <Eye />, label: t("dashboard.scouting"), tab: "Scouting" },
+ { icon: <GafferBinocularsIcon />, label: t("dashboard.scouting"), tab: "Scouting" },
  {
- icon: <GraduationCap />,
+ icon: <GafferAcademyIcon />,
  label: t("dashboard.youthAcademy"),
  tab: "Youth",
  },
- { icon: <DollarSign />, label: t("dashboard.finances"), tab: "Finances" },
- { icon: <TrendingUp />, label: t("dashboard.transfers"), tab: "Transfers" },
+ { icon: <GafferWageIcon />, label: t("dashboard.finances"), tab: "Finances" },
+ { icon: <GafferTransferIcon />, label: t("dashboard.transfers"), tab: "Transfers" },
  ];
  const worldItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
  { icon: <GlobeIcon />, label: t("transfers.centre"), tab: "TransferCentre" },
@@ -139,7 +143,7 @@ export default function DashboardSidebar({
  { icon: <User />, label: t("dashboard.managers"), tab: "Managers" },
  { icon: <Building2 />, label: t("dashboard.teams"), tab: "Teams" },
  {
- icon: <TrophyIcon />,
+ icon: <GafferTrophyIcon />,
  label: t("dashboard.tournaments"),
  tab: "Tournaments",
  },
