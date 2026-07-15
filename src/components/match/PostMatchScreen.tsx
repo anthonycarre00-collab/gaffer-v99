@@ -247,7 +247,7 @@ export default function PostMatchScreen({
  ? "bg-linear-to-r from-primary-100 via-white to-primary-100 dark:from-primary-900/50 dark:via-navy-900 dark:to-primary-900/50"
  : resultType === "loss"
  ? "bg-linear-to-r from-red-100 via-white to-red-100 dark:from-red-900/30 dark:via-navy-900 dark:to-red-900/30"
- : "bg-linear-to-r from-gray-200 via-white to-gray-200 dark: dark:via-navy-900 dark:"
+ : "bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800"
  }`}
  >
  <div className="text-center relative">

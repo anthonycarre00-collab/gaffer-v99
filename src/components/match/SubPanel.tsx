@@ -190,7 +190,7 @@ export function SubPanel({
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
- <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-100 to-white px-5 py-3 dark:border-navy-700 dark: dark:">
+ <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-100 to-white px-5 py-3 dark:border-navy-700 dark:bg-navy-800">
  <div className="flex items-center gap-2.5">
  <RefreshCw className="h-4 w-4 text-accent-400" />
  <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">

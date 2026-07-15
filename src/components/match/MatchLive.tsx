@@ -194,7 +194,7 @@ export default function MatchLive({
 
  return (
  <MatchScreenLayout
- headerClassName="bg-linear-to-r from-gray-200 via-white to-gray-200 dark: dark:via-navy-900 dark:"
+ headerClassName="bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800"
  headerContentClassName="max-w-7xl py-3"
  contentClassName="overflow-hidden"
  header={

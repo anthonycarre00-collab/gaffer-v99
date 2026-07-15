@@ -394,8 +394,8 @@ export default function Dashboard(): JSX.Element {
  label: t("continueMenu.goToField"),
  icon: <Flag className="w-4 h-4" />,
  desc: t("continueMenu.goToFieldDesc"),
- buttonColorClass: " ",
- dropdownColorClass: " ",
+ buttonColorClass: "bg-primary-500 hover:bg-primary-600",
+ dropdownColorClass: "bg-primary-600 hover:bg-primary-700",
  },
  spectator: {
  label: t("continueMenu.watchSpectator"),

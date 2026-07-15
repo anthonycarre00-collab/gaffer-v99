@@ -46,7 +46,7 @@ export default function ScoutPlayerCard({ report, onPlayerClick }: ScoutPlayerCa
  return (
  <div
  onClick={() => onPlayerClick?.(report.player_id)}
- className={`mt-4 rounded border border-gray-200 dark:border-navy-600 from-gray-50 to-white dark: dark: overflow-hidden ${onPlayerClick ? "cursor-pointer hover:border-primary-400 dark:hover:border-primary-500 hover: transition-all" : ""
+ className={`mt-4 rounded border border-gray-200 dark:border-navy-600 from-gray-50 to-white dark:bg-navy-800 overflow-hidden ${onPlayerClick ? "cursor-pointer hover:border-primary-400 dark:hover:border-primary-500 hover: transition-all" : ""
  }`}
  >
  {/* Header */}

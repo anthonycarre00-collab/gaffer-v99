@@ -442,7 +442,7 @@ export default function PressConference({
  return (
  <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
  {/* Header */}
- <header className="bg-linear-to-r from-gray-200 via-white to-gray-200 dark: dark:via-navy-900 dark: border-b border-gray-200 dark:border-navy-700 px-4 py-6 transition-colors duration-300">
+ <header className="bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800 border-b border-gray-200 dark:border-navy-700 px-4 py-6 transition-colors duration-300">
  <div className="max-w-3xl mx-auto text-center relative">
  <ThemeToggle className="absolute right-0 top-0" />
  <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-200 dark:bg-navy-700 rounded-full mb-3 transition-colors duration-300">
