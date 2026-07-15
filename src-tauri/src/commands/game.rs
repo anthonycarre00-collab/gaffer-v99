@@ -529,8 +529,46 @@ fn build_game_from_world_data(
             ofm_core::ai_hiring::seed_ai_managers(&mut game);
             log::info!("[world] NE-3 done ({} managers)", game.managers.len());
 
+            // P0-4: Prune excessive news/messages at game start.
+            //
+            // seed_ai_managers generates 184 news articles (managerial appointments).
+            // seed_opening_ai_loan_market (called later in bootstrap) generates ~366 more.
+            // These are world-building news, not user-facing inbox messages.
+            // But if the frontend shows them all at once, it causes performance issues.
+            //
+            // Cap news at 200 most recent articles. Messages should be 0 at this point
+            // (they're generated during gameplay, not world creation).
+            if game.news.len() > 200 {
+                let start = game.news.len() - 200;
+                game.news = game.news[start..].to_vec();
+                log::info!("[world] Pruned news to 200 most recent articles");
+            }
+            log::info!("[world] Game ready: {} teams, {} players, {} staff, {} managers, {} news, {} messages",
+                game.teams.len(), game.players.len(), game.staff.len(),
+                game.managers.len(), game.news.len(), game.messages.len());
+
             (game, StatsState::default())
         }
+    }
+}
+
+/// P0-4: Cap messages and news arrays sent to the frontend.
+///
+/// The full Game state is serialized via Tauri IPC. Large message/news arrays
+/// cause serialization overhead and frontend performance issues. The backend
+/// keeps the full arrays in the StateManager; the frontend can paginate via
+/// get_messages_page and get_news_feed commands.
+fn cap_messages_and_news(game: &mut Game) {
+    const MAX_MESSAGES: usize = 100;
+    const MAX_NEWS: usize = 200;
+
+    if game.messages.len() > MAX_MESSAGES {
+        let start = game.messages.len() - MAX_MESSAGES;
+        game.messages = game.messages[start..].to_vec();
+    }
+    if game.news.len() > MAX_NEWS {
+        let start = game.news.len() - MAX_NEWS;
+        game.news = game.news[start..].to_vec();
     }
 }
 
@@ -1867,11 +1905,24 @@ pub async fn start_new_game(
 
     new_game.package_lockfile = package_lockfile;
 
+    // P0-4: Limit messages and news returned to the frontend.
+    //
+    // The full game state is serialized and sent to the frontend via Tauri IPC.
+    // With 5000+ messages, this causes significant serialization overhead and
+    // frontend performance issues (deriveSessionState filters all messages
+    // on every state update).
+    //
+    // We cap the arrays sent to the frontend. The backend keeps the full arrays
+    // in memory; the frontend can paginate via get_messages_page / get_news_feed.
+    cap_messages_and_news(&mut new_game);
+
     info!(
-        "[cmd] start_new_game: world generated with {} teams, {} players, {} staff",
+        "[cmd] start_new_game: world generated with {} teams, {} players, {} staff, {} messages, {} news",
         new_game.teams.len(),
         new_game.players.len(),
-        new_game.staff.len()
+        new_game.staff.len(),
+        new_game.messages.len(),
+        new_game.news.len()
     );
     state.set_game(new_game.clone());
     state.set_stats_state(stats_state);
@@ -1935,6 +1986,8 @@ pub async fn select_team(
     let save_id = create_new_save(&mut sm, &game, &stats_state, &save_name)?;
     state.set_save_id(save_id);
 
+    // P0-4: Cap messages/news before sending to frontend
+    cap_messages_and_news(&mut game);
     state.set_game(game.clone());
     state.set_stats_state(stats_state);
     Ok(game)
@@ -1986,9 +2039,12 @@ pub async fn load_game(
 #[tauri::command]
 pub async fn get_active_game(state: State<'_, Arc<StateManager>>) -> Result<Game, String> {
     log::debug!("[cmd] get_active_game");
-    state
+    let mut game = state
         .get_game(|g: &Game| g.clone())
-        .ok_or("be.error.noActiveGameSession".to_string())
+        .ok_or("be.error.noActiveGameSession".to_string())?;
+    // P0-4: Cap messages/news before sending to frontend
+    cap_messages_and_news(&mut game);
+    Ok(game)
 }
 
 #[tauri::command]
