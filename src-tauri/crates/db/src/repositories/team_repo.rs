@@ -37,6 +37,8 @@ pub fn upsert_team(conn: &Connection, t: &Team) -> Result<(), String> {
     let training_focus_str = format!("{:?}", t.training_focus);
     let training_intensity_str = format!("{:?}", t.training_intensity);
     let training_schedule_str = format!("{:?}", t.training_schedule);
+    // P0-3: Persist board_type (V99.4 T4.7)
+    let board_type_str = format!("{:?}", t.board_type);
 
     conn.execute(
         "INSERT OR REPLACE INTO teams
@@ -46,8 +48,8 @@ pub fn upsert_team(conn: &Connection, t: &Team) -> Result<(), String> {
          training_focus, training_intensity, training_schedule,
          founded_year, colors_primary, colors_secondary,
          starting_xi_ids, match_roles, form, history, training_groups, financial_ledger, sponsorship, facilities, media_json, kit_pattern,
-         player_roles_json, tactics_phase_json)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35)",
+         player_roles_json, tactics_phase_json, board_type)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35, ?36)",
         params![
             t.id,
             t.name,
@@ -84,6 +86,7 @@ pub fn upsert_team(conn: &Connection, t: &Team) -> Result<(), String> {
             kit_pattern_str,
             player_roles_json,
             tactics_phase_json,
+            board_type_str,
         ],
     )
     .map_err(|_| GAME_PERSISTENCE_WRITE_ERROR.to_string())?;
@@ -249,7 +252,16 @@ fn row_to_team(row: &rusqlite::Row) -> rusqlite::Result<Team> {
         },
         form: serde_json::from_str(&form_json).unwrap_or_default(),
         history: serde_json::from_str(&history_json).unwrap_or_default(),
-        board_type: BoardType::default(),
+        // P0-3: Load board_type from DB instead of Default::default()
+        board_type: {
+            let bt_str: String = row.get(36).unwrap_or_else(|_| "Sensible".to_string());
+            match bt_str.as_str() {
+                "SugarDaddy" => BoardType::SugarDaddy,
+                "PennyPinching" => BoardType::PennyPinching,
+                "Ambitious" => BoardType::Ambitious,
+                _ => BoardType::Sensible,
+            }
+        },
     })
 }
 
@@ -264,7 +276,8 @@ pub fn load_all_teams(conn: &Connection) -> Result<Vec<Team>, String> {
                     founded_year, colors_primary, colors_secondary,
                     starting_xi_ids, match_roles, form, history, training_groups, financial_ledger, sponsorship, facilities,
                     COALESCE(media_json, '{}'), COALESCE(kit_pattern, 'Solid'),
-                    COALESCE(player_roles_json, '{}'), COALESCE(tactics_phase_json, '{}')
+                    COALESCE(player_roles_json, '{}'), COALESCE(tactics_phase_json, '{}'),
+                    COALESCE(board_type, 'Sensible')
              FROM teams",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -291,7 +304,8 @@ pub fn load_team(conn: &Connection, id: &str) -> Result<Option<Team>, String> {
                     founded_year, colors_primary, colors_secondary,
                     starting_xi_ids, match_roles, form, history, training_groups, financial_ledger, sponsorship, facilities,
                     COALESCE(media_json, '{}'), COALESCE(kit_pattern, 'Solid'),
-                    COALESCE(player_roles_json, '{}'), COALESCE(tactics_phase_json, '{}')
+                    COALESCE(player_roles_json, '{}'), COALESCE(tactics_phase_json, '{}'),
+                    COALESCE(board_type, 'Sensible')
              FROM teams WHERE id = ?1",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;

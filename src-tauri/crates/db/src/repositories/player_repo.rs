@@ -43,6 +43,11 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
     let personality_json = serde_json::to_string(&p.personality).unwrap_or_default();
     let narrative_traits_json = serde_json::to_string(&p.narrative_traits).unwrap_or_default();
 
+    // P0-1: V99.4 player fields that were previously dropped by ..Default::default()
+    let fame_str = format!("{:?}", p.fame);
+    let career_events_json = serde_json::to_string(&p.career_events).unwrap_or_else(|_| "[]".to_string());
+    let partnerships_json = serde_json::to_string(&p.partnerships).unwrap_or_else(|_| "{}".to_string());
+
     conn.execute(
         "INSERT INTO players
          (id, match_name, full_name, date_of_birth, nationality, football_nation, birth_country, position,
@@ -51,8 +56,9 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
           transfer_listed, loan_listed, transfer_offers, alternate_positions,
           natural_position, training_focus, morale_core, footedness, weak_foot, fitness, squad_role,
           ovr, potential, media_json, jersey_number, loan_offers, active_loan, movement_history,
-          personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35, ?36, ?37, ?38, ?39, ?40, ?41, ?42, ?43)
+          personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season,
+          fame, release_clause, career_events_json, partnerships_json, transfer_request_date, low_morale_days)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26, ?27, ?28, ?29, ?30, ?31, ?32, ?33, ?34, ?35, ?36, ?37, ?38, ?39, ?40, ?41, ?42, ?43, ?44, ?45, ?46, ?47, ?48, ?49)
          ON CONFLICT(id) DO UPDATE SET
            match_name = excluded.match_name,
            full_name = excluded.full_name,
@@ -95,7 +101,13 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
            stability_modifier = excluded.stability_modifier,
            narrative_traits_json = excluded.narrative_traits_json,
            former_team_id = excluded.former_team_id,
-           retired_season = excluded.retired_season",
+           retired_season = excluded.retired_season,
+           fame = excluded.fame,
+           release_clause = excluded.release_clause,
+           career_events_json = excluded.career_events_json,
+           partnerships_json = excluded.partnerships_json,
+           transfer_request_date = excluded.transfer_request_date,
+           low_morale_days = excluded.low_morale_days",
         params![
             p.id,
             p.match_name,
@@ -140,6 +152,13 @@ pub fn upsert_player(conn: &Connection, p: &Player) -> Result<(), String> {
             narrative_traits_json,
             p.former_team_id,
             p.retired_season.map(|s| s as i64),
+            // P0-1: V99.4 fields
+            fame_str,
+            p.release_clause.map(|v| v as i64),
+            career_events_json,
+            partnerships_json,
+            p.transfer_request_date,
+            p.low_morale_days as i64,
         ],
     )
     .map_err(|_| GAME_PERSISTENCE_WRITE_ERROR.to_string())?;
@@ -216,7 +235,10 @@ pub fn load_all_players(conn: &Connection) -> Result<Vec<Player>, String> {
                     ovr, potential, COALESCE(media_json, '{}'), jersey_number,
                     COALESCE(loan_offers, '[]'), active_loan,
                     COALESCE(movement_history, '[]'),
-                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season
+                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season,
+                    COALESCE(fame, 'Unknown'), release_clause,
+                    COALESCE(career_events_json, '[]'), COALESCE(partnerships_json, '{}'),
+                    transfer_request_date, COALESCE(low_morale_days, 0)
              FROM players",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -244,7 +266,10 @@ pub fn load_players_by_team(conn: &Connection, team_id: &str) -> Result<Vec<Play
                     ovr, potential, COALESCE(media_json, '{}'), jersey_number,
                     COALESCE(loan_offers, '[]'), active_loan,
                     COALESCE(movement_history, '[]'),
-                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season
+                    personality_json, stability_modifier, narrative_traits_json, former_team_id, retired_season,
+                    COALESCE(fame, 'Unknown'), release_clause,
+                    COALESCE(career_events_json, '[]'), COALESCE(partnerships_json, '{}'),
+                    transfer_request_date, COALESCE(low_morale_days, 0)
              FROM players WHERE team_id = ?1",
         )
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -363,8 +388,30 @@ fn row_to_player(row: &rusqlite::Row) -> rusqlite::Result<Player> {
         active_loan: active_loan_json.and_then(|json| serde_json::from_str(&json).ok()),
         morale_core: serde_json::from_str(&morale_core_json).unwrap_or_default(),
         jersey_number,
-            ..Default::default()
-        
+        // P0-1: V99.4 fields — read from DB instead of Default::default()
+        fame: {
+            let fame_str: String = row.get(45).unwrap_or_else(|_| "Unknown".to_string());
+            match fame_str.as_str() {
+                "Prospect" => domain::player::PlayerFame::Prospect,
+                "Known" => domain::player::PlayerFame::Known,
+                "Established" => domain::player::PlayerFame::Established,
+                "Star" => domain::player::PlayerFame::Star,
+                "WorldClass" => domain::player::PlayerFame::WorldClass,
+                "Legend" => domain::player::PlayerFame::Legend,
+                _ => domain::player::PlayerFame::Unknown,
+            }
+        },
+        release_clause: row.get::<_, Option<i64>>(46).ok().flatten().map(|v| v as u64),
+        career_events: {
+            let json_str: String = row.get(47).unwrap_or_else(|_| "[]".to_string());
+            serde_json::from_str(&json_str).unwrap_or_default()
+        },
+        partnerships: {
+            let json_str: String = row.get(48).unwrap_or_else(|_| "{}".to_string());
+            serde_json::from_str(&json_str).unwrap_or_default()
+        },
+        transfer_request_date: row.get::<_, Option<String>>(49).ok().flatten(),
+        low_morale_days: row.get::<_, i64>(50).unwrap_or(0) as u32,
     })
 }
 
