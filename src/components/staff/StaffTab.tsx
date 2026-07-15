@@ -141,7 +141,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  const roles = ["AssistantManager", "Coach", "Scout", "Physio"];
 
  return (
- <div>
+ <div className="gaffer-card-texture">
  {/* View toggle */}
  <div className="flex flex-wrap gap-3 mb-4 items-center">
  <div className="flex gap-2">

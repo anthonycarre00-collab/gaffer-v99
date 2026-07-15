@@ -712,7 +712,7 @@ export default function FinancesTab({
  ];
 
  return (
- <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+ <div className="gaffer-card-texture grid grid-cols-1 lg:grid-cols-3 gap-5">
  {/* Financial overview */}
  <Card accent="accent" className="lg:col-span-2">
  <CardHeader>{t("finances.overview")}</CardHeader>

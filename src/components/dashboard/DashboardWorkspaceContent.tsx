@@ -46,7 +46,7 @@ export default function DashboardWorkspaceContent({
  : null;
 
  return (
- <div className="flex-1 overflow-auto p-6 bg-gray-100 dark:bg-navy-900">
+ <div className="flex-1 overflow-auto p-6 bg-transparent">
  {isUnemployed && (
  <div className="mx-6 mt-4 flex items-center gap-3 rounded border border-accent-200 bg-accent-50 px-4 py-3 dark:border-accent-900/50 dark:bg-accent-950/30">
  <ShieldX className="h-5 w-5 shrink-0 text-accent-600 dark:text-accent-500" />

@@ -342,7 +342,7 @@ export default function DashboardHeader({
  }
 
  return (
- <header className="z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 shadow-sm transition-colors duration-300 dark:border-navy-700 dark:bg-navy-800">
+ <header className="gaffer-header-gradient z-10 flex items-center justify-between border-b border-accent-500/20 bg-white px-6 py-3 shadow-sm transition-colors duration-300 dark:border-accent-500/30 dark:bg-navy-800">
  <div className="flex items-center gap-3">
  {hasProfileHistory && (
  <button
@@ -354,10 +354,10 @@ export default function DashboardHeader({
  </button>
  )}
  <div>
- <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400">
+ <h2 className="gaffer-section-underline text-xl font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400">
  {activeTabLabel}
  </h2>
- <p className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
  <span className="font-mono font-medium">{currentDate}</span>
  </p>
  </div>

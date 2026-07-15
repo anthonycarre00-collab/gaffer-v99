@@ -229,11 +229,11 @@ export default function YouthAcademyTab({
  };
 
  return (
- <div className="flex flex-col gap-5">
+ <div className="gaffer-card-texture flex flex-col gap-5">
  {/* Header */}
  <div className="flex items-center gap-3">
  <GraduationCap className="w-5 h-5 text-primary-500" />
- <h2 className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wider">
+ <h2 className="gaffer-section-underline text-lg font-heading font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wider">
  {t("youthAcademy.title")}
  </h2>
  <Badge variant="neutral" size="sm">

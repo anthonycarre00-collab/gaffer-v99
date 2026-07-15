@@ -239,10 +239,10 @@ export default function PostMatchScreen({
  ];
 
  return (
- <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
+ <div className="postmatch-hero-bg min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
  {/* Result Header */}
  <header
- className={`border-b border-gray-200 dark:border-navy-700 px-4 py-6 transition-colors duration-300 ${
+ className={`gaffer-pitch-strip border-b border-accent-500/20 px-4 py-6 transition-colors duration-300 ${
  resultType === "win"
  ? "bg-linear-to-r from-primary-100 via-white to-primary-100 dark:from-primary-900/50 dark:via-navy-900 dark:to-primary-900/50"
  : resultType === "loss"

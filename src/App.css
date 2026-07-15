@@ -553,9 +553,88 @@ input[type="number"] {
   background-position: center;
 }
 
-/* Dark-mode adjustments — disable textures (don't render well on dark) */
-.dark .inbox-paper-bg { background-image: none; }
-.dark .transfer-market-bg { background-image: none; }
-.dark .scouting-dossier-bg { background-image: none; }
-.dark .dashboard-stripes-bg { background-image: none; }
-.dark .player-hero-bg { background-image: none; }
+/* Dark-mode adjustments — soften (not disable) textures so they're still
+   visible against the dark background but don't fight the dark surface.
+   V99.8: Previously these were disabled entirely in dark mode, leaving
+   every dark-mode tab visually flat. Now we drop the opacity and switch
+   to soft-light blend so the texture is a subtle hint, not a wallpaper. */
+.dark .inbox-paper-bg { opacity: 0.35; background-blend-mode: soft-light; }
+.dark .transfer-market-bg { opacity: 0.4; background-blend-mode: soft-light; }
+.dark .scouting-dossier-bg { opacity: 0.4; background-blend-mode: soft-light; }
+.dark .dashboard-stripes-bg { opacity: 0.4; background-blend-mode: soft-light; }
+.dark .player-hero-bg { opacity: 0.5; background-blend-mode: soft-light; }
+
+/* ============================================================================
+   V99.8: Stronger card texture + brass-tinted header band
+   The default gaffer-card-texture SVG noise was too subtle in light mode
+   and vanished in dark mode. We add a dark-mode variant that uses a
+   lighter noise (warm cream tones) so cards still feel "papery" in dark
+   mode instead of looking like flat plastic. */
+.dark .gaffer-card-texture {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.91  0 0 0 0 0.82  0 0 0 0.06 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.5'/></svg>");
+  background-size: 80px 80px;
+  background-repeat: repeat;
+  background-blend-mode: soft-light;
+}
+
+/* V99.8: Brass-tinted top edge for cards that opt into the "framed" look.
+   Use together with `gaffer-card-texture` for the full dugout-broadsheet
+   card aesthetic. */
+.gaffer-framed-accent {
+  box-shadow:
+    inset 0 1px 0 rgba(212, 166, 74, 0.18),
+    inset 0 0 0 1px rgba(212, 166, 74, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.dark .gaffer-framed-accent {
+  box-shadow:
+    inset 0 1px 0 rgba(212, 166, 74, 0.15),
+    inset 0 0 0 1px rgba(212, 166, 74, 0.10),
+    0 2px 4px rgba(0, 0, 0, 0.30);
+}
+
+/* V99.8: Pitch-line accent strip — a 3px brass-green gradient bar at the
+   top of a card or section, evoking the painted touchline on a tactics
+   board. Use on hero panels and key section dividers. */
+.gaffer-pitch-strip {
+  position: relative;
+}
+.gaffer-pitch-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-primary-500) 0%,
+    var(--color-accent-500) 50%,
+    var(--color-primary-500) 100%
+  );
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  pointer-events: none;
+}
+
+/* V99.8: Section header brass underline — a thin brass rule under a
+   section heading. Use on inline h2/h3 labels that aren't inside a
+   CardHeader. */
+.gaffer-section-underline {
+  position: relative;
+  padding-bottom: 0.4rem;
+}
+.gaffer-section-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 36px;
+  height: 2px;
+  background-color: var(--color-accent-500);
+}
+
+/* V99.8: Bracket/gaffer-quote — small decorative bracket pair used to
+   frame numbers and labels in a "broadsheet stat" style. */
+.gaffer-stat-bracket::before { content: "["; color: var(--color-accent-500); margin-right: 0.15em; font-weight: 600; }
+.gaffer-stat-bracket::after  { content: "]"; color: var(--color-accent-500); margin-left: 0.15em; font-weight: 600; }
+

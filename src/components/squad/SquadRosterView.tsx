@@ -431,8 +431,8 @@ export default function SquadRosterView({
  );
 
  return (
- <div className="flex flex-col gap-4">
- <Card>
+ <div className="pitch-grass-bg flex flex-col gap-4">
+ <Card plain>
  <div className="p-4 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_220px_220px_auto] gap-3 items-end">
  <div>
  <label className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 block">

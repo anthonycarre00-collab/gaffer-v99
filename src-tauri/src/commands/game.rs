@@ -1328,6 +1328,20 @@ fn ensure_multi_competition_foundations(game: &mut Game) {
     }
     if game.competitions.is_empty() {
         game.competitions = build_foundation_competitions(game);
+    } else {
+        // V99.8: Backfill fixtures/standings for stub competitions.
+        //
+        // The bundled world DB ships competitions as minimal stubs
+        // (id/name/participant_ids/type) with EMPTY fixtures and standings.
+        // Since `game.competitions` is non-empty here, the foundation builder
+        // above is skipped — but the stubs have no schedule, so the player
+        // joins a league with no fixtures to play.
+        //
+        // For each competition that has participants but no fixtures, run the
+        // appropriate season-regeneration function to build a real round-robin
+        // or knockout bracket. Competitions that already have fixtures (e.g.
+        // from a loaded save or authored definition) are left untouched.
+        backfill_stub_competition_fixtures(game);
     }
     if game.active_region_ids.is_empty() {
         game.active_region_ids = game
@@ -1347,6 +1361,102 @@ fn ensure_multi_competition_foundations(game: &mut Game) {
     }
     ensure_international_windows(game);
     game.sync_legacy_league();
+}
+
+/// V99.8: Generate fixtures and standings for any competition that arrived
+/// from the world DB as a minimal stub (participants present but fixtures
+/// empty). Stubs come from bundled roster-baseline worlds like the FIFA 22
+/// real-world DB, where each competition record only carries id/name/type/
+/// participants — no schedule.
+///
+/// For each stub:
+///   - Resolve a season-start date from the competition's
+///     `season_start_month`/`season_start_day` (defaulting to August 1).
+///   - Set the season to the preseason year of the game clock.
+///   - Call `regenerate_league_for_season` (LeagueTable) or
+///     `regenerate_knockout_for_season` (Knockout) to build the full
+///     fixture list and seed the standings/bracket.
+///   - Apply reputation-aware fixture importance so derbies and elite
+///     matchups feel big.
+///   - If the season-start date is before the game clock, run catch-up
+///     simulation so the player joins an in-progress season.
+///
+/// Competitions with `GroupAndKnockout` format are also backfilled via
+/// `regenerate_for_season`. Competitions with fewer than 2 participants or
+/// that already have fixtures are left unchanged.
+fn backfill_stub_competition_fixtures(game: &mut Game) {
+    let game_start = game.clock.start_date;
+    let season = preseason_league_year(&game.clock);
+    let players_snapshot = game.players.clone();
+    let team_reputations: std::collections::HashMap<String, u32> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.reputation))
+        .collect();
+
+    let mut backfilled = 0usize;
+    for competition in &mut game.competitions {
+        if !competition.fixtures.is_empty() {
+            continue;
+        }
+        if competition.participant_ids.len() < 2 {
+            continue;
+        }
+
+        let month = competition.season_start_month;
+        let day = competition.season_start_day;
+        let (start, is_mid_season) =
+            ofm_core::generator::start_date_at_game_open(game_start, month, day);
+
+        match competition.rules.format {
+            CompetitionFormat::LeagueTable => {
+                ofm_core::schedule::regenerate_league_for_season(
+                    competition,
+                    season,
+                    start,
+                );
+            }
+            CompetitionFormat::Knockout => {
+                ofm_core::schedule::regenerate_knockout_for_season(
+                    competition,
+                    season,
+                    start,
+                );
+            }
+            CompetitionFormat::GroupAndKnockout => {
+                ofm_core::group_stage::regenerate_for_season(
+                    competition,
+                    season,
+                    start,
+                );
+            }
+        }
+
+        // Apply reputation-aware fixture importance so elite matchups and
+        // derbies carry the right weight.
+        ofm_core::schedule::apply_fixture_importance(competition, &team_reputations);
+
+        // FM-style catch-up: if the competition's season began before the
+        // game anchor, simulate the missing matchdays so the player joins a
+        // living in-progress season rather than a blank table.
+        if is_mid_season {
+            ofm_core::catchup::simulate_past_fixtures(
+                competition,
+                &players_snapshot,
+                game_start,
+            );
+        }
+
+        backfilled += 1;
+    }
+
+    if backfilled > 0 {
+        log::info!(
+            "[world] V99.8: Backfilled fixtures for {} stub competitions ({} total competitions)",
+            backfilled,
+            game.competitions.len()
+        );
+    }
 }
 
 /// Schedule national-team friendlies on international windows and keep club

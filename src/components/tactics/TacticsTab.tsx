@@ -832,8 +832,12 @@ export default function TacticsTab({
  {/* V99.7-7: Sub-tab navigation — removed "Set Pieces" tab since set pieces
      are always visible in the right panel alongside the Phase Blueprint.
      Three tabs: Pitch (formation + roles), Selection (squad management),
-     Style (playing style + guidance). */}
- <div className="flex gap-1 border-b border-gray-200 dark:border-navy-600">
+     Style (playing style + guidance).
+     V99.8: Brass-on-chalk palette so labels stay readable against the
+     tactics-board texture in both light and dark mode. The active tab
+     uses a solid brass chip with a dark chalk inner; inactive tabs use
+     cream/chalk text that lifts off the dark chalkboard. */}
+ <div className="flex gap-1 border-b border-accent-500/30 dark:border-accent-500/20">
  {([
  { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
  { id: "selection", label: t("tactics.subTabs.selection", { defaultValue: "Selection" }) },
@@ -844,8 +848,8 @@ export default function TacticsTab({
  onClick={() => setActiveSubTab(tab.id)}
  className={`px-4 py-2 text-sm font-heading font-bold uppercase tracking-wider transition-all duration-200 border-b-2 ${
  activeSubTab === tab.id
- ? "border-primary-500 text-primary-600 dark:text-primary-400"
- : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+ ? "border-accent-400 bg-accent-500/15 text-accent-700 dark:text-accent-200"
+ : "border-transparent text-chalk/80 dark:text-chalk/70 hover:text-accent-600 dark:hover:text-accent-300 hover:bg-accent-500/5"
  }`}
  >
  {tab.label}

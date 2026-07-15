@@ -71,14 +71,14 @@ export default function AwardsCeremonyScreen({
  );
 
  return (
- <div className="mx-auto max-w-5xl space-y-5 py-6">
+ <div className="awards-bg mx-auto max-w-5xl space-y-5 py-6">
  <Card accent="accent">
  <CardBody className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
  <div>
  <p className="text-xs font-heading font-bold uppercase tracking-[0.25em] text-accent-500">
  {t("awardsCeremony.title")}
  </p>
- <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h2 className="gaffer-section-underline text-2xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
  {t("awardsCeremony.subtitle", { season, league: leagueName })}
  </h2>
  </div>

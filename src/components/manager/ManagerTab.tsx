@@ -19,7 +19,7 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
  const stats = mgr.career_stats;
 
  return (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+ <div className="gaffer-card-texture grid grid-cols-1 md:grid-cols-3 gap-5">
  {/* Profile card */}
  <Card accent="primary" className="md:col-span-3">
  <div className="bg-navy-700 p-6 rounded-t-xl flex items-center gap-6">

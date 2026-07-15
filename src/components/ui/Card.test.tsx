@@ -17,32 +17,44 @@ describe("Card", () => {
     const { container } = render(<Card>Default</Card>);
     const el = container.firstChild as HTMLElement;
     expect(el.className).toContain("border-gray-200");
-    expect(el.className).not.toContain("border-t-4");
+    expect(el.className).not.toContain("border-t-2");
   });
 
   it("applies primary accent border", () => {
     const { container } = render(<Card accent="primary">Primary</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-4");
+    expect(el.className).toContain("border-t-2");
     expect(el.className).toContain("border-t-primary-500");
   });
 
   it("applies accent accent border", () => {
     const { container } = render(<Card accent="accent">Accent</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-accent-400");
+    expect(el.className).toContain("border-t-accent-500");
   });
 
   it("applies success accent border", () => {
     const { container } = render(<Card accent="success">Success</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-success-400");
+    expect(el.className).toContain("border-t-success-500");
   });
 
   it("applies danger accent border", () => {
     const { container } = render(<Card accent="danger">Danger</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-red-500");
+    expect(el.className).toContain("border-t-danger-500");
+  });
+
+  it("V99.8: applies gaffer-card-texture by default", () => {
+    const { container } = render(<Card>Default</Card>);
+    const el = container.firstChild as HTMLElement;
+    expect(el.className).toContain("gaffer-card-texture");
+  });
+
+  it("V99.8: plain prop disables gaffer-card-texture", () => {
+    const { container } = render(<Card plain>Plain</Card>);
+    const el = container.firstChild as HTMLElement;
+    expect(el.className).not.toContain("gaffer-card-texture");
   });
 
   it("merges custom className", () => {
