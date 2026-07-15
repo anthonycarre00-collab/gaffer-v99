@@ -77,16 +77,14 @@ export default function TrainingSettingsPanel({
 
  <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
  {t(`training.schedules.${currentSchedule}.detail`)}{" "}
- <span
- dangerouslySetInnerHTML={{
- __html: t("training.todayIs", {
+ <span>
+ {t("training.todayIs", {
  day: t(`training.days.${dayKeys[todayWeekday]}`),
  type: isTodayTraining
  ? t("training.aTrainingDay")
  : t("training.aRestDay"),
- }),
- }}
- />
+ })}
+ </span>
  </p>
  </CardBody>
  </Card>
@@ -166,16 +164,14 @@ export default function TrainingSettingsPanel({
  {activeFocusAttrs.length > 0 && (
  <>
  {" "}
- <span
- dangerouslySetInnerHTML={{
- __html: t("training.currentlyTraining", {
+ <span>
+ {t("training.currentlyTraining", {
  attrs: activeFocusAttrs
  .map((attribute) => t(`common.attributes.${attribute}`))
  .join(", "),
  intensity: t(`training.intensities.${currentIntensity}.label`),
- }),
- }}
- />
+ })}
+ </span>
  </>
  )}
  {currentFocus === "Recovery" && <> {t("training.recoveryNote")}</>}

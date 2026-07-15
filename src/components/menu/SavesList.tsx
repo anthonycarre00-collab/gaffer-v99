@@ -52,7 +52,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  <div key={save.id} className="group relative flex flex-col gap-2 w-full p-4 bg-white dark:bg-navy-700 hover:bg-primary-50 dark:hover:bg-navy-600 text-left rounded transition-all duration-200 border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 shadow-sm">
  {confirmDeleteId === save.id ? (
  <div className="flex flex-col gap-2">
- <p className="text-sm text-gray-700 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: t('menu.deleteConfirm', { name: save.name }) }} />
+ <p className="text-sm text-gray-700 dark:text-gray-300">{t('menu.deleteConfirm', { name: save.name })}</p>
  <div className="flex gap-2">
  <button
  onClick={() => onDelete(save.id)}
