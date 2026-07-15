@@ -416,6 +416,10 @@ fn populate_minutes_played(
     tracked_player_ids: &[String],
     player_stats: &mut HashMap<String, PlayerMatchStats>,
 ) {
+    // Note: tracked_player_ids contains ONLY the starting XI from TeamData.players
+    // (not the bench). The full engine path doesn't make substitutions (by design),
+    // so all starters correctly receive total_minutes. The live match path emits
+    // Substitution events which override these defaults.
     let mut minutes_by_player: HashMap<String, u8> = tracked_player_ids
         .iter()
         .cloned()
