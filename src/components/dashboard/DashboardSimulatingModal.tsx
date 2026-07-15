@@ -295,13 +295,13 @@ export default function DashboardSimulatingModal({
  {/* V99.1: Instead of showing "Nothing to show", display useful
      content — upcoming fixtures, recent results, latest news. */}
  <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center py-2">
- Crunching the numbers...
+ {t("dashboard.simulating")}
  </p>
  {/* Show upcoming fixtures if available */}
  {upcomingFixtures.length > 0 && (
  <div>
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
- Coming Up
+ {t("dashboard.comingUp")}
  </p>
  {upcomingFixtures.slice(0, 3).map((f, i) => (
  <div key={i} className="text-xs text-gray-600 dark:text-gray-400 py-0.5">
@@ -314,7 +314,7 @@ export default function DashboardSimulatingModal({
  {recentResults.length > 0 && (
  <div>
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1 mt-2">
- Recent Results
+ {t("dashboard.recentResults")}
  </p>
  {recentResults.slice(0, 3).map((r, i) => (
  <div key={i} className="text-xs text-gray-600 dark:text-gray-400 py-0.5">
