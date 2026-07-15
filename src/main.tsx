@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { i18nReady } from "./i18n";
+import "./lib/prodLogger"; // P2-FE-4: Silence console.info/debug in production
 import App from "./App";
 
 // On Linux/WebKitGTK an unhandled promise rejection restarts the webview
