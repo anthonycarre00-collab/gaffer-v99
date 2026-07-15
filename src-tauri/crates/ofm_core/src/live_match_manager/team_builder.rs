@@ -508,10 +508,20 @@ fn to_engine_player(
         playing_out: p.attributes.playing_out,
         traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
         role,
-            ..Default::default()
-        
+        // P1-2: V99.4 T2.2 — partnership_bonus was only set in the full-engine
+        // path (turn/mod.rs:658). The live match path used ..Default::default()
+        // which defaults to 1.0 (no bonus). Now both paths compute it identically.
+        partnership_bonus: {
+            if p.partnerships.is_empty() {
+                1.0
+            } else {
+                let max_p = p.partnerships.values().copied().max().unwrap_or(0);
+                if max_p >= 20 { 1.02 }
+                else if max_p >= 10 { 1.01 }
+                else { 1.0 }
+            }
+        },
     }
-        
 }
 
 /// Auto-select set-piece takers from a set of player IDs.

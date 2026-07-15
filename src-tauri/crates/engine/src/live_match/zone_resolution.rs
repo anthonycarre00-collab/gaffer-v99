@@ -127,12 +127,14 @@ impl LiveMatchState {
             self.team_ref(att_side).play_style,
             PlayStylePhase::Midfield,
             true,
-        ) * role_attribute_modifier(attacker.role, PlayStylePhase::Midfield);
+        ) * role_attribute_modifier(attacker.role, PlayStylePhase::Midfield)
+            * self.team_ref(att_side).tactics_multiplier;  // P1-1: V99.4 T1.7
         let def_mod = play_style_modifier(
             self.team_ref(def_side).play_style,
             PlayStylePhase::Midfield,
             false,
-        ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense);
+        ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense)
+            * self.team_ref(def_side).tactics_multiplier;  // P1-1: V99.4 T1.7
         let att_eff = att_rating
             * att_mod
             * crate::shared::home_mod(att_side, &self.config)
@@ -231,12 +233,14 @@ impl LiveMatchState {
             self.team_ref(att_side).play_style,
             PlayStylePhase::Attack,
             true,
-        ) * role_attribute_modifier(attacker.role, PlayStylePhase::Attack);
+        ) * role_attribute_modifier(attacker.role, PlayStylePhase::Attack)
+            * self.team_ref(att_side).tactics_multiplier;  // P1-1: V99.4 T1.7
         let def_mod = play_style_modifier(
             self.team_ref(def_side).play_style,
             PlayStylePhase::Defense,
             false,
-        ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense);
+        ) * role_attribute_modifier(defender.role, PlayStylePhase::Defense)
+            * self.team_ref(def_side).tactics_multiplier;  // P1-1: V99.4 T1.7
         let att_eff = att_rating * att_mod * crate::shared::home_mod(att_side, &self.config);
         let def_eff = def_rating
             * def_mod
