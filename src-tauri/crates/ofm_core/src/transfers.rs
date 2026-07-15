@@ -398,12 +398,15 @@ fn minimum_acceptable_fee(
     let rep_gap = buyer_rep.saturating_sub(owner_rep);
 
     if player.ovr >= 85 && owner_rep >= 700 {
-        // World-class star at an elite club — virtually not for sale.
-        // 3.0× multiplier means a £50M player costs £150M+.
-        multiplier += 1.8;
+        // World-class star at an elite club — very hard to sign but not impossible.
+        // V99.7-3: Reduced from 1.8 to 1.2 — was making fees 3x market value,
+        // which exceeded all transfer budgets. Now ~2.4x — still expensive but
+        // achievable for elite clubs with good budgets.
+        multiplier += 1.2;
     } else if player.ovr >= 80 && owner_rep >= 650 {
-        // Star at a strong club — very hard to sign.
-        multiplier += 1.0;
+        // Star at a strong club — hard to sign.
+        // V99.7-3: Reduced from 1.0 to 0.7
+        multiplier += 0.7;
     } else if player.ovr >= 75 && owner_rep >= 600 && rep_gap < 100 {
         // Key player at a mid-strong club, buyer is similar level — hard.
         multiplier += 0.5;

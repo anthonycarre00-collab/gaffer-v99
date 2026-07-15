@@ -2,7 +2,7 @@
   "app": {
     "name": "Gaffer",
     "publisher": "Sturdy Robot",
-    "version": "v0.3.0-dev.21 (V99.6)"
+    "version": "v0.3.0-dev.22 (V99.7)"
   },
   "menu": {
     "newGame": "New Career",
@@ -615,7 +615,11 @@
       "physical": "The Body",
       "technical": "The Ball",
       "mental": "The Head",
-      "goalkeeper": "The Gloves"
+      "goalkeeper": "The Gloves",
+      "body": "The Body",
+      "ball": "The Ball",
+      "head": "The Head",
+      "gloves": "The Gloves"
     },
     "retry": "Retry",
     "score": "Score",

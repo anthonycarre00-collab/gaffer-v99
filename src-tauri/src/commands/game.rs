@@ -502,7 +502,32 @@ fn build_game_from_world_data(
             }
             log::info!("[world] NE-1 done");
 
-            log::info!("[world] NE-2/4: Fixing wage + transfer budgets for {} teams", game.teams.len());
+            // V99.7-1: Extend contracts that expired before the game start date.
+            //
+            // The bundled DB has contracts from 2022-2023. When the game starts
+            // in 2026, ~3,318 players (62%) have already-expired contracts.
+            // The daily process_contract_expiries function fires for each one,
+            // generating 500+ inbox messages and making the game unplayable.
+            //
+            // Fix: Extend all contracts to at least 2 years from game start.
+            // This preserves the roster while preventing mass expiry. Players
+            // whose real contracts expired will still leave on their next expiry.
+            let game_start_year = game.clock.start_date.year();
+            let min_contract_end = format!("{}-06-30", game_start_year + 2);
+            let mut extended_count = 0;
+            for player in game.players.iter_mut() {
+                let needs_extension = match &player.contract_end {
+                    None => true,
+                    Some(ce) => ce.as_str() < min_contract_end.as_str(),
+                };
+                if needs_extension {
+                    player.contract_end = Some(min_contract_end.clone());
+                    extended_count += 1;
+                }
+            }
+            log::info!("[world] V99.7-1: Extended {} player contracts to {}", extended_count, min_contract_end);
+
+            log::info!("[world] NE-2/4/7: Fixing finances for {} teams", game.teams.len());
             let mut team_wage_totals: std::collections::HashMap<String, i64> = std::collections::HashMap::new();
             for player in &game.players {
                 if let Some(ref team_id) = player.team_id {
@@ -512,7 +537,19 @@ fn build_game_from_world_data(
             for team in game.teams.iter_mut() {
                 let squad_wages = team_wage_totals.get(&team.id).copied().unwrap_or(0);
                 team.wage_budget = (squad_wages * 115) / 100;
-                team.transfer_budget = ((team.reputation as i64 - 300) * 250_000).max(0);
+                // V99.7-3: More generous transfer budget — was (rep-300)*250k = £145M for elite.
+                // Real-world: Man City spent £200M+ in 2023 summer window alone.
+                // New formula: (rep-300) * 400,000, capped at £300M.
+                // rep 880 (elite): £232M
+                // rep 750 (strong): £180M
+                // rep 650 (lower): £140M
+                team.transfer_budget = (((team.reputation as i64 - 300) * 400_000).max(0)).min(300_000_000);
+                // V99.7-2: Scale finance (cash reserves) by reputation.
+                // DB has £50M for ALL teams. Real range: £10M-£300M.
+                // rep 880 (elite): ~£181M
+                // rep 650 (lower): ~£109M
+                // rep 300 (min): £0 (clamped to £5M minimum)
+                team.finance = ((team.reputation as i64 - 300) * 312_500).max(5_000_000);
             }
             log::info!("[world] NE-2/4 done");
 
