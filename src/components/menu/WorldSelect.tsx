@@ -55,7 +55,9 @@ export interface PackageInfo {
 // Constants
 // ---------------------------------------------------------------------------
 
-const HISTORY_DEPTH_OPTIONS = [0, 6, 12, 24] as const;
+// V99.7: Reduced from [0, 6, 12, 24] to [0, 1, 3, 6] — 12+ seasons was
+// too slow on new game creation. 3 seasons gives enough seed history.
+const HISTORY_DEPTH_OPTIONS = [0, 1, 3, 6] as const;
 
 function historyDepthOptionLabel(
  t: (key: string, options?: Record<string, unknown>) => string,
@@ -230,7 +232,7 @@ export default function GenerationStep({
  <span className="block font-heading font-bold uppercase tracking-wide">
  {historyDepthOptionLabel(t, value)}
  </span>
- {value === 12 && (
+ {value === 3 && (
  <span className="block text-[10px] font-heading font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-300 mt-0.5">
  {t("worldSelect.historyDepth.recommended")}
  </span>

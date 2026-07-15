@@ -106,7 +106,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
 
  const groups: AttributeGroup[] = [
  {
- label: t("playerProfile.attrGroups.body") || "The Body",
+ label: t("common.attrGroups.body"),
  avg: attributes.body_avg,
  attrs: [
  ["Pace", attributes.pace],
@@ -117,7 +117,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  ],
  },
  {
- label: t("playerProfile.attrGroups.ball") || "The Ball",
+ label: t("common.attrGroups.ball"),
  avg: attributes.ball_avg,
  attrs: [
  ["Passing", attributes.passing],
@@ -129,7 +129,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  ],
  },
  {
- label: t("playerProfile.attrGroups.head") || "The Head",
+ label: t("common.attrGroups.head"),
  avg: attributes.head_avg,
  attrs: [
  ["Anticipation", attributes.anticipation],
@@ -140,7 +140,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  ],
  },
  {
- label: t("playerProfile.attrGroups.gloves") || "The Gloves",
+ label: t("common.attrGroups.gloves"),
  avg: attributes.gloves_avg,
  attrs: [
  ["Shot Stopping", attributes.shot_stopping],

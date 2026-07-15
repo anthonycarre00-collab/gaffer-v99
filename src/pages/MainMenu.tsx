@@ -69,8 +69,11 @@ interface SaveEntry {
  */
 const MANAGER_MINIMUM_AGE = 30;
 const MIN_CAREER_START_YEAR = 2020;
-const DEFAULT_GENERATED_HISTORY_DEPTH_YEARS = 12;
-const MAX_GENERATED_HISTORY_DEPTH_YEARS = 24;
+// V99.7: Capped at 3 seasons — 12 was too slow on new game creation.
+// The game will create its own stories going forward; 3 seasons of
+// seed history is enough to give context (recent form, past standings).
+const DEFAULT_GENERATED_HISTORY_DEPTH_YEARS = 3;
+const MAX_GENERATED_HISTORY_DEPTH_YEARS = 6;
 const GENERATED_HISTORY_DEPTH_STORAGE_KEY = "ofm-generated-history-depth-years";
 
 type StartupOptionsPayload = {

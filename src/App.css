@@ -522,8 +522,6 @@ input[type="number"] {
   background-image: url('../assets/gaffer-ui/transfer-market-bg.svg');
   background-size: 300px;
   background-repeat: repeat;
-  background-blend-mode: overlay;
-  opacity: 0.6;
 }
 
 /* Scouting dossier — aged paper feel */
@@ -531,8 +529,6 @@ input[type="number"] {
   background-image: url('../assets/gaffer-ui/scouting-dossier-texture.svg');
   background-size: 200px;
   background-repeat: repeat;
-  background-blend-mode: overlay;
-  opacity: 0.5;
 }
 
 /* Card header texture — adds depth to card tops */
@@ -542,13 +538,14 @@ input[type="number"] {
   background-repeat: no-repeat;
 }
 
-/* Dashboard stripes — subtle background pattern for the workspace */
+/* Dashboard stripes — VERY subtle background pattern for the workspace.
+   Uses background-color blending instead of opacity to avoid
+   greyout of child elements. */
 .dashboard-stripes-bg {
   background-image: url('../assets/gaffer-ui/dashboard-stripes-bg.svg');
   background-size: 400px;
   background-repeat: repeat;
-  background-blend-mode: overlay;
-  opacity: 0.3;
+  background-color: rgb(249 250 251 / 0.5);
 }
 
 /* Post-match hero — dramatic stadium atmosphere */
@@ -558,8 +555,8 @@ input[type="number"] {
   background-position: center;
 }
 
-/* Dark-mode adjustments for new textures */
-.dark .inbox-paper-bg { opacity: 0.3; }
-.dark .transfer-market-bg { opacity: 0.4; }
-.dark .scouting-dossier-bg { opacity: 0.3; }
-.dark .dashboard-stripes-bg { opacity: 0.15; }
+/* Dark-mode adjustments — use reduced background visibility without opacity */
+.dark .inbox-paper-bg { background-image: none; }
+.dark .transfer-market-bg { background-image: none; }
+.dark .scouting-dossier-bg { background-image: none; }
+.dark .dashboard-stripes-bg { background-image: none; }
