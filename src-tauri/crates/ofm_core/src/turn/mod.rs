@@ -840,12 +840,24 @@ where
     }
 
     // Apply sparse player stats (goals, assists, cards).
+    // P2-2: Credit appearances to ALL players on both teams, not just goal scorers.
+    let mut played_ids: std::collections::HashSet<String> = std::collections::HashSet::new();
+    for pd in home_data.players.iter().chain(away_data.players.iter()) {
+        played_ids.insert(pd.id.clone());
+    }
+    for player in &mut game.players {
+        if played_ids.contains(&player.id) {
+            player.stats.appearances += 1;
+        }
+    }
+
+    // Now apply event-specific stats (goals, assists, cards).
     for event in &result.events {
         if let Some(player) = game.players.iter_mut().find(|p| p.id == event.player_id) {
             match event.event_type {
                 engine::sparse_sim::SparseEventType::Goal => {
                     player.stats.goals += 1;
-                    player.stats.appearances += 1;
+                    // Appearances already credited above — don't double-count
                 }
                 engine::sparse_sim::SparseEventType::YellowCard => {
                     player.stats.yellow_cards += 1;
