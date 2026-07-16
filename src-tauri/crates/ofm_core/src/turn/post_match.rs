@@ -201,6 +201,21 @@ pub fn apply_match_report_with_capture<F>(
             -3
         }; // loss: -3
         let new_sat = (game.manager.satisfaction as i16 + sat_delta as i16).clamp(0, 100) as u8;
+        // V99.10 Item 23: New-manager grace period. For the first 30 days
+        // after appointment, satisfaction can't drop below 30 — the board
+        // gives a new manager breathing room rather than sacking them on
+        // the first bad run. Matches real football convention ("you can't
+        // be sacked in your first month"). Without this, a new manager
+        // losing their first 5 matches (5×-3 = -15, base 50) drops to 25
+        // → immediate warning, and one more loss → sack. The grace floor
+        // of 30 is above the WARN_THRESHOLD (25) and below FINAL_WARN (18),
+        // so warnings/firings are suppressed during the grace window.
+        let grace_floor = if crate::firing::manager_in_grace_period(&game.manager, game.clock.current_date) {
+            crate::firing::MANAGER_GRACE_FLOOR
+        } else {
+            0
+        };
+        let new_sat = new_sat.max(grace_floor);
         game.manager.satisfaction = new_sat;
 
         // Fan approval — fans react more emotionally
@@ -911,6 +926,12 @@ fn update_team_form(
 }
 
 fn deplete_match_stamina(game: &mut Game, team_id: &str, report: &engine::MatchReport) {
+    // V99.10 C5: Hoist the RNG outside the loop so we share one across all
+    // players on the team (matches the national-team pattern at
+    // national_team.rs:403-411). Previously each player got a fresh RNG,
+    // which is fine for `apply_match_wear` (deterministic per call) but
+    // wasteful.
+    let mut rng = rand::rng();
     for player in game.players.iter_mut() {
         if player.team_id.as_deref() == Some(team_id) {
             let minutes = report
@@ -920,7 +941,21 @@ fn deplete_match_stamina(game: &mut Game, team_id: &str, report: &engine::MatchR
                 .unwrap_or(0);
             // Shared with national-team friendlies so call-ups wear players
             // identically to club fixtures.
-            crate::player_wear::apply_match_wear(player, minutes, &mut rand::rng());
+            crate::player_wear::apply_match_wear(player, minutes, &mut rng);
+
+            // V99.10 C5: Roll for match injuries on players who actually
+            // played. Previously club matches NEVER applied injuries — only
+            // national-team call-ups did (national_team.rs:406). This meant
+            // squad depth was irrelevant (no injuries to cover) and the only
+            // injury paths were training-ground random events and internationals.
+            //
+            // `roll_match_injury` is idempotent (skips if already injured)
+            // and uses base 1/40 probability scaled by fitness (3x for
+            // unfit, 0.7x for peak). Gating on `minutes > 0` ensures
+            // benchwarmers don't pick up match injuries they didn't earn.
+            if minutes > 0 {
+                crate::player_wear::roll_match_injury(player, &mut rng);
+            }
         }
     }
 }

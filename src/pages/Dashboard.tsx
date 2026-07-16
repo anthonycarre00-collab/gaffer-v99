@@ -394,6 +394,7 @@ export default function Dashboard(): JSX.Element {
  label: t("continueMenu.goToField"),
  icon: <Flag className="w-4 h-4" />,
  desc: t("continueMenu.goToFieldDesc"),
+ // V99.10 UI-1: Matte Gaffer palette (Pitch Green) — no gradients.
  buttonColorClass: "bg-primary-500 hover:bg-primary-600",
  dropdownColorClass: "bg-primary-600 hover:bg-primary-700",
  },
@@ -401,15 +402,22 @@ export default function Dashboard(): JSX.Element {
  label: t("continueMenu.watchSpectator"),
  icon: <Eye className="w-4 h-4" />,
  desc: t("continueMenu.watchSpectatorDesc"),
- buttonColorClass: "from-indigo-500 to-indigo-600",
- dropdownColorClass: "from-indigo-600 to-indigo-700",
+ // V99.10 UI-1: Was "from-indigo-500 to-indigo-600" which requires
+ // `bg-gradient-to-r`/`bg-linear-to-r` to render — without it the button
+ // had NO background and rendered as transparent text. Now uses matte
+ // Brass (accent) to match the Gaffer palette and the live button style.
+ buttonColorClass: "bg-accent-500 hover:bg-accent-600",
+ dropdownColorClass: "bg-accent-600 hover:bg-accent-700",
  },
  delegate: {
  label: t("continueMenu.delegateAssistant"),
  icon: <Cpu className="w-4 h-4" />,
  desc: t("continueMenu.delegateAssistantDesc"),
- buttonColorClass: "from-amber-500 to-amber-600",
- dropdownColorClass: "from-amber-600 to-amber-700",
+ // V99.10 UI-1: Was "from-amber-500 to-amber-600" (same broken gradient
+ // issue). Now uses a darker Brass tone to differentiate from spectator
+ // while staying in the Gaffer palette.
+ buttonColorClass: "bg-accent-600 hover:bg-accent-700",
+ dropdownColorClass: "bg-accent-700 hover:bg-accent-800",
  },
  };
 

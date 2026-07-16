@@ -188,7 +188,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <button
  onClick={handleAdvance}
  disabled={loading}
- className="px-8 py-4 bg-primary-500 text-white rounded font-heading font-bold text-lg uppercase tracking-wider hover:bg-primary-600 transition-all shadow-primary-500/20 hover: hover:shadow-primary-500/30 disabled:opacity-50 flex items-center gap-3 mx-auto"
+ className="px-8 py-4 bg-primary-500 text-white rounded font-heading font-bold text-lg uppercase tracking-wider hover:bg-primary-600 transition-all shadow-primary-500/20 hover:shadow-primary-500/30 disabled:opacity-50 flex items-center gap-3 mx-auto"
  >
  {loading ? t('endOfSeason.processing') : t('endOfSeason.startNextSeason')}
  <ArrowRight className="w-5 h-5" />

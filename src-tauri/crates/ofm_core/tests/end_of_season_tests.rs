@@ -2544,13 +2544,57 @@ fn process_end_of_season_refreshes_transfer_budget_from_finance() {
 
     process_end_of_season(&mut game);
 
-    // Formula matches worldgen (generator/mod.rs:543): 15% of finance.
-    // We assert the invariant against post-prize finance so the test stays
-    // valid regardless of how much prize money each team receives.
+    // V99.10 Item 15: Formula now uses 20% of finance × board_type multiplier
+    // (was stale 15% assertion). The board_type multiplier for the default
+    // BoardType::Sensible is 1.0 for both wage and transfer budgets, so the
+    // assertion simplifies to 20% of finance for these test teams.
     let team1 = game.teams.iter().find(|t| t.id == "team1").unwrap();
     let team2 = game.teams.iter().find(|t| t.id == "team2").unwrap();
-    assert_eq!(team1.transfer_budget, (team1.finance as f64 * 0.15) as i64);
-    assert_eq!(team2.transfer_budget, (team2.finance as f64 * 0.15) as i64);
+    let board_transfer_mult = team1.board_type.transfer_budget_multiplier();
+    assert_eq!(
+        team1.transfer_budget,
+        ((team1.finance as f64 * 0.20) * board_transfer_mult) as i64,
+        "team1 transfer budget should be 20% of finance × board_type multiplier"
+    );
+    let board_transfer_mult2 = team2.board_type.transfer_budget_multiplier();
+    assert_eq!(
+        team2.transfer_budget,
+        ((team2.finance as f64 * 0.20) * board_transfer_mult2) as i64,
+        "team2 transfer budget should be 20% of finance × board_type multiplier"
+    );
     // Team1 went in with an empty envelope; the refill must have run.
     assert!(team1.transfer_budget > 0);
+}
+
+// V99.10 Item 15: Verify the wage_budget refresh now accounts for squad
+// wages (so a club with a big squad gets a wage budget that can actually
+// cover renewals) and applies the board_type multiplier.
+#[test]
+fn process_end_of_season_refreshes_wage_budget_aware_of_squad_wages() {
+    let mut game = make_completed_season_game();
+    let team1_idx = game.teams.iter().position(|t| t.id == "team1").unwrap();
+    game.teams[team1_idx].finance = 10_000_000;
+    game.teams[team1_idx].wage_budget = 0;
+
+    process_end_of_season(&mut game);
+
+    let team1 = game.teams.iter().find(|t| t.id == "team1").unwrap();
+    // The wage budget should be at least the squad's annual wages × 1.15
+    // (the floor we added), so the club can afford to keep its squad + renew.
+    let annual_wages = crate::finances::calc_annual_wages(&game, "team1");
+    let board_wage_mult = team1.board_type.wage_budget_multiplier();
+    let expected_floor = ((annual_wages as f64 * 1.15) * board_wage_mult) as i64;
+    // The budget may be capped at 35% of finance, so we only assert the floor
+    // when the floor is below the cap.
+    let wage_cap = (team1.finance as f64 * 0.35) as i64;
+    if expected_floor <= wage_cap {
+        assert!(
+            team1.wage_budget >= expected_floor,
+            "wage_budget {} should be >= squad_wages × 1.15 × board_mult = {}",
+            team1.wage_budget, expected_floor
+        );
+    }
+    // Regardless of floor/cap, wage_budget should be positive for a club
+    // with positive finance.
+    assert!(team1.wage_budget > 0, "wage_budget should be positive");
 }

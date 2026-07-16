@@ -1049,8 +1049,35 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
                 // `make_transfer_bid`, but showing "€-1.2M transfer budget"
                 // in the UI reads worse than a hard zero.
                 // V99.4 Sprint 6: Match the new 20% transfer budget ratio.
-                team.transfer_budget = ((team.finance as f64 * 0.20) as i64).max(0);
-                team.wage_budget = ((team.finance as f64 * 0.25) as i64).max(0);
+                //
+                // V99.10 Item 15: Apply `board_type` multipliers (matching
+                // worldgen at generator/mod.rs:571) and add a squad-wages
+                // floor so the wage budget can actually cover the current
+                // squad + 15% headroom for renewals. The old flat 25% meant:
+                //   - SugarDaddy clubs got the same wage budget as PennyPinching
+                //     clubs (board_type was ignored at refresh, only applied
+                //     at worldgen).
+                //   - A club with a big squad and small finance got a wage
+                //     budget too small to renew anyone, causing mass Bosmans.
+                let annual_wages = crate::finances::calc_annual_wages(game, &team.id);
+                let board_wage_mult = team.board_type.wage_budget_multiplier();
+                let board_transfer_mult = team.board_type.transfer_budget_multiplier();
+                // Wage floor: squad wages × 1.15 (headroom for renewals).
+                // Wage finance floor: 20% of finance (handles new clubs with
+                // no wages yet). Take the max so both paths are covered.
+                let wage_floor = (annual_wages as f64 * 1.15) as i64;
+                let wage_finance_floor = (team.finance as f64 * 0.20) as i64;
+                // Wage cap: 35% of finance (prevents SugarDaddy clubs from
+                // over-committing to wages they can't sustain).
+                let wage_cap = (team.finance as f64 * 0.35) as i64;
+                team.wage_budget = (((wage_floor.max(wage_finance_floor) as f64)
+                    * board_wage_mult) as i64)
+                    .min(wage_cap)
+                    .max(0);
+                // Transfer budget: 20% of finance × board_type multiplier.
+                team.transfer_budget = (((team.finance as f64 * 0.20) as i64 as f64)
+                    * board_transfer_mult) as i64
+                    .max(0);
             }
         }
 
@@ -1187,6 +1214,17 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
         next_season,
         &last_fixture_date,
     );
+
+    // V99.10 Item 16: Re-seed the AI loan market annually so the next
+    // season's transfer window has fresh loan listings. Previously
+    // `seed_opening_ai_loan_market` was only called once at career start
+    // (from save_manager.rs), so after season 1 the loan market went inert
+    // — AI clubs never re-flagged surplus players as loan-listed, and the
+    // only loan traffic was user-initiated. This runs AFTER competition
+    // regeneration so the new season's squads are settled. The function is
+    // idempotent (only adds enough to reach 2 loan-listed players per AI
+    // club), so re-running annually is safe.
+    crate::transfers::seed_opening_ai_loan_market(game);
 
     let preview_date = game.clock.current_date.to_rfc3339();
     let team_names: Vec<String> = game.teams.iter().map(|team| team.name.clone()).collect();

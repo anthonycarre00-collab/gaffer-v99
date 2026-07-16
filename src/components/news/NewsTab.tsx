@@ -342,7 +342,7 @@ function HeroArticle({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover: dark:hover:border-navy-600 transition-all group"
+ className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group"
  >
  <div className="p-6">
  <div className="flex items-center gap-2 mb-3">
@@ -439,7 +439,7 @@ function ArticleCard({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover: dark:hover:border-navy-600 transition-all group flex flex-col"
+ className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group flex flex-col"
  >
  <div className="p-4 flex-1 flex flex-col">
  <div className="flex items-center gap-2 mb-2">

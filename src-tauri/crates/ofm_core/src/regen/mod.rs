@@ -35,12 +35,20 @@ fn potential_band_for_position(position: &Position) -> (u8, u8) {
 
 /// Bias the potential band upward for high-reputation teams.
 /// Big clubs produce better academy prospects (better facilities, coaching, scouting).
+///
+/// V99.10 C8: Fixed scale mismatch. Team reputation is on a 0-1000 scale
+/// (see `reputation.rs:17 MAX_REPUTATION = 1000`), but the old thresholds
+/// (80/65/50) were on a 0-100 scale. Every team in the game (even the
+/// weakest at reputation ~100) tripped the `>= 80` check and got the +5
+/// elite-club bias, so big clubs did NOT produce better newgens than
+/// small clubs. New thresholds match the 0-1000 scale used everywhere
+/// else in the codebase.
 fn reputation_bias(team_reputation: u32) -> i8 {
-    if team_reputation >= 80 {
+    if team_reputation >= 800 {
         5
-    } else if team_reputation >= 65 {
+    } else if team_reputation >= 650 {
         3
-    } else if team_reputation >= 50 {
+    } else if team_reputation >= 500 {
         1
     } else {
         0
@@ -80,7 +88,7 @@ pub fn generate_replacement_regen(
     team_id: &str,
     team_reputation: u32,
     team_country: &str,
-    _season: u32,
+    season: u32,
     rng: &mut impl Rng,
 ) -> Player {
     // Use the existing youth academy generator, then customize for Phase 8.
@@ -104,7 +112,10 @@ pub fn generate_replacement_regen(
     } else {
         19
     };
-    let birth_year = 2024 - age;
+    // V99.10 C2: Use the current season year (not hardcoded 2024) so regens
+    // are born in the correct year for the in-game calendar. A regen generated
+    // in 2030 with age 17 gets birth_year = 2013, not 2007.
+    let birth_year = season as i32 - age;
     regen.date_of_birth = format!("{}-{:02}-{:02}", birth_year, rng.random_range(1..=12), rng.random_range(1..=28));
 
     // Override potential with position-band roll
@@ -131,12 +142,18 @@ pub fn generate_replacement_regen(
     // Assign to the team
     regen.team_id = Some(team_id.to_string());
 
-    // Contract: 3-year youth contract
-    regen.contract_end = Some(format!("{}-06-30", 2024 + 3));
+    // V99.10 C2: Contract end is 3 years from the CURRENT SEASON, not the
+    // hardcoded 2024. The old code `2024 + 3 = 2027` meant every regen
+    // generated from season 4 onward (year >= 2028) was immediately
+    // released as a free agent the next day because their contract had
+    // already expired.
+    regen.contract_end = Some(format!("{}-06-30", season + 3));
     regen.wage = 1000; // youth wage
 
-    // Refresh derived ratings
-    crate::player_rating::refresh_player_derived(&mut regen, 2024);
+    // V99.10 C2: Refresh derived ratings using the current season year so
+    // the Wonderkid trait check uses the correct age (was hardcoded 2024,
+    // causing regens in 2030+ to be mis-aged and wrongly tagged).
+    crate::player_rating::refresh_player_derived(&mut regen, season);
 
     regen
 }
@@ -147,7 +164,7 @@ pub fn generate_academy_intake_regens(
     team_id: &str,
     team_reputation: u32,
     team_country: &str,
-    _season: u32,
+    season: u32,
     rng: &mut impl Rng,
 ) -> Vec<Player> {
     use rand::RngExt;
@@ -173,7 +190,8 @@ pub fn generate_academy_intake_regens(
         // Age 16-19
         let age_roll: u32 = rng.random_range(0..100);
         let age = if age_roll < 25 { 16 } else if age_roll < 75 { 17 } else { 18 };
-        let birth_year = 2024 - age;
+        // V99.10 C2: Use current season year for birth year (was hardcoded 2024).
+        let birth_year = season as i32 - age;
         regen.date_of_birth = format!("{}-{:02}-{:02}", birth_year, rng.random_range(1..=12), rng.random_range(1..=28));
 
         // Potential
@@ -190,10 +208,12 @@ pub fn generate_academy_intake_regens(
         regen.stability_modifier = rng.random_range(30..=70);
         regen.squad_role = SquadRole::Youth;
         regen.team_id = Some(team_id.to_string());
-        regen.contract_end = Some(format!("{}-06-30", 2024 + 3));
+        // V99.10 C2: Contract end is 3 years from the current season (was 2027).
+        regen.contract_end = Some(format!("{}-06-30", season + 3));
         regen.wage = 1000;
 
-        crate::player_rating::refresh_player_derived(&mut regen, 2024);
+        // V99.10 C2: Use current season year for derived ratings (was 2024).
+        crate::player_rating::refresh_player_derived(&mut regen, season);
         regens.push(regen);
     }
 
@@ -368,7 +388,10 @@ pub fn generate_season_regens(game: &mut Game, season: u32) {
         .into_iter()
         .map(|(player_id, team_id, position, nationality)| {
             let team = game.teams.iter().find(|t| t.id == team_id);
-            let reputation = team.map(|t| t.reputation).unwrap_or(50);
+            // V99.10 C8: Default reputation 500 (mid-table on 0-1000 scale).
+            // Was 50 (0-100 scale) which gave every fallback team the elite
+            // +5 bias due to the scale mismatch fixed above.
+            let reputation = team.map(|t| t.reputation).unwrap_or(500);
             let country = team.map(|t| t.country.clone()).unwrap_or_else(|| "England".to_string());
             (player_id, team_id, position, nationality, reputation, country)
         })
@@ -603,30 +626,45 @@ mod tests {
         assert_eq!(max, 90);
     }
 
+    // V99.10 C8: Tests updated to use the 0-1000 reputation scale (was 0-100).
     #[test]
     fn reputation_bias_high_reputation() {
-        assert_eq!(reputation_bias(85), 5);
-        assert_eq!(reputation_bias(80), 5);
+        assert_eq!(reputation_bias(950), 5); // elite (e.g. Man City ~880-950)
+        assert_eq!(reputation_bias(800), 5); // top-tier threshold
     }
 
     #[test]
     fn reputation_bias_medium_reputation() {
-        assert_eq!(reputation_bias(70), 3);
-        assert_eq!(reputation_bias(65), 3);
+        assert_eq!(reputation_bias(700), 3); // strong mid-table
+        assert_eq!(reputation_bias(650), 3); // mid-table threshold
     }
 
     #[test]
     fn reputation_bias_low_reputation() {
-        assert_eq!(reputation_bias(55), 1);
-        assert_eq!(reputation_bias(40), 0);
+        assert_eq!(reputation_bias(550), 1); // lower-mid-table
+        assert_eq!(reputation_bias(400), 0); // lower-tier, no bias
+    }
+
+    // V99.10 C8: Verify big clubs actually get a higher bias than small clubs
+    // (the bug was that every club got +5 due to the scale mismatch).
+    #[test]
+    fn reputation_bias_big_club_higher_than_small_club() {
+        let big = reputation_bias(900);   // elite club
+        let small = reputation_bias(300); // lower-tier club
+        assert!(
+            big > small,
+            "big club bias ({}) should exceed small club bias ({})",
+            big, small
+        );
     }
 
     #[test]
     fn roll_potential_within_band() {
         let mut rng = rand::rng();
         for _ in 0..1000 {
-            let p = roll_potential(&Position::Midfielder, 60, &mut rng);
-            // Midfielder band: 45-90, +1 bias for rep 60
+            // V99.10 C8: Use 0-1000 scale (was 60). 600 = mid-table.
+            let p = roll_potential(&Position::Midfielder, 600, &mut rng);
+            // Midfielder band: 45-90, +1 bias for rep 600 (>= 500)
             assert!((45..=91).contains(&p), "potential {} out of range", p);
         }
     }
@@ -634,17 +672,18 @@ mod tests {
     #[test]
     fn roll_potential_biased_upward_for_big_clubs() {
         let mut rng = rand::rng();
-        // Big club (rep 85): +5 bias → band 50-95
+        // V99.10 C8: Use 0-1000 scale (was 85/40).
+        // Big club (rep 850): +5 bias → band 50-97
         let mut big_club_potentials = Vec::new();
         for _ in 0..1000 {
-            big_club_potentials.push(roll_potential(&Position::Forward, 85, &mut rng));
+            big_club_potentials.push(roll_potential(&Position::Forward, 850, &mut rng));
         }
         let avg_big: f64 = big_club_potentials.iter().map(|&p| p as f64).sum::<f64>() / 1000.0;
 
-        // Small club (rep 40): +0 bias → band 45-92
+        // Small club (rep 400): +0 bias → band 45-92
         let mut small_club_potentials = Vec::new();
         for _ in 0..1000 {
-            small_club_potentials.push(roll_potential(&Position::Forward, 40, &mut rng));
+            small_club_potentials.push(roll_potential(&Position::Forward, 400, &mut rng));
         }
         let avg_small: f64 = small_club_potentials.iter().map(|&p| p as f64).sum::<f64>() / 1000.0;
 
@@ -719,6 +758,56 @@ mod tests {
         let regen = generate_replacement_regen(&retiring, "team_1", 60, "England", 2024, &mut rng);
         assert!(regen.contract_end.is_some());
         assert!(regen.wage > 0);
+    }
+
+    // V99.10 C2: Regression test for the hardcoded "2024 + 3" bug. A regen
+    // generated in season 2030 must have a contract ending in 2033, NOT 2027.
+    // The old code produced "2027-06-30" for every regen regardless of season,
+    // causing regens from season 4+ to be released as free agents immediately.
+    #[test]
+    fn replacement_regen_contract_end_uses_season_year() {
+        let retiring = make_test_player(Position::Midfielder, "England");
+        let mut rng = rand::rng();
+        // Generate in season 2030 — contract should end 2033-06-30
+        let regen = generate_replacement_regen(&retiring, "team_1", 60, "England", 2030, &mut rng);
+        let contract_end = regen.contract_end.expect("regen should have a contract_end");
+        assert_eq!(
+            contract_end, "2033-06-30",
+            "regen generated in 2030 must have contract ending 2033-06-30, got {}",
+            contract_end
+        );
+    }
+
+    // V99.10 C2: Same regression test for the academy intake path.
+    #[test]
+    fn academy_intake_contract_end_uses_season_year() {
+        let mut rng = rand::rng();
+        let regens = generate_academy_intake_regens("team_1", 60, "England", 2031, &mut rng);
+        assert!(!regens.is_empty());
+        for regen in &regens {
+            let contract_end = regen.contract_end.as_ref().expect("academy regen should have contract_end");
+            assert_eq!(
+                contract_end, "2034-06-30",
+                "academy regen generated in 2031 must have contract ending 2034-06-30, got {}",
+                contract_end
+            );
+        }
+    }
+
+    // V99.10 C2: Verify birth_year uses the season year, not hardcoded 2024.
+    // A 17-year-old regen generated in 2030 should be born in 2013.
+    #[test]
+    fn replacement_regen_birth_year_uses_season_year() {
+        let retiring = make_test_player(Position::Midfielder, "England");
+        let mut rng = rand::rng();
+        let regen = generate_replacement_regen(&retiring, "team_1", 60, "England", 2030, &mut rng);
+        let birth_year: i32 = regen.date_of_birth.split('-').next().unwrap().parse().unwrap();
+        // Age is 16-19, so birth_year should be 2030 - {16..19} = 2011..=2014
+        assert!(
+            (2011..=2014).contains(&birth_year),
+            "regen born in {} for season 2030 — expected 2011-2014 (age 16-19)",
+            birth_year
+        );
     }
 
     #[test]

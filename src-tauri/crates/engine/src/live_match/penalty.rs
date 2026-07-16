@@ -26,7 +26,13 @@ impl LiveMatchState {
         let gk = self.pick_goalkeeper(kicking_side.opposite());
 
         let shoot_skill = (taker.finishing as f64 + taker.composure as f64) / 2.0;
-        let gk_skill = (gk.shot_stopping as f64 + gk.shot_stopping as f64) / 2.0;
+        // V99.10 C15: Fixed copy-paste bug — was `gk.shot_stopping + gk.shot_stopping`
+        // which doubled shot_stopping and completely ignored the `commanding`
+        // attribute. Now averages shot_stopping (reflex saves) with commanding
+        // (box control, reading the kicker) — the two GK-specific skills that
+        // matter for penalty shootouts. This makes well-rounded keepers
+        // properly better than one-dimensional shot-stoppers in shootouts.
+        let gk_skill = (gk.shot_stopping as f64 + gk.commanding as f64) / 2.0;
 
         // Fatigue affects penalty accuracy in shootout
         let taker_condition = self

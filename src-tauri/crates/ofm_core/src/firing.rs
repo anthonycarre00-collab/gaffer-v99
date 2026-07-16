@@ -16,6 +16,43 @@ const FIRED_ID_PREFIX: &str = "board_fired";
 const STAGE_WARNING: u8 = 1;
 const STAGE_FINAL: u8 = 2;
 
+// V99.10 Item 23: New-manager grace period constants.
+/// Number of days after appointment during which the manager is protected
+/// from being sacked (satisfaction can't drop below `MANAGER_GRACE_FLOOR`).
+/// 30 days = ~1 month, matching real football's "you can't be sacked in
+/// your first month" convention.
+pub const MANAGER_GRACE_DAYS: i64 = 30;
+/// Minimum satisfaction during the grace period. Set above WARN_THRESHOLD
+/// (25) so the board doesn't issue warnings during the honeymoon, but
+/// below FINAL_WARN (18) is irrelevant since we early-return in
+/// `check_manager_firing` during grace anyway.
+pub const MANAGER_GRACE_FLOOR: u8 = 30;
+
+/// V99.10 Item 23: Returns true if the manager is within their first
+/// `MANAGER_GRACE_DAYS` (30) days of appointment at their current club.
+///
+/// Determined by looking at the last open-ended entry in `career_history`
+/// (the current appointment). If no career history exists (legacy saves),
+/// returns false (no grace — safe default).
+pub fn manager_in_grace_period(
+    manager: &domain::manager::Manager,
+    today: chrono::DateTime<chrono::Utc>,
+) -> bool {
+    // Find the current (open-ended) career entry — the one with no end_date.
+    let current_appointment = manager.career_history.iter().rev()
+        .find(|entry| entry.end_date.is_none());
+    let Some(appointment) = current_appointment else {
+        // No career history or no current appointment — no grace.
+        return false;
+    };
+    let Ok(start_date) = chrono::NaiveDate::parse_from_str(&appointment.start_date, "%Y-%m-%d") else {
+        // Unparseable start date — no grace (defensive).
+        return false;
+    };
+    let days_since_appointment = (today.date_naive() - start_date).num_days();
+    days_since_appointment < MANAGER_GRACE_DAYS
+}
+
 enum FiringDecision {
     NoAction,
     Warning,
@@ -64,6 +101,17 @@ fn firing_decision(satisfaction: u8, stage: u8) -> FiringDecision {
 
 fn check_user_manager_firing(game: &mut Game) -> bool {
     if game.manager.team_id.is_none() {
+        return false;
+    }
+
+    // V99.10 Item 23: New-manager grace period. Suppress all board action
+    // (warnings, final warnings, firings) for the first 30 days after
+    // appointment. The satisfaction floor in `apply_match_report_morale`
+    // (post_match.rs:213-218) already keeps satisfaction ≥ 30 during grace,
+    // but this early-return is belt-and-braces: it also suppresses the
+    // warning MESSAGE, which would otherwise confuse a new manager who's
+    // "doing fine but got warned".
+    if manager_in_grace_period(&game.manager, game.clock.current_date) {
         return false;
     }
 
@@ -567,6 +615,100 @@ mod tests {
                     && article.source_key.as_deref() == Some("be.source.leagueWire")
             }),
             "An AI managerial dismissal should create a managerial-change news article"
+        );
+    }
+
+    // V99.10 Item 23: Grace period tests.
+    #[test]
+    fn manager_in_grace_period_returns_true_for_recent_appointment() {
+        let manager = Manager::new(
+            "mgr1".to_string(),
+            "Test".to_string(),
+            "Manager".to_string(),
+            "1980-01-01".to_string(),
+            "England".to_string(),
+        );
+        // Simulate an appointment 10 days ago.
+        let mut career_entry = ManagerCareerEntry::open(
+            "team1".to_string(),
+            "Team One".to_string(),
+            "2026-10-05".to_string(),
+        );
+        career_entry.end_date = None;
+        let mut manager = manager;
+        manager.career_history.push(career_entry);
+
+        let today = Utc.with_ymd_and_hms(2026, 10, 15, 12, 0, 0).unwrap(); // 10 days later
+        assert!(
+            manager_in_grace_period(&manager, today),
+            "Manager appointed 10 days ago should be in grace period"
+        );
+    }
+
+    #[test]
+    fn manager_in_grace_period_returns_false_after_30_days() {
+        let manager = Manager::new(
+            "mgr1".to_string(),
+            "Test".to_string(),
+            "Manager".to_string(),
+            "1980-01-01".to_string(),
+            "England".to_string(),
+        );
+        // Simulate an appointment 40 days ago.
+        let mut manager = manager;
+        manager.career_history.push(ManagerCareerEntry::open(
+            "team1".to_string(),
+            "Team One".to_string(),
+            "2026-09-05".to_string(),
+        ));
+
+        let today = Utc.with_ymd_and_hms(2026, 10, 15, 12, 0, 0).unwrap(); // 40 days later
+        assert!(
+            !manager_in_grace_period(&manager, today),
+            "Manager appointed 40 days ago should NOT be in grace period"
+        );
+    }
+
+    #[test]
+    fn manager_in_grace_period_returns_false_with_no_career_history() {
+        let manager = Manager::new(
+            "mgr1".to_string(),
+            "Test".to_string(),
+            "Manager".to_string(),
+            "1980-01-01".to_string(),
+            "England".to_string(),
+        );
+        let today = Utc.with_ymd_and_hms(2026, 10, 15, 12, 0, 0).unwrap();
+        // No career_history entries — should return false (no grace).
+        assert!(
+            !manager_in_grace_period(&manager, today),
+            "Manager with no career history should NOT be in grace period"
+        );
+    }
+
+    #[test]
+    fn no_firing_during_grace_period_even_with_low_satisfaction() {
+        // Build a game where the manager was appointed 5 days ago and has
+        // satisfaction = 10 (below FIRE_THRESHOLD). The grace period should
+        // suppress the firing.
+        let mut game = make_game(10); // satisfaction = 10
+                                      // make_game uses clock date 2026-10-15.
+                                      // Add a career entry 5 days ago (2026-10-10).
+        game.manager.career_history.push(ManagerCareerEntry::open(
+            "team1".to_string(),
+            "Team One".to_string(),
+            "2026-10-10".to_string(),
+        ));
+
+        let fired = check_manager_firing(&mut game);
+        assert!(
+            !fired,
+            "Manager in grace period should NOT be fired even with satisfaction = 10"
+        );
+        // Also verify no warning was sent (warning_stage should still be 0).
+        assert_eq!(
+            game.manager.warning_stage, 0,
+            "No warning should be issued during grace period"
         );
     }
 }

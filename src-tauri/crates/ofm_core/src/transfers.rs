@@ -43,9 +43,19 @@ const MAX_NEW_INCOMING_USER_OFFERS_PER_DAY: usize = 3;
 /// A club won't pursue a player whose current club out-reputes it by more than
 /// this margin — the player wouldn't realistically drop to a much smaller side.
 const MAX_BUYER_REPUTATION_DEFICIT: i32 = 150;
-/// A club already this deep in a position group has no need to sign another
-/// there, so it looks elsewhere.
-const POSITION_GROUP_SURPLUS_THRESHOLD: usize = 8;
+/// V99.10 Item 14: Per-position surplus thresholds. A club at or above this
+/// depth in a position group won't sign another player there.
+///
+/// Index order matches `position_group_index`: [GK, DEF, MID, FWD].
+/// - GK=3: 1 starter + 1 backup + 1 youth prospect. A club with 3 GKs has
+///   no need for a 4th — the old uniform threshold of 8 let clubs hoover up
+///   goalkeepers endlessly.
+/// - DEF=8: 4 starters + 4 backups (covers 2 FB + 2 CB in a back four).
+/// - MID=8: 4 starters + 4 backups (covers 2 CM + 2 wide in a 4-4-2 / 4-3-3).
+/// - FWD=6: 3 starters + 3 backups (covers a front three in 4-3-3 / 3 up
+///   top in 4-4-2). Forwards rotate more, so slightly fewer needed than
+///   defensive positions.
+const POSITION_GROUP_SURPLUS_THRESHOLDS: [usize; 4] = [3, 8, 8, 6];
 const ERR_TRANSFER_WINDOW_CLOSED: &str = "be.error.transfers.transferWindowClosed";
 const ERR_CANNOT_BID_ON_OWN_PLAYER: &str = "be.error.transfers.cannotBidOnOwnPlayer";
 const ERR_PLAYER_HAS_NO_TEAM: &str = "be.error.transfers.playerHasNoTeam";
@@ -297,14 +307,21 @@ fn position_group_index(position: &domain::player::Position) -> usize {
 /// Whether a club has a realistic reason to pursue a target: it isn't far below
 /// the player's current club in stature, and it isn't already overloaded in the
 /// player's position group.
+///
+/// V99.10 Item 14: Now takes `position_group_index` so the surplus check
+/// uses the per-position threshold (GK=3, DEF=8, MID=8, FWD=6) instead of
+/// the old uniform 8. This prevents clubs from hoovering up goalkeepers
+/// they don't need.
 fn buyer_has_genuine_interest(
     buyer_reputation: u32,
     owner_reputation: u32,
     buyer_position_depth: usize,
+    position_group_index: usize,
 ) -> bool {
     let reputation_deficit = owner_reputation as i32 - buyer_reputation as i32;
+    let surplus_threshold = POSITION_GROUP_SURPLUS_THRESHOLDS[position_group_index];
     reputation_deficit <= MAX_BUYER_REPUTATION_DEFICIT
-        && buyer_position_depth < POSITION_GROUP_SURPLUS_THRESHOLD
+        && buyer_position_depth < surplus_threshold
 }
 
 /// Current squad depth per club and broad position group, computed once so the
@@ -1145,10 +1162,13 @@ pub fn evaluate_transfer_market(game: &mut Game) {
             }
             // Clubs only chase players that fit their stature and a position they
             // actually need, so a single star doesn't draw the whole division.
+            // V99.10 Item 14: Pass the position group index so the per-position
+            // surplus threshold is used (GK=3, DEF=8, MID=8, FWD=6).
             if !buyer_has_genuine_interest(
                 buyer_team.reputation,
                 target.owner_reputation,
                 buyer_depths[target.position_group_index],
+                target.position_group_index,
             ) {
                 return false;
             }
@@ -1214,9 +1234,15 @@ pub fn generate_incoming_transfer_offers(game: &mut Game) {
 /// V99.3 VITAL-1 C2: AI free-agent signing.
 ///
 /// After the regular transfer market runs, AI clubs with thin squads
-/// (fewer than POSITION_GROUP_SURPLUS_THRESHOLD players in any position
-/// group) sign the strongest eligible free agent for the needed position.
-/// Capped at 1 signing per club per day to prevent hoarding.
+/// (fewer than the per-position surplus threshold — see
+/// `POSITION_GROUP_SURPLUS_THRESHOLDS`) sign the strongest eligible free
+/// agent for the needed position. Capped at 1 signing per club per day
+/// to prevent hoarding.
+///
+/// V99.10 Item 14: Now uses per-position thresholds (GK=3, DEF=8, MID=8,
+/// FWD=6) instead of the old uniform 6. This unifies the surplus logic
+/// with `evaluate_transfer_market` so both paths agree on what counts
+/// as "thin enough to need a signing".
 fn ai_sign_free_agents(game: &mut Game) {
     let current_date = game.clock.current_date.date_naive();
     let user_team_id = game.manager.team_id.clone();
@@ -1269,14 +1295,25 @@ fn ai_sign_free_agents(game: &mut Game) {
             *pos_counts.entry(pg).or_insert(0) += 1;
         }
 
-        // Find the position group with the fewest players that's below threshold.
-        let threshold = 6; // minimum squad depth per position group
-        let need_pos = ["GK", "DEF", "MID", "FWD"]
+        // V99.10 Item 14: Use per-position thresholds (was hardcoded 6 for
+        // all groups, which disagreed with POSITION_GROUP_SURPLUS_THRESHOLD=8
+        // used in evaluate_transfer_market). Now both paths use the same
+        // per-position array: GK=3, DEF=8, MID=8, FWD=6.
+        let position_thresholds: [(&'static str, usize); 4] = [
+            ("GK", POSITION_GROUP_SURPLUS_THRESHOLDS[0]),
+            ("DEF", POSITION_GROUP_SURPLUS_THRESHOLDS[1]),
+            ("MID", POSITION_GROUP_SURPLUS_THRESHOLDS[2]),
+            ("FWD", POSITION_GROUP_SURPLUS_THRESHOLDS[3]),
+        ];
+        // Find the position group with the fewest players that's below its
+        // per-position threshold. Prioritise the thinnest group so the AI
+        // fills genuine gaps rather than stockpiling.
+        let need_pos = position_thresholds
             .iter()
-            .map(|&pg| (pg, *pos_counts.get(pg).unwrap_or(&0)))
-            .min_by_key(|&(_, count)| count)
-            .filter(|&(_, count)| count < threshold)
-            .map(|(pg, _)| pg);
+            .map(|&(pg, threshold)| (pg, *pos_counts.get(pg).unwrap_or(&0), threshold))
+            .filter(|&(_, count, threshold)| count < threshold)
+            .min_by_key(|&(_, count, _)| count)
+            .map(|(pg, _, _)| pg);
 
         let Some(need_pg) = need_pos else {
             continue;

@@ -406,10 +406,15 @@ input[type="number"] {
 /* Subtle paper texture for cards — adds depth without overwhelming the UI.
    Applied via the `gaffer-card-texture` class. Uses a generated SVG noise
    pattern embedded as a data URL so it works in packaged builds without
-   needing an extra asset file. */
+   needing an extra asset file.
+   V99.10 UI-7: Bumped opacity from 0.4 → 0.7 (and the feColorMatrix alpha
+   from 0.08 → 0.15) so the texture is actually visible. The old values
+   produced ~3% effective opacity which was invisible on most monitors —
+   cards looked like flat plastic instead of dugout paper. Now the
+   texture reads as a subtle warm grain. */
 .gaffer-card-texture {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0.08 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.4'/></svg>");
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0.15 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.7'/></svg>");
   background-size: 80px 80px;
   background-repeat: repeat;
 }
@@ -679,10 +684,12 @@ input[type="number"] {
    The default gaffer-card-texture SVG noise was too subtle in light mode
    and vanished in dark mode. We add a dark-mode variant that uses a
    lighter noise (warm cream tones) so cards still feel "papery" in dark
-   mode instead of looking like flat plastic. */
+   mode instead of looking like flat plastic.
+   V99.10 UI-7: Bumped dark-mode opacity from 0.5 → 0.7 and feColorMatrix
+   alpha from 0.06 → 0.12 so the texture is visible on dark surfaces. */
 .dark .gaffer-card-texture {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.91  0 0 0 0 0.82  0 0 0 0.06 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.5'/></svg>");
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.91  0 0 0 0 0.82  0 0 0 0.12 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.7'/></svg>");
   background-size: 80px 80px;
   background-repeat: repeat;
   background-blend-mode: soft-light;

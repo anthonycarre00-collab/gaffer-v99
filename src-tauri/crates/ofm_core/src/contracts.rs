@@ -1333,7 +1333,12 @@ pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDat
         wage *= 0.90; // 10% wage discount for having a release clause
     }
 
-    if team.reputation < 40 {
+    // V99.10 C8: Small-club wage premium — players at low-reputation clubs
+    // demand a 5% premium to compensate for lower profile/exposure. The old
+    // threshold `< 40` was on a 0-100 scale but team reputation is 0-1000
+    // (see reputation.rs:17), so this branch NEVER fired. New threshold 400
+    // is the equivalent on the correct scale (bottom-tier clubs).
+    if team.reputation < 400 {
         wage *= 1.05;
     }
 
