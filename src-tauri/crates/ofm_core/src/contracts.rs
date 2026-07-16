@@ -1123,7 +1123,7 @@ fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
         let RenewalCandidate {
             player_index,
             ref team_id,
-            age,
+            age: _,
             ovr,
             morale,
             days_remaining: _,

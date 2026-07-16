@@ -1404,7 +1404,7 @@ fn ai_sign_free_agents(game: &mut Game) {
             // back to market_value / 50 when wage = 0). The FA's current
             // wage is 0 (set on release), so expected_wage will derive
             // from market_value and apply all the multipliers.
-            let expected_wage = crate::contracts::expected_wage(fa, team, current_date);
+            let expected_wage = crate::contracts::expected_wage(fa, &team, current_date);
             // Don't sign if the wage demand exceeds the team's wage budget.
             if expected_wage as i64 > team.wage_budget {
                 continue;
@@ -1414,7 +1414,7 @@ fn ai_sign_free_agents(game: &mut Game) {
             // skip — prevents AI from bankrupting itself on free agents.
             if !crate::contract_wage_policy::renewal_wage_policy_allows(
                 game,
-                team,
+                &team,
                 0, // FA has no current wage
                 expected_wage,
             ) {
@@ -1519,16 +1519,6 @@ fn sign_free_agent_to_team_with_wage(
     if player.team_id.is_some() {
         return Err("player already has a team".to_string());
     }
-
-    let age = {
-        let dob = NaiveDate::parse_from_str(&player.date_of_birth, "%Y-%m-%d")
-            .map_err(|_| "invalid dob")?;
-        let mut a = current_date.year() - dob.year();
-        if current_date.ordinal() < dob.ordinal() {
-            a -= 1;
-        }
-        a
-    };
 
     // V99.10 C4: Use expected_contract_years (age-based) for consistency
     // with the user-side flow and the C3 AI renewal rewrite.

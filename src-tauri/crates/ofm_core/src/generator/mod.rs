@@ -493,7 +493,6 @@ pub fn replenish_manager_and_scout_market(game: &mut crate::game::Game) {
 pub fn backfill_team_staff_slots(game: &mut crate::game::Game) {
     let (names_def, country_codes) = create_staff_generator_context();
     let mut rng = rand::rng();
-    let current_year = game.clock.current_date.year() as u32;
 
     let roles = [
         StaffRole::AssistantManager,
@@ -525,7 +524,6 @@ pub fn backfill_team_staff_slots(game: &mut crate::game::Game) {
                 role.clone(),
                 &nationality,
                 &names_def,
-                current_year,
                 &mut rng,
             );
             staff.team_id = Some(team_id.clone());

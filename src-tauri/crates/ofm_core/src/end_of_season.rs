@@ -1004,6 +1004,11 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
         .unwrap_or(0);
     for (division_standings, tier) in divisions {
         for (idx, standing) in division_standings.iter().enumerate() {
+            // V99.10 fix: Compute annual_wages BEFORE the mutable borrow
+            // of game.teams to avoid E0502 (cannot borrow *game as
+            // immutable because it is also borrowed as mutable).
+            let team_id = &standing.team_id;
+            let annual_wages = crate::finances::calc_annual_wages(game, team_id);
             if let Some(team) = game.teams.iter_mut().find(|t| t.id == standing.team_id) {
                 let position = (idx + 1) as u32;
                 let prize_money = division_prize_money(position, tier);
@@ -1059,7 +1064,7 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
                 //     at worldgen).
                 //   - A club with a big squad and small finance got a wage
                 //     budget too small to renew anyone, causing mass Bosmans.
-                let annual_wages = crate::finances::calc_annual_wages(game, &team.id);
+                // V99.10 fix: annual_wages computed before the mutable borrow (see above).
                 let board_wage_mult = team.board_type.wage_budget_multiplier();
                 let board_transfer_mult = team.board_type.transfer_budget_multiplier();
                 // Wage floor: squad wages × 1.15 (headroom for renewals).
@@ -1075,11 +1080,8 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
                     .min(wage_cap)
                     .max(0);
                 // Transfer budget: 20% of finance × board_type multiplier.
-                // V99.10 fix: Removed invalid `as i64 as f64` cast chain —
-                // keep it as f64 throughout the multiplication, then cast to i64 at the end.
-                team.transfer_budget = ((team.finance as f64 * 0.20)
-                    * board_transfer_mult) as i64
-                    .max(0);
+                team.transfer_budget = (((team.finance as f64 * 0.20)
+                    * board_transfer_mult) as i64).max(0);
             }
         }
 
