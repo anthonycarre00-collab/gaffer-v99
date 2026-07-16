@@ -68,6 +68,45 @@ pub fn refresh_player_derived(player: &mut Player, current_year: u32) {
     // V99.4 T4.1: Derive player fame from OVR + age + career trophies.
     let trophies = player.career.iter().map(|c| c.goals).filter(|&g| g > 0).count() as u32;
     player.fame = domain::player::PlayerFame::derive(ovr, age as i32, trophies);
+
+    // V99.10 C7: Recompute market_value from the current OVR + age.
+    //
+    // Previously `market_value` was set once at worldgen and NEVER updated.
+    // A wonderkid who developed from OVR 60 → 85 kept a £1-2M valuation
+    // forever; a 33-year-old in decline kept their peak-era £8M valuation.
+    // This corrupted every downstream fee calculation (minimum_acceptable_fee,
+    // suggested_incoming_fee, expected_wage, importance_wage_multiplier) and
+    // caused the transfer market to degrade over 5+ seasons.
+    //
+    // Formula mirrors worldgen (generator/generation.rs:278-298): OVR⁴ × 0.5
+    // × age_factor. Uses the position-weighted `ovr` (not `approx_ovr`) for
+    // more accurate valuation. Skipped for retired players (their MV is
+    // irrelevant and they're about to be pruned by C9).
+    //
+    // Cadence: this runs whenever refresh_player_derived is called — weekly
+    // via training ticks, on transfers, on save load, and at end-of-season.
+    // Mid-negotiation drift is mitigated by the TransferOffer.last_manager_fee
+    // snapshot (transfers.rs:881) which captures the fee basis at offer time.
+    if !player.retired {
+        let age_factor = if age <= 23 {
+            1.5
+        } else if age <= 28 {
+            1.2
+        } else if age <= 32 {
+            0.8
+        } else {
+            0.4
+        };
+        let base_value = (ovr as f64).powi(4) * 0.5;
+        let new_market_value = (base_value * age_factor) as u64;
+        // V99.10 C7: Clamp drift to ±25% per refresh to prevent wild swings
+        // from a single training bump. This keeps in-flight transfer
+        // negotiations stable while still tracking long-term OVR changes.
+        let old_mv = player.market_value as f64;
+        let min_mv = (old_mv * 0.75) as u64;
+        let max_mv = (old_mv * 1.25) as u64;
+        player.market_value = new_market_value.clamp(min_mv, max_mv).max(1);
+    }
 }
 
 /// Returns `true` when a player qualifies as a wonderkid: they are at or below
@@ -700,5 +739,82 @@ mod tests {
 
         assert!(player.potential >= player.ovr.saturating_add(10));
         assert!(!player.traits.contains(&PlayerTrait::Wonderkid));
+    }
+
+    // V99.10 C7: Verify market_value is recomputed from current OVR + age.
+    #[test]
+    fn refresh_player_derived_updates_market_value_from_ovr() {
+        let mut player = make_player(Position::Striker);
+        player.date_of_birth = "2000-01-01".to_string(); // age 26 in 2026
+        player.natural_position = Position::Striker;
+        // Set a low market_value to simulate a stale worldgen value.
+        player.market_value = 100_000;
+        // Set high attributes so OVR is high.
+        player.attributes.finishing = 85;
+        player.attributes.anticipation = 80;
+        player.attributes.decisions = 80;
+        player.attributes.pace = 80;
+        player.attributes.touch = 80;
+        player.attributes.power = 80;
+        player.attributes.composure = 80;
+        player.attributes.aerial = 80;
+
+        refresh_player_derived(&mut player, 2026);
+
+        // OVR should be high (~80+). Market value should have increased from
+        // the stale 100k, but the ±25% clamp means it can only grow to 125k
+        // per refresh. Verify it moved in the right direction.
+        assert!(
+            player.market_value > 100_000,
+            "market_value should increase when OVR is high (was 100k, now {})",
+            player.market_value
+        );
+    }
+
+    // V99.10 C7: Verify market_value clamps to ±25% per refresh.
+    #[test]
+    fn refresh_player_derived_market_value_clamps_25_percent() {
+        let mut player = make_player(Position::Striker);
+        player.date_of_birth = "2000-01-01".to_string(); // age 26
+        player.natural_position = Position::Striker;
+        player.market_value = 10_000_000; // £10M
+        // Low attributes → low OVR → low target MV. But the clamp should
+        // prevent it from dropping more than 25% in one refresh.
+        player.attributes.finishing = 30;
+        player.attributes.anticipation = 30;
+        player.attributes.decisions = 30;
+        player.attributes.pace = 30;
+        player.attributes.touch = 30;
+        player.attributes.power = 30;
+        player.attributes.composure = 30;
+        player.attributes.aerial = 30;
+
+        refresh_player_derived(&mut player, 2026);
+
+        // Should not drop below £7.5M (10M × 0.75) in one refresh.
+        assert!(
+            player.market_value >= 7_500_000,
+            "market_value should not drop more than 25% in one refresh (was 10M, now {})",
+            player.market_value
+        );
+    }
+
+    // V99.10 C7: Verify retired players don't get MV recompute (irrelevant).
+    #[test]
+    fn refresh_player_derived_skips_market_value_for_retired_players() {
+        let mut player = make_player(Position::Striker);
+        player.date_of_birth = "2000-01-01".to_string();
+        player.natural_position = Position::Striker;
+        player.retired = true;
+        let original_mv = 5_000_000;
+        player.market_value = original_mv;
+
+        refresh_player_derived(&mut player, 2026);
+
+        // MV should be unchanged for retired players.
+        assert_eq!(
+            player.market_value, original_mv,
+            "retired player market_value should not change"
+        );
     }
 }

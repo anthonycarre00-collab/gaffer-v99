@@ -159,26 +159,64 @@ pub fn generate_replacement_regen(
 }
 
 /// Generate the annual academy intake — 3-5 youth prospects per team.
-/// Position distribution: roughly 1 GK, 1-2 DEF, 1-2 MID, 0-1 FWD.
+/// Position distribution: roughly 0-1 GK, 1-2 DEF, 1-2 MID, 0-1 FWD.
+///
+/// V99.10 Item 20: GK count is now weighted by current squad GK depth.
+/// `current_gk_count` is the number of GKs already at the club. A club
+/// with 3+ GKs has 0% chance of producing another; 2 GKs → 15%; 0-1 → 50%.
+/// This prevents the GK surplus that accumulated over 10 seasons (every
+/// intake had exactly 1 GK → 10 GKs per club by season 10, when a club
+/// only needs ~3).
 pub fn generate_academy_intake_regens(
     team_id: &str,
     team_reputation: u32,
     team_country: &str,
     season: u32,
+    current_gk_count: usize,
     rng: &mut impl Rng,
 ) -> Vec<Player> {
     use rand::RngExt;
     let count: usize = rng.random_range(3..=5);
     let mut regens = Vec::with_capacity(count);
 
-    // Position distribution
-    let positions = if count <= 3 {
-        vec![Position::Goalkeeper, Position::Defender, Position::Midfielder]
-    } else if count == 4 {
-        vec![Position::Goalkeeper, Position::Defender, Position::Midfielder, Position::Forward]
-    } else {
-        vec![Position::Goalkeeper, Position::Defender, Position::Defender, Position::Midfielder, Position::Forward]
+    // V99.10 Item 20: Decide whether to include a GK in this intake,
+    // weighted by current GK depth.
+    let gk_chance = match current_gk_count {
+        0..=1 => 0.50, // thin GK cover → 50% chance of a GK newgen
+        2 => 0.15,     // adequate → 15% chance (backup for the future)
+        _ => 0.0,      // 3+ GKs → no need for another
     };
+    let want_gk = rng.random_range(0.0..1.0) < gk_chance;
+
+    // V99.10 Item 20: Build position list dynamically based on count and
+    // whether we want a GK. Ensures 1-2 DEF, 1-2 MID, 0-1 FWD, 0-1 GK.
+    let mut positions: Vec<Position> = Vec::with_capacity(count);
+    if want_gk {
+        positions.push(Position::Goalkeeper);
+    }
+    // Fill remaining slots with DEF/MID/FWD, prioritising outfield balance.
+    while positions.len() < count {
+        let remaining = count - positions.len();
+        if remaining >= 3 {
+            // Need 3+ more: add DEF, MID, FWD
+            positions.push(Position::Defender);
+            positions.push(Position::Midfielder);
+            positions.push(Position::Forward);
+        } else if remaining == 2 {
+            // Need 2 more: add DEF + MID
+            positions.push(Position::Defender);
+            positions.push(Position::Midfielder);
+        } else {
+            // Need 1 more: add MID (most versatile)
+            positions.push(Position::Midfielder);
+        }
+    }
+    // Shuffle so the GK isn't always first (cosmetic — affects regen order).
+    // Use a simple Fisher-Yates with the provided rng.
+    for i in (1..positions.len()).rev() {
+        let j = rng.random_range(0..=i);
+        positions.swap(i, j);
+    }
 
     for pos in positions {
         let mut regen = generate_youth_academy_recruit_with_nationality(
@@ -455,7 +493,29 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
 
     let mut all_new_regens = Vec::new();
     for (team_id, reputation, country) in &team_info {
-        let regens = generate_academy_intake_regens(team_id, *reputation, &country, _season, &mut rng);
+        // V99.10 Item 20: Count current senior GKs (under age 23) at this
+        // team so the intake can vary GK count by depth. A club with 3+ GKs
+        // has 0% chance of producing another; a club with 0-1 has 50%.
+        // This prevents the GK surplus that accumulated over 10 seasons
+        // (every intake had exactly 1 GK → 10 GKs per club by season 10).
+        let current_gk_count = game
+            .players
+            .iter()
+            .filter(|p| {
+                p.team_id.as_deref() == Some(team_id.as_str())
+                    && !p.retired
+                    && p.position.to_group_position() == domain::player::Position::Goalkeeper
+            })
+            .count();
+
+        let regens = generate_academy_intake_regens(
+            team_id,
+            *reputation,
+            &country,
+            _season,
+            current_gk_count,
+            &mut rng,
+        );
         all_new_regens.extend(regens);
     }
 
@@ -564,6 +624,76 @@ pub fn cleanup_retired_player_scouting(game: &mut Game) {
         .collect();
     for id in retired_ids {
         game.scouting_knowledge.remove(&id);
+    }
+}
+
+/// V99.10 C9: Prune retired players from `game.players`.
+///
+/// Previously retired players were NEVER removed — `retire_player` only
+/// set `retired = true` but left the player in the array forever. Over
+/// 10 seasons the player array grew from ~3,400 to ~8,500, causing save
+/// bloat and CPU slowdown (every daily training pass, match squad build,
+/// and transfer scan iterates the full list).
+///
+/// This function removes all players where `p.retired == true`. It must
+/// be called AFTER:
+///   1. `generate_season_regens` (which reads retired players' position/
+///      nationality to shape replacement regens)
+///   2. `convert_retired_players_to_candidates` (which reads retired
+///      players' career stats to create manager/scout candidates)
+///   3. `cleanup_retired_player_scouting` (which clears scouting knowledge)
+///
+/// It also cleans up dangling references in `relationship_graph.edges`
+/// (no `remove_node` method exists, so we remove edges one by one).
+pub fn prune_retired_players(game: &mut Game) {
+    let retired_ids: Vec<String> = game
+        .players
+        .iter()
+        .filter(|p| p.retired)
+        .map(|p| p.id.clone())
+        .collect();
+
+    if retired_ids.is_empty() {
+        return;
+    }
+
+    // Clean up relationship graph edges that reference retired players.
+    // Without this, `relationship_graph.edges` would accumulate orphaned
+    // keys pointing at player IDs that no longer exist.
+    for retired_id in &retired_ids {
+        // Get all partners of this retired player.
+        let partners: Vec<String> = game
+            .relationship_graph
+            .relationships_for(retired_id)
+            .into_iter()
+            .map(|(partner_id, _)| partner_id.to_string())
+            .collect();
+        // Remove edges in both directions.
+        for partner_id in partners {
+            game.relationship_graph.remove(retired_id, &partner_id);
+            game.relationship_graph.remove(&partner_id, retired_id);
+        }
+    }
+
+    // Clean up scouting knowledge (defensive — cleanup_retired_player_scouting
+    // should have already run, but this ensures no stale entries survive).
+    for retired_id in &retired_ids {
+        game.scouting_knowledge.remove(retired_id);
+    }
+
+    // Prune the players.
+    let before_count = game.players.len();
+    game.players.retain(|p| !p.retired);
+    let after_count = game.players.len();
+    let pruned = before_count - after_count;
+
+    if pruned > 0 {
+        log::info!(
+            "[world] V99.10 C9: Pruned {} retired players ({} → {} active)",
+            pruned,
+            before_count,
+            after_count
+        );
     }
 }
 
@@ -782,7 +912,7 @@ mod tests {
     #[test]
     fn academy_intake_contract_end_uses_season_year() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("team_1", 60, "England", 2031, &mut rng);
+        let regens = generate_academy_intake_regens("team_1", 60, "England", 2031, 0, &mut rng);
         assert!(!regens.is_empty());
         for regen in &regens {
             let contract_end = regen.contract_end.as_ref().expect("academy regen should have contract_end");
@@ -814,7 +944,7 @@ mod tests {
     fn academy_intake_generates_3_to_5_per_team() {
         let mut rng = rand::rng();
         for _ in 0..20 {
-            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, &mut rng);
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
             assert!((3..=5).contains(&regens.len()), "intake count {} out of range", regens.len());
         }
     }
@@ -822,7 +952,7 @@ mod tests {
     #[test]
     fn academy_intake_all_youth_role() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, &mut rng);
+        let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
         for r in &regens {
             assert_eq!(r.squad_role, SquadRole::Youth);
         }
@@ -831,10 +961,49 @@ mod tests {
     #[test]
     fn academy_intake_all_assigned_to_team() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("arsenal", 85, "England", 2024, &mut rng);
+        let regens = generate_academy_intake_regens("arsenal", 85, "England", 2024, 0, &mut rng);
         for r in &regens {
             assert_eq!(r.team_id, Some("arsenal".to_string()));
         }
+    }
+
+    // V99.10 Item 20: Verify GK count varies by current squad depth.
+    #[test]
+    fn academy_intake_no_gk_when_squad_has_3_plus_gks() {
+        let mut rng = rand::rng();
+        // Simulate 100 intakes with current_gk_count = 5 (well above threshold).
+        // 0% chance of GK → no GKs should appear in any intake.
+        let mut total_gks = 0;
+        for _ in 0..100 {
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 5, &mut rng);
+            total_gks += regens.iter()
+                .filter(|r| r.position.to_group_position() == Position::Goalkeeper)
+                .count();
+        }
+        assert_eq!(
+            total_gks, 0,
+            "No GKs should be produced when squad already has 5 GKs, got {}",
+            total_gks
+        );
+    }
+
+    // V99.10 Item 20: Verify GKs ARE produced when squad is thin at GK.
+    #[test]
+    fn academy_intake_produces_gks_when_squad_is_thin() {
+        let mut rng = rand::rng();
+        // 50% chance per intake → over 100 intakes we expect ~50 GKs.
+        // Just verify at least SOME GKs are produced (probabilistic).
+        let mut total_gks = 0;
+        for _ in 0..100 {
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
+            total_gks += regens.iter()
+                .filter(|r| r.position.to_group_position() == Position::Goalkeeper)
+                .count();
+        }
+        assert!(
+            total_gks > 0,
+            "Some GKs should be produced when squad has 0 GKs (50% chance per intake), got 0 in 100 intakes"
+        );
     }
 
     #[test]

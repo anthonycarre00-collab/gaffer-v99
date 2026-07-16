@@ -1125,6 +1125,20 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
     convert_retired_players_to_candidates(game);
     crate::generator::replenish_manager_and_scout_market(game);
 
+    // V99.10 C13/Item 30: Backfill missing team staff slots (AssistantManager,
+    // Coach, Physio) after retirement. Previously only Managers and Scouts
+    // were backfilled, so AI clubs gradually lost their coaching/medical
+    // staff over 10 seasons with no replacement.
+    crate::generator::backfill_team_staff_slots(game);
+
+    // V99.10 C9: Prune retired players from game.players. Must run AFTER
+    // convert_retired_players_to_candidates (which reads retired players'
+    // career stats) and AFTER cleanup_retired_player_scouting (which ran
+    // at line 1116). Without this, retired players pile up forever — the
+    // array grew from ~3,400 to ~8,500 over 10 seasons, causing save bloat
+    // and CPU slowdown. Also cleans up dangling relationship_graph edges.
+    crate::regen::prune_retired_players(game);
+
     // V99.4 T1.4: AI manager poaching — elite clubs can poach managers from
     // smaller clubs at end-of-season. Creates dynamic managerial movement.
     crate::ai_hiring::process_ai_manager_poaching(game);

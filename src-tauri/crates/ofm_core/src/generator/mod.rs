@@ -477,6 +477,63 @@ pub fn replenish_manager_and_scout_market(game: &mut crate::game::Game) {
 // World generation
 // ---------------------------------------------------------------------------
 
+/// V99.10 C13/Item 30: Backfill missing team staff slots (AssistantManager,
+/// Coach, Physio) at end-of-season.
+///
+/// After `apply_staff_retirement` removes retired staff, teams that lost
+/// their AssistantManager/Coach/Physio need replacements. Previously only
+/// Managers and Scouts were backfilled (via `replenish_manager_and_scout_market`),
+/// so AI clubs gradually lost their coaching/scouting/medical staff over
+/// 10 seasons with no replacement.
+///
+/// For each team, checks if they have at least 1 of each non-Manager role
+/// (AssistantManager, Coach, Physio). If missing, generates a new unattached
+/// staff member and assigns them to the team. Managers are NOT backfilled
+/// here — that's handled by `process_vacant_ai_clubs` in `ai_hiring.rs`.
+pub fn backfill_team_staff_slots(game: &mut crate::game::Game) {
+    let (names_def, country_codes) = create_staff_generator_context();
+    let mut rng = rand::rng();
+    let current_year = game.clock.current_date.year() as u32;
+
+    let roles = [
+        StaffRole::AssistantManager,
+        StaffRole::Coach,
+        StaffRole::Physio,
+    ];
+
+    // Snapshot team IDs to avoid borrow conflicts during mutation.
+    let team_ids: Vec<String> = game.teams.iter().map(|t| t.id.clone()).collect();
+
+    for team_id in &team_ids {
+        for role in &roles {
+            // Check if this team already has at least 1 staff member of this role.
+            let has_role = game.staff.iter().any(|s| {
+                s.team_id.as_deref() == Some(team_id.as_str()) && s.role == *role
+            });
+            if has_role {
+                continue;
+            }
+
+            // Generate a replacement staff member.
+            let nationality = if country_codes.is_empty() {
+                "ENG".to_string()
+            } else {
+                let idx = rng.random_range(0..country_codes.len());
+                country_codes[idx].clone()
+            };
+            let mut staff = generate_random_staff_unattached_from_def(
+                role.clone(),
+                &nationality,
+                &names_def,
+                current_year,
+                &mut rng,
+            );
+            staff.team_id = Some(team_id.clone());
+            game.staff.push(staff);
+        }
+    }
+}
+
 /// Generate a random world (raw tuple — used by `generate_world_data`).
 /// Loads definition files from `data_dir` if provided; otherwise procedurally
 /// generates the full standard world (every catalogued nation with a real

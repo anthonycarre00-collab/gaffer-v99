@@ -61,3 +61,27 @@ Stage Summary:
 - Gaffer voice maintained (no raw numbers in UI, Gaffer palette used for all color changes).
 
 Next: Sprint 2 (data integrity: C7 market_value recompute, C3 AI renewals rewrite, C4 AI FA signings rewrite, C9 prune retired players, C13/Item 30 staff retirement, Item 20 GK count variation).
+
+---
+Task ID: V99.10-Sprint-2
+Agent: Main agent
+Task: Sprint 2 of V99.10 master roadmap — 6 data integrity fixes (C7, C3, C4, C9, C13/Item 30, Item 20)
+
+Work Log:
+- C7 (market_value recompute): Added market_value recompute to refresh_player_derived (player_rating.rs:72-109). Uses OVR⁴ × 0.5 × age_factor (mirrors worldgen formula). Clamps drift to ±25% per refresh to prevent mid-negotiation swings. Skips retired players. Added 3 tests (MV increases with OVR, ±25% clamp, retired skip).
+- C3 (AI contract renewals rewrite): Rewrote ai_renew_expiring_contracts (contracts.rs:1037-1185). Now uses expected_wage + expected_contract_years + renewal_wage_policy_allows instead of hardcoded multipliers. Widened renewal window from 30 days to 180 days for stars (OVR >= 75), 60 days for regulars. Refuses to renew unhappy + below-squad players.
+- C4 (AI free agent signings): Rewrote ai_sign_free_agents wage calculation (transfers.rs:1328-1384). Now uses expected_wage (factors morale, importance, fame, team reputation) instead of market_value/50. Gates on renewal_wage_policy_allows. Added sign_free_agent_to_team_with_wage helper that uses the pre-computed wage + expected_contract_years.
+- C9 (prune retired players): Added prune_retired_players function (regen/mod.rs:570-638). Removes retired players from game.players + cleans up dangling relationship_graph edges + scouting knowledge. Called from end_of_season.rs:1134 after convert_retired_players_to_candidates. Prevents player array bloat (was ~3,400 → ~8,500 over 10 seasons).
+- C13/Item 30 (staff retirement): Added staff_retire_chance function (aging.rs:202-229) with role-aware cutoffs: Managers 70+/75+/80+, AssistantManagers/Coaches 65+/70+/75+, Scouts 65+/70+/75+, Physios 60+/65+/70+. Added backfill_team_staff_slots function (generator/mod.rs:480-535) that fills missing AssistantManager/Coach/Physio slots at end-of-season. Called from end_of_season.rs:1132.
+- Item 20 (vary academy GK count): Updated generate_academy_intake_regens signature to accept current_gk_count. GK chance: 50% if 0-1 GKs, 15% if 2, 0% if 3+. Updated generate_academy_intake to count current GKs per team and pass the count. Updated 5 existing test calls. Added 2 new tests (no GK when 5 GKs, produces GKs when 0 GKs).
+
+Stage Summary:
+- 6 items completed across 6 files (player_rating.rs, contracts.rs, transfers.rs, regen/mod.rs, aging.rs, generator/mod.rs, end_of_season.rs).
+- 5 new tests added (3 C7 market_value tests, 2 Item 20 GK count tests).
+- 5 existing tests updated for new generate_academy_intake_regens signature.
+- TypeScript check passes clean.
+- All changes commented with V99.10 + item number.
+- No scripts used — all manual edits.
+- Gaffer voice maintained.
+
+Next: Sprint 3 (match engine realism: C6 red card team ratings, C10 build_engine_team delegation, C11 consistency test, C1 player rating wiring).

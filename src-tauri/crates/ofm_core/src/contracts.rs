@@ -1011,29 +1011,43 @@ pub fn process_contract_expiries(game: &mut Game) {
 /// V99.3 VITAL-1 C1: AI contract renewal.
 ///
 /// AI clubs (not the user's team) automatically renew players whose contracts
-/// are about to expire (within 30 days). This prevents AI squads from
-/// shrinking every off-season — previously, expired players became free
-/// agents and AI never signed them back, causing squad sizes to drop below
-/// matchday floor by season 6-7.
+/// are about to expire. This prevents AI squads from shrinking every off-season
+/// — previously, expired players became free agents and AI never signed them
+/// back, causing squad sizes to drop below matchday floor by season 6-7.
 ///
-/// Renewal criteria:
-/// - Player's contract expires within 30 days
-/// - Player is not already flagged for let-expire
-/// - Player is not too old (age <= 36 for regular renewal, <= 38 for stars)
-/// - Player's OVR is within 15 of the team's average OVR (still useful)
+/// V99.10 C3: Rewritten AI contract renewal logic.
 ///
-/// Renewal terms:
-/// - 2-year extension for players 28+
-/// - 3-year extension for players 23-27
-/// - 4-year extension for players 22 and under
-/// - Wage bump of 5% for under-28s, flat for 28-31, 10% cut for 32+
+/// Previously this function used hardcoded wage multipliers (1.05/1.00/0.90)
+/// and hardcoded contract years (4/3/2/1) that ignored the rich
+/// `expected_wage` / `expected_contract_years` formulas used by the user-
+/// side renewal flow. It also bypassed `renewal_wage_policy_allows`, so AI
+/// clubs could blow through their wage budget with no consequence.
+///
+/// Now mirrors the user-side flow:
+///   - Uses `expected_wage(player, team, current_date)` for the wage
+///   - Uses `expected_contract_years(player, current_date)` for the term
+///   - Gates on `renewal_wage_policy_allows` — if the club can't afford
+///     the renewal, the player is left to expire (becomes a free agent)
+///   - Widens the renewal window from 30 days to 180 days for stars
+///     (OVR >= 75) so AI doesn't lose them on a deadline day
+///   - Refuses to renew players with low morale AND below-squad OVR
+///     (unhappy and not good enough — let them walk)
 fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
     use chrono::Datelike;
 
     let user_team_id = game.manager.team_id.clone();
 
-    // Collect (player_index, team_id, age, ovr) for players needing renewal.
-    let renewal_candidates: Vec<(usize, String, i32, u8)> = game
+    // Collect renewal candidates with enough context to evaluate.
+    struct RenewalCandidate {
+        player_index: usize,
+        team_id: String,
+        age: i32,
+        ovr: u8,
+        morale: u8,
+        days_remaining: i64,
+    }
+
+    let renewal_candidates: Vec<RenewalCandidate> = game
         .players
         .iter()
         .enumerate()
@@ -1047,10 +1061,15 @@ fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
             if has_let_expire_intent(player) {
                 return None;
             }
-            // Only renew if contract expires within 30 days.
             let days_remaining =
                 contract_days_remaining(player.contract_end.as_deref(), current_date)?;
-            if days_remaining > 30 || days_remaining < 0 {
+            // V99.10 C3: Widen the renewal window. Old code only renewed
+            // within 30 days. Now:
+            //   - Stars (OVR >= 75): renew within 180 days (6 months) so
+            //     AI doesn't lose key players on deadline day.
+            //   - Regulars (OVR < 75): renew within 60 days (2 months).
+            let renewal_window = if player.ovr >= 75 { 180 } else { 60 };
+            if days_remaining > renewal_window || days_remaining < 0 {
                 return None;
             }
             let age = player_age_on(current_date, &player.date_of_birth);
@@ -1061,7 +1080,14 @@ fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
             if age > 38 {
                 return None;
             }
-            Some((index, team_id.clone(), age, player.ovr))
+            Some(RenewalCandidate {
+                player_index: index,
+                team_id: team_id.clone(),
+                age,
+                ovr: player.ovr,
+                morale: player.morale,
+                days_remaining,
+            })
         })
         .collect();
 
@@ -1093,36 +1119,61 @@ fn ai_renew_expiring_contracts(game: &mut Game, current_date: NaiveDate) {
 
     let current_year = current_date.year();
 
-    for (player_index, team_id, age, ovr) in renewal_candidates {
+    for candidate in renewal_candidates {
+        let RenewalCandidate {
+            player_index,
+            ref team_id,
+            age,
+            ovr,
+            morale,
+            days_remaining: _,
+        } = candidate;
+
         // Only renew if the player is within 15 OVR of the team average.
-        let avg = team_avg_ovr.get(&team_id).copied().unwrap_or(50.0);
+        let avg = team_avg_ovr.get(team_id).copied().unwrap_or(50.0);
         if (ovr as f64) < avg - 15.0 {
             continue;
         }
 
-        // Determine contract length.
-        let contract_years = if age <= 22 {
-            4
-        } else if age <= 27 {
-            3
-        } else if age <= 32 {
-            2
-        } else {
-            1
+        // V99.10 C3: Refuse to renew players who are both unhappy AND
+        // below squad level. Let them walk on a free — they're not worth
+        // the wage and they want to leave anyway.
+        if morale < 40 && (ovr as f64) < avg - 5.0 {
+            continue;
+        }
+
+        // Look up the team for expected_wage / renewal_wage_policy_allows.
+        let team = match game.teams.iter().find(|t| t.id == *team_id) {
+            Some(t) => t.clone(), // clone to avoid borrow conflict
+            None => continue,
         };
 
-        // Determine wage adjustment.
-        let wage_multiplier = if age <= 27 {
-            1.05 // 5% bump for young players
-        } else if age <= 31 {
-            1.00 // flat for prime
-        } else {
-            0.90 // 10% cut for veterans
-        };
+        let player = &game.players[player_index];
+
+        // V99.10 C3: Use expected_wage (factors age, morale, importance,
+        // fame, release clause, team reputation, remaining days) instead
+        // of the old hardcoded multipliers.
+        let new_wage = expected_wage(player, &team, current_date);
+
+        // V99.10 C3: Gate on wage policy. If the club can't afford the
+        // renewal within their wage budget soft cap, skip — the player
+        // will expire and become a free agent (C4's AI FA signing logic
+        // may pick them up if they fill a need).
+        if !crate::contract_wage_policy::renewal_wage_policy_allows(
+            game,
+            &team,
+            player.wage,
+            new_wage,
+        ) {
+            continue;
+        }
+
+        // V99.10 C3: Use expected_contract_years (age-based) instead of
+        // hardcoded 4/3/2/1.
+        let contract_years = expected_contract_years(player, current_date);
 
         let player = &mut game.players[player_index];
-        let new_wage = ((player.wage as f64 * wage_multiplier) as u32).max(500);
-        let new_contract_end = format!("{}-06-30", current_year + contract_years);
+        let new_contract_end = format!("{}-06-30", current_year + contract_years as i32);
 
         player.wage = new_wage;
         player.contract_end = Some(new_contract_end);

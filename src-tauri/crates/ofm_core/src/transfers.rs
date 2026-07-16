@@ -1328,8 +1328,30 @@ fn ai_sign_free_agents(game: &mut Game) {
         // Try to sign the first eligible candidate (strongest first).
         for &fa_index in &candidates {
             let fa = &game.players[fa_index];
+            // V99.10 C4: Compute the expected wage using the same formula
+            // as the user-side `offer_free_agent_contract` flow, instead
+            // of the old `market_value / 50` heuristic that ignored
+            // morale, importance, fame, and team reputation.
+            //
+            // We need a temporary player with team_id = None for
+            // expected_wage (it uses reference_player_wage which falls
+            // back to market_value / 50 when wage = 0). The FA's current
+            // wage is 0 (set on release), so expected_wage will derive
+            // from market_value and apply all the multipliers.
+            let expected_wage = crate::contracts::expected_wage(fa, team, current_date);
             // Don't sign if the wage demand exceeds the team's wage budget.
-            if fa.wage as i64 > team.wage_budget {
+            if expected_wage as i64 > team.wage_budget {
+                continue;
+            }
+            // V99.10 C4: Gate on wage policy (matching AI renewal logic).
+            // If signing this FA would push the club over the soft cap,
+            // skip — prevents AI from bankrupting itself on free agents.
+            if !crate::contract_wage_policy::renewal_wage_policy_allows(
+                game,
+                team,
+                0, // FA has no current wage
+                expected_wage,
+            ) {
                 continue;
             }
             // Reputation gate — don't sign a player way above the team's level.
@@ -1337,9 +1359,16 @@ fn ai_sign_free_agents(game: &mut Game) {
                 continue;
             }
 
-            // Sign the free agent.
+            // Sign the free agent. Pass the expected_wage so the signing
+            // function uses it instead of recomputing from market_value.
             let fa_id = game.players[fa_index].id.clone();
-            if let Err(e) = sign_free_agent_to_team(game, &fa_id, team_id, current_date) {
+            if let Err(e) = sign_free_agent_to_team_with_wage(
+                game,
+                &fa_id,
+                team_id,
+                current_date,
+                expected_wage,
+            ) {
                 log::warn!("[ai_fa] Failed to sign FA {} to {}: {}", fa_id, team_id, e);
                 continue;
             }
@@ -1390,6 +1419,60 @@ fn sign_free_agent_to_team(
     player.contract_end = Some(format!("{}-06-30", current_date.year() + contract_years));
     // Free agents accept a modest wage — their market_value / 50.
     player.wage = ((player.market_value / 50) as u32).max(500);
+    player.transfer_listed = false;
+    player.loan_listed = false;
+    player.transfer_offers.clear();
+    player.loan_offers.clear();
+
+    Ok(())
+}
+
+/// V99.10 C4: Sign a free agent to a team with a pre-computed wage.
+///
+/// Same as `sign_free_agent_to_team` but uses the caller-provided wage
+/// (computed via `expected_wage` in the AI signing path) instead of
+/// the old `market_value / 50` heuristic. This ensures AI-signed free
+/// agents get wages consistent with the user-side `offer_free_agent_contract`
+/// flow — factoring in morale, importance, fame, release clause, and team
+/// reputation.
+fn sign_free_agent_to_team_with_wage(
+    game: &mut Game,
+    player_id: &str,
+    team_id: &str,
+    current_date: NaiveDate,
+    wage: u32,
+) -> Result<(), String> {
+    use chrono::Datelike;
+
+    let player = game
+        .players
+        .iter_mut()
+        .find(|p| p.id == player_id)
+        .ok_or("player not found")?;
+
+    if player.team_id.is_some() {
+        return Err("player already has a team".to_string());
+    }
+
+    let age = {
+        let dob = NaiveDate::parse_from_str(&player.date_of_birth, "%Y-%m-%d")
+            .map_err(|_| "invalid dob")?;
+        let mut a = current_date.year() - dob.year();
+        if current_date.ordinal() < dob.ordinal() {
+            a -= 1;
+        }
+        a
+    };
+
+    // V99.10 C4: Use expected_contract_years (age-based) for consistency
+    // with the user-side flow and the C3 AI renewal rewrite.
+    let contract_years = crate::contracts::expected_contract_years(player, current_date);
+    player.team_id = Some(team_id.to_string());
+    player.contract_end = Some(format!("{}-06-30", current_date.year() + contract_years as i32));
+    // V99.10 C4: Use the pre-computed wage (from expected_wage) instead
+    // of the old market_value / 50 heuristic. Ensures wages reflect the
+    // player's actual ability, morale, importance, and team reputation.
+    player.wage = wage.max(500);
     player.transfer_listed = false;
     player.loan_listed = false;
     player.transfer_offers.clear();
