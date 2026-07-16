@@ -102,19 +102,19 @@ fn team_position_counts() {
 #[test]
 fn team_ratings_non_zero() {
     let team = make_team("t1", "Test FC", 65, PlayStyle::Balanced);
-    assert!(team.defense_rating() > 0.0);
+    // V99.10 Item 29: Removed defense_rating/attack_rating/goalkeeper_rating
+    // (dead code). Only midfield_rating survives — the others were never
+    // called by production code. Use position_attr_avg directly for the
+    // removed ratings if needed.
     assert!(team.midfield_rating() > 0.0);
-    assert!(team.attack_rating() > 0.0);
-    assert!(team.goalkeeper_rating() > 0.0);
 }
 
 #[test]
 fn team_ratings_scale_with_skill() {
     let weak = make_team("w", "Weak", 30, PlayStyle::Balanced);
     let strong = make_team("s", "Strong", 90, PlayStyle::Balanced);
-    assert!(strong.defense_rating() > weak.defense_rating());
+    // V99.10 Item 29: Only midfield_rating survives.
     assert!(strong.midfield_rating() > weak.midfield_rating());
-    assert!(strong.attack_rating() > weak.attack_rating());
 }
 
 // ---------------------------------------------------------------------------
@@ -706,17 +706,20 @@ fn average_goals_realistic() {
     let away = make_team("away", "Away FC", 65, PlayStyle::Balanced);
     let config = MatchConfig::default();
 
-    let trials = 500;
+    // V99.10 Item 22: Bumped trials from 500 → 1000 for tighter CI.
+    let trials = 1000;
     let mut total_goals = 0u32;
     for seed in 0..trials {
         let report = simulate_with_rng(&home, &away, &config, &mut seeded_rng(seed));
         total_goals += (report.home_goals + report.away_goals) as u32;
     }
     let avg = total_goals as f64 / trials as f64;
-    // Real football averages ~2.5 goals/game. Allow a wide range for a simulation.
+    // V99.10 Item 22: Tightened from 0.5-8.0 to 1.5-4.0. Real football
+    // averages ~2.5 goals/game. The old range was 16× wider than necessary
+    // and would pass even if the engine averaged 7 goals/game.
     assert!(
-        avg > 0.5 && avg < 8.0,
-        "Average goals per game should be reasonable: {avg:.2}"
+        avg > 1.5 && avg < 4.0,
+        "Average goals per game should be realistic (1.5-4.0): {avg:.2}"
     );
 }
 

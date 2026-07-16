@@ -5,8 +5,17 @@
 //! running the full 90-minute per-minute engine. Based on the existing
 //! `simulate_scoreline` Poisson model + a small event-sampling pass.
 //!
-//! Used for in-scope AI-vs-AI matches when there are many fixtures on a
-//! matchday (10+). User matches always use the full `LiveMatchState` engine.
+//! V99.10 Item 25: This module is ACTIVELY USED — it is NOT dead code.
+//! `simulate_sparse_match` is called from `turn/mod.rs:805` via
+//! `simulate_sparse_ai_match` (line 782) for ALL AI-vs-AI matchday
+//! fixtures. The V998 forensic report's "Bug C14: sparse_sim.rs is dead
+//! code" finding was incorrect — it pre-dated the V99.4 PERF-1 wiring
+//! that connected this module to the daily turn pipeline.
+//!
+//! Used for ALL AI-vs-AI matches (not just 10+ per matchday as the old
+//! docstring claimed). User matches always use the full `LiveMatchState`
+//! engine. This gives a ~10× speedup over running the full engine for
+//! every AI-vs-AI fixture.
 //!
 //! The sparse events are enough for:
 //! - News story generation (scorers, cards)

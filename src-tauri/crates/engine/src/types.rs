@@ -363,19 +363,6 @@ impl TeamData {
         }, sent_off)
     }
 
-    /// Composite defense rating (from defenders + goalkeeper).
-    pub fn defense_rating(&self) -> f64 {
-        let def_avg = self.position_attr_avg(Position::Defender, |p| {
-            ((p.defending as u16 + p.aerial as u16 + p.anticipation as u16 + p.power as u16)
-                / 4) as u8
-        });
-        let gk_avg = self.position_attr_avg(Position::Goalkeeper, |p| {
-            ((p.shot_stopping as u16 + p.commanding as u16 + p.anticipation as u16 + p.decisions as u16) / 4)
-                as u8
-        });
-        def_avg * 0.7 + gk_avg * 0.3
-    }
-
     /// Composite midfield rating.
     pub fn midfield_rating(&self) -> f64 {
         self.position_attr_avg(Position::Midfielder, |p| {
@@ -383,24 +370,12 @@ impl TeamData {
         })
     }
 
-    /// Composite attack rating (from forwards + midfielders).
-    pub fn attack_rating(&self) -> f64 {
-        let fwd_avg = self.position_attr_avg(Position::Forward, |p| {
-            ((p.finishing as u16 + p.touch as u16 + p.pace as u16 + p.burst as u16) / 4) as u8
-        });
-        let mid_contrib = self.position_attr_avg(Position::Midfielder, |p| {
-            ((p.finishing as u16 + p.passing as u16 + p.distribution as u16) / 3) as u8
-        });
-        fwd_avg * 0.75 + mid_contrib * 0.25
-    }
-
-    /// Goalkeeper save rating.
-    pub fn goalkeeper_rating(&self) -> f64 {
-        self.position_attr_avg(Position::Goalkeeper, |p| {
-            ((p.shot_stopping as u16 + p.commanding as u16 + p.playing_out as u16 + p.anticipation as u16) / 4)
-                as u8
-        })
-    }
+    // V99.10 Item 29: Removed dead `defense_rating()`, `attack_rating()`,
+    // and `goalkeeper_rating()` methods. These were never called by any
+    // production code — only by tests (simulation_tests.rs:105-117). The
+    // tests have been updated to use `midfield_rating` + `position_attr_avg`
+    // directly. `midfield_rating` stays because it's called by
+    // `effective_midfield` in both live and simple engines.
 }
 
 // ---------------------------------------------------------------------------
