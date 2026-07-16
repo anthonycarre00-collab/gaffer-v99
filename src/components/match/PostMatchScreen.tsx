@@ -117,8 +117,8 @@ export default function PostMatchScreen({
  const awayFullTeam = gameState.teams.find(
  (t) => t.id === snapshot.away_team.id,
  );
- const homeTeamColor = homeFullTeam?.colors?.primary || "#10b981";
- const awayTeamColor = awayFullTeam?.colors?.primary || "#6366f1";
+ const homeTeamColor = homeFullTeam?.colors?.primary || "#2d5a3d";
+ const awayTeamColor = awayFullTeam?.colors?.primary || "#7a2e1f";
 
  const userScore =
  userSide === "Home" ? snapshot.home_score : snapshot.away_score;
@@ -242,12 +242,15 @@ export default function PostMatchScreen({
  <div className="postmatch-hero-bg min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
  {/* Result Header */}
  <header
+ // V99.10 UI-6: Replaced gradients with matte Gaffer palette backgrounds.
+ // The design system explicitly avoids gradients — this was the last
+ // remaining `bg-linear-to-r` in the app.
  className={`gaffer-pitch-strip border-b border-accent-500/20 px-4 py-6 transition-colors duration-300 ${
  resultType === "win"
- ? "bg-linear-to-r from-primary-100 via-white to-primary-100 dark:from-primary-900/50 dark:via-navy-900 dark:to-primary-900/50"
+ ? "bg-primary-500/15 dark:bg-primary-500/10"
  : resultType === "loss"
- ? "bg-linear-to-r from-red-100 via-white to-red-100 dark:from-red-900/30 dark:via-navy-900 dark:to-red-900/30"
- : "bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800"
+ ? "bg-danger-500/15 dark:bg-danger-500/10"
+ : "bg-concrete/15 dark:bg-navy-700/50"
  }`}
  >
  <div className="text-center relative">

@@ -73,9 +73,9 @@ Each simulated minute follows this sequence:
 
 When the ball reaches the attacking box, a shot is taken:
 
-1. **Accuracy check** — base accuracy (configurable, default 45%) adjusted by the shooter's `shooting + composure + decisions` rating. Clamped to 15%–85%.
+1. **Accuracy check** — base accuracy (configurable, default 35%) adjusted by the shooter's `finishing + composure + decisions` rating. Clamped to 15%–85%.
    - **Miss**: 40% chance the shot is blocked, 60% chance off target.
-2. **Conversion check** — base conversion (default 30%) adjusted by `(shooter_rating - goalkeeper_rating) / 150`. Clamped to 10%–70%.
+2. **Conversion check** — base conversion (default 30%) adjusted by `(shooter_rating - goalkeeper_rating) / 150` and the defensive line modifier. Clamped to 10%–70%.
    - **Score**: Goal event emitted with scorer + assister.
    - **Save**: Shot saved event.
 
@@ -83,9 +83,9 @@ When the ball reaches the attacking box, a shot is taken:
 
 Fouls can occur after tackles in midfield and the attacking third:
 
-1. **Foul probability** — base 12%, modified by the fouler's `aggression` attribute and the `HotHead` / `CoolHead` traits.
-2. **If foul occurs in the box** → 8% chance of a **penalty** being awarded.
-3. **Card probability** — 30% chance of a yellow, modified by aggression. 4% chance a card is upgraded to red.
+1. **Foul probability** — base 40%, modified by the fouler's `aggression` attribute and the `HotHead` / `CoolHead` traits.
+2. **If foul occurs in the box** → 50% chance of a **penalty** being awarded.
+3. **Card probability** — 8.5% chance of a yellow per foul, modified by aggression. 2.5% chance a card is direct red.
 4. **Second yellow** → automatic red card and sending off.
 5. **Injury** — 3% chance per foul that the fouled player is injured.
 
@@ -182,7 +182,7 @@ each dial's effect on possession %, shots and goals against a neutral opponent.
 
 ## Home Advantage
 
-The home team receives a configurable multiplier (default **1.08**, i.e. 8% boost) applied to all their ratings during action resolution. This models the effect of playing at home — crowd support, familiarity with the pitch, etc.
+The home team receives a configurable multiplier (default **1.12**, i.e. 12% boost) applied to all their ratings during action resolution. This models the effect of playing at home — crowd support, familiarity with the pitch, etc.
 
 ---
 
@@ -208,16 +208,19 @@ Trait bonuses are multiplicative — a Sharpshooter with CoolHead gets `1.08 × 
 
 All probabilities and multipliers are tuneable via `MatchConfig`:
 
+<!-- V99.10 Item 27: Updated to match actual MatchConfig::default() values
+     in engine/src/types.rs:517-532. The old values were stale since V99.3. -->
+
 | Parameter | Default | Description |
 |---|---|---|
-| `home_advantage` | 1.08 | Multiplier for home team ratings |
-| `shot_accuracy_base` | 0.45 | Base chance a shot is on target |
+| `home_advantage` | 1.12 | Multiplier for home team ratings |
+| `shot_accuracy_base` | 0.35 | Base chance a shot is on target |
 | `goal_conversion_base` | 0.30 | Base chance an on-target shot scores |
-| `fatigue_per_minute` | 0.15 | Condition loss per minute (live mode) |
-| `foul_probability` | 0.12 | Base chance a tackle results in a foul |
-| `yellow_card_probability` | 0.30 | Chance a foul produces a yellow |
-| `red_card_probability` | 0.04 | Chance a card is direct red |
-| `penalty_probability` | 0.08 | Chance a box foul is a penalty |
+| `fatigue_per_minute` | 0.20 | Condition loss per minute (live mode) |
+| `foul_probability` | 0.40 | Base chance a tackle results in a foul |
+| `yellow_card_probability` | 0.085 | Chance a foul produces a yellow |
+| `red_card_probability` | 0.025 | Chance a card is direct red |
+| `penalty_probability` | 0.50 | Chance a box foul is a penalty |
 | `stoppage_time_max` | 4 | Max stoppage time minutes per half |
 | `injury_probability` | 0.03 | Chance of injury per foul |
 

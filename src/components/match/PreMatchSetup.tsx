@@ -97,8 +97,8 @@ export default function PreMatchSetup({
 
  const homeFullTeam = gameState.teams.find((t) => t.id === homeTeam.id);
  const awayFullTeam = gameState.teams.find((t) => t.id === awayTeam.id);
- const homeTeamColor = homeFullTeam?.colors?.primary ?? "#10b981";
- const awayTeamColor = awayFullTeam?.colors?.primary ?? "#6366f1";
+ const homeTeamColor = homeFullTeam?.colors?.primary ?? "#2d5a3d";
+ const awayTeamColor = awayFullTeam?.colors?.primary ?? "#7a2e1f";
  const userColor = userSide === "Home" ? homeTeamColor : awayTeamColor;
 
  const userFullTeam = userSide === "Home" ? homeFullTeam : awayFullTeam;
@@ -107,7 +107,7 @@ export default function PreMatchSetup({
  const userPattern = userFullTeam?.kit_pattern ?? "Solid";
 
  const oppFullTeam = userSide === "Home" ? awayFullTeam : homeFullTeam;
- const oppPrimary = oppFullTeam?.colors?.primary ?? "#6366f1";
+ const oppPrimary = oppFullTeam?.colors?.primary ?? "#7a2e1f";
  const oppSecondary = oppFullTeam?.colors?.secondary ?? "#1a3a6b";
  const oppPattern = oppFullTeam?.kit_pattern ?? "Solid";
 

@@ -165,8 +165,8 @@ export default function RoundDigestScreen({
  const awayFullTeam = gameState.teams.find(
  (t) => t.id === snapshot.away_team.id,
  );
- const homeTeamColor = homeFullTeam?.colors?.primary || "#10b981";
- const awayTeamColor = awayFullTeam?.colors?.primary || "#6366f1";
+ const homeTeamColor = homeFullTeam?.colors?.primary || "#2d5a3d";
+ const awayTeamColor = awayFullTeam?.colors?.primary || "#7a2e1f";
 
  const resultType =
  userSide === "Home"

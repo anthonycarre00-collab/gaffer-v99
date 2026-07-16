@@ -1084,6 +1084,69 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
         crate::reputation::update_team_reputation(game, &division_standings);
     }
 
+    // V99.10 Item 17: Record final league tables for every competition
+    // into the world history archive. This lets the UI display historical
+    // standings ("Serie A 2030 final table"). We snapshot the standings
+    // with team names so the data is stable even if teams are renamed
+    // or relegated later.
+    let divisions_snapshot = division_standings_with_tiers(game);
+    for (division_standings, tier) in &divisions_snapshot {
+        // Find the competition this division belongs to.
+        let competition_id = game
+            .competitions
+            .iter()
+            .find(|c| {
+                c.standings
+                    .iter()
+                    .any(|s| division_standings.iter().any(|ds| ds.team_id == s.team_id))
+            })
+            .map(|c| c.id.clone())
+            .unwrap_or_else(|| format!("division-{}", tier));
+        let competition_name = game
+            .competitions
+            .iter()
+            .find(|c| c.id == competition_id)
+            .map(|c| c.name.clone())
+            .unwrap_or_else(|| format!("Division {}", tier + 1));
+
+        let historical_standings: Vec<domain::world_history::HistoricalStandingEntry> =
+            division_standings
+                .iter()
+                .enumerate()
+                .map(|(idx, s)| {
+                    let team_name = game
+                        .teams
+                        .iter()
+                        .find(|t| t.id == s.team_id)
+                        .map(|t| t.name.clone())
+                        .unwrap_or_else(|| s.team_id.clone());
+                    domain::world_history::HistoricalStandingEntry {
+                        position: (idx + 1) as u32,
+                        team_id: s.team_id.clone(),
+                        team_name,
+                        played: s.played,
+                        won: s.won,
+                        drawn: s.drawn,
+                        lost: s.lost,
+                        goals_for: s.goals_for,
+                        goals_against: s.goals_against,
+                        goal_difference: s.goals_for as i32 - s.goals_against as i32,
+                        points: s.points,
+                    }
+                })
+                .collect();
+
+        game.world_history.record_league_table(
+            domain::world_history::HistoricalLeagueTableRecord {
+                season,
+                competition_id,
+                competition_name,
+                tier: *tier,
+                standings: historical_standings,
+            },
+        );
+    }
+
     // 5. Record player career entries and reset stats
     for player in game.players.iter_mut() {
         if player.stats.appearances > 0 {

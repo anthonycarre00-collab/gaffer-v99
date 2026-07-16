@@ -164,3 +164,28 @@ Stage Summary:
 - No scripts used — all manual edits.
 
 Next: Sprint 5 (long-term depth: Items 17/18/19/22/26/21) + Sprint 6 (cleanup + UI sweep).
+
+---
+Task ID: V99.10-Sprint-6
+Agent: Main agent
+Task: Sprint 6 — Items 27/28/17 + UI-2/4/5/6/9/13
+
+Work Log:
+- Item 28 (remove distribution): DISCOVERED distribution IS used in midfield_rating formula — NOT dead code. The forensic report was wrong. No change needed.
+- Item 27 (update MATCH_SIMULATION.md): Updated MatchConfig table (home_advantage 1.08→1.12, shot_accuracy_base 0.45→0.35, fatigue 0.15→0.20, foul_probability 0.12→0.40, yellow_card 0.30→0.085, red_card 0.04→0.025, penalty 0.08→0.50). Updated narrative section numbers.
+- Item 17 (past league tables): Added HistoricalLeagueTableRecord + HistoricalStandingEntry structs to world_history.rs. Added record_league_table + league_tables_for_season methods. Wired into end_of_season.rs — records every division's final standings at season rollover with team name snapshots.
+- UI-2 (hardcoded hex in match components + chartTheme): Replaced #10b981 (Tailwind emerald) with #2d5a3d (Gaffer Pitch Green) and #6366f1 (Tailwind indigo) with #7a2e1f (Gaffer Mahogany) in 5 match components. Rewrote chartTheme.ts to use full Gaffer palette.
+- UI-4 (purple/fuchsia in NewsTab): Replaced text-purple-500→text-accent-500, text-fuchsia-500→text-primary-500, and corresponding bg-* variants.
+- UI-5 (font-mono font-mono duplicate): Fixed in TournamentsTab:1174.
+- UI-6 (last remaining gradient): Replaced bg-linear-to-r in PostMatchScreen with matte bg-primary-500/15, bg-danger-500/15, bg-concrete/15.
+- UI-9 (Facebook blue .pos-mid): Replaced #3b5998 with var(--color-primary-400).
+- UI-13 (cold blue dark-mode overrides): Replaced #8d99ae/#a0aec0 with var(--color-concrete)/#9a958f.
+
+Stage Summary:
+- 8 items completed (7 actual fixes + 1 discovered-not-a-bug).
+- 7 files modified (docs/MATCH_SIMULATION.md, world_history.rs, end_of_season.rs, chartTheme.ts, 5 match components, NewsTab.tsx, TournamentsTab.tsx, PostMatchScreen.tsx, App.css).
+- TypeScript check passes clean.
+- All changes commented with V99.10 item numbers.
+- No scripts used — all manual edits.
+
+ALL 45 ROADMAP ITEMS NOW ADDRESSED. Ready for bulk testing.

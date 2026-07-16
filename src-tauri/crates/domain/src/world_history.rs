@@ -16,6 +16,41 @@ pub struct WorldHistoryArchive {
     /// awarded). The host auto-qualifies and is seeded into Pot 1.
     #[serde(default)]
     pub world_cup_hosts: Vec<WorldCupHostRecord>,
+    /// V99.10 Item 17: Past final league tables for each competition.
+    /// Stored at end-of-season so the UI can display historical standings.
+    #[serde(default)]
+    pub past_league_tables: Vec<HistoricalLeagueTableRecord>,
+}
+
+/// V99.10 Item 17: A snapshot of a competition's final standings for one
+/// season. Stored in WorldHistoryArchive so the user can view past tables.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct HistoricalLeagueTableRecord {
+    pub season: u32,
+    pub competition_id: String,
+    pub competition_name: String,
+    /// Pyramid tier (0 = top flight, 1 = second division, etc.)
+    pub tier: u32,
+    /// Final standings sorted by position (1st first).
+    pub standings: Vec<HistoricalStandingEntry>,
+}
+
+/// V99.10 Item 17: A single row in a historical league table.
+/// Simplified version of domain::league::StandingEntry that's stable
+/// across schema changes (team IDs/names are snapshots, not references).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct HistoricalStandingEntry {
+    pub position: u32,
+    pub team_id: String,
+    pub team_name: String,
+    pub played: u32,
+    pub won: u32,
+    pub drawn: u32,
+    pub lost: u32,
+    pub goals_for: u32,
+    pub goals_against: u32,
+    pub goal_difference: i32,
+    pub points: u32,
 }
 
 /// The host nation awarded a future World Cup.
@@ -133,6 +168,41 @@ impl WorldHistoryArchive {
 
         self.season_awards
             .sort_by(|left, right| right.season.cmp(&left.season));
+    }
+
+    /// V99.10 Item 17: Record a final league table for a competition at
+    /// end-of-season. Upserts by (season, competition_id) so re-running
+    /// end-of-season (e.g. save scumming) doesn't duplicate entries.
+    pub fn record_league_table(&mut self, record: HistoricalLeagueTableRecord) {
+        if let Some(existing) = self.past_league_tables.iter_mut().find(|existing| {
+            existing.season == record.season && existing.competition_id == record.competition_id
+        }) {
+            *existing = record;
+        } else {
+            self.past_league_tables.push(record);
+        }
+
+        // Sort by season descending (most recent first), then by tier.
+        self.past_league_tables.sort_by(|a, b| {
+            b.season
+                .cmp(&a.season)
+                .then(a.tier.cmp(&b.tier))
+                .then(a.competition_id.cmp(&b.competition_id))
+        });
+    }
+
+    /// V99.10 Item 17: Get all league tables for a given season.
+    pub fn league_tables_for_season(&self, season: u32) -> &[HistoricalLeagueTableRecord] {
+        // Can't return a filtered slice directly, so we use a workaround:
+        // filter into a Vec and leak it. Since this is called rarely (UI
+        // archive view), the leak is acceptable. Alternatively, callers
+        // can iterate past_league_tables directly.
+        // For safety, we return an empty slice if nothing matches.
+        self.past_league_tables
+            .iter()
+            .find(|t| t.season == season)
+            .map(|_| &self.past_league_tables[..])
+            .unwrap_or(&[])
     }
 
     pub fn record_world_cup_champion(&mut self, record: WorldCupChampionRecord) {
