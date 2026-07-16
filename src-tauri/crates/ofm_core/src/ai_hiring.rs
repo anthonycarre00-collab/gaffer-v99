@@ -306,6 +306,13 @@ pub fn seed_ai_managers(game: &mut Game) {
 
 pub fn process_vacant_ai_clubs(game: &mut Game) {
     let user_team_id = game.manager.team_id.clone();
+    // V99.10 Item 12: Need user_manager_id for the sacked-manager rehire
+    // filter (don't rehire the user's manager).
+    let user_manager_id = if game.manager_id.is_empty() {
+        game.manager.id.clone()
+    } else {
+        game.manager_id.clone()
+    };
 
     let occupied_team_ids: Vec<String> = game
         .teams
@@ -333,6 +340,76 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
             continue;
         }
 
+        // V99.10 Item 12: Before creating a brand-new manager from staff,
+        // check if there's an unemployed (sacked) manager in game.managers
+        // with suitable reputation. This rehires sacked managers instead of
+        // letting them pile up in game.managers forever (memory leak).
+        let team_rep = game
+            .teams
+            .iter()
+            .find(|t| t.id == team_id)
+            .map(|t| t.reputation)
+            .unwrap_or(500);
+        let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+        let team_name = game
+            .teams
+            .iter()
+            .find(|team| team.id == team_id)
+            .map(|team| team.name.clone())
+            .unwrap_or_else(|| team_id.clone());
+
+        // Find the best unemployed manager within 100 reputation of the club.
+        // "Best" = highest manager.rating().
+        let sacked_candidate: Option<(String, String, f64)> = game
+            .managers
+            .iter()
+            .filter(|m| m.id != user_manager_id && m.team_id.is_none())
+            .filter(|m| {
+                // Reputation within 100 of the club (don't rehire a terrible
+                // manager at a top club, or a great manager at a tiny club).
+                let mgr_rep = m.reputation;
+                (mgr_rep as i32 - team_rep as i32).abs() <= 100
+            })
+            .map(|m| (m.id.clone(), m.full_name(), m.rating()))
+            .max_by(|a, b| a.2.partial_cmp(&b.2).unwrap_or(std::cmp::Ordering::Equal));
+
+        if let Some((mgr_id, mgr_name, _)) = sacked_candidate {
+            // Rehire the sacked manager.
+            if let Some(mgr) = game.managers.iter_mut().find(|m| m.id == mgr_id) {
+                mgr.team_id = Some(team_id.clone());
+                mgr.satisfaction = 50; // Reset satisfaction for new club.
+                mgr.warning_stage = 0; // Reset warnings.
+                // Open a new career_history entry.
+                mgr.career_history.push(domain::manager::ManagerCareerEntry::open(
+                    team_id.clone(),
+                    team_name.clone(),
+                    today.clone(),
+                ));
+            }
+            if let Some(team) = game.teams.iter_mut().find(|t| t.id == team_id) {
+                team.manager_id = Some(mgr_id.clone());
+            }
+            crate::job_offers::expire_outstanding_job_offers_for_team(game, &team_id);
+            let media_style_str = game
+                .managers
+                .iter()
+                .find(|m| m.id == mgr_id)
+                .map(|m| format!("{:?}", m.personality.media_style))
+                .unwrap_or_else(|| "Reserved".to_string());
+            game.news.push(crate::news::managerial_appointment_article(
+                &mgr_id,
+                &mgr_name,
+                &team_id,
+                &team_name,
+                &today,
+                &media_style_str,
+            ));
+            game.vacant_team_days.remove(&team_id);
+            log::info!("[ai_hiring] Rehired sacked manager {} at {}", mgr_name, team_name);
+            continue; // Skip the brand-new manager creation below.
+        }
+
+        // No suitable sacked manager — create a new one from staff.
         let Some(source_staff) = manager_seed_staff(&game.staff, &team_id) else {
             continue;
         };
@@ -340,13 +417,6 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
         let Some(manager) = create_seeded_manager(game, &team_id, source_staff, manager_id) else {
             continue;
         };
-        let team_name = game
-            .teams
-            .iter()
-            .find(|team| team.id == team_id)
-            .map(|team| team.name.clone())
-            .unwrap_or_else(|| team_id.clone());
-        let today = game.clock.current_date.format("%Y-%m-%d").to_string();
 
         if let Some(team) = game.teams.iter_mut().find(|team| team.id == team_id) {
             team.manager_id = Some(manager.id.clone());
@@ -371,10 +441,17 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
 }
 
 /// V99.4 T1.4: AI manager poaching.
+/// V99.10 Item 12: Rewritten to score candidates by manager rating,
+/// allow lateral moves, and close/open career_history entries.
 ///
-/// Elite clubs (reputation >= 700) can poach managers from smaller clubs
-/// (reputation gap >= 150). The poached manager moves to the bigger club,
+/// Elite clubs (reputation >= 700) can poach managers from smaller or
+/// same-tier clubs (reputation gap >= 0 — was 150, which prevented
+/// lateral moves). The poached manager moves to the bigger club,
 /// leaving their old club vacant (filled by existing process_vacant_ai_clubs).
+///
+/// Candidates are scored by `manager.rating()` (which factors reputation,
+/// career stats, and trophies) rather than just picking the first match.
+/// The highest-rated candidate is poached.
 ///
 /// Called at end-of-season to allow managerial movement between seasons.
 pub fn process_ai_manager_poaching(game: &mut Game) {
@@ -398,11 +475,14 @@ pub fn process_ai_manager_poaching(game: &mut Game) {
 
     let today = game.clock.current_date.format("%Y-%m-%d").to_string();
 
-    // For each elite vacant club, try to poach a manager from a smaller club.
+    // For each elite vacant club, try to poach a manager from a smaller
+    // or same-tier club.
     for (team_id, team_name, team_rep) in &elite_vacant_teams {
-        // Find AI managers at clubs with reputation <= (elite_rep - 150).
-        let poach_threshold = team_rep.saturating_sub(150);
-        let candidates: Vec<(usize, String, String, String)> = game
+        // V99.10 Item 12: Relax threshold from team_rep - 150 to team_rep.
+        // This allows lateral moves (same-tier clubs poaching each other's
+        // managers), which is realistic — big clubs poach from each other.
+        let poach_threshold = *team_rep;
+        let candidates: Vec<(usize, String, String, String, f64)> = game
             .managers
             .iter()
             .enumerate()
@@ -411,7 +491,10 @@ pub fn process_ai_manager_poaching(game: &mut Game) {
                 let mgr_team_id = m.team_id.as_ref()?;
                 let mgr_team = game.teams.iter().find(|t| &t.id == mgr_team_id)?;
                 if mgr_team.reputation <= poach_threshold {
-                    Some((idx, m.id.clone(), m.full_name(), mgr_team_id.clone()))
+                    // V99.10 Item 12: Score by manager.rating() which factors
+                    // reputation, career stats, and trophies. Higher = better.
+                    let score = m.rating();
+                    Some((idx, m.id.clone(), m.full_name(), mgr_team_id.clone(), score))
                 } else {
                     None
                 }
@@ -422,12 +505,27 @@ pub fn process_ai_manager_poaching(game: &mut Game) {
             continue;
         }
 
-        // Pick the first candidate.
-        let (_mgr_idx, mgr_id, mgr_name, old_team_id) = &candidates[0];
+        // V99.10 Item 12: Pick the BEST candidate (highest rating), not
+        // just the first. Sort by score descending.
+        let mut sorted_candidates = candidates;
+        sorted_candidates.sort_by(|a, b| b.4.partial_cmp(&a.4).unwrap_or(std::cmp::Ordering::Equal));
+        let (_mgr_idx, mgr_id, mgr_name, old_team_id, _score) = &sorted_candidates[0];
 
         // Move the manager to the elite club.
         if let Some(mgr) = game.managers.iter_mut().find(|m| &m.id == mgr_id) {
             mgr.team_id = Some(team_id.clone());
+            // V99.10 Item 12: Close the career_history entry at the old club
+            // and open a new one at the elite club.
+            if let Some(entry) = mgr.career_history.iter_mut().rev().find(|e| e.end_date.is_none()) {
+                entry.end_date = Some(today.clone());
+            }
+            mgr.career_history.push(domain::manager::ManagerCareerEntry::open(
+                team_id.clone(),
+                team_name.clone(),
+                today.clone(),
+            ));
+            // Reset warning_stage for the new club.
+            mgr.warning_stage = 0;
         }
 
         // Set the elite club's manager_id.

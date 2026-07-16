@@ -6,6 +6,8 @@ use domain::season::{SeasonContext, SeasonPhase, TransferWindowContext, Transfer
 
 const TRANSFER_WINDOW_PRESEASON_DAYS: i64 = 30;
 const TRANSFER_WINDOW_POST_START_DAYS: i64 = 30;
+/// V99.10 Item 13: January transfer window duration (Jan 1-31).
+const JANUARY_WINDOW_DAYS: i64 = 31;
 
 pub fn refresh_game_context(game: &mut Game) {
     game.season_context = derive_season_context(game);
@@ -70,6 +72,17 @@ fn league_has_started(league: &League) -> bool {
         })
 }
 
+/// V99.10 Item 13: Rewritten to support TWO transfer windows per season:
+///   1. Summer window: [season_start - 30d, season_start + 30d] (existing)
+///   2. January window: [Jan 1, Jan 31] of the year AFTER season_start (NEW)
+///
+/// For a season starting August 2026:
+///   - Summer: ~July 2 - August 31, 2026
+///   - January: January 1-31, 2027
+///
+/// If the current date is between windows, returns Closed with
+/// `days_until_opens` pointing to the next window (either January or
+/// the next season's summer).
 fn derive_transfer_window_context(
     current_date: NaiveDate,
     season_start: Option<NaiveDate>,
@@ -78,14 +91,48 @@ fn derive_transfer_window_context(
         return TransferWindowContext::default();
     };
 
-    let mut opens_on = transfer_window_opens_on(window_season_start);
-    let mut closes_on = transfer_window_closes_on(window_season_start);
+    // Compute the summer and January windows for this season.
+    let mut summer_opens = transfer_window_opens_on(window_season_start);
+    let mut summer_closes = transfer_window_closes_on(window_season_start);
+    let mut january_opens = january_window_opens_on(window_season_start);
+    let mut january_closes = january_window_closes_on(window_season_start);
 
-    while current_date > closes_on {
+    // Advance season until we find a window that hasn't fully closed yet.
+    // This handles the case where we're past both windows for this season
+    // and need to look at the next season.
+    while current_date > summer_closes && current_date > january_closes {
         window_season_start = add_year_clamped(window_season_start);
-        opens_on = transfer_window_opens_on(window_season_start);
-        closes_on = transfer_window_closes_on(window_season_start);
+        summer_opens = transfer_window_opens_on(window_season_start);
+        summer_closes = transfer_window_closes_on(window_season_start);
+        january_opens = january_window_opens_on(window_season_start);
+        january_closes = january_window_closes_on(window_season_start);
     }
+
+    // Determine which window is active (or next to open).
+    // Windows are ordered: summer → january → next summer → ...
+    // But chronologically for a season starting in August:
+    //   summer (Jul-Aug) → january (Jan) → next summer (Jul-Aug)
+
+    let (opens_on, closes_on) = if current_date >= summer_opens && current_date <= summer_closes {
+        // Currently in the summer window.
+        (summer_opens, summer_closes)
+    } else if current_date >= january_opens && current_date <= january_closes {
+        // Currently in the January window.
+        (january_opens, january_closes)
+    } else if current_date < summer_opens {
+        // Before the summer window — it's the next to open.
+        (summer_opens, summer_closes)
+    } else if current_date > summer_closes && current_date < january_opens {
+        // Between summer close and January open — January is next.
+        (january_opens, january_closes)
+    } else {
+        // After January close — next summer is next.
+        // Advance to next season's summer window.
+        let next_season_start = add_year_clamped(window_season_start);
+        let next_summer_opens = transfer_window_opens_on(next_season_start);
+        let next_summer_closes = transfer_window_closes_on(next_season_start);
+        (next_summer_opens, next_summer_closes)
+    };
 
     let (status, days_until_opens, days_remaining) = if current_date < opens_on {
         (
@@ -124,6 +171,20 @@ fn transfer_window_opens_on(season_start: NaiveDate) -> NaiveDate {
 
 fn transfer_window_closes_on(season_start: NaiveDate) -> NaiveDate {
     season_start + Duration::days(TRANSFER_WINDOW_POST_START_DAYS)
+}
+
+/// V99.10 Item 13: January transfer window opens on January 1 of the year
+/// AFTER the season start. For a season starting August 2026, the January
+/// window opens January 1, 2027.
+fn january_window_opens_on(season_start: NaiveDate) -> NaiveDate {
+    let january_year = season_start.year() + 1;
+    NaiveDate::from_ymd_opt(january_year, 1, 1)
+        .expect("January 1 of next year should always be valid")
+}
+
+/// V99.10 Item 13: January transfer window closes on January 31.
+fn january_window_closes_on(season_start: NaiveDate) -> NaiveDate {
+    january_window_opens_on(season_start) + Duration::days(JANUARY_WINDOW_DAYS - 1)
 }
 
 fn add_year_clamped(date: NaiveDate) -> NaiveDate {
@@ -297,17 +358,60 @@ mod tests {
 
         let context = derive_season_context(&game);
 
+        // V99.10 Item 13: After the summer window closes (Aug 31), the
+        // NEXT window is now the January window (Jan 1-31, 2027), not
+        // the next season's summer window.
         assert_eq!(context.transfer_window.status, TransferWindowStatus::Closed);
         assert_eq!(
             context.transfer_window.opens_on.as_deref(),
-            Some("2027-07-02")
+            Some("2027-01-01")
         );
         assert_eq!(
             context.transfer_window.closes_on.as_deref(),
-            Some("2027-08-31")
+            Some("2027-01-31")
         );
-        assert_eq!(context.transfer_window.days_until_opens, Some(290));
+        // days_until_opens = Sep 15 → Jan 1 = 108 days
+        assert_eq!(context.transfer_window.days_until_opens, Some(108));
         assert_eq!(context.transfer_window.days_remaining, None);
+    }
+
+    // V99.10 Item 13: Verify the January window is open when current date
+    // is within Jan 1-31.
+    #[test]
+    fn january_window_opens_mid_season() {
+        let league = League {
+            id: "league1".to_string(),
+            name: "Premier Division".to_string(),
+            season: 2026,
+            fixtures: vec![make_fixture(
+                "fx1",
+                "2026-08-01",
+                FixtureStatus::Completed,
+                1,
+            )],
+            standings: vec![
+                StandingEntry::new("team1".to_string()),
+                StandingEntry::new("team2".to_string()),
+            ],
+            transfer_log: vec![],
+            transfer_rumours: vec![],
+        };
+        let game = make_game((2027, 1, 15), Some(league));
+
+        let context = derive_season_context(&game);
+
+        assert_eq!(context.transfer_window.status, TransferWindowStatus::Open);
+        assert_eq!(
+            context.transfer_window.opens_on.as_deref(),
+            Some("2027-01-01")
+        );
+        assert_eq!(
+            context.transfer_window.closes_on.as_deref(),
+            Some("2027-01-31")
+        );
+        assert_eq!(context.transfer_window.days_until_opens, None);
+        // Jan 15 → Jan 31 = 16 days remaining
+        assert_eq!(context.transfer_window.days_remaining, Some(16));
     }
 
     #[test]

@@ -127,3 +127,40 @@ Stage Summary:
 - No scripts used — all manual edits.
 
 Next: Sprint 4b (Item 12 rewrite poaching + ai_headhunt, Item 13 January transfer window).
+
+---
+Task ID: V99.10-Sprint-4b
+Agent: Main agent
+Task: Sprint 4b — Item 12 (AI manager poaching rewrite + sacked-manager rehire) + Item 13 (January transfer window)
+
+Work Log:
+- Item 12 (AI manager lateral moves + rehire sacked):
+  - Rewrote process_ai_manager_poaching (ai_hiring.rs:380-501):
+    - Relaxed poach threshold from team_rep - 150 to team_rep (allows lateral moves between same-tier clubs)
+    - Score candidates by manager.rating() (factors reputation, career stats, trophies) instead of picking first
+    - Close career_history entry at old club, open new one at new club
+    - Reset warning_stage for the new club
+  - Added sacked-manager rehire in process_vacant_ai_clubs (ai_hiring.rs:336-403):
+    - Before creating a brand-new manager from staff, search game.managers for unemployed (sacked) managers
+    - Filter by reputation within 100 of the club
+    - Pick the highest-rated candidate
+    - Reset satisfaction, warning_stage, open new career_history entry
+    - Generate appointment news article
+    - If no suitable sacked manager, fall through to brand-new creation (existing path)
+
+- Item 13 (January transfer window):
+  - Rewrote derive_transfer_window_context (season_context.rs:86-162) to support TWO windows:
+    - Summer window: [season_start - 30d, season_start + 30d] (existing)
+    - January window: [Jan 1, Jan 31] of the year after season_start (NEW)
+  - Added january_window_opens_on and january_window_closes_on helper functions
+  - Updated existing test (derives_next_window_after_current_window_has_closed) to assert January window is next after summer closes (was asserting next summer)
+  - Added new test (january_window_opens_mid_season) verifying the January window opens correctly
+
+Stage Summary:
+- 2 items completed across 2 files (ai_hiring.rs, season_context.rs).
+- 1 new test added (January window), 1 existing test updated.
+- TypeScript check passes clean.
+- All changes commented with V99.10 Item 12/13.
+- No scripts used — all manual edits.
+
+Next: Sprint 5 (long-term depth: Items 17/18/19/22/26/21) + Sprint 6 (cleanup + UI sweep).
