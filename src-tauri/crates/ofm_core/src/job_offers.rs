@@ -144,12 +144,21 @@ pub fn hire_manager(game: &mut Game, team_id: &str, date: &str) -> Result<String
     .with_sender_i18n("be.sender.boardOfDirectors", "be.role.chairman");
 
     game.messages.push(msg);
+    // V99.10 C12: Pass the user manager's media_style so the appointment
+    // article reflects their personality.
+    let media_style_str = game
+        .manager
+        .personality
+        .media_style
+        .clone();
+    let media_style_debug = format!("{:?}", media_style_str);
     game.news.push(crate::news::managerial_appointment_article(
         &manager_id,
         &manager_name,
         team_id,
         &team_name,
         date,
+        &media_style_debug,
     ));
 
     info!(

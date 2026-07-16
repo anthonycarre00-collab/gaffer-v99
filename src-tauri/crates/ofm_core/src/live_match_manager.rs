@@ -335,7 +335,33 @@ fn manager_for_team<'a>(game: &'a Game, team_id: &str) -> Option<&'a Manager> {
 /// - Reactive: moderate reputation with a winning record (win rate ≥ 55 %)
 /// - Pragmatist: default
 fn derive_personality(rep: u32, manager: Option<&Manager>) -> AiPersonality {
+    // V99.10 C12: Use manager.personality.risk_appetite as the primary
+    // signal for AI match behaviour. Previously this function ignored
+    // the personality field entirely and derived from reputation + career
+    // stats — so a cautious manager (risk_appetite=20) at a big club got
+    // Visionary (bold tactical changes) regardless of their actual style.
+    //
+    // Now: risk_appetite >= 70 → Visionary (bold, makes tactical changes),
+    //       risk_appetite >= 40 → Reactive (adapts to scoreline),
+    //       risk_appetite < 40 → Pragmatist (conservative).
+    // Falls back to the old reputation+stats logic if no personality
+    // (legacy saves where personality defaults to 50).
     if let Some(manager) = manager {
+        // V99.10 C12: Prefer risk_appetite if it's set away from default (50).
+        // If risk_appetite is at default, fall back to the old logic so we
+        // don't change behavior for existing saves.
+        let risk = manager.personality.risk_appetite;
+        if risk != 50 {
+            if risk >= 70 {
+                return AiPersonality::Visionary;
+            }
+            if risk >= 40 {
+                return AiPersonality::Reactive;
+            }
+            return AiPersonality::Pragmatist;
+        }
+
+        // Fallback: old reputation + career stats logic.
         let stats = &manager.career_stats;
         let total = stats.matches_managed;
         if rep >= 700 && total >= 50 {

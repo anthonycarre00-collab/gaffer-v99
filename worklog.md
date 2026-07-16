@@ -106,3 +106,24 @@ Stage Summary:
 - No scripts used — all manual edits.
 
 Next: Sprint 4 (AI personality + movement: C12 plumb 4 unused personality fields, Item 12 rewrite poaching + ai_headhunt, Item 13 January transfer window).
+
+---
+Task ID: V99.10-Sprint-4a
+Agent: Main agent
+Task: Sprint 4a — C12 plumb 4 unused manager personality fields
+
+Work Log:
+- C12 (manager personality mostly cosmetic): Plumbed all 4 unused personality fields:
+  1. transfer_philosophy: Applied per-buyer shortlist reordering in evaluate_transfer_market (transfers.rs:1146-1198). YouthFocused boosts young+high-potential targets, StarSigning boosts high-OVR targets, BargainHunter boosts undervalued targets, SquadBuilder neutral.
+  2. man_management: Applied morale_recovery_bonus to positive streak morale in apply_match_report_morale (post_match.rs:938-963). Great man-managers (100) give +50% to positive morale deltas.
+  3. risk_appetite: Updated derive_personality (live_match_manager.rs:337-383) to use risk_appetite as primary signal. >=70 → Visionary, >=40 → Reactive, <40 → Pragmatist. Falls back to old reputation+stats logic when risk_appetite is at default (50) for legacy saves.
+  4. media_style: Added media_style parameter to managerial_appointment_article (news.rs:301-335). Passed as i18n param so frontend can render personality-appropriate quotes. Updated both callers (ai_hiring.rs:355, job_offers.rs:147).
+
+Stage Summary:
+- 1 item completed across 5 files (transfers.rs, turn/post_match.rs, live_match_manager.rs, news.rs, ai_hiring.rs, job_offers.rs).
+- Manager personality is now consumed by all 4 intended subsystems (transfers, morale, match engine, news).
+- TypeScript check passes clean.
+- All changes commented with V99.10 C12.
+- No scripts used — all manual edits.
+
+Next: Sprint 4b (Item 12 rewrite poaching + ai_headhunt, Item 13 January transfer window).

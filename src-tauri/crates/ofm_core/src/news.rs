@@ -298,12 +298,17 @@ pub fn season_preview_article(team_names: &[String], date: &str) -> NewsArticle 
     )
 }
 
+/// V99.10 C12: Now accepts `media_style` so the article body can reflect
+/// the manager's personality (Outspoken managers get a punchier quote,
+/// Charismatic managers get a fan-friendly quote, etc.). The media_style
+/// is passed as an i18n param so the frontend can select variant text.
 pub fn managerial_appointment_article(
     manager_id: &str,
     manager_name: &str,
     team_id: &str,
     team_name: &str,
     date: &str,
+    media_style: &str,
 ) -> NewsArticle {
     NewsArticle::new(
         format!("managerial_appointment_{}_{}", team_id, date),
@@ -322,6 +327,9 @@ pub fn managerial_appointment_article(
             ("team", team_name),
             ("manager", manager_name),
             ("managerId", manager_id),
+            // V99.10 C12: Pass media_style so the frontend can render
+            // personality-appropriate quotes (Outspoken, Charismatic, etc.).
+            ("mediaStyle", media_style),
         ]),
     )
 }

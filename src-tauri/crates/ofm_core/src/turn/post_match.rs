@@ -936,10 +936,27 @@ fn update_team_form(
             };
 
             if streak_delta != 0 {
+                // V99.10 C12: Look up the team's manager's man_management
+                // rating to boost positive morale recovery. A great man-
+                // manager (100) gives +0.5 to positive deltas; a poor one
+                // (0) gives +0. The bonus only applies to positive deltas
+                // (win streaks), not negative ones (loss streaks).
+                let mgr_recovery_bonus = game
+                    .managers
+                    .iter()
+                    .find(|m| m.team_id.as_deref() == Some(team_id_str))
+                    .map(|m| m.personality.morale_recovery_bonus())
+                    .unwrap_or(0.0);
+
                 for player in game.players.iter_mut() {
                     if player.team_id.as_deref() == Some(team_id_str) {
                         let base = player.morale as i16;
-                        let adjusted_delta = capped_positive_recovery(streak_delta, player);
+                        let mut adjusted_delta = capped_positive_recovery(streak_delta, player);
+                        // V99.10 C12: Apply man_management bonus to positive deltas.
+                        if adjusted_delta > 0 && mgr_recovery_bonus > 0.0 {
+                            let bonus = (adjusted_delta as f64 * mgr_recovery_bonus).round() as i16;
+                            adjusted_delta += bonus;
+                        }
                         player.morale = (base + adjusted_delta).clamp(10, 100) as u8;
                     }
                 }

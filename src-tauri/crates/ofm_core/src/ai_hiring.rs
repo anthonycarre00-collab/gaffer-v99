@@ -352,12 +352,16 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
             team.manager_id = Some(manager.id.clone());
         }
         crate::job_offers::expire_outstanding_job_offers_for_team(game, &team_id);
+        // V99.10 C12: Pass the manager's media_style so the appointment
+        // article can reflect their personality.
+        let media_style_str = format!("{:?}", manager.personality.media_style);
         game.news.push(crate::news::managerial_appointment_article(
             &manager.id,
             &manager.full_name(),
             &team_id,
             &team_name,
             &today,
+            &media_style_str,
         ));
         game.managers.push(manager);
         game.vacant_team_days.remove(&team_id);

@@ -1107,6 +1107,18 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         };
         let buyer_depths = position_depths.get(&buyer_id).copied().unwrap_or([0; 4]);
 
+        // V99.10 C12: Look up the buyer's manager personality to apply
+        // transfer_philosophy to target selection. A YouthFocused manager
+        // prefers young high-potential players; a StarSigning manager
+        // prefers established stars; a BargainHunter prefers undervalued
+        // players; SquadBuilder is neutral.
+        let buyer_philosophy = game
+            .managers
+            .iter()
+            .find(|m| m.team_id.as_deref() == Some(buyer_id.as_str()))
+            .map(|m| m.personality.transfer_philosophy.clone())
+            .unwrap_or_default();
+
         let loan_offer_player_id = if let Some(user_team_id) = user_team_id.as_deref() {
             if new_user_loan_offers_today < MAX_NEW_INCOMING_USER_OFFERS_PER_DAY {
                 create_incoming_user_loan_offer_if_any(
@@ -1131,9 +1143,63 @@ pub fn evaluate_transfer_market(game: &mut Game) {
             new_user_loan_offers_today += 1;
         }
 
-        // The list is score-sorted, so the first target clearing this club's
-        // filters is its highest-appeal eligible signing.
-        let chosen = shortlist.iter().find(|target| {
+        // V99.10 C12: Apply transfer_philosophy to reorder the shortlist
+        // for this buyer. A YouthFocused manager boosts young targets;
+        // StarSigning boosts high-OVR targets; BargainHunter boosts
+        // undervalued targets (fee < market_value). SquadBuilder is neutral.
+        let mut philosophy_adjusted_shortlist: Vec<(i32, &MarketTarget)> = shortlist
+            .iter()
+            .map(|target| {
+                let player = game.players.iter().find(|p| p.id == target.player_id);
+                let mut adjusted_score = target.score;
+                if let Some(player) = player {
+                    use domain::manager::TransferPhilosophy;
+                    match buyer_philosophy {
+                        TransferPhilosophy::YouthFocused => {
+                            // Boost players under 23 with high potential.
+                            let age = current_date.year() as i32
+                                - chrono::NaiveDate::parse_from_str(&player.date_of_birth, "%Y-%m-%d")
+                                    .map(|d| d.year())
+                                    .unwrap_or(2000);
+                            if age <= 21 {
+                                adjusted_score += 20;
+                            } else if age <= 23 {
+                                adjusted_score += 10;
+                            }
+                            if player.potential >= 85 {
+                                adjusted_score += 15;
+                            }
+                        }
+                        TransferPhilosophy::StarSigning => {
+                            // Boost high-OVR established players.
+                            if player.ovr >= 80 {
+                                adjusted_score += 20;
+                            } else if player.ovr >= 75 {
+                                adjusted_score += 10;
+                            }
+                        }
+                        TransferPhilosophy::BargainHunter => {
+                            // Boost players whose fee is below market_value.
+                            if (target.fee as u64) < player.market_value {
+                                adjusted_score += 15;
+                            }
+                        }
+                        TransferPhilosophy::SquadBuilder => {
+                            // Neutral — no adjustment.
+                        }
+                    }
+                }
+                (adjusted_score, target)
+            })
+            .collect();
+        // Sort by adjusted score (highest first) so the philosophy-preferred
+        // targets are evaluated first.
+        philosophy_adjusted_shortlist.sort_by(|a, b| b.0.cmp(&a.0));
+
+        // The list is score-sorted (with philosophy adjustment), so the
+        // first target clearing this club's filters is its highest-appeal
+        // eligible signing.
+        let chosen = philosophy_adjusted_shortlist.iter().find(|(_, target)| {
             if target.owner_team_id == buyer_id || moved_player_ids.contains(&target.player_id) {
                 return false;
             }
@@ -1176,7 +1242,7 @@ pub fn evaluate_transfer_market(game: &mut Game) {
                 && buyer_team.finance >= target.fee as i64
         });
 
-        let Some(target) = chosen else {
+        let Some((_adjusted_score, target)) = chosen else {
             continue;
         };
         let candidate = MarketCandidate {
