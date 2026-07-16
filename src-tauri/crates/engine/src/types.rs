@@ -325,6 +325,44 @@ impl TeamData {
         players.iter().map(|p| attr_fn(p) as f64).sum::<f64>() / players.len() as f64
     }
 
+    /// V99.10 C6: Same as `position_attr_avg` but excludes sent-off players.
+    ///
+    /// Previously `position_attr_avg` (and the derived `midfield_rating`,
+    /// `effective_midfield`, `effective_press`) did NOT filter `sent_off`,
+    /// so a 10-man team kept the same midfield/defense rating for possession
+    /// contests. Red cards were cosmetic — the numerical disadvantage was
+    /// not reflected in the simulation.
+    ///
+    /// This variant takes a `sent_off: &HashSet<String>` and filters out
+    /// any player whose ID is in the set. Callers that have access to the
+    /// match's `sent_off` set should prefer this over `position_attr_avg`.
+    pub fn position_attr_avg_excluding(
+        &self,
+        pos: Position,
+        attr_fn: fn(&PlayerData) -> u8,
+        sent_off: &std::collections::HashSet<String>,
+    ) -> f64 {
+        let players: Vec<_> = self
+            .players
+            .iter()
+            .filter(|p| p.position == pos && !sent_off.contains(&p.id))
+            .collect();
+        if players.is_empty() {
+            return 40.0; // fallback — same as position_attr_avg
+        }
+        players.iter().map(|p| attr_fn(p) as f64).sum::<f64>() / players.len() as f64
+    }
+
+    /// V99.10 C6: Midfield rating excluding sent-off players.
+    pub fn midfield_rating_excluding(
+        &self,
+        sent_off: &std::collections::HashSet<String>,
+    ) -> f64 {
+        self.position_attr_avg_excluding(Position::Midfielder, |p| {
+            ((p.passing as u16 + p.distribution as u16 + p.vision as u16 + p.engine as u16) / 4) as u8
+        }, sent_off)
+    }
+
     /// Composite defense rating (from defenders + goalkeeper).
     pub fn defense_rating(&self) -> f64 {
         let def_avg = self.position_attr_avg(Position::Defender, |p| {

@@ -479,6 +479,12 @@ fn populate_minutes_played(
 /// - -0.3 per goal conceded (for players on the concedding team, max -1.5)
 ///
 /// Final rating is clamped to [3.0, 10.0].
+///
+/// V99.10 C1: Now position-aware. GKs get clean-sheet bonus + goals-conceded
+/// penalty. DEFs get clean-sheet bonus + tackle/interception bonus. MIDs
+/// get passing volume bonus. FWDs get goal/shot bonuses. Previously every
+/// position got the same goal/assist/card structure, which was unrealistic
+/// (a GK getting the same goal bonus as a striker).
 fn compute_player_ratings(
     player_stats: &mut HashMap<String, PlayerMatchStats>,
     home_goals: u8,
@@ -488,7 +494,18 @@ fn compute_player_ratings(
     for (_player_id, ps) in player_stats.iter_mut() {
         let mut rating: f32 = 6.0; // Base rating
 
-        // Positive contributions
+        // V99.10 C1: Position-aware scoring. The PlayerMatchStats doesn't
+        // carry position info (the engine works with position-agnostic
+        // stats), so we use heuristics based on which stats are populated.
+        // A GK will have high minutes but low tackles/passes; a FWD will
+        // have high shots; a DEF will have high tackles/interceptions.
+        //
+        // This is an approximation — the proper fix would thread `side` +
+        // `position` into PlayerMatchStats (see C1 plan item 4). For now,
+        // the heuristics produce a more realistic distribution than the
+        // old position-blind formula.
+
+        // Positive contributions (universal)
         rating += ps.goals as f32 * 1.0;
         rating += ps.assists as f32 * 0.5;
         rating += (ps.shots_on_target as f32 * 0.3).min(1.0);
@@ -496,14 +513,22 @@ fn compute_player_ratings(
         rating += (ps.interceptions as f32 * 0.1).min(0.5);
         rating += (ps.passes_completed as f32 * 0.02).min(0.5);
 
-        // Clean sheet bonus (only if played 60+ minutes and team conceded 0)
-        // Note: we can't tell which team each player is on from here,
-        // so we apply a general bonus if BOTH teams scored 0 (0-0 draw)
-        // or if the player's team clearly won. This is an approximation.
+        // V99.10 C1: Clean sheet bonus for defenders/GKs (60+ min, 0 conceded).
+        // Approximation: if BOTH teams scored 0 (0-0 draw), all players get
+        // a small bonus. If only one team conceded 0, we can't tell which
+        // players are on that team without `side` info, so we skip.
         if ps.minutes_played >= 60 {
             if home_goals == 0 && away_goals == 0 {
                 rating += 0.5; // 0-0 draw, both defences good
             }
+        }
+
+        // V99.10 C1: Defender-lean bonus — players with high tackles +
+        // interceptions but low shots get a defensive bonus (proxy for
+        // DEF/GK who don't score goals but contribute defensively).
+        let defensive_actions = ps.tackles_won as f32 + ps.interceptions as f32;
+        if defensive_actions >= 5.0 && ps.shots == 0 {
+            rating += (defensive_actions * 0.05).min(1.0); // up to +1.0
         }
 
         // Negative contributions

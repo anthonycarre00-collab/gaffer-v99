@@ -14,7 +14,11 @@ use std::collections::{HashMap, HashSet};
 // Domain → Engine conversion with starting XI / bench split
 // ---------------------------------------------------------------------------
 
-pub(super) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Vec<PlayerData>) {
+// V99.10 C10: Bumped from pub(super) to pub(crate) so turn/mod.rs can
+// call this from build_engine_team (delegation pattern). This ensures
+// AI-vs-AI matches use the same starting-XI selection logic as live
+// matches, instead of passing the entire squad into team.players.
+pub(crate) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Vec<PlayerData>) {
     let team = game.teams.iter().find(|t| t.id == team_id);
     let (name, formation, play_style, tactics, saved_xi_ids) = match team {
         Some(t) => (

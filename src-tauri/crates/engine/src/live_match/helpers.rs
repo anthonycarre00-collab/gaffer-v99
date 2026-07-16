@@ -180,7 +180,10 @@ impl LiveMatchState {
     // -----------------------------------------------------------------------
 
     pub(super) fn effective_midfield(&self, side: Side) -> f64 {
-        let base = self.team_ref(side).midfield_rating();
+        // V99.10 C6: Use midfield_rating_excluding to filter sent-off
+        // players. Previously a 10-man team kept the same midfield rating,
+        // making red cards cosmetic.
+        let base = self.team_ref(side).midfield_rating_excluding(&self.sent_off);
         let modifier = play_style_modifier(
             self.team_ref(side).play_style,
             PlayStylePhase::Midfield,
@@ -191,9 +194,10 @@ impl LiveMatchState {
 
     pub(super) fn effective_press(&self, pressing_side: Side) -> f64 {
         let team = self.team_ref(pressing_side);
-        let base = team.position_attr_avg(Position::Midfielder, |p| {
+        // V99.10 C6: Use position_attr_avg_excluding to filter sent-off.
+        let base = team.position_attr_avg_excluding(Position::Midfielder, |p| {
             ((p.engine as u16 + p.defending as u16 + p.pace as u16) / 3) as u8
-        });
+        }, &self.sent_off);
         let modifier = play_style_modifier(team.play_style, PlayStylePhase::Press, true);
         base * modifier
             * tactics_pressing_press(&team.tactics)

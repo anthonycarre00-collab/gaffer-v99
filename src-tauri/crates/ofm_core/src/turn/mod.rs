@@ -5,7 +5,9 @@ mod round_summary;
 
 use crate::board_objectives;
 use crate::game::Game;
-use crate::live_match_manager::{domain_to_engine_role, domain_to_engine_tactics};
+// V99.10 C10: domain_to_engine_role/domain_to_engine_tactics imports
+// removed — were only used by the old build_engine_team which now
+// delegates to build_team_with_bench (which has its own copies).
 use crate::player_events;
 use crate::random_events;
 use crate::scouting;
@@ -13,7 +15,9 @@ use crate::training;
 use crate::transfers;
 use chrono::Datelike;
 use domain::league::FixtureStatus;
-use domain::player::Position as DomainPosition;
+// V99.10 C10: DomainPosition import removed — was only used by the old
+// build_engine_team which has been replaced with a delegation to
+// build_team_with_bench.
 use domain::stats::StatsState;
 use log::{debug, info};
 
@@ -572,138 +576,157 @@ mod tests {
             initial_finance - ((52_000 + 10_400) / 52)
         );
     }
+
+    // V99.10 C11: Verify build_engine_team produces the same XI as
+    // build_team_with_bench. Both paths should now use identical team
+    // construction (starting XI, not full squad) so AI-vs-AI matches
+    // and live matches produce consistent scorelines.
+    #[test]
+    fn build_engine_team_matches_build_team_with_bench() {
+        let mut game = make_game();
+        // Add a few players to team1 so there's a squad to select from.
+        for i in 0..18 {
+            let mut player = Player::new(
+                format!("p{}", i),
+                format!("Player {}", i),
+                format!("P{}", i),
+                "2000-01-01".to_string(),
+                "England".to_string(),
+            );
+            player.team_id = Some("team1".to_string());
+            player.position = match i % 4 {
+                0 => Position::Goalkeeper,
+                1 => Position::Defender,
+                2 => Position::Midfielder,
+                _ => Position::Forward,
+            };
+            player.ovr = 60 + (i as u8) % 20;
+            player.condition = 80;
+            game.players.push(player);
+        }
+
+        // Build via build_engine_team (the AI-vs-AI path).
+        let engine_team = build_engine_team(&game, "team1");
+        // Build via build_team_with_bench (the live match path).
+        let (live_team, _bench) =
+            crate::live_match_manager::build_team_with_bench(&game, "team1");
+
+        // Both should have the same number of players (starting XI, not squad).
+        assert_eq!(
+            engine_team.players.len(),
+            live_team.players.len(),
+            "build_engine_team and build_team_with_bench should produce the same XI size"
+        );
+
+        // Both should have the same player IDs (order may differ, so compare as sets).
+        let engine_ids: std::collections::HashSet<_> = engine_team.players.iter().map(|p| p.id.clone()).collect();
+        let live_ids: std::collections::HashSet<_> = live_team.players.iter().map(|p| p.id.clone()).collect();
+        assert_eq!(
+            engine_ids, live_ids,
+            "build_engine_team and build_team_with_bench should select the same players"
+        );
+    }
+
+    // V99.10 C11: Verify injured players are excluded from AI-vs-AI matches.
+    #[test]
+    fn build_engine_team_excludes_injured_players() {
+        let mut game = make_game();
+        // Add 14 healthy players + 4 injured players to team1.
+        for i in 0..14 {
+            let mut player = Player::new(
+                format!("healthy{}", i),
+                format!("Healthy {}", i),
+                format!("H{}", i),
+                "2000-01-01".to_string(),
+                "England".to_string(),
+            );
+            player.team_id = Some("team1".to_string());
+            player.position = match i % 4 {
+                0 => Position::Goalkeeper,
+                1 => Position::Defender,
+                2 => Position::Midfielder,
+                _ => Position::Forward,
+            };
+            player.ovr = 70;
+            player.condition = 80;
+            game.players.push(player);
+        }
+        for i in 0..4 {
+            let mut player = Player::new(
+                format!("injured{}", i),
+                format!("Injured {}", i),
+                format!("I{}", i),
+                "2000-01-01".to_string(),
+                "England".to_string(),
+            );
+            player.team_id = Some("team1".to_string());
+            player.position = match i % 4 {
+                0 => Position::Goalkeeper,
+                1 => Position::Defender,
+                2 => Position::Midfielder,
+                _ => Position::Forward,
+            };
+            player.ovr = 90; // High OVR so they'd be selected if not injured
+            player.condition = 80;
+            player.injury = Some(domain::player::Injury {
+                name: "Hamstring".to_string(),
+                days_remaining: 14,
+            });
+            game.players.push(player);
+        }
+
+        let engine_team = build_engine_team(&game, "team1");
+
+        // No injured players should be in the XI.
+        for p in &engine_team.players {
+            // The engine PlayerData doesn't carry injury info, but we can
+            // check that no "injured" IDs appear.
+            assert!(
+                !p.id.starts_with("injured"),
+                "Injured player {} should not be in the XI",
+                p.id
+            );
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
 // Domain → Engine type conversion
 // ---------------------------------------------------------------------------
 
-fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
-    let team = game.teams.iter().find(|t| t.id == team_id);
-    let player_roles = team.map(|t| &t.player_roles);
-    let (name, formation, play_style, tactics) = match team {
-        Some(t) => (
-            t.name.clone(),
-            t.formation.clone(),
-            match t.play_style {
-                domain::team::PlayStyle::Attacking => engine::PlayStyle::Attacking,
-                domain::team::PlayStyle::Defensive => engine::PlayStyle::Defensive,
-                domain::team::PlayStyle::Possession => engine::PlayStyle::Possession,
-                domain::team::PlayStyle::Counter => engine::PlayStyle::Counter,
-                domain::team::PlayStyle::HighPress => engine::PlayStyle::HighPress,
-                _ => engine::PlayStyle::Balanced,
-        
-            },
-            domain_to_engine_tactics(&t.tactics_phase),
-        ),
-        None => (
-            "Unknown".into(),
-            "4-4-2".into(),
-            engine::PlayStyle::Balanced,
-            engine::TacticsConfig::default(),
-        ),
-    };
-
-    let players: Vec<engine::PlayerData> = game
-        .players
-        .iter()
-        .filter(|p| p.team_id.as_deref() == Some(team_id))
-        .map(|p| {
-            let pos = match p.position.to_group_position() {
-                DomainPosition::Goalkeeper => engine::Position::Goalkeeper,
-                DomainPosition::Defender => engine::Position::Defender,
-                DomainPosition::Midfielder => engine::Position::Midfielder,
-                DomainPosition::Forward => engine::Position::Forward,
-                _ => engine::Position::Midfielder,
-            };
-            engine::PlayerData {
-                id: p.id.clone(),
-                name: p.match_name.clone(),
-                position: pos,
-                ovr: p.ovr,
-                condition: p.condition,
-                fitness: p.fitness,
-                // Gaffer 19 attrs — direct mapping
-                pace: p.attributes.pace,
-                burst: p.attributes.burst,
-                engine: p.attributes.engine,
-                power: p.attributes.power,
-                agility: p.attributes.agility,
-                passing: p.attributes.passing,
-                distribution: p.attributes.distribution,
-                touch: p.attributes.touch,
-                finishing: p.attributes.finishing,
-                defending: p.attributes.defending,
-                aerial: p.attributes.aerial,
-                anticipation: p.attributes.anticipation,
-                vision: p.attributes.vision,
-                decisions: p.attributes.decisions,
-                composure: p.attributes.composure,
-                leadership: p.attributes.leadership,
-                // Personality-derived for engine simulation
-                aggression: p.personality.neuroticism,
-                teamwork: p.personality.agreeableness,
-                stability: p.stability_modifier,
-                morale: p.morale,
-                // GK attrs
-                shot_stopping: p.attributes.shot_stopping,
-                commanding: p.attributes.commanding,
-                playing_out: p.attributes.playing_out,
-                traits: p.traits.iter().map(|t| format!("{:?}", t)).collect(),
-                role: player_roles
-                    .and_then(|roles| roles.get(&p.id))
-                    .map(domain_to_engine_role)
-                    .unwrap_or(engine::PlayerRole::Standard),
-                // V99.4 T2.2: Compute partnership bonus from goal combinations.
-                partnership_bonus: compute_partnership_bonus(p, team_id),
-            }
-        })
-        .collect();
-
-    // V99.4 T1.7: Set tactics_multiplier from the AI manager's tactical acumen.
-    let tactics_multiplier = game
-        .managers
-        .iter()
-        .find(|m| m.team_id.as_deref() == Some(team_id))
-        .map(|m| m.personality.tactics_effectiveness_multiplier())
-        .unwrap_or(1.0);
-
-    // V99.4 T3.4: Pass the user-designated captain ID to the engine.
-    let captain_id = team.and_then(|t| t.match_roles.captain.clone());
-
-    engine::TeamData {
-        id: team_id.to_string(),
-        name,
-        formation,
-        play_style,
-        players,
-        tactics,
-        tactics_multiplier,
-        captain_id,
-            ..Default::default()
-        
-    }
-}
-
-/// V99.4 T2.2: Compute a player's partnership bonus based on their goal
-/// combinations with teammates. Returns 1.0 (no bonus) to 1.02 (max bonus).
+/// V99.10 C10: Rewritten to delegate to `build_team_with_bench`.
 ///
-/// - 20+ combined goals with any teammate: +2%
-/// - 10+ combined goals with any teammate: +1%
-/// - Takes the best partnership (doesn't stack)
-fn compute_partnership_bonus(player: &domain::player::Player, _team_id: &str) -> f64 {
-    if player.partnerships.is_empty() {
-        return 1.0;
-    }
-    let max_partnership = player.partnerships.values().copied().max().unwrap_or(0);
-    if max_partnership >= 20 {
-        1.02
-    } else if max_partnership >= 10 {
-        1.01
-    } else {
-        1.0
-    }
+/// Previously this function built `engine::TeamData` with the ENTIRE SQUAD
+/// in `team.players` (20-30 players), while the live engine used only the
+/// starting XI (11 players). This caused:
+///   - `position_attr_avg` to be diluted by bench players
+///   - `snap_player` to pick from the whole squad (deep squads unfairly boosted)
+///   - Injured players to participate in AI-vs-AI matches
+///   - Inconsistent scorelines between live and simmed matches
+///
+/// Now delegates to `build_team_with_bench` (the same function used by the
+/// live engine), which:
+///   - Filters injured players
+///   - Calls `ai_select_starting_xi` to pick the best 11
+///   - Returns the XI in `TeamData.players` and the bench separately
+///
+/// We discard the bench (AI-vs-AI matches don't use substitutions). The
+/// `TeamData` returned is identical in structure to what the live engine
+/// uses, ensuring consistency between the two paths (C11).
+// V99.10 C10/C11: Made pub(crate) so the consistency test in
+// tests/turn_tests.rs can verify build_engine_team produces the same
+// XI as build_team_with_bench.
+pub(crate) fn build_engine_team(game: &Game, team_id: &str) -> engine::TeamData {
+    let (team_data, _bench) =
+        crate::live_match_manager::build_team_with_bench(game, team_id);
+    team_data
 }
+
+// V99.10 C10: `compute_partnership_bonus` removed — it was only called by
+// the old `build_engine_team` which has been replaced with a delegation to
+// `build_team_with_bench`. The live engine's `team_builder.rs` has its own
+// inline copy of this logic (team_builder.rs:518-527), so no functionality
+// is lost.
 
 // ---------------------------------------------------------------------------
 // Matchday simulation using the engine crate

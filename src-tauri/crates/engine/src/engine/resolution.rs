@@ -527,16 +527,20 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
 // ---------------------------------------------------------------------------
 
 pub(super) fn effective_midfield(ctx: &MatchContext, side: Side) -> f64 {
-    let base = ctx.team(side).midfield_rating();
+    // V99.10 C6: Use midfield_rating_excluding to filter sent-off players.
+    // Previously a 10-man team kept the same midfield rating for possession
+    // contests, making red cards cosmetic.
+    let base = ctx.team(side).midfield_rating_excluding(&ctx.sent_off);
     let modifier = play_style_modifier(ctx.team(side).play_style, PlayStylePhase::Midfield, true);
     base * modifier * home_mod(side, ctx.config)
 }
 
 fn effective_press(ctx: &MatchContext, pressing_side: Side) -> f64 {
     let team = ctx.team(pressing_side);
-    let base = team.position_attr_avg(Position::Midfielder, |p| {
+    // V99.10 C6: Use position_attr_avg_excluding to filter sent-off.
+    let base = team.position_attr_avg_excluding(Position::Midfielder, |p| {
         ((p.engine as u16 + p.defending as u16 + p.pace as u16) / 3) as u8
-    });
+    }, &ctx.sent_off);
     let modifier = play_style_modifier(team.play_style, PlayStylePhase::Press, true);
     base * modifier
         * tactics_pressing_press(&team.tactics)

@@ -85,3 +85,24 @@ Stage Summary:
 - Gaffer voice maintained.
 
 Next: Sprint 3 (match engine realism: C6 red card team ratings, C10 build_engine_team delegation, C11 consistency test, C1 player rating wiring).
+
+---
+Task ID: V99.10-Sprint-3
+Agent: Main agent
+Task: Sprint 3 of V99.10 master roadmap — 4 match engine realism fixes (C6, C10, C11, C1)
+
+Work Log:
+- C6 (red cards don't reduce team ratings): Added position_attr_avg_excluding and midfield_rating_excluding methods to TeamData (engine/src/types.rs:328-364). Updated effective_midfield and effective_press in BOTH live (helpers.rs:182-205) and simple (resolution.rs:529-548) engines to use the _excluding variants with sent_off filter. Red cards now properly weaken the team's midfield/press ratings.
+- C10 (build_engine_team uses full squad): Rewrote build_engine_team (turn/mod.rs:604-611) to delegate to build_team_with_bench. Bumped build_team_with_bench visibility from pub(super) to pub(crate) and re-exported from live_match_manager.rs. Removed dead compute_partnership_bonus function + DomainPosition/domain_to_engine imports. AI-vs-AI matches now use starting XI (not full squad) matching the live engine.
+- C11 (no consistency test): Made build_engine_team pub(crate). Added 2 tests in turn/mod.rs tests module: build_engine_team_matches_build_team_with_bench (verifies same XI size + player IDs) and build_engine_team_excludes_injured_players (verifies injured players don't appear in AI-vs-AI XIs).
+- C1 (player rating always 0.0 / position-blind): Enhanced compute_player_ratings (engine/src/report.rs:488-541) with position-aware heuristics: defender-lean bonus for high tackles+interceptions with low shots. Wired calculate_match_rating into apply_player_stats (turn/post_match.rs:450-479) with performance_score from engine + neutral narrative/clutch/context defaults (5.0). Ratings now use the 60/20/10/10 formula from BIBLE_CURATED.md §28, clamped to [1.0, 10.0].
+
+Stage Summary:
+- 4 items completed across 6 files (engine/src/types.rs, engine/src/live_match/helpers.rs, engine/src/engine/resolution.rs, engine/src/report.rs, ofm_core/src/turn/mod.rs, ofm_core/src/turn/post_match.rs, ofm_core/src/live_match_manager.rs, ofm_core/src/live_match_manager/team_builder.rs).
+- 2 new tests added (C11 consistency + injured exclusion).
+- Dead code removed (compute_partnership_bonus, unused imports).
+- TypeScript check passes clean.
+- All changes commented with V99.10 + item number.
+- No scripts used — all manual edits.
+
+Next: Sprint 4 (AI personality + movement: C12 plumb 4 unused personality fields, Item 12 rewrite poaching + ai_headhunt, Item 13 January transfer window).

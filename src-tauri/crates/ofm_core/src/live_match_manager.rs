@@ -1,6 +1,8 @@
 mod team_builder;
 pub use team_builder::auto_select_set_pieces;
-use team_builder::build_team_with_bench;
+// V99.10 C10: Re-export build_team_with_bench as pub(crate) so
+// turn/mod.rs::build_engine_team can delegate to it.
+pub(crate) use team_builder::build_team_with_bench;
 pub(crate) use team_builder::domain_to_engine_role;
 pub(crate) use team_builder::domain_to_engine_tactics;
 

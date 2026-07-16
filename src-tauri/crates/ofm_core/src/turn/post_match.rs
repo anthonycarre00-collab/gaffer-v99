@@ -448,11 +448,34 @@ fn apply_player_stats(
             player.stats.fouls_committed += ps.fouls_committed as u32;
 
             // Update average rating (running average)
+            // V99.10 C1: Wire calculate_match_rating for narrative-aware scoring.
+            //
+            // Previously the engine's `compute_player_ratings` rating was used
+            // directly. Now we pass it through `calculate_match_rating` which
+            // weights it at 60% performance + 20% narrative + 10% clutch +
+            // 10% context. For now, narrative/clutch/context use neutral
+            // defaults (5.0) — these can be enhanced later by threading
+            // game.memory_store, rivalry data, and late-winner detection.
+            // Even with neutral narrative inputs, this produces a more
+            // realistic distribution because:
+            //   1. The 60% performance weighting smooths extreme ratings
+            //   2. The clamp to [1.0, 10.0] is wider than the engine's [3.0, 10.0]
+            //   3. The formula matches the design spec (BIBLE_CURATED.md §28)
+            let performance_score = ps.rating;
+            let narrative_weight = 5.0; // neutral — no story thread lookup yet
+            let clutch_factor = 5.0; // neutral — no late-winner detection yet
+            let context_difficulty = 5.0; // neutral — no opponent-strength lookup yet
+            let narrative_rating = crate::media::calculate_match_rating(
+                performance_score,
+                narrative_weight,
+                clutch_factor,
+                context_difficulty,
+            );
             if player.stats.appearances == 1 {
-                player.stats.avg_rating = ps.rating;
+                player.stats.avg_rating = narrative_rating;
             } else {
                 let n = player.stats.appearances as f32;
-                player.stats.avg_rating = (player.stats.avg_rating * (n - 1.0) + ps.rating) / n;
+                player.stats.avg_rating = (player.stats.avg_rating * (n - 1.0) + narrative_rating) / n;
             }
 
             // Clean sheet for goalkeepers
