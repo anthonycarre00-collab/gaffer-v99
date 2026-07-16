@@ -360,7 +360,8 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
 
         // Find the best unemployed manager within 100 reputation of the club.
         // "Best" = highest manager.rating().
-        let sacked_candidate: Option<(String, String, f64)> = game
+        // V99.10 fix: rating() returns u8, not f64 — changed type annotation.
+        let sacked_candidate: Option<(String, String, u8)> = game
             .managers
             .iter()
             .filter(|m| m.id != user_manager_id && m.team_id.is_none())
@@ -371,7 +372,7 @@ pub fn process_vacant_ai_clubs(game: &mut Game) {
                 (mgr_rep as i32 - team_rep as i32).abs() <= 100
             })
             .map(|m| (m.id.clone(), m.full_name(), m.rating()))
-            .max_by(|a, b| a.2.partial_cmp(&b.2).unwrap_or(std::cmp::Ordering::Equal));
+            .max_by_key(|(_, _, rating)| *rating);
 
         if let Some((mgr_id, mgr_name, _)) = sacked_candidate {
             // Rehire the sacked manager.
@@ -482,7 +483,8 @@ pub fn process_ai_manager_poaching(game: &mut Game) {
         // This allows lateral moves (same-tier clubs poaching each other's
         // managers), which is realistic — big clubs poach from each other.
         let poach_threshold = *team_rep;
-        let candidates: Vec<(usize, String, String, String, f64)> = game
+        // V99.10 fix: rating() returns u8, not f64.
+        let candidates: Vec<(usize, String, String, String, u8)> = game
             .managers
             .iter()
             .enumerate()
@@ -507,8 +509,9 @@ pub fn process_ai_manager_poaching(game: &mut Game) {
 
         // V99.10 Item 12: Pick the BEST candidate (highest rating), not
         // just the first. Sort by score descending.
+        // V99.10 fix: u8 implements Ord, so use sort_by directly.
         let mut sorted_candidates = candidates;
-        sorted_candidates.sort_by(|a, b| b.4.partial_cmp(&a.4).unwrap_or(std::cmp::Ordering::Equal));
+        sorted_candidates.sort_by(|a, b| b.4.cmp(&a.4));
         let (_mgr_idx, mgr_id, mgr_name, old_team_id, _score) = &sorted_candidates[0];
 
         // Move the manager to the elite club.

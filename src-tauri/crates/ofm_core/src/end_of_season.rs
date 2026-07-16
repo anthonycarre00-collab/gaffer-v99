@@ -1075,7 +1075,9 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
                     .min(wage_cap)
                     .max(0);
                 // Transfer budget: 20% of finance × board_type multiplier.
-                team.transfer_budget = (((team.finance as f64 * 0.20) as i64 as f64)
+                // V99.10 fix: Removed invalid `as i64 as f64` cast chain —
+                // keep it as f64 throughout the multiplication, then cast to i64 at the end.
+                team.transfer_budget = ((team.finance as f64 * 0.20)
                     * board_transfer_mult) as i64
                     .max(0);
             }

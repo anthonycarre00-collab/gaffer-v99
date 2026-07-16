@@ -3,8 +3,10 @@ pub use team_builder::auto_select_set_pieces;
 // V99.10 C10: Re-export build_team_with_bench as pub(crate) so
 // turn/mod.rs::build_engine_team can delegate to it.
 pub(crate) use team_builder::build_team_with_bench;
-pub(crate) use team_builder::domain_to_engine_role;
-pub(crate) use team_builder::domain_to_engine_tactics;
+// V99.10 fix: These re-exports are kept for potential future use but
+// are currently unused outside this module after C10's delegation refactor.
+#[allow(unused_imports)]
+pub(crate) use team_builder::{domain_to_engine_role, domain_to_engine_tactics};
 
 use rand::SeedableRng;
 use rand::rngs::StdRng;
