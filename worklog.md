@@ -189,3 +189,25 @@ Stage Summary:
 - No scripts used — all manual edits.
 
 ALL 45 ROADMAP ITEMS NOW ADDRESSED. Ready for bulk testing.
+
+---
+Task ID: V99.11
+Agent: Main agent
+Task: V99.11 UI Overhaul and Bug Fixes — comprehensive restyle per Gaffer UI Spec
+
+Work Log:
+- A1: Fixed league_tables_for_season to return filtered Vec (was returning all tables)
+- A2: Added PlayerMilestone news category + player_milestone_article builder + wired into apply_player_stats (detects 50/100/250 appearances, 25/50/100 goals, debut goals)
+- A6: Removed unused .gaffer-card class, added .gaffer-surface utility, updated Card.tsx with brass-marker bar in header, tighter padding (p-3.5)
+- B1: Replaced entire @theme token block with UI Spec palette (carbon-0/1/2/3, slate-line, ink/ink-dim/ink-faint, brass, muted green/red). Added pitch-mow body background (§8.1), signature motifs (.brass-marker, .hero-panel, .dossier-panel). Dark-first per spec §0.5.
+- B2: Sidebar restyled to 208px width, carbon gradient bg, brass left-border active state. Top bar restyled to 52px fixed height, carbon-1 bg, brass bottom border.
+- B3: Card.tsx uses .gaffer-surface, CardHeader has brass-marker bar, CardBody padding 14px.
+- B5: MIGRATED 183 FILES — all text-gray-*/bg-gray-*/border-gray-*/dark:navy-* utilities replaced with carbon/ink/slate tokens. Single biggest visual impact change.
+- B4: Cleaned up texture classes from tab roots. Replaced player-hero-bg and scouting-dossier-bg with .dossier-panel. Kept tactics-board-bg and match pitch-grass-bg.
+
+Stage Summary:
+- 7 commits pushed (d931d4a through a9e0119)
+- TypeScript check passes clean on every commit
+- Card tests 17/17 pass
+- ~190 files modified across the codebase
+- Remaining: A3 (comeback news), A4 (career-threatening injuries), A5 (youth facility), B6 (GafferIcons expansion), per-screen polish (brass markers on section titles, hero-panel on key cards)
