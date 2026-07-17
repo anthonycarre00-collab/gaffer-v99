@@ -408,3 +408,123 @@ export function HandshakeIcon({ size = 20, brassColor = "#c9972e", ...props }: G
  </svg>
  );
 }
+
+// ─── V99.11 B6: Additional icons to replace remaining lucide-react ───
+
+/** Home / dashboard — a pitch with a simple house outline */
+export function HomePitchIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <path d="M3 11l9-7 9 7" />
+ <path d="M5 10v10h14V10" />
+ {/* Mini pitch lines inside the house */}
+ <line x1="12" y1="12" x2="12" y2="20" strokeWidth="0.5" opacity="0.4" />
+ <circle cx="12" cy="16" r="2" strokeWidth="0.5" opacity="0.4" stroke={brassColor} />
+ </svg>
+ );
+}
+
+/** Inbox — a letter slot in a door panel */
+export function MailSlotIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <rect x="3" y="8" width="18" height="10" rx="1" />
+ <line x1="3" y1="12" x2="21" y2="12" stroke={brassColor} strokeWidth="1" />
+ <path d="M7 8V5h10v3" strokeWidth="0.8" opacity="0.5" />
+ <rect x="9" y="14" width="6" height="2" rx="0.5" strokeWidth="0.5" opacity="0.3" />
+ </svg>
+ );
+}
+
+/** Calendar with whistle — for schedule/fixtures */
+export function CalendarWhistleIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <rect x="3" y="5" width="18" height="16" rx="1" />
+ <line x1="3" y1="9" x2="21" y2="9" strokeWidth="0.8" />
+ <line x1="8" y1="3" x2="8" y2="6" />
+ <line x1="16" y1="3" x2="16" y2="6" />
+ {/* Whistle mark on a date */}
+ <circle cx="12" cy="15" r="2.5" stroke={brassColor} strokeWidth="1" />
+ <line x1="14" y1="15" x2="17" y2="14" stroke={brassColor} strokeWidth="0.8" />
+ </svg>
+ );
+}
+
+/** Settings cog — a gear */
+export function SettingsCogIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <circle cx="12" cy="12" r="3" />
+ {/* Gear teeth */}
+ <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"
+ strokeWidth="1" stroke={brassColor} opacity="0.7" />
+ </svg>
+ );
+}
+
+/** Globe with stadium — for transfer centre / world view */
+export function GlobeStadiumIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <circle cx="12" cy="12" r="9" />
+ {/* Latitude/longitude lines */}
+ <ellipse cx="12" cy="12" rx="9" ry="4" strokeWidth="0.5" opacity="0.4" />
+ <line x1="3" y1="12" x2="21" y2="12" strokeWidth="0.5" opacity="0.4" />
+ {/* Stadium silhouette */}
+ <path d="M8 14c0-2 2-3 4-3s4 1 4 3" stroke={brassColor} strokeWidth="1" />
+ <line x1="9" y1="14" x2="9" y2="16" strokeWidth="0.8" stroke={brassColor} />
+ <line x1="15" y1="14" x2="15" y2="16" strokeWidth="0.8" stroke={brassColor} />
+ </svg>
+ );
+}
+
+/** Players with kit — for players list */
+export function PlayersKitIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Two player silhouettes */}
+ <circle cx="8" cy="7" r="2" />
+ <path d="M5 20v-5c0-2 1.5-3 3-3s3 1 3 3v5" strokeWidth="0.8" />
+ <circle cx="16" cy="7" r="2" />
+ <path d="M13 20v-5c0-2 1.5-3 3-3s3 1 3 3v5" strokeWidth="0.8" />
+ {/* Kit numbers */}
+ <text x="8" y="17" textAnchor="middle" fontSize="4" fill={brassColor} stroke="none" fontFamily="monospace">9</text>
+ <text x="16" y="17" textAnchor="middle" fontSize="4" fill={brassColor} stroke="none" fontFamily="monospace">10</text>
+ </svg>
+ );
+}
+
+/** Manager clipboard — for managers list */
+export function ManagerClipIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ <rect x="4" y="4" width="16" height="18" rx="1" />
+ <rect x="9" y="2" width="6" height="3" rx="0.5" stroke={brassColor} strokeWidth="1" />
+ {/* Mini formation on the clipboard */}
+ <circle cx="12" cy="9" r="0.8" fill={brassColor} stroke="none" />
+ <circle cx="8" cy="14" r="0.6" fill={brassColor} stroke="none" />
+ <circle cx="12" cy="14" r="0.6" fill={brassColor} stroke="none" />
+ <circle cx="16" cy="14" r="0.6" fill={brassColor} stroke="none" />
+ <circle cx="9" cy="18" r="0.5" fill="currentColor" stroke="none" opacity="0.5" />
+ <circle cx="15" cy="18" r="0.5" fill="currentColor" stroke="none" opacity="0.5" />
+ </svg>
+ );
+}
+
+/** Building stadium — for teams list */
+export function BuildingStadiumIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Stadium bowl */}
+ <path d="M3 18c0-4 4-6 9-6s9 2 9 6" />
+ {/* Roof/floodlight pylons */}
+ <line x1="4" y1="18" x2="4" y2="12" strokeWidth="0.8" stroke={brassColor} />
+ <line x1="20" y1="18" x2="20" y2="12" strokeWidth="0.8" stroke={brassColor} />
+ <path d="M2 12h4M18 12h4" stroke={brassColor} strokeWidth="0.8" />
+ {/* Pitch */}
+ <rect x="8" y="15" width="8" height="3" rx="0.3" strokeWidth="0.5" opacity="0.4" />
+ <line x1="12" y1="15" x2="12" y2="18" strokeWidth="0.3" opacity="0.3" />
+ </svg>
+ );
+}

@@ -1,21 +1,19 @@
 import { useTranslation } from "react-i18next";
 import type { JSX, ReactNode } from "react";
 import {
- HomeIcon,
  UsersIcon,
- MailIcon,
- SettingsIcon,
  CrosshairIcon,
  TrophyIcon,
- GlobeIcon,
- ClipboardIcon,
  UserCog,
- Building2,
  LogOut,
  PanelLeftClose,
  PanelLeftOpen,
  StarIcon,
  User,
+ HomeIcon,
+ MailIcon,
+ ClipboardIcon,
+ SettingsIcon,
 } from "../ui/icons";
 // Gaffer custom icons — football-specific replacements for generic lucide icons
 import {
@@ -25,6 +23,11 @@ import {
  WageSlipIcon as GafferWageIcon,
  TransferDocIcon as GafferTransferIcon,
  TrophyRibbonsIcon as GafferTrophyIcon,
+ // V99.11 B6: New icons replacing remaining lucide-react
+ GlobeStadiumIcon as GafferGlobeIcon,
+ PlayersKitIcon as GafferPlayersIcon,
+ ManagerClipIcon as GafferManagerIcon,
+ BuildingStadiumIcon as GafferTeamsIcon,
 } from "../ui/icons/GafferIcons";
 
 interface DashboardSidebarProps {
@@ -136,11 +139,12 @@ export default function DashboardSidebar({
  { icon: <GafferTransferIcon />, label: t("dashboard.transfers"), tab: "Transfers" },
  ];
  const worldItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
- { icon: <GlobeIcon />, label: t("transfers.centre"), tab: "TransferCentre" },
+ // V99.11 B6: Using Gaffer icons instead of lucide-react
+ { icon: <GafferGlobeIcon size={16} />, label: t("transfers.centre"), tab: "TransferCentre" },
  { icon: <StarIcon />, label: t("dashboard.hallOfFame"), tab: "HallOfFame" },
- { icon: <UsersIcon />, label: t("dashboard.players"), tab: "Players" },
- { icon: <User />, label: t("dashboard.managers"), tab: "Managers" },
- { icon: <Building2 />, label: t("dashboard.teams"), tab: "Teams" },
+ { icon: <GafferPlayersIcon size={16} />, label: t("dashboard.players"), tab: "Players" },
+ { icon: <GafferManagerIcon size={16} />, label: t("dashboard.managers"), tab: "Managers" },
+ { icon: <GafferTeamsIcon size={16} />, label: t("dashboard.teams"), tab: "Teams" },
  {
  icon: <GafferTrophyIcon />,
  label: t("dashboard.tournaments"),
