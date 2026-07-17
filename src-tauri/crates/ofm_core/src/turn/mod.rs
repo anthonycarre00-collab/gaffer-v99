@@ -38,6 +38,20 @@ fn progress_injury_recovery(game: &mut Game) {
         {
             injury.days_remaining -= 1;
             player.injury = Some(injury);
+        } else if let Some(injury) = player.injury.take() {
+            // V99.11 A4: Injury has healed (days_remaining == 1, now 0).
+            // Check if this was a career-threatening injury and apply
+            // permanent attribute penalty if so.
+            if let Some(idx) = crate::player_wear::career_threatening_injury_index(&injury) {
+                crate::player_wear::apply_career_threatening_penalty(player, idx);
+                log::info!(
+                    "[injury] Player {} recovered from career-threatening injury (idx={}), permanent penalty applied",
+                    player.full_name,
+                    idx
+                );
+            }
+            // Clear the injury (player is now fit)
+            player.injury = None;
         }
     }
 }

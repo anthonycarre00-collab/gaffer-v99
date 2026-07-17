@@ -591,7 +591,11 @@
       "twistedAnkle": "Twisted ankle",
       "kneeBruise": "Knee bruise",
       "hamstringTightness": "Hamstring tightness",
-      "calfStrain": "Calf strain"
+      "calfStrain": "Calf strain",
+      "aclTear": "ACL Tear",
+      "brokenLeg": "Broken Leg",
+      "achillesRupture": "Achilles Rupture",
+      "kneeCartilage": "Severe Knee Cartilage Damage"
     },
     "scoutRatings": {
       "excellent": "Different class",

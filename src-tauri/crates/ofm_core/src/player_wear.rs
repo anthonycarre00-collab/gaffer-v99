@@ -17,6 +17,33 @@ pub const MATCH_INJURY_NAMES: [&str; 5] = [
     "common.injuries.calfStrain",
 ];
 
+/// V99.11 A4: Career-threatening injury names + their attribute penalties.
+/// These are rare (0.05% chance per match) but have long durations (150-270
+/// days) and apply permanent attribute penalties on recovery.
+pub const CAREER_THREATENING_INJURIES: [(&str, u32, u32, &[(&str, u8)]); 4] = [
+    // (i18n key, min_days, max_days, [(attribute_key, penalty)])
+    (
+        "common.injuries.aclTear",
+        180, 270,
+        &[("pace", 8), ("burst", 6), ("agility", 5)],
+    ),
+    (
+        "common.injuries.brokenLeg",
+        150, 210,
+        &[("power", 6), ("aerial", 5)],
+    ),
+    (
+        "common.injuries.achillesRupture",
+        200, 270,
+        &[("pace", 7), ("agility", 7)],
+    ),
+    (
+        "common.injuries.kneeCartilage",
+        120, 180,
+        &[("agility", 5), ("burst", 4), ("aerial", 3)],
+    ),
+];
+
 /// Deplete a player's short-term condition based on minutes played and stamina,
 /// and gradually sharpen match fitness for players with significant minutes.
 ///
@@ -56,13 +83,38 @@ fn injury_multiplier_from_fitness(fitness: u8) -> f64 {
 
 /// Roll for a match-day injury. On a hit, sets the player's injury and returns
 /// `true`. Already-injured players are skipped (returns `false`).
+///
+/// V99.11 A4: Added career-threatening injury path (0.05% chance, 1/2000).
+/// These are rare but severe — 120-270 day layoff + permanent attribute
+/// penalty on recovery (applied in progress_injury_recovery).
 pub fn roll_match_injury(player: &mut Player, rng: &mut impl Rng) -> bool {
     if player.injury.is_some() {
         return false;
     }
 
-    // Base match-day risk, slightly higher than the training-ground rate to
-    // reflect competitive intensity.
+    // V99.11 A4: First, check for career-threatening injury (1/2000 chance).
+    // This is checked BEFORE the minor injury roll so it takes priority.
+    let career_prob = 1.0_f64 / 2000.0;
+    let career_roll = rng.random_bool(career_prob * injury_multiplier_from_fitness(player.fitness));
+    if career_roll {
+        let idx = rng.random_range(0..CAREER_THREATENING_INJURIES.len());
+        let (name, min_days, max_days, _penalties) = CAREER_THREATENING_INJURIES[idx];
+        let days = rng.random_range(min_days..=max_days);
+        player.injury = Some(Injury {
+            name: name.to_string(),
+            days_remaining: days,
+        });
+        // Mark this as a severe injury via the injury name prefix so
+        // progress_injury_recovery can apply the permanent penalty.
+        // We store the index in the injury name as a suffix: "aclTear|0"
+        player.injury = Some(Injury {
+            name: format!("{}|{}", name, idx),
+            days_remaining: days,
+        });
+        return true;
+    }
+
+    // Base match-day risk for minor injuries (1/40 chance).
     let base_prob = 1.0_f64 / 40.0;
     let prob = (base_prob * injury_multiplier_from_fitness(player.fitness)).min(1.0);
     if !rng.random_bool(prob) {
@@ -76,6 +128,42 @@ pub fn roll_match_injury(player: &mut Player, rng: &mut impl Rng) -> bool {
         days_remaining: days,
     });
     true
+}
+
+/// V99.11 A4: Check if a player's injury is career-threatening (by checking
+/// if the injury name contains a pipe separator storing the injury index).
+/// Returns Some(index) if career-threatening, None otherwise.
+pub fn career_threatening_injury_index(injury: &Injury) -> Option<usize> {
+    if injury.name.contains('|') {
+        let parts: Vec<&str> = injury.name.split('|').collect();
+        if parts.len() == 2 {
+            return parts[1].parse::<usize>().ok();
+        }
+    }
+    None
+}
+
+/// V99.11 A4: Apply permanent attribute penalty when a career-threatening
+/// injury heals. Called from progress_injury_recovery when days_remaining
+/// reaches 0 for a severe injury.
+pub fn apply_career_threatening_penalty(player: &mut Player, injury_index: usize) {
+    if injury_index >= CAREER_THREATENING_INJURIES.len() {
+        return;
+    }
+    let (_, _, _, penalties) = CAREER_THREATENING_INJURIES[injury_index];
+    for (attr_key, penalty) in penalties {
+        match *attr_key {
+            "pace" => player.attributes.pace = player.attributes.pace.saturating_sub(*penalty),
+            "burst" => player.attributes.burst = player.attributes.burst.saturating_sub(*penalty),
+            "engine" => player.attributes.engine = player.attributes.engine.saturating_sub(*penalty),
+            "power" => player.attributes.power = player.attributes.power.saturating_sub(*penalty),
+            "agility" => player.attributes.agility = player.attributes.agility.saturating_sub(*penalty),
+            "aerial" => player.attributes.aerial = player.attributes.aerial.saturating_sub(*penalty),
+            _ => {}
+        }
+    }
+    // Refresh derived ratings after attribute changes
+    crate::player_rating::refresh_player_derived(player, chrono::Utc::now().year() as u32);
 }
 
 #[cfg(test)]
