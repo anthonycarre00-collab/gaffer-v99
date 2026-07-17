@@ -68,7 +68,7 @@ function getSaveButtonClassName(saveFlash: boolean, isSaving: boolean): string {
  if (saveFlash) {
  className = `${className} bg-success-500 text-white`;
  } else {
- className = `${className} bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600`;
+ className = `${className} bg-gray-200 text-gray-600 hover:bg-carbon-3 bg-carbon-2 text-ink-dim hover:bg-carbon-3`;
  }
 
  if (isSaving) {
@@ -124,7 +124,7 @@ function getContinueDropdownButtonClassName(
 
 function getModeOptionClassName(isActive: boolean): string {
  const baseClassName =
- "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 dark:hover:bg-navy-600";
+ "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 hover:bg-carbon-3";
 
  if (isActive) {
  return `${baseClassName} bg-gray-50 dark:bg-navy-600`;
@@ -138,7 +138,7 @@ function getModeOptionIconClassName(isActive: boolean): string {
  return "text-primary-500";
  }
 
- return "text-gray-400";
+ return "text-ink-faint";
 }
 
 function renderContinueButtonContent(
@@ -185,7 +185,7 @@ function renderSearchResults(props: {
 
  if (matchedPlayers.length === 0 && matchedTeams.length === 0) {
  return (
- <p className="p-3 text-xs text-gray-400 dark:text-gray-500">
+ <p className="p-3 text-xs text-ink-faint">
  {t("dashboard.noResults")}
  </p>
  );
@@ -195,7 +195,7 @@ function renderSearchResults(props: {
  <>
  {matchedTeams.length > 0 && (
  <div>
- <p className="px-3 pb-1 pt-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="px-3 pb-1 pt-2 text-xs font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("dashboard.searchTeams")}
  </p>
  {matchedTeams.map((team) => {
@@ -207,7 +207,7 @@ function renderSearchResults(props: {
  <ContextMenu items={contextItems} key={team.id}>
  <button
  onMouseDown={() => onSelectSearchTeam(team.id)}
- className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 dark:hover:bg-navy-600"
+ className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 hover:bg-carbon-3"
  data-testid={`dashboard-search-team-${team.id}`}
  >
  <TeamLogo
@@ -217,10 +217,10 @@ function renderSearchResults(props: {
  fallback={<span>{team.short_name.charAt(0)}</span>}
  style={{ backgroundColor: team.colors.primary }}
  />
- <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+ <span className="text-sm font-medium text-gray-800 text-ink">
  {team.name}
  </span>
- <span className="ml-auto text-xs text-gray-400">{team.city}</span>
+ <span className="ml-auto text-xs text-ink-faint">{team.city}</span>
  </button>
  </ContextMenu>
  );
@@ -229,7 +229,7 @@ function renderSearchResults(props: {
  )}
  {matchedPlayers.length > 0 && (
  <div>
- <p className="px-3 pb-1 pt-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="px-3 pb-1 pt-2 text-xs font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("dashboard.searchPlayers")}
  </p>
  {matchedPlayers.map((player) => {
@@ -247,20 +247,20 @@ function renderSearchResults(props: {
  <ContextMenu items={contextItems} key={player.id}>
  <button
  onMouseDown={() => onSelectSearchPlayer(player.id)}
- className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 dark:hover:bg-navy-600"
+ className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 hover:bg-carbon-3"
  data-testid={`dashboard-search-player-${player.id}`}
  >
  <PlayerAvatar
  player={player}
- className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300"
+ className="h-7 w-7 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim"
  />
  <Badge variant={getPlayerBadgeVariant(player.position)} size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+ <span className="text-sm font-medium text-gray-800 text-ink">
  {player.full_name}
  </span>
- <span className="ml-auto text-xs text-gray-400">
+ <span className="ml-auto text-xs text-ink-faint">
  {getTeamName(teams, player.team_id ?? "")}
  </span>
  </button>
@@ -342,12 +342,14 @@ export default function DashboardHeader({
  }
 
  return (
- <header className="gaffer-header-gradient z-10 flex items-center justify-between border-b border-accent-500/20 bg-white px-6 py-3 shadow-sm transition-colors duration-300 dark:border-accent-500/30 dark:bg-navy-800">
+ // V99.11 B2: Top bar per UI spec §2.2 — 52px fixed height, carbon-1 bg,
+ // brass-tinted bottom border (the "matchday strip" signature detail).
+ <header className="gaffer-header-gradient z-10 flex h-[52px] items-center justify-between border-b border-accent-500/40 px-6 shadow-sm" style={{ backgroundColor: "var(--color-carbon-1)" }}>
  <div className="flex items-center gap-3">
  {hasProfileHistory && (
  <button
  onClick={onBack}
- className="-ml-2 rounded p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-white"
+ className="-ml-2 rounded p-2 text-ink-faint transition-colors hover:bg-carbon-3 hover:text-ink hover:bg-carbon-3 hover:text-ink"
  title={t("common.back")}
  >
  <ArrowLeftIcon className="h-5 w-5" />
@@ -357,14 +359,14 @@ export default function DashboardHeader({
  <h2 className="gaffer-section-underline text-xl font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400">
  {activeTabLabel}
  </h2>
- <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-500 dark:text-ink-faint">
  <span className="font-mono font-medium">{currentDate}</span>
  </p>
  </div>
  </div>
 
  <div className="relative mx-auto flex-1 px-10">
- <SearchIcon className="absolute left-13 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+ <SearchIcon className="absolute left-13 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" />
  <input
  type="text"
  placeholder={t("dashboard.searchPlaceholder")}
@@ -372,10 +374,10 @@ export default function DashboardHeader({
  onChange={(event) => onSearchQueryChange(event.target.value)}
  onFocus={onSearchFocus}
  onBlur={onSearchBlur}
- className="w-full rounded border border-gray-200 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-800 transition-all placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:border-navy-600 dark:bg-navy-700 dark:text-gray-200 dark:placeholder-gray-500"
+ className="w-full rounded border border-gray-200 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-800 transition-all placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 border-slate-line bg-carbon-2 text-ink dark:placeholder-gray-500"
  />
  {showSearchResults && (
- <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-700">
+ <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-gray-200 bg-white border-slate-line bg-carbon-2">
  {renderSearchResults({
  matchedPlayers,
  matchedTeams,
@@ -403,7 +405,7 @@ export default function DashboardHeader({
  <button
  onClick={onSaveAs}
  disabled={isSaving}
- className="inline-flex items-center gap-1.5 rounded border border-gray-300 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200 transition-colors hover:border-accent-400 hover:text-accent-600 dark:hover:border-accent-500 dark:hover:text-accent-300 disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:border-accent-400 hover:text-accent-600 dark:hover:border-accent-500 dark:hover:text-accent-300 disabled:opacity-50"
  title={t("dashboard.saveAsHint", { defaultValue: "Save a copy under a new name — keeps the original save intact." })}
  >
  {t("dashboard.saveAs", { defaultValue: "Save As" })}
@@ -450,7 +452,7 @@ export default function DashboardHeader({
  </div>
 
  {showContinueMenu && (
- <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-gray-200 bg-white py-1 dark:border-navy-600 dark:bg-navy-700">
+ <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-gray-200 bg-white py-1 border-slate-line bg-carbon-2">
  {(["live", "spectator", "delegate"] as const).map((mode) => {
  const isActive = matchMode === mode;
  const optionMeta = modeMeta[mode];
@@ -465,10 +467,10 @@ export default function DashboardHeader({
  {optionMeta.icon}
  </span>
  <div className="flex-1">
- <span className="text-xs font-heading font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100">
+ <span className="text-xs font-heading font-bold uppercase tracking-wide text-ink">
  {optionMeta.label}
  </span>
- <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-0.5 text-xs text-gray-500 dark:text-ink-faint">
  {optionMeta.desc}
  </p>
  </div>
@@ -480,15 +482,15 @@ export default function DashboardHeader({
  </button>
  );
  })}
- <div className="my-1 border-t border-gray-200 dark:border-navy-600" />
+ <div className="my-1 border-t border-slate-line" />
  <button
  onClick={handleSkipToMatchDayClick}
- className="w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 dark:hover:bg-navy-600"
+ className="w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 hover:bg-carbon-3"
  >
- <span className="text-xs font-heading font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100">
+ <span className="text-xs font-heading font-bold uppercase tracking-wide text-ink">
  {t("continueMenu.skipToMatchDay")}
  </span>
- <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-0.5 text-xs text-gray-500 dark:text-ink-faint">
  {t("continueMenu.skipToMatchDayDesc")}
  </p>
  </button>
