@@ -13,10 +13,10 @@ export default function DashboardExitSavingModal(): JSX.Element {
  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
  <Loader2 className="h-7 w-7 animate-spin" />
  </div>
- <h3 className="mt-4 text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="mt-4 text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("exitConfirm.savingTitle")}
  </h3>
- <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+ <p className="mt-2 text-sm text-ink-dim">
  {t("exitConfirm.savingMessage")}
  </p>
  </div>

@@ -179,17 +179,17 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  <label className={labelClass}>{t("worldEditor.packageLogo")}</label>
  <div className="flex items-center gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
  ) : (
- <div className="w-12 h-12 rounded border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
- <ImagePlus className="w-5 h-5 text-gray-300 dark:text-navy-500" />
+ <div className="w-12 h-12 rounded border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
+ <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
  </div>
  )}
  <div className="flex gap-2">
  <button
  type="button"
  onClick={() => { void handlePickLogo(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>
@@ -197,7 +197,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  <button
  type="button"
  onClick={() => { set({ logo: null }); }}
- className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition"
+ className="px-2 py-1.5 text-xs rounded border border-slate-line text-ink-faint hover:text-danger-500 dark:hover:text-danger-400 transition"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -249,9 +249,9 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {/* Package preview card */}
  <div className="flex flex-col gap-1.5">
  <p className={labelClass}>{t("worldEditor.licensePreview")}</p>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4 flex items-start gap-3">
+ <div className="rounded border border-slate-line bg-white bg-carbon-1 p-4 flex items-start gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-9 h-9 rounded object-contain border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-9 h-9 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-9 h-9 rounded from-primary-400 flex items-center justify-center flex-shrink-0">
  <Globe className="w-5 h-5 text-white" />
@@ -259,7 +259,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  )}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5 flex-wrap">
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-gray-800 dark:text-gray-200 truncate">
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink text-ink truncate">
  {meta.name || meta.id || "—"}
  </p>
  {meta.packageType && meta.packageType !== "database" && (
@@ -268,7 +268,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  </span>
  )}
  </div>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
+ <p className="text-[10px] text-ink-faint mt-0.5">
  {meta.author && `${meta.author}`}
  {meta.author && meta.version && " · "}
  {meta.version && `v${meta.version}`}
@@ -276,7 +276,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {meta.license && meta.license}
  </p>
  {meta.description && (
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+ <p className="text-xs text-ink-dim mt-1 line-clamp-2">
  {meta.description}
  </p>
  )}
@@ -294,7 +294,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  .map(({ n, key }) => (
  <span
  key={key}
- className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-navy-700 text-gray-600 dark:text-gray-300"
+ className="text-[10px] px-1.5 py-0.5 rounded bg-carbon-2 text-ink-dim"
  >
  {n} {t(`worldEditor.${key}`)}
  </span>
@@ -307,8 +307,8 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
  {/* License permissions card */}
  {licenseDetails && !useCustom && (
- <div className="flex flex-col gap-2 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-4">
- <p className="text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500">
+ <div className="flex flex-col gap-2 rounded border border-slate-line bg-white bg-carbon-1 p-4">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-ink-faint">
  {SPDX_LICENSES.find((l) => l.id === meta.license)?.name}
  </p>
 
@@ -320,7 +320,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {licenseDetails.permissions.map((p) => (
  <div key={p} className="flex items-center gap-1.5">
  <CheckCircle2 className="w-3.5 h-3.5 text-success-500 flex-shrink-0" />
- <span className="text-xs text-gray-700 dark:text-gray-300">{p}</span>
+ <span className="text-xs text-ink-dim">{p}</span>
  </div>
  ))}
  </div>
@@ -334,7 +334,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {licenseDetails.conditions.map((c) => (
  <div key={c} className="flex items-center gap-1.5">
  <Info className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" />
- <span className="text-xs text-gray-700 dark:text-gray-300">{c}</span>
+ <span className="text-xs text-ink-dim">{c}</span>
  </div>
  ))}
  </div>
@@ -348,7 +348,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {licenseDetails.limitations.map((l) => (
  <div key={l} className="flex items-center gap-1.5">
  <XCircle className="w-3.5 h-3.5 text-danger-500 flex-shrink-0" />
- <span className="text-xs text-gray-700 dark:text-gray-300">{l}</span>
+ <span className="text-xs text-ink-dim">{l}</span>
  </div>
  ))}
  </div>

@@ -165,7 +165,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  <button
  key={group.label}
  onClick={() => setExpandedGroup(isExpanded ? null : group.label)}
- className="flex flex-col items-center p-3 rounded transition-colors hover:bg-gray-100 dark:hover:bg-navy-700"
+ className="flex flex-col items-center p-3 rounded transition-colors hover:bg-carbon-2 hover:bg-carbon-3"
  style={{ borderBottom: `3px solid ${color}` }}
  title={tierDesc}
  >
@@ -190,7 +190,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  {tierLabel}
  </text>
  </svg>
- <span className="mt-1 text-xs font-heading font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400">
+ <span className="mt-1 text-xs font-heading font-semibold uppercase tracking-wide text-ink-dim">
  {group.label}
  </span>
  </button>
@@ -201,7 +201,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  {/* Expanded attribute bars — uses short tier label (e.g. "EXC", "STL")
  instead of the raw number. Bar colour still reflects the underlying value. */}
  {expandedGroup && (
- <div className="tab-enter rounded border border-gray-200 dark:border-navy-600 p-4 bg-white dark:bg-navy-700">
+ <div className="tab-enter rounded border border-slate-line p-4 bg-white bg-carbon-2">
  <div className="flex items-center justify-between mb-3">
  <h4
  className="font-heading font-bold uppercase tracking-wide text-sm"
@@ -210,7 +210,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  {expandedGroup}
  </h4>
  <span
- className="text-xs text-gray-500 dark:text-gray-400"
+ className="text-xs text-ink-dim"
  title={interpretOvr(groups.find(g => g.label === expandedGroup)?.avg ?? 50, position).description}
  >
  Group <span className="font-heading font-bold">{shortOvrLabel(groups.find(g => g.label === expandedGroup)?.avg ?? 50, position)}</span>
@@ -221,8 +221,8 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  const tierDesc = attrDescription(name, val, position);
  return (
  <div key={name} className="flex items-center gap-3 mb-2">
- <span className="w-28 text-xs text-gray-600 dark:text-gray-400">{name}</span>
- <div className="flex-1 h-2 bg-gray-200 dark:bg-navy-600 rounded-sm overflow-hidden">
+ <span className="w-28 text-xs text-ink-dim">{name}</span>
+ <div className="flex-1 h-2 bg-carbon-3 rounded-sm overflow-hidden">
  <div
  className="h-full transition-all duration-300"
  style={{ width: `${(val / 99) * 100}%`, backgroundColor: getAttrColor(val) }}
@@ -242,8 +242,8 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  )}
 
  {/* Overall — always visible, shown as Gaffer interpretation (not raw number) */}
- <div className="flex items-center justify-between border-t border-gray-200 dark:border-navy-600 pt-3">
- <span className="font-heading font-bold uppercase tracking-wide text-sm text-gray-700 dark:text-gray-300">
+ <div className="flex items-center justify-between border-t border-slate-line pt-3">
+ <span className="font-heading font-bold uppercase tracking-wide text-sm text-ink-dim">
  {t("common.overall") || "Overall"}
  </span>
  <span

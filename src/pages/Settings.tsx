@@ -123,25 +123,25 @@ export default function Settings() {
 
  if (!loaded) {
  return (
- <div className="min-h-screen bg-gray-100 dark:bg-navy-900 flex items-center justify-center transition-colors">
+ <div className="min-h-screen bg-carbon-2 bg-carbon-0 flex items-center justify-center transition-colors">
  <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
  </div>
  );
  }
 
  return (
- <div className="min-h-screen bg-gray-100 dark:bg-navy-900 transition-colors duration-300">
+ <div className="min-h-screen bg-carbon-2 bg-carbon-0 transition-colors duration-300">
  {/* Header */}
- <header className="bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 shadow-sm">
+ <header className="bg-white bg-carbon-1 border-b border-slate-line shadow-sm">
  <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <button
  onClick={() => navigate(returnTo)}
- className="p-2 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+ className="p-2 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
- <h1 className="text-xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h1 className="text-xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("settings.title")}
  </h1>
  </div>
@@ -224,7 +224,7 @@ export default function Settings() {
  description={t("settings.uiScaleDesc")}
  >
  <div className="flex items-center gap-2">
- <Type className="w-4 h-4 text-gray-400" />
+ <Type className="w-4 h-4 text-ink-faint" />
  <SegmentedControl
  options={UI_SCALE_KEYS.map((key) => ({
  value: key,
@@ -254,7 +254,7 @@ export default function Settings() {
  >
  <button
  onClick={toggleFullscreen}
- className="flex items-center gap-2 px-4 py-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-navy-600 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
+ className="flex items-center gap-2 px-4 py-2 rounded bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3 text-sm font-heading font-bold uppercase tracking-wider transition-colors"
  >
  {isFullscreen ? (
  <Minimize className="w-4 h-4" />
@@ -391,7 +391,7 @@ export default function Settings() {
  </p>
  )}
 
- <div className="border-t border-gray-200 dark:border-navy-600 pt-4 mt-2">
+ <div className="border-t border-slate-line pt-4 mt-2">
  <SettingRow
  label={t("settings.clearSaves")}
  description={t("settings.clearSavesDesc")}
@@ -407,7 +407,7 @@ export default function Settings() {
  </button>
  <button
  onClick={() => setConfirmClear(false)}
- className="px-4 py-2 rounded bg-gray-200 dark:bg-navy-600 text-gray-700 dark:text-gray-300 text-sm font-heading font-bold uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-500 transition-colors"
+ className="px-4 py-2 rounded bg-carbon-3 text-ink-dim text-sm font-heading font-bold uppercase tracking-wider hover:bg-carbon-3 dark:hover:bg-navy-500 transition-colors"
  >
  {t("common.cancel")}
  </button>
@@ -449,14 +449,14 @@ export default function Settings() {
  <Section title={t("settings.about")} icon={<Zap className="w-5 h-5" />}>
  <div className="flex justify-between items-center">
  <div>
- <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+ <p className="text-sm font-medium text-ink text-ink">
  {t("app.name")}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {t("app.version")}
  </p>
  </div>
- <span className="text-[10px] font-heading uppercase tracking-widest text-gray-400 dark:text-gray-600">
+ <span className="text-[10px] font-heading uppercase tracking-widest text-ink-faint">
  {t("app.publisher")}
  </span>
  </div>
@@ -478,10 +478,10 @@ function Section({
  children: React.ReactNode;
 }) {
  return (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
- <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-100 dark:border-navy-700">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
+ <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-line-soft">
  <span className="text-primary-500">{icon}</span>
- <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
+ <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-ink text-ink">
  {title}
  </h2>
  </div>
@@ -505,11 +505,11 @@ function SettingRow({
  <div className="flex items-center justify-between gap-4">
  <div className="flex-1 min-w-0">
  <p
- className={`text-sm font-medium ${danger ? "text-danger-500" : "text-gray-800 dark:text-gray-200"}`}
+ className={`text-sm font-medium ${danger ? "text-danger-500" : "text-ink text-ink"}`}
  >
  {label}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {description}
  </p>
  </div>
@@ -528,7 +528,7 @@ function Toggle({
  return (
  <button
  onClick={() => onChange(!checked)}
- className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${checked ? "bg-primary-500" : "bg-gray-300 dark:bg-navy-600"
+ className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${checked ? "bg-primary-500" : "bg-carbon-3 bg-carbon-3"
  }`}
  >
  <div
@@ -549,14 +549,14 @@ function SegmentedControl({
  onChange: (v: string) => void;
 }) {
  return (
- <div className="flex rounded bg-gray-100 dark:bg-navy-700 p-0.5 border border-gray-200 dark:border-navy-600">
+ <div className="flex rounded bg-carbon-2 p-0.5 border border-slate-line">
  {options.map((opt) => (
  <button
  key={opt.value}
  onClick={() => onChange(opt.value)}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${value === opt.value
- ? "bg-white dark:bg-navy-500 text-primary-600 dark:text-primary-400 shadow-sm"
- : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+ ? "bg-white bg-carbon-3 text-primary-600 dark:text-primary-400 shadow-sm"
+ : "text-ink-dim hover:text-ink hover:text-ink-dim"
  }`}
  >
  {opt.icon}

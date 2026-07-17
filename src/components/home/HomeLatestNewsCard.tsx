@@ -37,34 +37,34 @@ export default function HomeLatestNewsCard({
  <CardBody className="p-0">
  {articles.length === 0 ? (
  <div className="flex flex-col items-center gap-2 py-6">
- <Newspaper className="w-8 h-8 text-gray-300 dark:text-navy-600" />
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <Newspaper className="w-8 h-8 text-ink-faint dark:text-navy-600" />
+ <p className="text-xs text-ink-dim">
  {t("home.noNews")}
  </p>
  </div>
  ) : (
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {articles.map((article) => (
  <button
  key={article.id}
  onClick={() => onNavigate?.("News")}
- className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-700/50 transition-colors"
+ className="w-full text-left px-4 py-3 hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors"
  >
- <p className="text-xs text-gray-400 dark:text-gray-500 mb-0.5">
+ <p className="text-xs text-ink-faint mb-0.5">
  {formatDateShort(article.date, lang)} - {article.source}
  </p>
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2">
+ <p className="text-sm font-heading font-bold text-ink text-ink leading-snug line-clamp-2">
  {article.headline}
  </p>
  {article.match_score && (
  <div className="flex items-center gap-1.5 mt-1">
- <span className="text-[10px] text-gray-500 dark:text-gray-400">
+ <span className="text-[10px] text-ink-dim">
  {getTeamName(teams, article.match_score.home_team_id)}
  </span>
  <span className="text-[10px] font-heading font-bold text-primary-500">
  {article.match_score.home_goals}-{article.match_score.away_goals}
  </span>
- <span className="text-[10px] text-gray-500 dark:text-gray-400">
+ <span className="text-[10px] text-ink-dim">
  {getTeamName(teams, article.match_score.away_team_id)}
  </span>
  </div>

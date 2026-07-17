@@ -34,7 +34,7 @@ export default function HallOfFameWorldTab({
  <p className="text-xs font-heading font-bold uppercase tracking-[0.25em] text-primary-500">
  {t("hallOfFameWorld.title")}
  </p>
- <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("hallOfFameWorld.subtitle")}
  </h2>
  </div>
@@ -56,7 +56,7 @@ export default function HallOfFameWorldTab({
  {worldCupChampions.length > 0 && (
  <section className="space-y-4">
  <div className="flex items-center justify-between gap-3">
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("hallOfFameWorld.worldCupChampions")}
  </h3>
  <Badge variant="accent" size="md">{worldCupChampions.length}</Badge>
@@ -66,14 +66,14 @@ export default function HallOfFameWorldTab({
  <Card key={champion.year} accent="accent">
  <CardBody className="flex items-center justify-between gap-4">
  <div data-testid={`world-cup-champion-${champion.year}`}>
- <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
+ <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-ink-faint">
  {t("hallOfFameWorld.worldCupEdition", { year: champion.year })}
  </p>
  <p className="mt-1 text-xl font-heading font-bold uppercase tracking-wide text-accent-500">
  {champion.nation_name}
  </p>
  {champion.nation_code ? (
- <div className="mt-2 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mt-2 flex items-center gap-2 text-sm text-ink-dim">
  <CountryFlag
  code={champion.nation_code}
  locale={i18n.language}
@@ -95,7 +95,7 @@ export default function HallOfFameWorldTab({
 
  <section className="space-y-4">
  <div className="flex items-center justify-between gap-3">
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("hallOfFameWorld.legends")}
  </h3>
  <Badge variant="primary" size="md">{legends.length}</Badge>
@@ -103,7 +103,7 @@ export default function HallOfFameWorldTab({
 
  {legends.length === 0 ? (
  <Card>
- <CardBody className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+ <CardBody className="py-10 text-center text-sm text-ink-dim">
  {t("hallOfFameWorld.noLegends")}
  </CardBody>
  </Card>
@@ -128,7 +128,7 @@ export default function HallOfFameWorldTab({
  <CardBody className="space-y-4">
  <div className="flex items-start justify-between gap-4">
  <div>
- <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="flex items-center gap-2 text-sm text-ink-dim">
  <CountryFlag
  code={footballNation}
  locale={i18n.language}
@@ -136,7 +136,7 @@ export default function HallOfFameWorldTab({
  />
  <span>{countryName(footballNation, i18n.language)}</span>
  </div>
- <p className="mt-2 text-xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <p className="mt-2 text-xl font-heading font-bold uppercase tracking-wide text-ink">
  {legend.player.position}
  </p>
  {legend.lastClubName ? (
@@ -178,7 +178,7 @@ export default function HallOfFameWorldTab({
 
  <section className="space-y-4">
  <div className="flex items-center justify-between gap-3">
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("hallOfFameWorld.pastChampions")}
  </h3>
  <Badge variant="accent" size="md">{champions.length}</Badge>
@@ -186,7 +186,7 @@ export default function HallOfFameWorldTab({
 
  {champions.length === 0 ? (
  <Card>
- <CardBody className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+ <CardBody className="py-10 text-center text-sm text-ink-dim">
  {t("hallOfFameWorld.noChampions")}
  </CardBody>
  </Card>
@@ -196,7 +196,7 @@ export default function HallOfFameWorldTab({
  <Card key={`${champion.team.id}-${champion.season}`} accent="accent">
  <CardBody className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
  <div>
- <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
+ <p className="text-xs font-heading font-bold uppercase tracking-[0.2em] text-ink-faint">
  {t("hallOfFameWorld.seasonLabel", { season: champion.season })}
  </p>
  <button
@@ -206,7 +206,7 @@ export default function HallOfFameWorldTab({
  >
  {champion.team.name}
  </button>
- <div className="mt-2 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mt-2 flex items-center gap-2 text-sm text-ink-dim">
  <CountryFlag
  code={champion.team.country}
  locale={i18n.language}
@@ -260,14 +260,14 @@ interface SummaryTileProps {
 
 function SummaryTile({ icon, label, value }: SummaryTileProps) {
  return (
- <div className="rounded bg-gray-50 p-3 dark:bg-navy-800/70">
- <div className="mb-2 flex items-center gap-2 text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 p-3 bg-carbon-1/70">
+ <div className="mb-2 flex items-center gap-2 text-ink-faint">
  {icon}
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.18em]">
  {label}
  </span>
  </div>
- <p className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="text-lg font-heading font-bold text-ink">
  {value}
  </p>
  </div>
@@ -281,11 +281,11 @@ interface StatTileProps {
 
 function StatTile({ label, value }: StatTileProps) {
  return (
- <div className="rounded bg-gray-50 p-3 dark:bg-navy-800/70">
- <p className="text-[11px] font-heading font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 p-3 bg-carbon-1/70">
+ <p className="text-[11px] font-heading font-bold uppercase tracking-[0.18em] text-ink-faint">
  {label}
  </p>
- <p className="mt-2 text-lg font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="mt-2 text-lg font-heading font-bold text-ink">
  {value}
  </p>
  </div>

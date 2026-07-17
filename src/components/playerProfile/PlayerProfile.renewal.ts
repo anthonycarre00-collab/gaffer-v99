@@ -124,7 +124,7 @@ export function getRenewalStatusClassName(renewalStatus: RenewalStatus): string 
     return "text-accent-600 dark:text-accent-400";
   }
 
-  return "text-gray-500 dark:text-gray-400";
+  return "text-ink-dim";
 }
 
 export function shouldDisableRenewalSubmit(state: RenewalSubmitState): boolean {

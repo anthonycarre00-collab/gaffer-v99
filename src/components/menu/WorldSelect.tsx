@@ -74,9 +74,9 @@ function historyDepthOptionLabel(
 function StepIndicator({ current }: { current: 2 | 3 }) {
  const active = "flex items-center justify-center w-6 h-6 rounded-full bg-primary-500 text-white text-xs font-bold";
  const done = "flex items-center justify-center w-6 h-6 rounded-full bg-primary-500/30 text-primary-400 text-xs font-bold";
- const future = "flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 dark:bg-navy-600 text-gray-400 dark:text-gray-500 text-xs font-bold";
+ const future = "flex items-center justify-center w-6 h-6 rounded-full bg-carbon-3 text-ink-faint text-xs font-bold";
  const filledLine = "h-0.5 flex-1 bg-primary-500";
- const emptyLine = "h-0.5 flex-1 bg-gray-200 dark:bg-navy-600";
+ const emptyLine = "h-0.5 flex-1 bg-carbon-3";
 
  return (
  <div className="flex items-center gap-2 mb-1">
@@ -137,18 +137,18 @@ export default function GenerationStep({
  <div className="flex items-center gap-2">
  <button
  onClick={onBack}
- className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
+ className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
- <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("generation.title")}
  </h2>
  </div>
  <button
  type="button"
  onClick={onClose}
- className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
+ className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <X className="w-5 h-5" />
  </button>
@@ -157,12 +157,12 @@ export default function GenerationStep({
  <StepIndicator current={2} />
 
  {/* Summary card */}
- <div className="rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600 dark:border-navy-600 dark:bg-navy-700/60 dark:text-gray-200">
+ <div className="rounded border border-slate-line bg-carbon-2 p-3 text-sm text-ink-dim border-slate-line bg-carbon-2/60 text-ink">
  <div className="flex flex-wrap items-center gap-2">
- <span className="font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <span className="font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("worldSelect.summary.startYear")}
  </span>
- <span className="font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <span className="font-heading font-bold uppercase tracking-wide text-ink">
  {startYear}
  </span>
  <span className="rounded-full bg-primary-500/10 px-2 py-0.5 text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-primary-600 dark:text-primary-300">
@@ -171,7 +171,7 @@ export default function GenerationStep({
  : t("worldSelect.historyMode.generated")}
  </span>
  </div>
- <p className="mt-2 text-xs uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mt-2 text-xs uppercase tracking-[0.18em] text-ink-dim">
  {hasActiveDatabases
  ? t(`worldSelect.summary.${startPhase}.reference`, { year: startYear, count: historyDepthYears })
  : t(`worldSelect.summary.${startPhase}.generated`, { year: startYear, count: historyDepthYears })}
@@ -179,11 +179,11 @@ export default function GenerationStep({
  </div>
 
  {/* Advanced options — history depth (collapsible) */}
- <div className="rounded border border-gray-200 dark:border-navy-600">
+ <div className="rounded border border-slate-line">
  <button
  type="button"
  onClick={() => setShowAdvanced(!showAdvanced)}
- className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink text-ink-faint hover:text-ink"
  >
  {t("createManager.advancedOptions")}
  <ChevronDown
@@ -191,16 +191,16 @@ export default function GenerationStep({
  />
  </button>
  {showAdvanced && (
- <div className="border-t border-gray-200 p-3 dark:border-navy-600">
+ <div className="border-t border-slate-line p-3 border-slate-line">
  <div className="flex items-start justify-between gap-3">
  <div>
  <p
  id={historyDepthLabelId}
- className="font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400"
+ className="font-heading font-bold uppercase tracking-[0.18em] text-ink-dim"
  >
  {t("worldSelect.historyDepth.label")}
  </p>
- <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 text-xs text-ink-dim">
  {t("worldSelect.historyDepth.hint")}
  </p>
  </div>
@@ -226,7 +226,7 @@ export default function GenerationStep({
  className={`rounded border px-3 py-3 text-left transition-all ${
  selected
  ? "border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-400/30 dark:border-primary-500 dark:bg-primary-500/10 dark:text-primary-300"
- : "border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200 dark:hover:border-navy-500"
+ : "border-slate-line bg-carbon-2 text-ink hover:border-slate-line bg-carbon-1 text-ink dark:hover:border-navy-500"
  }`}
  >
  <span className="block font-heading font-bold uppercase tracking-wide">

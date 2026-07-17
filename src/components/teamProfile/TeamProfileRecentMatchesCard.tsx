@@ -36,40 +36,40 @@ export default function TeamProfileRecentMatchesCard({
  {matches.map((match) => (
  <div
  key={match.fixtureId}
- className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,0.8fr)] gap-3 rounded bg-gray-50 dark:bg-navy-700 px-3 py-2.5"
+ className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,0.8fr)] gap-3 rounded bg-carbon-2 px-3 py-2.5"
  >
  <div>
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink-dim">
  {match.date}
  </p>
- <p className="font-heading font-bold text-base text-gray-800 dark:text-gray-100">
+ <p className="font-heading font-bold text-base text-ink">
  {match.opponentName}
  </p>
  </div>
 
  <div className="text-center">
- <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="text-[11px] uppercase tracking-wider text-ink-faint">
  {scoreLabel}
  </p>
- <p className="font-heading font-bold text-base text-gray-700 dark:text-gray-200 tabular-nums">
+ <p className="font-heading font-bold text-base text-ink tabular-nums">
  {match.goalsFor}-{match.goalsAgainst}
  </p>
  </div>
 
  <div className="text-center">
- <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="text-[11px] uppercase tracking-wider text-ink-faint">
  {possessionLabel}
  </p>
- <p className="font-heading font-bold text-base text-gray-700 dark:text-gray-200 tabular-nums">
+ <p className="font-heading font-bold text-base text-ink tabular-nums">
  {match.possessionPct.toFixed(1)}%
  </p>
  </div>
 
  <div className="text-center">
- <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="text-[11px] uppercase tracking-wider text-ink-faint">
  {shotsLabel}
  </p>
- <p className="font-heading font-bold text-base text-gray-700 dark:text-gray-200 tabular-nums">
+ <p className="font-heading font-bold text-base text-ink tabular-nums">
  {match.shots} / {match.shotsOnTarget}
  </p>
  </div>

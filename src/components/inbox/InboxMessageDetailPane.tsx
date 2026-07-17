@@ -104,8 +104,8 @@ export default function InboxMessageDetailPane({
  return (
  <div className="flex-1 flex items-center justify-center">
  <div className="text-center">
- <MailOpen className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <MailOpen className="w-12 h-12 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-faint font-heading uppercase tracking-wider">
  {t("inbox.selectMessage")}
  </p>
  </div>
@@ -115,10 +115,10 @@ export default function InboxMessageDetailPane({
 
  return (
  <>
- <div className="shrink-0 border-b border-gray-100 p-5 dark:border-navy-600">
+ <div className="shrink-0 border-b border-slate-line-soft p-5 border-slate-line">
  <button
  onClick={onCloseSelectedMessage}
- className="md:hidden flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 mb-3"
+ className="md:hidden flex items-center gap-1.5 text-xs text-ink-dim hover:text-ink hover:text-ink mb-3"
  >
  <ArrowLeft className="w-3.5 h-3.5" /> {t("inbox.backToInbox")}
  </button>
@@ -130,17 +130,17 @@ export default function InboxMessageDetailPane({
  {getCategoryIcon(selectedMessage.category)}
  </div>
  <div className="flex-1 min-w-0">
- <h3 className="font-heading font-bold text-lg text-gray-900 dark:text-gray-100">
+ <h3 className="font-heading font-bold text-lg text-ink">
  {selectedMessage.subject}
  </h3>
  <div className="flex items-center gap-3 mt-1">
- <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+ <span className="text-sm font-medium text-ink-dim">
  {selectedMessage.sender}
  {selectedMessage.sender_role
  ? ` — ${selectedMessage.sender_role}`
  : ""}
  </span>
- <span className="text-xs text-gray-400 dark:text-gray-500">
+ <span className="text-xs text-ink-faint">
  {formatDateFull(selectedMessage.date, language)}
  </span>
  </div>
@@ -212,8 +212,8 @@ export default function InboxMessageDetailPane({
  {selectedMessage.category === "ScoutReport" &&
  !selectedMessage.context?.scout_report ? (
  <div className="mt-6 flex flex-col gap-3">
- <div className="flex flex-wrap items-center gap-2 rounded border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/60">
- <span className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="flex flex-wrap items-center gap-2 rounded border border-slate-line-soft bg-carbon-2 px-4 py-3 border-slate-line bg-carbon-2/60">
+ <span className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("scouting.youthTargetLabel")}
  </span>
  <Badge variant="neutral" size="sm">
@@ -273,7 +273,7 @@ export default function InboxMessageDetailPane({
  <div className="flex flex-wrap items-start justify-between gap-3">
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <p className="font-heading font-bold text-base text-gray-900 dark:text-gray-100">
+ <p className="font-heading font-bold text-base text-ink">
  {prospect.full_name}
  </p>
  <Badge
@@ -288,7 +288,7 @@ export default function InboxMessageDetailPane({
  </Badge>
  ) : null}
  </div>
- <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-dim">
  <span>
  {t(`common.positions.${prospect.position}`)}
  </span>
@@ -323,8 +323,8 @@ export default function InboxMessageDetailPane({
  </div>
 
  <div className="grid gap-3 sm:grid-cols-2">
- <div className="rounded border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
- <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="rounded border border-slate-line-soft bg-carbon-2 px-3 py-2 border-slate-line bg-carbon-2/40">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("youthAcademy.growth")}
  </p>
  <div className="mt-2 flex items-center gap-2">
@@ -356,11 +356,11 @@ export default function InboxMessageDetailPane({
  </p>
  </div>
 
- <div className="rounded border border-gray-100 bg-gray-50 px-3 py-2 dark:border-navy-600 dark:bg-navy-700/40">
- <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="rounded border border-slate-line-soft bg-carbon-2 px-3 py-2 border-slate-line bg-carbon-2/40">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("playerProfile.contractInfo")}
  </p>
- <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-300">
+ <div className="mt-2 flex flex-wrap gap-2 text-xs text-ink-dim">
  <Badge variant="neutral" size="sm">
  {t("finances.wagePerYear")}: {formatAnnualAmount(formatVal(prospect.wage ?? 0), annualSuffix)}
  </Badge>
@@ -425,16 +425,16 @@ export default function InboxMessageDetailPane({
  ) : null}
 
  {selectedMessage.context?.match_result ? (
- <div className="mt-6 p-4 bg-gray-50 dark:bg-navy-700 rounded flex items-center justify-center gap-8 border border-gray-100 dark:border-navy-600">
- <span className="font-heading font-bold text-sm text-gray-700 dark:text-gray-200">
+ <div className="mt-6 p-4 bg-carbon-2 rounded flex items-center justify-center gap-8 border border-slate-line-soft">
+ <span className="font-heading font-bold text-sm text-ink">
  {selectedMessage.context.match_result.home_team_name ||
  selectedMessage.context.match_result.home_team_id}
  </span>
- <span className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100">
+ <span className="font-heading font-bold text-2xl text-ink">
  {selectedMessage.context.match_result.home_goals} -{" "}
  {selectedMessage.context.match_result.away_goals}
  </span>
- <span className="font-heading font-bold text-sm text-gray-700 dark:text-gray-200">
+ <span className="font-heading font-bold text-sm text-ink">
  {selectedMessage.context.match_result.away_team_name ||
  selectedMessage.context.match_result.away_team_id}
  </span>
@@ -460,7 +460,7 @@ export default function InboxMessageDetailPane({
  return (
  <div
  key={action.id}
- className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 mt-2"
+ className="flex items-center gap-2 text-sm text-ink-faint mt-2"
  >
  <CheckCircle2 className="w-4 h-4 text-primary-500" />
  <span className="font-heading font-bold uppercase tracking-wider text-xs">
@@ -472,7 +472,7 @@ export default function InboxMessageDetailPane({
 
  return (
  <div key={action.id} className="space-y-2">
- <p className="text-xs font-heading font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 flex items-center gap-1.5 mb-3">
+ <p className="text-xs font-heading font-bold uppercase tracking-widest text-ink-faint flex items-center gap-1.5 mb-3">
  <MessageCircle className="w-3.5 h-3.5" />
  {isPlayerEventMessage(selectedMessage.id)
  ? t("inbox.chooseResponseOutcomeVaries")
@@ -488,12 +488,12 @@ export default function InboxMessageDetailPane({
  option.id,
  )
  }
- className="w-full text-left p-4 rounded border border-gray-200 dark:border-navy-600 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-500/5 transition-all group"
+ className="w-full text-left p-4 rounded border border-slate-line hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-500/5 transition-all group"
  >
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <p className="text-sm font-heading font-bold text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {option.label}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+ <p className="text-xs text-ink-dim mt-1">
  {option.description}
  </p>
  </button>
@@ -572,8 +572,8 @@ function getProspectPotentialLabel(
  return { label: t("youthAcademy.potPromising"), color: "text-primary-400" };
  }
  if (potential >= 55) {
- return { label: t("youthAcademy.potDecent"), color: "text-gray-400" };
+ return { label: t("youthAcademy.potDecent"), color: "text-ink-faint" };
  }
 
- return { label: t("youthAcademy.potLimited"), color: "text-gray-500" };
+ return { label: t("youthAcademy.potLimited"), color: "text-ink-faint" };
 }

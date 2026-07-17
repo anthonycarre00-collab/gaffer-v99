@@ -35,9 +35,9 @@ export function CountryForm({
  }, [editingIndex]);
 
  const labelClass =
- "text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400";
+ "text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-ink-dim";
  const inputClass =
- "w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
+ "w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
 
  return (
  <EntityFormShell

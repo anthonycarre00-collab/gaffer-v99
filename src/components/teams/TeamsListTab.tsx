@@ -118,13 +118,13 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  return (
  <div className="gaffer-card-texture flex flex-col gap-4">
  <div className="relative">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
  <input
  type="text"
  value={search}
  onChange={(event) => setSearch(event.target.value)}
  placeholder={t("teams.searchPlaceholder")}
- className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 py-2.5 pl-10 pr-4 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+ className="w-full rounded border border-slate-line bg-white bg-carbon-1 py-2.5 pl-10 pr-4 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/40"
  />
  </div>
 
@@ -135,7 +135,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  ) : null}
 
  {visibleGroups.length === 0 ? (
- <p className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+ <p className="py-10 text-center text-sm text-ink-dim">
  {t("teams.noResults")}
  </p>
  ) : (
@@ -146,14 +146,14 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  <button
  type="button"
  onClick={() => setExpandedRegions((set) => toggle(set, region.id))}
- className="flex items-center gap-2 rounded bg-gray-100 dark:bg-navy-800 px-3 py-2 text-left"
+ className="flex items-center gap-2 rounded bg-carbon-2 px-3 py-2 text-left"
  >
  {regionOpen ? (
- <ChevronDown className="w-4 h-4 text-gray-500" />
+ <ChevronDown className="w-4 h-4 text-ink-faint" />
  ) : (
- <ChevronRight className="w-4 h-4 text-gray-500" />
+ <ChevronRight className="w-4 h-4 text-ink-faint" />
  )}
- <span className="flex-1 font-heading font-bold uppercase tracking-wide text-sm text-gray-800 dark:text-gray-100">
+ <span className="flex-1 font-heading font-bold uppercase tracking-wide text-sm text-ink">
  {region.name}
  </span>
  <Badge variant="neutral" size="sm">
@@ -172,14 +172,14 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  onClick={() =>
  setExpandedLeagues((set) => toggle(set, leagueKey))
  }
- className="flex items-center gap-2 rounded px-3 py-1.5 text-left hover:bg-gray-50 dark:hover:bg-navy-700/40"
+ className="flex items-center gap-2 rounded px-3 py-1.5 text-left hover:bg-carbon-2 hover:bg-carbon-3/40"
  >
  {leagueOpen ? (
- <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+ <ChevronDown className="w-3.5 h-3.5 text-ink-faint" />
  ) : (
- <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+ <ChevronRight className="w-3.5 h-3.5 text-ink-faint" />
  )}
- <span className="flex-1 font-heading font-bold uppercase tracking-wider text-xs text-gray-500 dark:text-gray-400">
+ <span className="flex-1 font-heading font-bold uppercase tracking-wider text-xs text-ink-dim">
  {league.name}
  </span>
  <Badge variant="neutral" size="sm">
@@ -278,7 +278,7 @@ function TeamCardView({
  )}
  </div>
 
- <div className="grid grid-cols-5 gap-px bg-gray-200 dark:bg-navy-600">
+ <div className="grid grid-cols-5 gap-px bg-carbon-3">
  <StatCell label={t("teams.squad")} value={String(rosterSize)} />
  <StatCell label={t("teams.avgOvr")} value={String(avgOvr)} />
  <StatCell label={t("teams.rep")} value={String(team.reputation)} />
@@ -287,7 +287,7 @@ function TeamCardView({
  </div>
 
  <CardBody>
- <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+ <div className="flex items-center justify-between text-xs text-ink-dim">
  <span className="flex items-center gap-1">
  <Users className="w-3.5 h-3.5" />
  {team.formation} — {playStyleLabel}
@@ -310,11 +310,11 @@ function TeamCardView({
 
 function StatCell({ label, value }: { label: string; value: string }) {
  return (
- <div className="bg-white dark:bg-navy-800 px-2 py-2.5 text-center">
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <div className="bg-white bg-carbon-1 px-2 py-2.5 text-center">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>
- <p className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100 mt-0.5">
+ <p className="font-heading font-bold text-sm text-ink mt-0.5">
  {value}
  </p>
  </div>

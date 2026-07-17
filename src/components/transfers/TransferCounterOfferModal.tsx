@@ -70,10 +70,10 @@ export default function TransferCounterOfferModal({
  onClick={onClose}
  >
  <div
- className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+ className="bg-white bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
  onClick={(event) => event.stopPropagation()}
  >
- <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
+ <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-ink-dim mb-3">
  {t("transfers.counterOffer")}
  </h3>
  <div className="flex items-center gap-3 mb-4">
@@ -84,10 +84,10 @@ export default function TransferCounterOfferModal({
  {translatePositionAbbreviation(t, counterTarget.player.position)}
  </Badge>
  <div>
- <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+ <p className="font-semibold text-sm text-ink text-ink">
  {counterTarget.player.full_name}
  </p>
- <p className="text-xs text-gray-400">
+ <p className="text-xs text-ink-faint">
  {getTeamName(teams, counterTarget.fromTeamId)} •
  {t("transfers.currentOffer", {
  fee: formatVal(counterTarget.fee),
@@ -110,13 +110,13 @@ export default function TransferCounterOfferModal({
  </div>
  ) : null}
  {counterFeedback ? (
- <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+ <p className="text-xs text-ink-dim mb-3">
  {t("transfers.resumeNegotiationHint")}
  </p>
  ) : null}
  <label
  htmlFor="counter-offer-amount"
- className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 block"
+ className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1 block"
  >
  {t("transfers.counterAmount")}
  </label>
@@ -127,10 +127,10 @@ export default function TransferCounterOfferModal({
  pattern="[0-9]*"
  value={counterAmount}
  onChange={(event) => onCounterAmountChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  {parsedCounterAmount !== null ? (
- <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+ <p className="text-xs text-ink-dim mb-3">
  {formatExactMoney(parsedCounterAmount)}
  </p>
  ) : null}
@@ -173,7 +173,7 @@ export default function TransferCounterOfferModal({
  </button>
  <button
  onClick={onClose}
- className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
+ className="px-4 py-2 bg-carbon-3 text-ink-dim rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-carbon-3 hover:bg-carbon-3 transition-colors"
  >
  {t("transfers.close")}
  </button>

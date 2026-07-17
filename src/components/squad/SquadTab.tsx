@@ -52,7 +52,7 @@ export default function SquadTab({
 
  if (!team) {
  return (
- <p className="text-gray-500 dark:text-gray-400">
+ <p className="text-ink-dim">
  {t("common.unemployed")}
  </p>
  );

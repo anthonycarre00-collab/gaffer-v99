@@ -68,7 +68,7 @@ function getSaveButtonClassName(saveFlash: boolean, isSaving: boolean): string {
  if (saveFlash) {
  className = `${className} bg-success-500 text-white`;
  } else {
- className = `${className} bg-gray-200 text-gray-600 hover:bg-carbon-3 bg-carbon-2 text-ink-dim hover:bg-carbon-3`;
+ className = `${className} bg-carbon-3 text-ink-dim hover:bg-carbon-3 bg-carbon-2 text-ink-dim hover:bg-carbon-3`;
  }
 
  if (isSaving) {
@@ -124,10 +124,10 @@ function getContinueDropdownButtonClassName(
 
 function getModeOptionClassName(isActive: boolean): string {
  const baseClassName =
- "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 hover:bg-carbon-3";
+ "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-carbon-2 hover:bg-carbon-3";
 
  if (isActive) {
- return `${baseClassName} bg-gray-50 dark:bg-navy-600`;
+ return `${baseClassName} bg-carbon-2 bg-carbon-3`;
  }
 
  return baseClassName;
@@ -207,7 +207,7 @@ function renderSearchResults(props: {
  <ContextMenu items={contextItems} key={team.id}>
  <button
  onMouseDown={() => onSelectSearchTeam(team.id)}
- className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 hover:bg-carbon-3"
+ className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-carbon-2 hover:bg-carbon-3"
  data-testid={`dashboard-search-team-${team.id}`}
  >
  <TeamLogo
@@ -217,7 +217,7 @@ function renderSearchResults(props: {
  fallback={<span>{team.short_name.charAt(0)}</span>}
  style={{ backgroundColor: team.colors.primary }}
  />
- <span className="text-sm font-medium text-gray-800 text-ink">
+ <span className="text-sm font-medium text-ink text-ink">
  {team.name}
  </span>
  <span className="ml-auto text-xs text-ink-faint">{team.city}</span>
@@ -247,7 +247,7 @@ function renderSearchResults(props: {
  <ContextMenu items={contextItems} key={player.id}>
  <button
  onMouseDown={() => onSelectSearchPlayer(player.id)}
- className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-gray-50 hover:bg-carbon-3"
+ className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-carbon-2 hover:bg-carbon-3"
  data-testid={`dashboard-search-player-${player.id}`}
  >
  <PlayerAvatar
@@ -257,7 +257,7 @@ function renderSearchResults(props: {
  <Badge variant={getPlayerBadgeVariant(player.position)} size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-sm font-medium text-gray-800 text-ink">
+ <span className="text-sm font-medium text-ink text-ink">
  {player.full_name}
  </span>
  <span className="ml-auto text-xs text-ink-faint">
@@ -359,7 +359,7 @@ export default function DashboardHeader({
  <h2 className="gaffer-section-underline text-xl font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400">
  {activeTabLabel}
  </h2>
- <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-500 dark:text-ink-faint">
+ <p className="mt-1 flex items-center gap-1.5 text-xs text-ink-faint dark:text-ink-faint">
  <span className="font-mono font-medium">{currentDate}</span>
  </p>
  </div>
@@ -374,10 +374,10 @@ export default function DashboardHeader({
  onChange={(event) => onSearchQueryChange(event.target.value)}
  onFocus={onSearchFocus}
  onBlur={onSearchBlur}
- className="w-full rounded border border-gray-200 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-800 transition-all placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 border-slate-line bg-carbon-2 text-ink dark:placeholder-gray-500"
+ className="w-full rounded border border-slate-line bg-carbon-2 py-2 pl-9 pr-3 text-sm text-ink transition-all placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50 border-slate-line bg-carbon-2 text-ink placeholder-ink-faint"
  />
  {showSearchResults && (
- <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-gray-200 bg-white border-slate-line bg-carbon-2">
+ <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-slate-line bg-white border-slate-line bg-carbon-2">
  {renderSearchResults({
  matchedPlayers,
  matchedTeams,
@@ -415,7 +415,7 @@ export default function DashboardHeader({
  <button
  onClick={handleContinueClick}
  disabled={isAdvancing}
- className="bg-gray-600 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
+ className="bg-carbon-3 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
  >
  <span>{isAdvancing ? t("dashboard.simulating") : t("dashboard.continue")}</span>
  <ChevronRightIcon className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`} />
@@ -452,7 +452,7 @@ export default function DashboardHeader({
  </div>
 
  {showContinueMenu && (
- <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-gray-200 bg-white py-1 border-slate-line bg-carbon-2">
+ <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-slate-line bg-white py-1 border-slate-line bg-carbon-2">
  {(["live", "spectator", "delegate"] as const).map((mode) => {
  const isActive = matchMode === mode;
  const optionMeta = modeMeta[mode];
@@ -470,7 +470,7 @@ export default function DashboardHeader({
  <span className="text-xs font-heading font-bold uppercase tracking-wide text-ink">
  {optionMeta.label}
  </span>
- <p className="mt-0.5 text-xs text-gray-500 dark:text-ink-faint">
+ <p className="mt-0.5 text-xs text-ink-faint dark:text-ink-faint">
  {optionMeta.desc}
  </p>
  </div>
@@ -485,12 +485,12 @@ export default function DashboardHeader({
  <div className="my-1 border-t border-slate-line" />
  <button
  onClick={handleSkipToMatchDayClick}
- className="w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-50 hover:bg-carbon-3"
+ className="w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <span className="text-xs font-heading font-bold uppercase tracking-wide text-ink">
  {t("continueMenu.skipToMatchDay")}
  </span>
- <p className="mt-0.5 text-xs text-gray-500 dark:text-ink-faint">
+ <p className="mt-0.5 text-xs text-ink-faint dark:text-ink-faint">
  {t("continueMenu.skipToMatchDayDesc")}
  </p>
  </button>

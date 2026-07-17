@@ -45,7 +45,7 @@ const CompareBar = ({
  const diff = valB - valA;
  return (
  <div className="flex items-center gap-1.5 py-0.5 text-xs">
- <span className="w-7 text-right font-heading text-gray-500">{label}</span>
+ <span className="w-7 text-right font-heading text-ink-faint">{label}</span>
  <span className="w-5 text-right tabular-nums text-danger-400">{displayA ?? valA}</span>
  <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-navy-600">
  <div className="h-full bg-danger-500/60" style={{ width: `${valA}%` }} />
@@ -55,7 +55,7 @@ const CompareBar = ({
  </div>
  <span className="w-5 tabular-nums text-success-400">{displayB ?? valB}</span>
  <span
- className={`w-6 text-right tabular-nums font-heading font-bold ${diff > 0 ? "text-success-400" : diff < 0 ? "text-danger-400" : "text-gray-600"}`}
+ className={`w-6 text-right tabular-nums font-heading font-bold ${diff > 0 ? "text-success-400" : diff < 0 ? "text-danger-400" : "text-ink-dim"}`}
  >
  {diff > 0 ? "+" : ""}
  {diff}
@@ -126,7 +126,7 @@ export function SubPanel({
  case "find-winner":
  return <Sparkles className="h-3.5 w-3.5 text-accent-400" />;
  default:
- return <RefreshCw className="h-3.5 w-3.5 text-gray-400" />;
+ return <RefreshCw className="h-3.5 w-3.5 text-ink-faint" />;
  }
  };
 
@@ -187,14 +187,14 @@ export function SubPanel({
  onClick={onClose}
  >
  <div
- className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-600 shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden transition-colors duration-300"
+ className="bg-white bg-carbon-1 rounded border border-slate-line shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden transition-colors duration-300"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
- <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-100 to-white px-5 py-3 dark:border-navy-700 dark:bg-navy-800">
+ <div className="flex shrink-0 items-center justify-between border-b border-slate-line bg-linear-to-r from-gray-100 to-white px-5 py-3 border-slate-line bg-carbon-1">
  <div className="flex items-center gap-2.5">
  <RefreshCw className="h-4 w-4 text-accent-400" />
- <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white">
+ <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-ink">
  {t("match.substitutionsTitle")}
  </h3>
  <Badge
@@ -206,7 +206,7 @@ export function SubPanel({
  </div>
  <button
  onClick={onClose}
- className="rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-navy-600 dark:hover:text-white"
+ className="rounded p-1.5 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink text-ink-faint hover:bg-carbon-3 hover:text-ink"
  >
  <span className="font-heading text-sm">✕</span>
  </button>
@@ -224,11 +224,11 @@ export function SubPanel({
  ) : (
  <>
  {/* Tactics strip — scenario, recommendation chips, quick selects */}
- <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-gray-200 bg-gray-50/60 px-4 py-2 dark:border-navy-700 dark:bg-navy-900/30">
+ <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-slate-line bg-carbon-2/60 px-4 py-2 border-slate-line bg-carbon-0/30">
  {/* Scenario + apply play style */}
  <div className="flex items-center gap-1.5">
  {getScenarioIcon(scenario.id)}
- <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-gray-800 dark:text-gray-200">
+ <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-ink text-ink">
  {t(`match.subScenario.${scenario.id}.title`)}
  </span>
  <button
@@ -256,12 +256,12 @@ export function SubPanel({
  onClick={() =>
  handleApplyRecommendation(rec.offId, rec.onId)
  }
- className="flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2 py-0.5 font-heading text-[10px] font-bold transition-colors hover:border-primary-400 hover:bg-primary-50 dark:border-navy-600 dark:bg-navy-800 dark:hover:bg-navy-700"
+ className="flex items-center gap-1 rounded-full border border-slate-line bg-white px-2 py-0.5 font-heading text-[10px] font-bold transition-colors hover:border-primary-400 hover:bg-primary-50 border-slate-line bg-carbon-1 hover:bg-carbon-3"
  >
  <span className="text-danger-400">
  {offPlayer.name.split(" ").pop()}
  </span>
- <span className="text-gray-400">→</span>
+ <span className="text-ink-faint">→</span>
  <span className="text-success-400">
  {onPlayer.name.split(" ").pop()}
  </span>
@@ -269,7 +269,7 @@ export function SubPanel({
  ),
  )}
  {visibleRecommendations.length > 3 && (
- <span className="font-heading text-[10px] text-gray-400 dark:text-gray-500">
+ <span className="font-heading text-[10px] text-ink-faint">
  +{visibleRecommendations.length - 3}
  </span>
  )}
@@ -312,8 +312,8 @@ export function SubPanel({
  {/* Main body: two columns */}
  <div className="flex min-h-0 flex-1 overflow-hidden">
  {/* Left: formation pitch + on-field player list */}
- <div className="flex min-w-0 flex-1 flex-col border-r border-gray-200 dark:border-navy-700">
- <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-navy-700 dark:bg-navy-800/50">
+ <div className="flex min-w-0 flex-1 flex-col border-r border-slate-line">
+ <div className="shrink-0 border-b border-slate-line bg-carbon-2 px-4 py-2 border-slate-line bg-carbon-1/50">
  <p className="font-heading text-xs uppercase tracking-widest text-danger-400">
  {selectedOff
  ? t("match.takingOff", { name: selectedPlayer?.name })
@@ -336,7 +336,7 @@ export function SubPanel({
  <div className="min-h-0 flex-1 overflow-auto px-4 py-2">
  <table className="w-full text-left">
  <thead>
- <tr className="border-b border-gray-200 font-heading text-[10px] uppercase tracking-widest text-gray-600 dark:border-navy-700 dark:text-gray-500">
+ <tr className="border-b border-slate-line font-heading text-[10px] uppercase tracking-widest text-ink-dim border-slate-line text-ink-faint">
  <th className="py-2 pr-2">{t("match.player")}</th>
  <th className="w-12 py-2 text-center">
  {t("common.position")}
@@ -382,7 +382,7 @@ export function SubPanel({
  className={`cursor-pointer text-sm transition-colors ${
  isSelected
  ? "bg-danger-500/10"
- : "hover:bg-gray-100 dark:hover:bg-navy-700/50"
+ : "hover:bg-carbon-2 hover:bg-carbon-3/50"
  }`}
  >
  <td className="py-2 pr-2">
@@ -396,14 +396,14 @@ export function SubPanel({
  </span>
  )}
  <span
- className={`truncate font-medium ${isSelected ? "text-danger-400" : "text-gray-700 dark:text-gray-300"}`}
+ className={`truncate font-medium ${isSelected ? "text-danger-400" : "text-ink-dim"}`}
  >
  {p.name}
  </span>
  </div>
  </td>
  <td className="w-12 py-2 text-center">
- <span className="font-heading text-xs text-gray-500 dark:text-gray-400">
+ <span className="font-heading text-xs text-ink-dim">
  {translatePositionAbbreviation(
  t,
  p.position,
@@ -418,7 +418,7 @@ export function SubPanel({
  </td>
  <td className="w-24 py-2">
  <div className="flex items-center gap-1.5">
- <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-navy-600">
+ <div className="h-2 flex-1 overflow-hidden rounded-full bg-carbon-3 bg-carbon-3">
  <div
  className={`h-full rounded-full ${condBgColor(p.condition)}`}
  style={{ width: `${p.condition}%` }}
@@ -458,7 +458,7 @@ export function SubPanel({
 
  {/* Right: bench players (full column height) */}
  <div className="flex min-w-0 flex-1 flex-col">
- <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-navy-700 dark:bg-navy-800/50">
+ <div className="shrink-0 border-b border-slate-line bg-carbon-2 px-4 py-2 border-slate-line bg-carbon-1/50">
  <p className="font-heading text-xs uppercase tracking-widest text-success-400">
  {selectedOff
  ? t("match.selectReplacement")
@@ -468,7 +468,7 @@ export function SubPanel({
 
  {availableBench.length === 0 ? (
  <div className="flex flex-1 items-center justify-center">
- <p className="text-xs text-gray-600 dark:text-gray-500">
+ <p className="text-xs text-ink-dim text-ink-faint">
  {t("match.noBenchAvailable")}
  </p>
  </div>
@@ -476,7 +476,7 @@ export function SubPanel({
  <div className="min-h-0 flex-1 overflow-auto px-4 py-2">
  <table className="w-full text-left">
  <thead>
- <tr className="border-b border-gray-200 font-heading text-[10px] uppercase tracking-widest text-gray-600 dark:border-navy-700 dark:text-gray-500">
+ <tr className="border-b border-slate-line font-heading text-[10px] uppercase tracking-widest text-ink-dim border-slate-line text-ink-faint">
  <th className="py-2 pr-2">{t("match.player")}</th>
  <th className="w-12 py-2 text-center">
  {t("common.position")}
@@ -519,14 +519,14 @@ export function SubPanel({
  {selectedOff && (
  <UserPlus className="h-3.5 w-3.5 shrink-0 text-success-400/50" />
  )}
- <span className="truncate font-medium text-gray-700 dark:text-gray-300">
+ <span className="truncate font-medium text-ink-dim">
  {p.name}
  </span>
  </div>
  </td>
  <td className="w-12 py-2 text-center">
  <span
- className={`font-heading text-xs ${!posMatch && selectedOff ? "text-accent-400" : "text-gray-500 dark:text-gray-400"}`}
+ className={`font-heading text-xs ${!posMatch && selectedOff ? "text-accent-400" : "text-ink-dim"}`}
  >
  {translatePositionAbbreviation(t, p.position)}
  {!posMatch && selectedOff && " !"}
@@ -540,7 +540,7 @@ export function SubPanel({
  </td>
  <td className="w-24 py-2">
  <div className="flex items-center gap-1.5">
- <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-navy-600">
+ <div className="h-2 flex-1 overflow-hidden rounded-full bg-carbon-3 bg-carbon-3">
  <div
  className={`h-full rounded-full ${condBgColor(p.condition)}`}
  style={{ width: `${p.condition}%` }}
@@ -598,8 +598,8 @@ export function SubPanel({
  {/* Sub history */}
  {snapshot.substitutions.filter((s) => s.side === side).length >
  0 && (
- <div className="shrink-0 border-t border-gray-200 px-4 py-3 dark:border-navy-700">
- <p className="mb-1.5 font-heading text-[10px] uppercase tracking-widest text-gray-600 dark:text-gray-500">
+ <div className="shrink-0 border-t border-slate-line px-4 py-3 border-slate-line">
+ <p className="mb-1.5 font-heading text-[10px] uppercase tracking-widest text-ink-dim text-ink-faint">
  {t("match.history")}
  </p>
  {snapshot.substitutions
@@ -609,15 +609,15 @@ export function SubPanel({
  key={i}
  className="flex items-center gap-1.5 py-0.5 text-[11px]"
  >
- <span className="w-5 text-right font-mono tabular-nums text-gray-600 dark:text-gray-500">
+ <span className="w-5 text-right font-mono tabular-nums text-ink-dim text-ink-faint">
  {sub.minute}'
  </span>
  <span className="text-success-400">▲</span>
- <span className="truncate text-gray-700 dark:text-gray-300">
+ <span className="truncate text-ink-dim">
  {getPlayerName(snapshot, sub.player_on_id)}
  </span>
  <span className="text-danger-400">▼</span>
- <span className="truncate text-gray-500 dark:text-gray-400">
+ <span className="truncate text-ink-dim">
  {getPlayerName(snapshot, sub.player_off_id)}
  </span>
  </div>
@@ -628,7 +628,7 @@ export function SubPanel({
  </div>
 
  {/* Sticky footer: comparison summary + confirm / cancel */}
- <div className="shrink-0 border-t border-gray-200 bg-gray-50/60 px-4 py-3 dark:border-navy-700 dark:bg-navy-900/30">
+ <div className="shrink-0 border-t border-slate-line bg-carbon-2/60 px-4 py-3 border-slate-line bg-carbon-0/30">
  {selectedPlayer && comparedPlayer ? (
  <div>
  {/* Player names + position match + action buttons */}
@@ -638,7 +638,7 @@ export function SubPanel({
  <span className="max-w-[110px] truncate font-heading text-sm font-bold text-danger-400">
  {selectedPlayer.name}
  </span>
- <span className="text-gray-400">→</span>
+ <span className="text-ink-faint">→</span>
  <span className="max-w-[110px] truncate font-heading text-sm font-bold text-success-400">
  {comparedPlayer.name}
  </span>
@@ -659,7 +659,7 @@ export function SubPanel({
  <button
  type="button"
  onClick={handleClearSelection}
- className="rounded border border-gray-300 px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-gray-700 transition-colors hover:bg-gray-100 dark:border-navy-500 dark:text-gray-300 dark:hover:bg-navy-600"
+ className="rounded border border-slate-line px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-ink transition-colors hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("common.cancel")}
  </button>
@@ -726,13 +726,13 @@ export function SubPanel({
  <span className="font-heading text-sm font-bold text-danger-400">
  {selectedPlayer.name}
  </span>
- <span className="text-gray-400">—</span>
- <span className="font-heading text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+ <span className="text-ink-faint">—</span>
+ <span className="font-heading text-xs uppercase tracking-wide text-ink-dim">
  {t("match.selectBenchToCompare")}
  </span>
  </div>
  ) : (
- <p className="text-center font-heading text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-center font-heading text-xs uppercase tracking-widest text-ink-dim">
  {t("match.selectPlayerOff")}
  </p>
  )}

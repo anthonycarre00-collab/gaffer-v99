@@ -48,14 +48,14 @@ function valueTone(value: number): string {
  if (value >= 80) return "text-success-500 dark:text-success-400";
  if (value >= 65) return "text-primary-500 dark:text-primary-400";
  if (value >= 50) return "text-accent-500 dark:text-accent-400";
- return "text-gray-500 dark:text-gray-400";
+ return "text-ink-dim";
 }
 
 function valueBarTone(value: number): string {
  if (value >= 80) return "bg-success-500";
  if (value >= 65) return "bg-primary-500";
  if (value >= 50) return "bg-accent-500";
- return "bg-gray-300 dark:bg-navy-600";
+ return "bg-carbon-3 bg-carbon-3";
 }
 
 function getNormalizedPlayerPosition(player: PlayerData): string {
@@ -75,20 +75,20 @@ function PlayerSummary({
  const overallRating = getPlayerOvr(player);
 
  return (
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-4">
+ <div className="rounded border border-slate-line bg-carbon-2/70 px-4 py-4">
  <div className="flex items-start justify-between gap-3">
  <div>
- <p className="text-sm font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-sm font-heading font-bold uppercase tracking-widest text-ink-dim">
  {label}
  </p>
- <p className="text-base font-heading font-bold text-gray-900 dark:text-gray-100 mt-1">
+ <p className="text-base font-heading font-bold text-ink mt-1">
  {player.full_name}
  </p>
  <div className="flex items-center gap-2 mt-2 flex-wrap">
  <Badge variant={positionBadgeVariant(normalizedPosition)} size="sm">
  {translatePositionLabel(t, displayPosition)}
  </Badge>
- <span className="text-xs text-gray-500 dark:text-gray-400">
+ <span className="text-xs text-ink-dim">
  <CountryFlag
  code={player.nationality}
  className="text-xs leading-none mr-1"
@@ -98,7 +98,7 @@ function PlayerSummary({
  </div>
  </div>
  <div className="text-right shrink-0">
- <div className="text-sm font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="text-sm font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("common.ovr")}
  </div>
  <div
@@ -124,7 +124,7 @@ function SinglePlayerAttributes({ player }: { player: PlayerData }) {
  group.labelKey !== "common.attrGroups.goalkeeper" || isGoalkeeper,
  ).map((group) => (
  <div key={group.labelKey}>
- <h4 className="text-sm font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+ <h4 className="text-sm font-heading font-bold uppercase tracking-widest text-ink-dim mb-2">
  {t(group.labelKey)}
  </h4>
  <div className="space-y-2">
@@ -136,10 +136,10 @@ function SinglePlayerAttributes({ player }: { player: PlayerData }) {
  className="grid grid-cols-[minmax(0,1fr)_40px] gap-3 items-center"
  >
  <div>
- <div className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+ <div className="text-xs text-ink-dim mb-1">
  {t(`common.attributes.${attr}`)}
  </div>
- <div className="h-2 rounded-full bg-gray-100 dark:bg-navy-800 overflow-hidden">
+ <div className="h-2 rounded-full bg-carbon-2 overflow-hidden">
  <div
  className={`h-full rounded-full ${valueBarTone(value)}`}
  style={{ width: `${value}%` }}
@@ -189,8 +189,8 @@ function CompareAttributes({
  player={comparePlayer}
  />
  </div>
- <div className="flex flex-col gap-3 rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
- <p className="text-sm text-gray-600 dark:text-gray-300">
+ <div className="flex flex-col gap-3 rounded border border-slate-line bg-carbon-2/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+ <p className="text-sm text-ink-dim">
  {t("tactics.compareSelectionHint")}
  </p>
  <Button
@@ -208,7 +208,7 @@ function CompareAttributes({
  showGoalkeeperAttrs,
  ).map((group) => (
  <div key={group.labelKey}>
- <h4 className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+ <h4 className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-2">
  {t(group.labelKey)}
  </h4>
  <div className="space-y-2">
@@ -223,7 +223,7 @@ function CompareAttributes({
  className="grid grid-cols-[minmax(0,1fr)_90px_minmax(0,1fr)] gap-2 items-center"
  >
  <div
- className={`rounded px-2 py-2 ${leftWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
+ className={`rounded px-2 py-2 ${leftWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-carbon-2/70"}`}
  >
  <div className="flex items-center justify-between gap-2 text-xs mb-1">
  <span
@@ -232,18 +232,18 @@ function CompareAttributes({
  {left}
  </span>
  </div>
- <div className="h-2 rounded-full bg-white dark:bg-navy-700 overflow-hidden">
+ <div className="h-2 rounded-full bg-white bg-carbon-2 overflow-hidden">
  <div
  className={`h-full rounded-full ${valueBarTone(left)}`}
  style={{ width: `${left}%` }}
  />
  </div>
  </div>
- <div className="text-center text-[10px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="text-center text-[10px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t(`common.attributes.${attr}`)}
  </div>
  <div
- className={`rounded px-2 py-2 ${rightWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-gray-50 dark:bg-navy-800/70"}`}
+ className={`rounded px-2 py-2 ${rightWins ? "bg-primary-500/10 ring-1 ring-primary-500/20" : "bg-carbon-2/70"}`}
  >
  <div className="flex items-center justify-between gap-2 text-xs mb-1">
  <span
@@ -252,7 +252,7 @@ function CompareAttributes({
  {right}
  </span>
  </div>
- <div className="h-2 rounded-full bg-white dark:bg-navy-700 overflow-hidden">
+ <div className="h-2 rounded-full bg-white bg-carbon-2 overflow-hidden">
  <div
  className={`h-full rounded-full ${valueBarTone(right)}`}
  style={{ width: `${right}%` }}
@@ -280,7 +280,7 @@ export default function TacticsPlayerFocusPanel({
 
  return (
  <Card>
- <div className="p-4 border-b border-gray-100 dark:border-navy-600 bg-linear-to-r rounded-t-xl">
+ <div className="p-4 border-b border-slate-line-soft bg-linear-to-r rounded-t-xl">
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
  <Eye className="w-4 h-4 text-accent-400" />
@@ -312,22 +312,22 @@ export default function TacticsPlayerFocusPanel({
  label={t("tactics.selectedPlayer")}
  player={selectedPlayer}
  />
- <div className="rounded border border-dashed border-gray-200 dark:border-navy-600 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-dashed border-slate-line px-4 py-3 text-sm text-ink-dim">
  {t("tactics.selectSecondPlayer")}
  </div>
  <SinglePlayerAttributes player={selectedPlayer} />
  </div>
  )
  ) : (
- <div className="rounded border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center dark:border-navy-600 dark:bg-navy-800/70">
- <GitCompareArrows className="mx-auto mb-3 h-10 w-10 text-gray-300 dark:text-navy-600" />
- <p className="text-sm font-heading font-bold uppercase tracking-[0.18em] text-gray-700 dark:text-gray-200">
+ <div className="rounded border border-dashed border-slate-line bg-carbon-2 px-4 py-8 text-center border-slate-line bg-carbon-1/70">
+ <GitCompareArrows className="mx-auto mb-3 h-10 w-10 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm font-heading font-bold uppercase tracking-[0.18em] text-ink">
  {t("tactics.inspectorEmptyTitle")}
  </p>
- <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+ <p className="mt-2 text-sm text-ink-dim">
  {t("tactics.selectPitchPlayer")}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+ <p className="text-xs text-ink-dim mt-2">
  {t("tactics.selectAnotherToSwap")}
  </p>
  </div>

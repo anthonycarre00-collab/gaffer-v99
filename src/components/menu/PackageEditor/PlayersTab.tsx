@@ -17,7 +17,7 @@ function PlayerAvatarCell({ player, posAbbr, projectDir }: PlayerAvatarCellProps
  const photoUrl = useAssetDataUrl(player.photo, projectDir);
 
  const name = player.name || `${player.firstName} ${player.lastName}`.trim() || player.id;
- const posColor = POSITION_COLOR[player.position] ?? "bg-gray-500";
+ const posColor = POSITION_COLOR[player.position] ?? "bg-carbon-3";
 
  return (
  <div className="relative flex-shrink-0">
@@ -25,7 +25,7 @@ function PlayerAvatarCell({ player, posAbbr, projectDir }: PlayerAvatarCellProps
  <img
  src={photoUrl}
  alt=""
- className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-navy-600"
+ className="w-9 h-9 rounded-full object-cover border border-slate-line"
  />
  ) : (
  <GeneratedAvatar
@@ -83,14 +83,14 @@ export function PlayersTab({ players, teams, onAdd, onEdit, onDelete, selectedIn
  searchSlot={
  scoped.length > 0 && (
  <div className="relative">
- <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-gray-500 pointer-events-none" />
+ <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-faint pointer-events-none" />
  <input
  type="text"
  value={query}
  onChange={(e) => setQuery(e.target.value)}
  aria-label={t("worldEditor.searchPlayers")}
  placeholder={t("worldEditor.searchPlayers")}
- className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
+ className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-line bg-white bg-carbon-2 text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
  />
  </div>
  )

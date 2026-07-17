@@ -73,12 +73,12 @@ export default function PlayerProfileAttributesCard({
  <CardHeader
  action={
  isOwnClub ? (
- <div className="flex rounded overflow-hidden border border-gray-200 dark:border-navy-600 text-[10px] font-heading font-bold uppercase tracking-wider">
+ <div className="flex rounded overflow-hidden border border-slate-line text-[10px] font-heading font-bold uppercase tracking-wider">
  <button
  type="button"
  aria-pressed={view === "list"}
  onClick={() => setView("list")}
- className={`px-3 py-1 transition-colors ${view === "list" ? "bg-primary-500 text-white" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700"}`}
+ className={`px-3 py-1 transition-colors ${view === "list" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {listLabel}
  </button>
@@ -86,7 +86,7 @@ export default function PlayerProfileAttributesCard({
  type="button"
  aria-pressed={view === "radar"}
  onClick={() => setView("radar")}
- className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700"}`}
+ className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {radarLabel}
  </button>
@@ -128,7 +128,7 @@ export default function PlayerProfileAttributesCard({
  return (
  <div key={attr.name} className="flex flex-col gap-0.5">
  <div className="flex items-baseline justify-between gap-2">
- <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 whitespace-nowrap">
+ <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-ink-dim whitespace-nowrap">
  {attr.name}
  </span>
  <span
@@ -138,7 +138,7 @@ export default function PlayerProfileAttributesCard({
  {tier.short}
  </span>
  </div>
- <p className="text-[11px] leading-tight text-gray-700 dark:text-gray-300 italic">
+ <p className="text-[11px] leading-tight text-ink-dim italic">
  {tier.description}
  </p>
  <ProgressBar
@@ -156,13 +156,13 @@ export default function PlayerProfileAttributesCard({
  </div>
  ) : (
  <div className="text-center py-8">
- <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-navy-700 flex items-center justify-center mx-auto mb-4">
- <Shield className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+ <div className="w-14 h-14 rounded-full bg-carbon-2 flex items-center justify-center mx-auto mb-4">
+ <Shield className="w-7 h-7 text-ink-faint" />
  </div>
- <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+ <p className="text-sm text-ink-dim font-medium">
  {hiddenTitle}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-xs mx-auto">
+ <p className="text-xs text-ink-faint mt-1 max-w-xs mx-auto">
  {hiddenBody}
  </p>
  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:auto-rows-fr text-left">
@@ -170,9 +170,9 @@ export default function PlayerProfileAttributesCard({
  <PlayerProfileStatCard
  key={group.label}
  label={group.label}
- labelClassName="text-gray-400 dark:text-gray-500"
+ labelClassName="text-ink-faint"
  headerRight={
- <span className="font-heading font-bold text-sm text-gray-400 dark:text-gray-500">
+ <span className="font-heading font-bold text-sm text-ink-faint">
  ??
  </span>
  }
@@ -180,7 +180,7 @@ export default function PlayerProfileAttributesCard({
  <div className="grid grid-cols-[auto_1fr_1.75rem] items-center gap-x-3 gap-y-2.5">
  {group.attrs.map((attr) => (
  <Fragment key={attr.name}>
- <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+ <span className="text-xs text-ink-faint whitespace-nowrap">
  {attr.name}
  </span>
  <ProgressBar
@@ -189,7 +189,7 @@ export default function PlayerProfileAttributesCard({
  size="sm"
  className="min-w-0"
  />
- <span className="text-xs text-gray-400 dark:text-gray-500 text-right">
+ <span className="text-xs text-ink-faint text-right">
  ??
  </span>
  </Fragment>

@@ -62,7 +62,7 @@ const PLAY_STYLE_DESCRIPTORS: Record<string, PlayStyleDescriptor> = {
  shortLabel: "Defensive",
  description:
  "Shut up shop. Banks of four, low block, ride it out. Boring as paint — but it keeps you in the league when the squad's not good enough.",
- accentClass: "text-gray-700 dark:text-gray-200",
+ accentClass: "text-ink",
  bgClass: "from-gray-600/15 via-gray-600/5 to-transparent",
  },
  Possession: {
@@ -110,7 +110,7 @@ export function PlayingStyleHero({
 
  return (
  <div
- className={`relative overflow-hidden rounded-lg border border-gray-200 dark:border-navy-600 bg-gradient-to-r ${descriptor.bgClass} bg-white dark:bg-navy-800`}
+ className={`relative overflow-hidden rounded-lg border border-slate-line bg-gradient-to-r ${descriptor.bgClass} bg-white bg-carbon-1`}
  >
  {/* Subtle texture overlay */}
  <div
@@ -126,12 +126,12 @@ export function PlayingStyleHero({
  {/* Formation badge — large, prominent */}
  <div className="flex items-center gap-3 shrink-0">
  <div
- className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 border-current ${descriptor.accentClass} bg-white dark:bg-navy-900`}
+ className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 border-current ${descriptor.accentClass} bg-white bg-carbon-0`}
  >
- <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("tactics.formation", "Formation")}
  </span>
- <span className="text-xl font-heading font-extrabold tracking-tight text-gray-900 dark:text-white">
+ <span className="text-xl font-heading font-extrabold tracking-tight text-ink">
  {formation}
  </span>
  </div>
@@ -146,23 +146,23 @@ export function PlayingStyleHero({
  {descriptor.icon}
  {t("tactics.playStyle", "Playing Style")}
  </span>
- <span className="text-lg font-heading font-extrabold uppercase tracking-wide text-gray-900 dark:text-white">
+ <span className="text-lg font-heading font-extrabold uppercase tracking-wide text-ink">
  {t(`common.playStyles.${playStyle}`, playStyle)}
  </span>
  {tacticName ? (
- <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+ <span className="text-xs text-ink-dim ml-1">
  — {tacticName}
  </span>
  ) : null}
  </div>
- <p className="mt-1.5 text-sm leading-snug text-gray-700 dark:text-gray-200 max-w-2xl">
+ <p className="mt-1.5 text-sm leading-snug text-ink max-w-2xl">
  {descriptor.description}
  </p>
  </div>
 
  {/* Quick metrics — shows what this style favours */}
  <div className="flex sm:flex-col gap-2 sm:gap-1 shrink-0 sm:text-right">
- <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("tactics.styleSignature", "Style Signature")}
  </span>
  <div className="flex gap-1.5 sm:justify-end">
@@ -208,7 +208,7 @@ export function PlayingStyleHero({
 
 function Pill({ label }: { label: string }): JSX.Element {
  return (
- <span className="inline-flex items-center text-[10px] font-heading font-bold uppercase tracking-wider rounded bg-gray-100 dark:bg-navy-700 px-1.5 py-0.5 text-gray-600 dark:text-gray-300">
+ <span className="inline-flex items-center text-[10px] font-heading font-bold uppercase tracking-wider rounded bg-carbon-2 px-1.5 py-0.5 text-ink-dim">
  {label}
  </span>
  );

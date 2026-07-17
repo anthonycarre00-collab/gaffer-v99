@@ -216,8 +216,8 @@ export default function TournamentsTab({
  if (!league) {
  return (
  <div className="max-w-4xl mx-auto text-center py-12">
- <Trophy className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-gray-500 dark:text-gray-400 text-sm">
+ <Trophy className="w-12 h-12 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-ink-dim text-sm">
  {t("tournaments.noActive")}
  </p>
  </div>
@@ -359,13 +359,13 @@ export default function TournamentsTab({
  const groupStandings = [...group.standings].sort(byTablePosition);
  return (
  <div key={group.id} data-testid={`tournaments-group-${group.id}`}>
- <div className="px-4 py-2 border-b border-gray-100 dark:border-navy-600 bg-gray-50 dark:bg-navy-800">
- <h5 className="font-heading font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+ <div className="px-4 py-2 border-b border-slate-line-soft bg-carbon-2">
+ <h5 className="font-heading font-bold text-xs uppercase tracking-wider text-ink-dim">
  {t("tournaments.group", { name: group.name })}
  </h5>
  </div>
  <table className="w-full text-left border-collapse">
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {groupStandings.map((entry, idx) => {
  const isUser = entry.team_id === userTeamId;
  return (
@@ -376,21 +376,21 @@ export default function TournamentsTab({
  ? () => onSelectTeam(entry.team_id)
  : undefined
  }
- className={`${isClubTeam(entry.team_id) ? "cursor-pointer" : ""} transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-gray-50 dark:hover:bg-navy-700/50"}`}
+ className={`${isClubTeam(entry.team_id) ? "cursor-pointer" : ""} transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-carbon-2 hover:bg-carbon-3/50"}`}
  data-testid={`tournaments-group-standing-${entry.team_id}`}
  >
- <td className="py-1.5 px-3 font-heading font-bold text-xs text-gray-400 w-6">
+ <td className="py-1.5 px-3 font-heading font-bold text-xs text-ink-faint w-6">
  {idx + 1}
  </td>
  <td
- className={`py-1.5 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}
+ className={`py-1.5 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
- <td className="py-1.5 px-3 text-center text-xs text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-1.5 px-3 text-center text-xs text-ink-dim tabular-nums">
  {entry.played}
  </td>
- <td className="py-1.5 px-3 text-center font-heading font-bold text-sm text-gray-800 dark:text-gray-100 tabular-nums">
+ <td className="py-1.5 px-3 text-center font-heading font-bold text-sm text-ink tabular-nums">
  {entry.points}
  </td>
  </tr>
@@ -418,13 +418,13 @@ export default function TournamentsTab({
  ? () => onSelectTeam(f.home_team_id)
  : undefined
  }
- className={`flex-1 text-right font-semibold text-sm ${isClubTeam(f.home_team_id) ? "cursor-pointer hover:underline" : ""} ${f.home_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}
+ className={`flex-1 text-right font-semibold text-sm ${isClubTeam(f.home_team_id) ? "cursor-pointer hover:underline" : ""} ${f.home_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
  >
  {resolveTeamName(f.home_team_id)}
  </span>
  <div className="w-24 text-center mx-3">
  {completed && f.result ? (
- <span className="font-heading font-bold text-lg text-gray-800 dark:text-gray-100">
+ <span className="font-heading font-bold text-lg text-ink">
  {f.result.home_goals} - {f.result.away_goals}
  </span>
  ) : (
@@ -439,7 +439,7 @@ export default function TournamentsTab({
  ? () => onSelectTeam(f.away_team_id)
  : undefined
  }
- className={`flex-1 text-left font-semibold text-sm ${isClubTeam(f.away_team_id) ? "cursor-pointer hover:underline" : ""} ${f.away_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}
+ className={`flex-1 text-left font-semibold text-sm ${isClubTeam(f.away_team_id) ? "cursor-pointer hover:underline" : ""} ${f.away_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
  >
  {resolveTeamName(f.away_team_id)}
  </span>
@@ -458,7 +458,7 @@ export default function TournamentsTab({
  <Badge variant="accent" size="sm">
  {t(`season.phases.${seasonContext.phase}`)}
  </Badge>
- <span className="text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <span className="text-sm font-heading font-bold text-ink">
  {seasonContext.season_start
  ? t("season.startsOn", {
  date: formatMatchDate(seasonContext.season_start),
@@ -466,7 +466,7 @@ export default function TournamentsTab({
  : t("season.noOpener")}
  </span>
  </div>
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("season.tournamentsPreseasonHint")}
  </p>
  </div>
@@ -485,7 +485,7 @@ export default function TournamentsTab({
  <h2 className="text-2xl font-heading font-bold text-white uppercase tracking-wide">
  {competitionDisplayName(league, t)}
  </h2>
- <p className="text-gray-400 text-sm mt-0.5">
+ <p className="text-ink-faint text-sm mt-0.5">
  {t("schedule.season", { number: league.season })} —{" "}
  {t("tournaments.nTeams", { count: participantCount })}
  </p>
@@ -509,7 +509,7 @@ export default function TournamentsTab({
  )}
  <div className="hidden md:flex gap-4">
  <div className="bg-white/5 rounded px-4 py-2 text-center">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.progress")}
  </p>
  <p className="font-heading font-bold text-lg text-white">
@@ -517,7 +517,7 @@ export default function TournamentsTab({
  </p>
  </div>
  <div className="bg-white/5 rounded px-4 py-2 text-center">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.matches")}
  </p>
  <p className="font-heading font-bold text-lg text-white">
@@ -525,7 +525,7 @@ export default function TournamentsTab({
  </p>
  </div>
  <div className="bg-white/5 rounded px-4 py-2 text-center">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.goals")}
  </p>
  <p className="font-heading font-bold text-lg text-accent-400">
@@ -556,7 +556,7 @@ export default function TournamentsTab({
  onClick={() => setView(v)}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all ${view === v
  ? "bg-primary-500 text-white "
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim hover:text-ink hover:text-ink border border-slate-line"
  }`}
  >
  {v === "overview" ? (
@@ -606,14 +606,14 @@ export default function TournamentsTab({
  {groups.map(renderGroupTable)}
  </div>
  ) : (
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {knockoutRounds.map((round) => (
  <div
  key={round.id}
  className="flex items-center justify-between px-4 py-2.5"
  data-testid={`tournaments-round-summary-${round.id}`}
  >
- <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+ <span className="text-sm font-semibold text-ink text-ink">
  {localizedRoundName(t, round.name)}
  </span>
  <Badge variant={round.completed ? "accent" : "neutral"} size="sm">
@@ -631,45 +631,45 @@ export default function TournamentsTab({
  </div>
  ) : isPreseason ? (
  <div className="flex flex-col items-center gap-2 px-6 py-8 text-center">
- <Trophy className="w-8 h-8 text-gray-300 dark:text-navy-600" />
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <Trophy className="w-8 h-8 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm font-heading font-bold text-ink">
  {t("season.standingsLocked")}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
+ <p className="text-xs text-ink-dim max-w-md">
  {t("season.tournamentsPreseasonHint")}
  </p>
  </div>
  ) : (
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 w-8">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim w-8">
  #
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.team")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.played")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.won")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.drawn")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.lost")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.gd")}
  </th>
- <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-2 px-3 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("common.pts")}
  </th>
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {standings.map((entry, idx) => {
  const isUser = entry.team_id === userTeamId;
  const gd = entry.goals_for - entry.goals_against;
@@ -680,35 +680,35 @@ export default function TournamentsTab({
  >
  <tr
  onClick={() => onSelectTeam(entry.team_id)}
- className={`cursor-pointer transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-gray-50 dark:hover:bg-navy-700/50"}`}
+ className={`cursor-pointer transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-carbon-2 hover:bg-carbon-3/50"}`}
  data-testid={`tournaments-overview-standing-${entry.team_id}`}
  >
- <td className="py-2 px-3 font-heading font-bold text-sm text-gray-400">
+ <td className="py-2 px-3 font-heading font-bold text-sm text-ink-faint">
  {idx + 1}
  </td>
  <td
- className={`py-2 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}
+ className={`py-2 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
- <td className="py-2 px-3 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2 px-3 text-center text-sm text-ink-dim tabular-nums">
  {entry.played}
  </td>
- <td className="py-2 px-3 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2 px-3 text-center text-sm text-ink-dim tabular-nums">
  {entry.won}
  </td>
- <td className="py-2 px-3 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2 px-3 text-center text-sm text-ink-dim tabular-nums">
  {entry.drawn}
  </td>
- <td className="py-2 px-3 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2 px-3 text-center text-sm text-ink-dim tabular-nums">
  {entry.lost}
  </td>
  <td
- className={`py-2 px-3 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}
+ className={`py-2 px-3 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-ink-faint"}`}
  >
  {gd > 0 ? `+${gd}` : gd}
  </td>
- <td className="py-2 px-3 text-center font-heading font-bold text-sm text-gray-800 dark:text-gray-100 tabular-nums">
+ <td className="py-2 px-3 text-center font-heading font-bold text-sm text-ink tabular-nums">
  {entry.points}
  </td>
  </tr>
@@ -726,11 +726,11 @@ export default function TournamentsTab({
  <CardHeader>{t("tournaments.topScorers")}</CardHeader>
  <CardBody className="p-0">
  {topScorers.length === 0 ? (
- <p className="p-4 text-sm text-gray-400 dark:text-gray-500 text-center">
+ <p className="p-4 text-sm text-ink-faint text-center">
  {t("tournaments.noGoals")}
  </p>
  ) : (
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {topScorers.map((entry, i) => (
  <ContextMenu
  items={buildPlayerMenuItems(
@@ -743,14 +743,14 @@ export default function TournamentsTab({
  className="flex items-center px-4 py-2.5 gap-3"
  data-testid={`tournaments-top-scorer-${entry.playerId}`}
  >
- <span className="font-heading font-bold text-sm text-gray-400 dark:text-gray-500 w-5 text-center">
+ <span className="font-heading font-bold text-sm text-ink-faint w-5 text-center">
  {i + 1}
  </span>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
+ <p className="text-sm font-semibold text-ink text-ink truncate">
  {entry.playerName!.full_name}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500">
+ <p className="text-xs text-ink-faint">
  {entry.playerName!.team_name ?? entry.playerName!.team_id ?? ""}
  </p>
  </div>
@@ -822,11 +822,11 @@ export default function TournamentsTab({
  <Card>
  <CardBody>
  <div className="flex flex-col items-center gap-2 py-6 text-center">
- <Trophy className="w-8 h-8 text-gray-300 dark:text-navy-600" />
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <Trophy className="w-8 h-8 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm font-heading font-bold text-ink">
  {t("season.standingsLocked")}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
+ <p className="text-xs text-ink-dim max-w-md">
  {t("season.tournamentsPreseasonHint")}
  </p>
  </div>
@@ -834,7 +834,7 @@ export default function TournamentsTab({
  </Card>
  ) : (
  <Card>
- <div className="p-5 border-b border-gray-100 dark:border-navy-600 bg-navy-700 rounded-t-xl">
+ <div className="p-5 border-b border-slate-line-soft bg-navy-700 rounded-t-xl">
  <h3 className="text-lg font-heading font-bold text-white flex items-center gap-2 uppercase tracking-wide">
  <Trophy className="text-accent-400 w-5 h-5" />
  {competitionDisplayName(league, t)} —{" "}
@@ -844,11 +844,11 @@ export default function TournamentsTab({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 w-8">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim w-8">
  #
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.team")}
  </th>
  <SortableHeader label={t("common.played")} columnKey="played" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
@@ -861,7 +861,7 @@ export default function TournamentsTab({
  <SortableHeader label={t("common.pts")} columnKey="points" sortKey={standingsSortKey} sortDir={standingsSortDir} onSort={toggleStandingsSort} numeric />
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {sortedStandings.map((entry, idx) => {
  const isUser = entry.team_id === userTeamId;
  const gd = entry.goals_for - entry.goals_against;
@@ -876,7 +876,7 @@ export default function TournamentsTab({
  >
  <tr
  onClick={() => onSelectTeam(entry.team_id)}
- className={`cursor-pointer transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-gray-50 dark:hover:bg-navy-700/50"}`}
+ className={`cursor-pointer transition-colors ${isUser ? "bg-primary-50 dark:bg-primary-500/10" : "hover:bg-carbon-2 hover:bg-carbon-3/50"}`}
  data-testid={`tournaments-standing-${entry.team_id}`}
  >
  <td
@@ -885,7 +885,7 @@ export default function TournamentsTab({
  ? "border-l-2 border-primary-500 text-primary-500"
  : inRelegationZone
  ? "border-l-2 border-danger-500 text-danger-500"
- : "text-gray-400"
+ : "text-ink-faint"
  }`}
  data-testid={
  inPromotionZone
@@ -898,34 +898,34 @@ export default function TournamentsTab({
  {idx + 1}
  </td>
  <td
- className={`py-3 px-4 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}
+ className={`py-3 px-4 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.played}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.won}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.drawn}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.lost}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.goals_for}
  </td>
- <td className="py-3 px-4 text-center text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-4 text-center text-sm text-ink-dim tabular-nums">
  {entry.goals_against}
  </td>
  <td
- className={`py-3 px-4 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}
+ className={`py-3 px-4 text-center text-sm font-semibold tabular-nums ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-ink-faint"}`}
  >
  {gd > 0 ? `+${gd}` : gd}
  </td>
- <td className="py-3 px-4 text-center font-heading font-bold text-sm text-gray-800 dark:text-gray-100 tabular-nums">
+ <td className="py-3 px-4 text-center font-heading font-bold text-sm text-ink tabular-nums">
  {entry.points}
  </td>
  </tr>
@@ -935,7 +935,7 @@ export default function TournamentsTab({
  </tbody>
  </table>
  {(zones.promotionSlots > 0 || zones.relegationSlots > 0) && (
- <div className="flex gap-5 border-t border-gray-100 px-4 py-2.5 text-xs text-gray-500 dark:border-navy-600 dark:text-gray-400">
+ <div className="flex gap-5 border-t border-slate-line-soft px-4 py-2.5 text-xs text-ink-faint border-slate-line text-ink-faint">
  {zones.promotionSlots > 0 && (
  <span className="flex items-center gap-1.5">
  <span className="h-2 w-2 rounded-full bg-primary-500" />
@@ -959,14 +959,14 @@ export default function TournamentsTab({
  <div className="flex flex-col gap-4">
  {sortedMatchdays.map(([md, fixtures]) => (
  <Card key={md}>
- <div className="px-5 py-3 border-b border-gray-100 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 rounded-t-xl">
- <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-gray-600 dark:text-gray-300">
+ <div className="px-5 py-3 border-b border-slate-line-soft bg-carbon-2 rounded-t-xl">
+ <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-ink-dim">
  {t("schedule.matchday", { number: md })} —{" "}
  {formatMatchDate(fixtures[0].date)}
  </h4>
  </div>
  <CardBody className="p-0">
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {fixtures.map((f) =>
  renderFixtureRow(f, `tournaments-fixture-${f.id}`),
  )}
@@ -1061,8 +1061,8 @@ export default function TournamentsTab({
  </>
  ) : awardsLoadState === "error" ? (
  <div className="col-span-full text-center py-12">
- <Award className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">
+ <Award className="w-12 h-12 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-faint mb-4">
  {t("tournaments.awards.noDataYet")}
  </p>
  <button
@@ -1074,8 +1074,8 @@ export default function TournamentsTab({
  </div>
  ) : (
  <div className="col-span-full text-center py-12">
- <Award className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-400 dark:text-gray-500">
+ <Award className="w-12 h-12 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-faint">
  {t("tournaments.loadingAwards")}
  </p>
  </div>
@@ -1127,7 +1127,7 @@ function AwardCard({
  {icon}
  <div>
  <span>{title}</span>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-normal normal-case tracking-normal">
+ <p className="text-[10px] text-ink-faint font-normal normal-case tracking-normal">
  {subtitle}
  </p>
  </div>
@@ -1135,11 +1135,11 @@ function AwardCard({
  </CardHeader>
  <CardBody className="p-0">
  {entries.length === 0 ? (
- <p className="p-4 text-sm text-gray-400 dark:text-gray-500 text-center">
+ <p className="p-4 text-sm text-ink-faint text-center">
  {emptyText}
  </p>
  ) : (
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {entries.map((entry, i) => (
  <ContextMenu
  items={buildAwardMenuItems(entry)}
@@ -1152,7 +1152,7 @@ function AwardCard({
  <span
  className={`font-heading font-bold text-sm w-5 text-center ${i === 0
  ? "text-accent-500"
- : "text-gray-400 dark:text-gray-500"
+ : "text-ink-faint"
  }`}
  >
  {i + 1}
@@ -1160,25 +1160,25 @@ function AwardCard({
  <div className="flex-1 min-w-0">
  <p
  className={`text-sm font-semibold truncate ${i === 0
- ? "text-gray-900 dark:text-gray-100"
- : "text-gray-700 dark:text-gray-300"
+ ? "text-ink"
+ : "text-ink-dim"
  }`}
  >
  {"player_name" in entry ? entry.player_name : entry.manager_name}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500">
+ <p className="text-xs text-ink-faint">
  {entry.team_name}
  </p>
  </div>
  <span
  className={`font-mono font-bold tabular-nums ${i === 0
  ? "text-lg text-accent-500"
- : "text-sm text-gray-600 dark:text-gray-400"
+ : "text-sm text-ink-dim"
  }`}
  >
  {decimal ? entry.value.toFixed(2) : `${Math.round("win_rate" in entry ? entry.win_rate : entry.value)}`}
  </span>
- <span className="text-[10px] text-gray-400 dark:text-gray-500 w-12">
+ <span className="text-[10px] text-ink-faint w-12">
  {unit}
  </span>
  </div>

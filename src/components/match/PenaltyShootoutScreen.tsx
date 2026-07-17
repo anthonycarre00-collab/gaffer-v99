@@ -108,7 +108,7 @@ export default function PenaltyShootoutScreen({
  );
 
  return (
- <div className="min-h-screen bg-gray-100 dark:bg-navy-900 flex flex-col items-center justify-center px-4 py-8 transition-colors duration-300">
+ <div className="min-h-screen bg-carbon-2 bg-carbon-0 flex flex-col items-center justify-center px-4 py-8 transition-colors duration-300">
  {/* Header */}
  <div className="w-full max-w-lg mb-6 text-center">
  <p className="text-xs font-heading uppercase tracking-widest text-accent-600 dark:text-accent-400 mb-1">
@@ -118,37 +118,37 @@ export default function PenaltyShootoutScreen({
  ? t("match.shootout.round", { n: roundNumber })
  : t("match.penaltyShootout")}
  </p>
- <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+ <h1 className="text-2xl font-heading font-bold text-ink">
  {t("match.penaltyShootout")}
  </h1>
  </div>
 
  {/* Score card */}
- <div className="w-full max-w-lg bg-white dark:bg-navy-800 rounded p-6 mb-4">
+ <div className="w-full max-w-lg bg-white bg-carbon-1 rounded p-6 mb-4">
  <div className="flex items-center justify-between gap-4">
  {/* Home */}
  <div className="flex flex-col items-center gap-2 flex-1">
  {homeFullTeam && <TeamLogo team={homeFullTeam} />}
- <span className="font-heading font-semibold text-gray-900 dark:text-white text-sm text-center">
+ <span className="font-heading font-semibold text-ink text-sm text-center">
  {snapshot.home_team.name}
  </span>
- <span className="text-3xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-3xl font-heading font-bold text-ink tabular-nums">
  {ps?.home_scored ?? 0}
  </span>
  </div>
 
  {/* vs */}
- <div className="text-gray-400 dark:text-gray-500 font-heading font-bold text-xl">
+ <div className="text-ink-faint font-heading font-bold text-xl">
  –
  </div>
 
  {/* Away */}
  <div className="flex flex-col items-center gap-2 flex-1">
  {awayFullTeam && <TeamLogo team={awayFullTeam} />}
- <span className="font-heading font-semibold text-gray-900 dark:text-white text-sm text-center">
+ <span className="font-heading font-semibold text-ink text-sm text-center">
  {snapshot.away_team.name}
  </span>
- <span className="text-3xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-3xl font-heading font-bold text-ink tabular-nums">
  {ps?.away_scored ?? 0}
  </span>
  </div>
@@ -175,13 +175,13 @@ export default function PenaltyShootoutScreen({
 
  {/* Event feed */}
  {shootoutEvents.length > 0 && (
- <div className="w-full max-w-lg bg-white dark:bg-navy-800 rounded p-4 mb-4 space-y-1">
+ <div className="w-full max-w-lg bg-white bg-carbon-1 rounded p-4 mb-4 space-y-1">
  {shootoutEvents.slice(-8).map((evt, i) => (
  <div
  key={i}
- className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+ className="flex items-center gap-2 text-sm text-ink-dim"
  >
- <span className="text-gray-400 dark:text-gray-500 tabular-nums w-6 text-right">
+ <span className="text-ink-faint tabular-nums w-6 text-right">
  {evt.minute}&apos;
  </span>
  <span
@@ -212,22 +212,22 @@ export default function PenaltyShootoutScreen({
  if (!isRunning) setSpeed("normal");
  else setSpeed("paused");
  }}
- className="p-2 rounded-full bg-white dark:bg-navy-700 shadow hover: transition-all"
+ className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
  aria-label={isRunning ? t("match.pause") : t("match.live")}
  >
  {isRunning ? (
- <Pause className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+ <Pause className="w-5 h-5 text-ink" />
  ) : (
- <Play className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+ <Play className="w-5 h-5 text-ink" />
  )}
  </button>
  <button
  type="button"
  onClick={() => { setSpeed("fast"); setIsRunning(true); }}
- className="p-2 rounded-full bg-white dark:bg-navy-700 shadow hover: transition-all"
+ className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
  aria-label={t("match.fast")}
  >
- <FastForward className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+ <FastForward className="w-5 h-5 text-ink" />
  </button>
  <button
  type="button"
@@ -235,10 +235,10 @@ export default function PenaltyShootoutScreen({
  setIsRunning(false);
  await stepMatch();
  }}
- className="p-2 rounded-full bg-white dark:bg-navy-700 shadow hover: transition-all"
+ className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
  aria-label={t("match.step1Min")}
  >
- <SkipForward className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+ <SkipForward className="w-5 h-5 text-ink" />
  </button>
  </div>
  </div>
@@ -260,7 +260,7 @@ export function KickRow({
 
  return (
  <div className="flex items-center gap-3">
- <span className="text-xs text-gray-500 dark:text-gray-400 w-20 truncate text-right">
+ <span className="text-xs text-ink-dim w-20 truncate text-right">
  {label}
  </span>
  <div className="flex gap-1.5 flex-wrap">
@@ -269,7 +269,7 @@ export function KickRow({
  return (
  <span
  key={i}
- className="w-6 h-6 rounded-full border-2 border-gray-200 dark:border-gray-600 flex items-center justify-center text-xs text-gray-300"
+ className="w-6 h-6 rounded-full border-2 border-slate-line border-slate-line flex items-center justify-center text-xs text-ink-faint"
  >
  ?
  </span>

@@ -62,12 +62,12 @@ export default function HomeLeaguePositionCard({
  <Badge variant="accent" size="sm">
  {t(`season.phases.${phase}`)}
  </Badge>
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="text-sm font-heading font-bold text-ink">
  {seasonStartLabel
  ? t("season.startsOn", { date: seasonStartLabel })
  : t("season.noOpener")}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs">
+ <p className="text-xs text-ink-dim max-w-xs">
  {t("season.standingsLocked")}
  </p>
  </div>
@@ -80,7 +80,7 @@ export default function HomeLeaguePositionCard({
  </span>
  </div>
  <div>
- <p className="text-xs text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-dim font-heading uppercase tracking-wider">
  {myStanding === 1
  ? t("common.place.1")
  : myStanding === 2
@@ -89,32 +89,32 @@ export default function HomeLeaguePositionCard({
  ? t("common.place.3")
  : t("common.place.other", { n: myStanding })}
  </p>
- <p className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="text-lg font-heading font-bold text-ink">
  {myStandingData.points} pts
  </p>
  </div>
  </div>
  <div className="w-full grid grid-cols-4 text-center gap-1">
  <div>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">P</p>
- <p className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
+ <p className="text-xs text-ink-faint font-heading uppercase">P</p>
+ <p className="text-sm font-heading font-bold text-ink-dim">
  {myStandingData.played}
  </p>
  </div>
  <div>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">W</p>
+ <p className="text-xs text-ink-faint font-heading uppercase">W</p>
  <p className="text-sm font-heading font-bold text-success-500">
  {myStandingData.won}
  </p>
  </div>
  <div>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">D</p>
- <p className="text-sm font-heading font-bold text-gray-500">
+ <p className="text-xs text-ink-faint font-heading uppercase">D</p>
+ <p className="text-sm font-heading font-bold text-ink-faint">
  {myStandingData.drawn}
  </p>
  </div>
  <div>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">L</p>
+ <p className="text-xs text-ink-faint font-heading uppercase">L</p>
  <p className="text-sm font-heading font-bold text-danger-500">
  {myStandingData.lost}
  </p>
@@ -131,7 +131,7 @@ export default function HomeLeaguePositionCard({
  ? "bg-success-500"
  : result === "L"
  ? "bg-danger-500"
- : "bg-gray-400"
+ : "bg-carbon-3"
  }`}
  >
  {result}
@@ -158,8 +158,8 @@ export default function HomeLeaguePositionCard({
  </div>
  ) : (
  <div className="flex flex-col items-center gap-2 py-4">
- <Trophy className="w-8 h-8 text-gray-300 dark:text-navy-600" />
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <Trophy className="w-8 h-8 text-ink-faint dark:text-navy-600" />
+ <p className="text-xs text-ink-dim">
  {t("home.noLeague")}
  </p>
  </div>

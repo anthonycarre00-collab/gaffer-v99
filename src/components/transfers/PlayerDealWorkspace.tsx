@@ -44,38 +44,38 @@ interface DealOption {
 function routeButtonClass(isSelected: boolean, isDisabled: boolean): string {
  if (isDisabled) {
  return [
- "min-h-[88px] w-full rounded bg-gray-50 px-3 py-3 text-left",
- "text-gray-500 opacity-80 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
+ "min-h-[88px] w-full rounded bg-carbon-2 px-3 py-3 text-left",
+ "text-ink-faint opacity-80 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
  "transition-[box-shadow,background-color,color] duration-150",
- "dark:bg-navy-900/50 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]",
+ "bg-carbon-0/50 text-ink-dim dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]",
  ].join(" ");
  }
 
  if (isSelected) {
  return [
  "min-h-[88px] w-full rounded bg-primary-50 px-3 py-3 text-left",
- "text-gray-900 shadow-[0_0_0_1px_rgba(16,185,129,0.35),0_2px_8px_rgba(16,185,129,0.12)]",
+ "text-ink shadow-[0_0_0_1px_rgba(16,185,129,0.35),0_2px_8px_rgba(16,185,129,0.12)]",
  "transition-[box-shadow,background-color,color] duration-150",
- "dark:bg-primary-900/50 dark:text-white dark:shadow-[0_0_0_1px_rgba(52,211,153,0.34)]",
+ "dark:bg-primary-900/50 text-ink dark:shadow-[0_0_0_1px_rgba(52,211,153,0.34)]",
  ].join(" ");
  }
 
  return [
  "min-h-[88px] w-full rounded bg-white px-3 py-3 text-left",
- "text-gray-700 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
- "transition-[box-shadow,background-color,color] duration-150 hover:bg-gray-50 hover:text-gray-950",
+ "text-ink shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
+ "transition-[box-shadow,background-color,color] duration-150 hover:bg-carbon-2 hover:text-ink",
  "hover:shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.05)]",
- "dark:bg-navy-800 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]",
- "dark:hover:bg-navy-700 dark:hover:text-white dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14)]",
+ "bg-carbon-1 text-ink-dim dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]",
+ "hover:bg-carbon-3 hover:text-ink dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14)]",
  ].join(" ");
 }
 
 function factLabelClass(): string {
- return "text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300";
+ return "text-xs font-heading font-bold uppercase tracking-wider text-ink-dim";
 }
 
 function factValueClass(): string {
- return "mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100";
+ return "mt-1 text-sm font-semibold text-ink";
 }
 
 export default function PlayerDealWorkspace({
@@ -147,15 +147,15 @@ export default function PlayerDealWorkspace({
  role="dialog"
  aria-modal="true"
  aria-labelledby="player-deal-workspace-title"
- className="fixed inset-0 z-50 bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-gray-100"
+ className="fixed inset-0 z-50 bg-carbon-2 text-ink bg-carbon-0 text-ink"
  >
  <div className="flex h-full min-h-0 flex-col">
- <header className="shrink-0 border-b border-gray-200 bg-white px-4 py-3 shadow-sm dark:border-navy-600 dark:bg-navy-800">
+ <header className="shrink-0 border-b border-slate-line bg-white px-4 py-3 shadow-sm border-slate-line bg-carbon-1">
  <div className="flex items-center gap-4">
  <button
  type="button"
  onClick={onClose}
- className="-ml-2 flex shrink-0 items-center gap-2 rounded px-2 py-2 text-sm text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-navy-700 dark:hover:text-white"
+ className="-ml-2 flex shrink-0 items-center gap-2 rounded px-2 py-2 text-sm text-ink-faint transition-colors duration-150 hover:bg-carbon-2 hover:text-ink text-ink-dim hover:bg-carbon-3 hover:text-ink"
  aria-label={t("common.back")}
  >
  <ArrowLeft className="h-5 w-5" />
@@ -166,14 +166,14 @@ export default function PlayerDealWorkspace({
  <div className="flex min-w-0 flex-1 items-center gap-4">
  <PlayerAvatar
  player={player}
- className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-100 text-sm font-heading font-bold text-gray-500 shadow-[0_0_0_1px_rgba(0,0,0,0.08)] dark:bg-navy-700 dark:text-gray-300 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.1)]"
+ className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded bg-carbon-2 text-sm font-heading font-bold text-ink-faint shadow-[0_0_0_1px_rgba(0,0,0,0.08)] bg-carbon-2 text-ink-dim dark:shadow-[0_0_0_1px_rgba(255,255,255,0.1)]"
  imageClassName="h-full w-full object-cover object-top"
  />
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
  <h2
  id="player-deal-workspace-title"
- className="truncate font-heading text-2xl font-bold uppercase tracking-wide text-gray-950 dark:text-white"
+ className="truncate font-heading text-2xl font-bold uppercase tracking-wide text-ink"
  >
  {player.full_name}
  </h2>
@@ -189,7 +189,7 @@ export default function PlayerDealWorkspace({
  )}
  </Badge>
  </div>
- <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-300">
+ <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-dim">
  <span>{age}</span>
  <span className="flex items-center gap-1">
  <CountryFlag
@@ -230,10 +230,10 @@ export default function PlayerDealWorkspace({
  <span
  className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
  disabled
- ? "bg-gray-200 text-gray-500 dark:bg-navy-700 dark:text-gray-300"
+ ? "bg-carbon-3 text-ink-faint bg-carbon-2 text-ink-dim"
  : selected
  ? "bg-primary-700 text-white"
- : "bg-gray-100 text-gray-600 dark:bg-navy-700 dark:text-gray-300"
+ : "bg-carbon-2 text-ink-dim bg-carbon-2 text-ink-dim"
  }`}
  >
  {option.icon}
@@ -242,7 +242,7 @@ export default function PlayerDealWorkspace({
  <span className="font-heading text-sm font-bold uppercase tracking-wider">
  {option.title}
  </span>
- <span className="mt-1 block text-xs text-gray-500 dark:text-gray-300">
+ <span className="mt-1 block text-xs text-ink-dim">
  {option.disabledReason ?? option.detail}
  </span>
  </span>
@@ -252,16 +252,16 @@ export default function PlayerDealWorkspace({
  })}
  </nav>
 
- <section className="min-h-0 overflow-y-auto rounded bg-white p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <section className="min-h-0 overflow-y-auto rounded bg-white p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  {selectedOption.disabledReason ? (
- <div className="flex min-h-[280px] flex-col justify-center rounded bg-gray-50 p-6 text-center dark:bg-navy-900/50">
- <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded bg-gray-200 text-gray-500 dark:bg-navy-700 dark:text-gray-300">
+ <div className="flex min-h-[280px] flex-col justify-center rounded bg-carbon-2 p-6 text-center bg-carbon-0/50">
+ <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded bg-carbon-3 text-ink-faint bg-carbon-2 text-ink-dim">
  {selectedOption.icon}
  </div>
- <p className="font-heading text-lg font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <p className="font-heading text-lg font-bold uppercase tracking-wide text-ink">
  {selectedOption.title}
  </p>
- <p className="mx-auto mt-2 max-w-md text-sm text-gray-600 dark:text-gray-300">
+ <p className="mx-auto mt-2 max-w-md text-sm text-ink-dim">
  {selectedOption.description}
  </p>
  <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-danger-600 dark:text-danger-300">
@@ -274,7 +274,7 @@ export default function PlayerDealWorkspace({
  </section>
 
  <aside className="min-h-0 space-y-4 lg:overflow-y-auto">
- <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>{t("common.ovr")}</p>
  <p
  className={`mt-1 font-heading text-2xl font-bold ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
@@ -282,7 +282,7 @@ export default function PlayerDealWorkspace({
  >
  {shortOvrLabel(ovr, player.natural_position || player.position)}
  </p>
- <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 italic">
+ <p className="mt-1 text-xs text-ink-dim italic">
  {interpretOvr(ovr, player.natural_position || player.position).description}
  </p>
  <div className="mt-4 grid grid-cols-2 gap-3">
@@ -302,7 +302,7 @@ export default function PlayerDealWorkspace({
  </div>
 
  {myTeam ? (
- <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-navy-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>
  {t("finances.transferBudget")}
  </p>

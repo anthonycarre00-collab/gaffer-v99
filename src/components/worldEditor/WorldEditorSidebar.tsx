@@ -87,7 +87,7 @@ export function WorldEditorSidebar({
  `flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors text-left ${
  active
  ? "bg-primary-100 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 font-semibold"
- : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700 hover:text-gray-900 dark:hover:text-white"
+ : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink"
  }`;
 
  return (
@@ -95,7 +95,7 @@ export function WorldEditorSidebar({
  <div className="flex-1 overflow-y-auto scrollbar-thin px-2">
  {groups.map((group) => (
  <div key={group.groupKey} className="mb-4">
- <p className="px-3 mb-1 text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500">
+ <p className="px-3 mb-1 text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-ink-faint">
  {group.label}
  </p>
  {group.items.map((item) => (
@@ -111,7 +111,7 @@ export function WorldEditorSidebar({
  className={`text-xs rounded-full px-1.5 py-0.5 min-w-[20px] text-center leading-none ${
  selectedSection === item.key && !showingIssues
  ? "bg-primary-200 dark:bg-primary-500/30 text-primary-700 dark:text-primary-300"
- : "bg-gray-200 dark:bg-navy-600 text-gray-500 dark:text-gray-400"
+ : "bg-carbon-3 text-ink-dim"
  }`}
  >
  {item.count}
@@ -124,7 +124,7 @@ export function WorldEditorSidebar({
  </div>
 
  {/* Issues badge at bottom */}
- <div className="flex-shrink-0 px-2 pt-2 border-t border-gray-200 dark:border-navy-700">
+ <div className="flex-shrink-0 px-2 pt-2 border-t border-slate-line">
  <button
  onClick={onShowIssues}
  className={`flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors ${
@@ -132,7 +132,7 @@ export function WorldEditorSidebar({
  ? "bg-danger-50 dark:bg-danger-500/10 text-danger-600 dark:text-danger-400"
  : issueCount > 0
  ? "text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-500/10"
- : "text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-navy-700"
+ : "text-ink-faint hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  <AlertCircle className="w-4 h-4 flex-shrink-0" />

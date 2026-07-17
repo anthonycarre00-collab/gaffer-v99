@@ -35,11 +35,11 @@ function formatPercentage(value: number | null): string {
 
 function SummaryStat({ label, value }: { label: string; value: string }) {
  return (
- <div className="rounded bg-gray-50 dark:bg-navy-700 px-3 py-2.5 text-center">
- <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 px-3 py-2.5 text-center">
+ <p className="text-[11px] uppercase tracking-wider text-ink-faint">
  {label}
  </p>
- <p className="font-heading font-bold text-lg text-gray-800 dark:text-gray-100 tabular-nums">
+ <p className="font-heading font-bold text-lg text-ink tabular-nums">
  {value}
  </p>
  </div>
@@ -58,21 +58,21 @@ function MetricRow({
  secondaryValue: string;
 }) {
  return (
- <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)] gap-3 items-center rounded bg-gray-50 dark:bg-navy-700 px-3 py-2.5">
+ <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)] gap-3 items-center rounded bg-carbon-2 px-3 py-2.5">
  <div>
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink-dim">
  {label}
  </p>
- <p className="font-heading font-bold text-lg text-gray-800 dark:text-gray-100 tabular-nums">
+ <p className="font-heading font-bold text-lg text-ink tabular-nums">
  {primaryValue}
  </p>
  </div>
 
  <div className="text-center">
- <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="text-[11px] uppercase tracking-wider text-ink-faint">
  {secondaryLabel}
  </p>
- <p className="font-heading font-bold text-base text-gray-700 dark:text-gray-200 tabular-nums">
+ <p className="font-heading font-bold text-base text-ink tabular-nums">
  {secondaryValue}
  </p>
  </div>
@@ -125,12 +125,12 @@ export default function TeamProfileAdvancedStatsCard({
  <Card className="lg:col-span-3">
  <CardHeader
  action={
- <div className="flex rounded overflow-hidden border border-gray-200 dark:border-navy-600 text-[10px] font-heading font-bold uppercase tracking-wider">
+ <div className="flex rounded overflow-hidden border border-slate-line text-[10px] font-heading font-bold uppercase tracking-wider">
  <button
  type="button"
  aria-pressed={view === "stats"}
  onClick={() => setView("stats")}
- className={`px-3 py-1 transition-colors ${view === "stats" ? "bg-primary-500 text-white" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700"}`}
+ className={`px-3 py-1 transition-colors ${view === "stats" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {t("common.statsView")}
  </button>
@@ -138,7 +138,7 @@ export default function TeamProfileAdvancedStatsCard({
  type="button"
  aria-pressed={view === "radar"}
  onClick={() => setView("radar")}
- className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700"}`}
+ className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {t("teamProfile.teamStyle")}
  </button>

@@ -41,7 +41,7 @@ function ResultBadge({ result }: { result: RecapMatch["userResult"] }): JSX.Elem
  if (!result) return null;
  const styles = {
  win: "bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300",
- draw: "bg-gray-100 text-gray-600 dark:bg-navy-700 dark:text-gray-400",
+ draw: "bg-carbon-2 text-ink-dim bg-carbon-2 text-ink-faint",
  loss: "bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-300",
  } as const;
  const labels = {
@@ -66,10 +66,10 @@ function MatchCard({ match, idx }: { match: RecapMatch; idx: number }): JSX.Elem
  <Swords className="h-3.5 w-3.5" />
  </div>
  <div className="min-w-0 flex-1">
- <p className="text-xs font-medium text-gray-800 dark:text-gray-200 truncate">
+ <p className="text-xs font-medium text-ink text-ink truncate">
  {match.home_team} {match.home_goals}–{match.away_goals} {match.away_team}
  </p>
- <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{match.competition}</p>
+ <p className="text-[11px] text-ink-dim truncate">{match.competition}</p>
  </div>
  {match.involves_user && <ResultBadge result={match.userResult} />}
  </div>
@@ -94,10 +94,10 @@ function TransferCard({ player, from, to, fee, involvesUser, idx }: {
  <ArrowRightLeft className="h-3.5 w-3.5" />
  </div>
  <div className="min-w-0 flex-1">
- <p className={`text-xs truncate ${involvesUser ? "font-bold text-primary-600 dark:text-primary-400" : "font-medium text-gray-800 dark:text-gray-200"}`}>
+ <p className={`text-xs truncate ${involvesUser ? "font-bold text-primary-600 dark:text-primary-400" : "font-medium text-ink text-ink"}`}>
  {player}
  </p>
- <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{from} → {to}</p>
+ <p className="text-[11px] text-ink-dim truncate">{from} → {to}</p>
  </div>
  {feeLabel && (
  <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
@@ -111,13 +111,13 @@ function TransferCard({ player, from, to, fee, involvesUser, idx }: {
 function NewsCard({ text, idx }: { text: string; idx: number }): JSX.Element {
  return (
  <div
- className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-gray-50 dark:bg-navy-700/50"
+ className="digest-event-item flex items-center gap-2.5 rounded px-3 py-2 bg-carbon-2/50"
  style={{ animationDelay: `${Math.min(idx, 5) * 80}ms` }}
  >
- <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-500 dark:bg-navy-600 dark:text-gray-400">
+ <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-carbon-3 text-ink-faint bg-carbon-3 text-ink-faint">
  <Newspaper className="h-3.5 w-3.5" />
  </div>
- <p className="min-w-0 flex-1 text-xs text-gray-700 dark:text-gray-300 line-clamp-2">{text}</p>
+ <p className="min-w-0 flex-1 text-xs text-ink-dim line-clamp-2">{text}</p>
  </div>
  );
 }
@@ -160,14 +160,14 @@ function DigestDayRow({ entry }: { entry: DigestEntry }): JSX.Element {
  const inboxOffset = newsOffset + recap.news.length;
 
  return (
- <div className="border-b border-gray-100 pb-3 last:border-0 dark:border-navy-700">
- <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+ <div className="border-b border-slate-line-soft pb-3 last:border-0 border-slate-line">
+ <div className="flex items-center gap-1.5 text-xs font-semibold text-ink-dim mb-2">
  <Calendar className="h-3 w-3" />
  {formattedDate}
  </div>
 
  {!hasContent && (
- <p className="text-xs text-gray-400 dark:text-gray-500 italic px-1">
+ <p className="text-xs text-ink-faint italic px-1">
  {t("dashboard.digestQuietDay")}
  </p>
  )}
@@ -242,10 +242,10 @@ export default function DashboardSimulatingModal({
  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
  <Loader2 className="h-7 w-7 animate-spin" />
  </div>
- <h3 className="mt-4 text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="mt-4 text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("dashboard.simulating")}
  </h3>
- <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+ <p className="mt-2 text-sm text-ink-dim">
  {t("dashboard.simulatingMessage")}
  </p>
  </div>
@@ -258,7 +258,7 @@ export default function DashboardSimulatingModal({
  <DashboardModalFrame maxWidthClassName="max-w-2xl">
  <div className="flex flex-col" style={{ maxHeight: "80vh" }}>
  {/* Header */}
- <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-navy-700 shrink-0">
+ <div className="flex items-center gap-3 pb-4 border-b border-slate-line shrink-0">
  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
  {isRunning ? (
  <Loader2 className="h-5 w-5 animate-spin" />
@@ -266,7 +266,7 @@ export default function DashboardSimulatingModal({
  <CheckCircle2 className="h-5 w-5" />
  )}
  </div>
- <h3 className="flex-1 text-base font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="flex-1 text-base font-heading font-bold uppercase tracking-wide text-ink">
  {isRunning
  ? t("dashboard.digestAdvancing")
  : t("dashboard.digestDone")}
@@ -276,7 +276,7 @@ export default function DashboardSimulatingModal({
  type="button"
  onClick={onStop}
  disabled={isDigestAborting}
- className="flex items-center gap-1.5 rounded border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="flex items-center gap-1.5 rounded border border-slate-line px-3 py-1.5 text-xs font-medium text-ink hover:bg-carbon-2 disabled:opacity-60 disabled:cursor-not-allowed border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {isDigestAborting ? (
  <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -294,17 +294,17 @@ export default function DashboardSimulatingModal({
  <div className="space-y-3">
  {/* V99.1: Instead of showing "Nothing to show", display useful
      content — upcoming fixtures, recent results, latest news. */}
- <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center py-2">
+ <p className="text-xs text-ink-faint italic text-center py-2">
  {t("dashboard.simulating")}
  </p>
  {/* Show upcoming fixtures if available */}
  {upcomingFixtures.length > 0 && (
  <div>
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-1">
  {t("dashboard.comingUp")}
  </p>
  {upcomingFixtures.slice(0, 3).map((f, i) => (
- <div key={i} className="text-xs text-gray-600 dark:text-gray-400 py-0.5">
+ <div key={i} className="text-xs text-ink-dim py-0.5">
  {f.home_team} v {f.away_team} — {f.date}
  </div>
  ))}
@@ -313,18 +313,18 @@ export default function DashboardSimulatingModal({
  {/* Show recent results if available */}
  {recentResults.length > 0 && (
  <div>
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1 mt-2">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-1 mt-2">
  {t("dashboard.recentResults")}
  </p>
  {recentResults.slice(0, 3).map((r, i) => (
- <div key={i} className="text-xs text-gray-600 dark:text-gray-400 py-0.5">
+ <div key={i} className="text-xs text-ink-dim py-0.5">
  {r.home_team} {r.home_goals}-{r.away_goals} {r.away_team}
  </div>
  ))}
  </div>
  )}
  {upcomingFixtures.length === 0 && recentResults.length === 0 && (
- <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center py-4">
+ <p className="text-xs text-ink-faint italic text-center py-4">
  {t("dashboard.digestEmpty")}
  </p>
  )}
@@ -336,7 +336,7 @@ export default function DashboardSimulatingModal({
  ))}
 
  {isRunning && (
- <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 py-1">
+ <div className="flex items-center gap-2 text-xs text-ink-faint py-1">
  <Loader2 className="h-3 w-3 animate-spin" />
  {t("dashboard.digestSimulating")}
  </div>
@@ -347,11 +347,11 @@ export default function DashboardSimulatingModal({
 
  {/* Close button when digest finished with no specific stop reason (natural end or user-aborted) */}
  {!isRunning && !stopReason && digestEntries && digestEntries.length > 0 && (
- <div className="border-t border-gray-200 dark:border-navy-700 pt-4 shrink-0">
+ <div className="border-t border-slate-line pt-4 shrink-0">
  <button
  type="button"
  onClick={onDismiss}
- className="w-full rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="w-full rounded border border-slate-line px-4 py-2 text-sm font-medium text-ink hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("common.close")}
  </button>
@@ -360,7 +360,7 @@ export default function DashboardSimulatingModal({
 
  {/* Action buttons pinned at the bottom */}
  {stopReason && (
- <div className="border-t border-gray-200 dark:border-navy-700 pt-4 shrink-0">
+ <div className="border-t border-slate-line pt-4 shrink-0">
  {stopReason.kind === "match_day" && (
  <div className="bg-primary-50 rounded px-4 py-3 dark:bg-primary-900/20">
  <div className="flex items-center gap-2 mb-2">
@@ -423,7 +423,7 @@ export default function DashboardSimulatingModal({
  <button
  type="button"
  onClick={onDismiss}
- className="rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="rounded border border-slate-line px-3 py-2 text-xs font-medium text-ink hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("dashboard.digestClose")}
  </button>
@@ -439,7 +439,7 @@ export default function DashboardSimulatingModal({
  <button
  type="button"
  onClick={onDismiss}
- className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="w-full rounded border border-slate-line px-3 py-2 text-xs font-medium text-ink hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("dashboard.digestClose")}
  </button>
@@ -447,14 +447,14 @@ export default function DashboardSimulatingModal({
  )}
 
  {stopReason.kind === "stopped" && (
- <div className="bg-gray-50 rounded px-4 py-3 dark:bg-navy-700/60">
- <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+ <div className="bg-carbon-2 rounded px-4 py-3 bg-carbon-2/60">
+ <p className="text-sm font-semibold text-ink-dim mb-3">
  {t("dashboard.digestStopped")}
  </p>
  <button
  type="button"
  onClick={onDismiss}
- className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="w-full rounded border border-slate-line px-3 py-2 text-xs font-medium text-ink hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("dashboard.digestClose")}
  </button>
@@ -462,14 +462,14 @@ export default function DashboardSimulatingModal({
  )}
 
  {stopReason.kind === "error" && (
- <div className="bg-gray-50 rounded px-4 py-3 dark:bg-navy-700/60">
- <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+ <div className="bg-carbon-2 rounded px-4 py-3 bg-carbon-2/60">
+ <p className="text-sm font-semibold text-ink-dim mb-3">
  {t("dashboard.digestError")}
  </p>
  <button
  type="button"
  onClick={onDismiss}
- className="w-full rounded border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-navy-600 dark:text-gray-300 dark:hover:bg-navy-700"
+ className="w-full rounded border border-slate-line px-3 py-2 text-xs font-medium text-ink hover:bg-carbon-2 border-slate-line text-ink-dim hover:bg-carbon-3"
  >
  {t("dashboard.digestClose")}
  </button>

@@ -7,8 +7,8 @@ const REP_TIERS = [
  { min: 850, label: "Elite", color: "text-accent-500" },
  { min: 720, label: "Top", color: "text-primary-500" },
  { min: 550, label: "Mid", color: "text-success-500" },
- { min: 300, label: "Lower", color: "text-gray-500" },
- { min: 0, label: "Amateur", color: "text-gray-400" },
+ { min: 300, label: "Lower", color: "text-ink-faint" },
+ { min: 0, label: "Amateur", color: "text-ink-faint" },
 ];
 
 function repTier(rep: number) {
@@ -37,7 +37,7 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
  }
 
  return (
- <div className="rounded border border-gray-200 dark:border-navy-600 overflow-hidden bg-white dark:bg-navy-700 shadow-sm select-none">
+ <div className="rounded border border-slate-line overflow-hidden bg-white bg-carbon-2 shadow-sm select-none">
  {/* Colour banner */}
  <div
  className="h-20 flex items-center justify-center"
@@ -62,11 +62,11 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
  <div className="p-3 flex flex-col gap-2.5">
  {/* Name */}
  <div>
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-gray-900 dark:text-white leading-tight">
- {team.name || <span className="text-gray-400 italic">New Team</span>}
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink leading-tight">
+ {team.name || <span className="text-ink-faint italic">New Team</span>}
  </p>
  {team.shortName && (
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-0.5">
+ <p className="text-[10px] text-ink-faint font-mono mt-0.5">
  {team.shortName}
  </p>
  )}
@@ -83,20 +83,20 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
  <div className="flex flex-col gap-1">
  <div className="flex items-center gap-1">
  <div
- className="w-4 h-4 rounded border border-gray-200 dark:border-navy-600 flex-shrink-0"
+ className="w-4 h-4 rounded border border-slate-line flex-shrink-0"
  style={{ background: primaryColor }}
  title={t("worldEditor.teamPrimaryColor")}
  />
  <div
- className="w-4 h-4 rounded border border-gray-200 dark:border-navy-600 flex-shrink-0"
+ className="w-4 h-4 rounded border border-slate-line flex-shrink-0"
  style={{ background: secondaryColor }}
  title={t("worldEditor.teamSecondaryColor")}
  />
  </div>
- <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">
+ <span className="text-[10px] text-ink-faint font-mono">
  {primaryColor}
  </span>
- <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">
+ <span className="text-[10px] text-ink-faint font-mono">
  {secondaryColor}
  </span>
  </div>
@@ -104,14 +104,14 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
 
  {/* Location */}
  {(team.city || team.country) && (
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {[team.city, team.country].filter(Boolean).join(", ")}
  </p>
  )}
 
  {/* Play style */}
  {team.playStyle && (
- <p className="text-[11px] font-heading font-bold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+ <p className="text-[11px] font-heading font-bold uppercase tracking-wide text-ink-faint">
  {t(`common.playStyles.${team.playStyle}`, { defaultValue: team.playStyle })}
  </p>
  )}
@@ -120,16 +120,16 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
  {team.reputationRange && (
  <div className="flex flex-col gap-1">
  <div className="flex items-center justify-between text-[11px]">
- <span className="text-gray-400 uppercase tracking-wide">
+ <span className="text-ink-faint uppercase tracking-wide">
  {t("worldEditor.teamRepMin").replace(" Reputation", "").replace(" Rep", "")} Rep
  </span>
  {tier && (
  <span className={`font-bold uppercase ${tier.color}`}>{tier.label}</span>
  )}
  </div>
- <div className="flex items-center gap-1 text-[11px] text-gray-500">
+ <div className="flex items-center gap-1 text-[11px] text-ink-faint">
  <span>{team.reputationRange[0]}</span>
- <div className="flex-1 h-1.5 bg-gray-100 dark:bg-navy-600 rounded-full overflow-hidden mx-1">
+ <div className="flex-1 h-1.5 bg-carbon-2 bg-carbon-3 rounded-full overflow-hidden mx-1">
  <div
  className="h-full bg-primary-500 rounded-full"
  style={{ width: `${(team.reputationRange[1] / 950) * 100}%` }}
@@ -142,9 +142,9 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
 
  {/* Budget */}
  {team.financeRange && (
- <div className="text-[11px] text-gray-400">
+ <div className="text-[11px] text-ink-faint">
  <span className="uppercase tracking-wide">{t("worldEditor.teamBudget")} </span>
- <span className="text-gray-600 dark:text-gray-300 font-mono">
+ <span className="text-ink-dim font-mono">
  {formatBudget(team.financeRange[0])}–{formatBudget(team.financeRange[1])}
  </span>
  </div>

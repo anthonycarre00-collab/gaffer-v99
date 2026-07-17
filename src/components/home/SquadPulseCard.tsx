@@ -22,7 +22,7 @@ export function SquadPulseCard() {
  <Card accent="primary">
  <CardHeader>{t("meaning.squadPulse.title")}</CardHeader>
  <CardBody>
- <div className="text-sm text-gray-500 dark:text-gray-400">
+ <div className="text-sm text-ink-dim">
  {t("meaning.loading")}
  </div>
  </CardBody>
@@ -64,7 +64,7 @@ export function SquadPulseCard() {
  {tensionFlag && (
  <Badge variant="danger">{t("meaning.squadPulse.tensionFlag")}</Badge>
  )}
- <span className="text-sm font-bold font-heading text-gray-900 dark:text-white">
+ <span className="text-sm font-bold font-heading text-ink">
  {harmonyScore >= 75 ? "Buzzing" : harmonyScore >= 55 ? "Steady" : harmonyScore >= 35 ? "Restless" : "Toxic"}
  </span>
  </div>
@@ -76,14 +76,14 @@ export function SquadPulseCard() {
  {/* Harmony score bar */}
  <div className="mb-4">
  <div className="flex justify-between items-baseline mb-1">
- <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+ <span className="text-xs uppercase tracking-wide text-ink-dim">
  {t("meaning.squadPulse.harmonyScore")}
  </span>
- <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
+ <span className="text-xs font-mono text-ink-dim">
  {t(`meaning.squadPulse.pressureLevel`)}: {pressureLevel}
  </span>
  </div>
- <div className="w-full h-4 bg-gray-200 dark:bg-navy-600 rounded-sm overflow-hidden">
+ <div className="w-full h-4 bg-carbon-3 rounded-sm overflow-hidden">
  <div
  className="h-full pulse-bar transition-all duration-500"
  style={{ width: `${harmonyScore}%`, backgroundColor: harmonyColor }}
@@ -94,34 +94,34 @@ export function SquadPulseCard() {
  {/* Secondary metrics grid */}
  <div className="grid grid-cols-2 gap-3 text-sm mb-4">
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.squadPulse.tacticalCoherence")}
  </div>
- <div className="font-heading font-semibold text-gray-900 dark:text-white">
+ <div className="font-heading font-semibold text-ink">
  {tacticalCoherence >= 70 ? "In Sync" : tacticalCoherence >= 40 ? "Gelling" : "All Over the Shop"}
  </div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.squadPulse.mediaHeat")}
  </div>
- <div className="font-heading font-semibold text-gray-900 dark:text-white">
+ <div className="font-heading font-semibold text-ink">
  {mediaHeat >= 70 ? "Front Page News" : mediaHeat >= 30 ? "Under the Radar" : "Quiet"}
  </div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.squadPulse.fatigueRisk")}
  </div>
- <div className="font-semibold text-gray-900 dark:text-white">
+ <div className="font-semibold text-ink">
  {fatigueBand}
  </div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.squadPulse.identityAlignment")}
  </div>
- <div className="font-semibold text-gray-900 dark:text-white">
+ <div className="font-semibold text-ink">
  {snapshot.identity_alignment_label}
  </div>
  </div>
@@ -130,7 +130,7 @@ export function SquadPulseCard() {
  {/* Story threads */}
  {storyThreads.length > 0 && (
  <div className="mb-3">
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-1">
+ <div className="text-xs uppercase text-ink-dim mb-1">
  {t("meaning.squadPulse.storyThreads")}
  </div>
  <div className="flex flex-wrap gap-2">
@@ -144,7 +144,7 @@ export function SquadPulseCard() {
  )}
 
  {/* Expandable breakdown */}
- <div className="border-t border-gray-200 dark:border-navy-600 pt-3">
+ <div className="border-t border-slate-line pt-3">
  <button
  onClick={() => setShowBreakdown(!showBreakdown)}
  className="text-xs text-primary-600 hover:underline dark:text-primary-400"
@@ -154,10 +154,10 @@ export function SquadPulseCard() {
  : t("meaning.showBreakdown")}
  </button>
  {showBreakdown && (
- <div className="mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-300">
+ <div className="mt-3 space-y-1 text-xs text-ink-dim">
  {snapshot.harmony_explanation.entries.map((entry, i) => (
  <div key={i} className="flex gap-2">
- <span className="text-gray-400">•</span>
+ <span className="text-ink-faint">•</span>
  <span>{entry.reason}</span>
  </div>
  ))}

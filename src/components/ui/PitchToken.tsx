@@ -110,7 +110,7 @@ export function PitchToken({
  </div>
  )}
  <div className="absolute -right-1.5 -top-1.5 z-10">
- <span className={`rounded-full ${position ? getPositionColor(position) : "bg-gray-900"} px-2 py-0.5 text-xs font-heading font-bold uppercase leading-4 text-white ring-1 ring-white/40`}>
+ <span className={`rounded-full ${position ? getPositionColor(position) : "bg-carbon-0"} px-2 py-0.5 text-xs font-heading font-bold uppercase leading-4 text-white ring-1 ring-white/40`}>
  {positionAbbr}
  </span>
  </div>
@@ -120,7 +120,7 @@ export function PitchToken({
  />
  <div className="absolute -bottom-1 -right-1.5 z-10">
  <span
- className={`rounded-full bg-gray-900 px-2 py-0.5 text-[10px] font-heading font-bold leading-4 text-white ring-1 ring-white/30 max-w-[4.5rem] truncate`}
+ className={`rounded-full bg-carbon-0 px-2 py-0.5 text-[10px] font-heading font-bold leading-4 text-white ring-1 ring-white/30 max-w-[4.5rem] truncate`}
  title={interpretOvr(ovr, position).description}
  >
  {shortOvrLabel(ovr, position)}

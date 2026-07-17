@@ -198,17 +198,17 @@ export default function RoundDigestScreen({
  const headingParts = [matchdayLabel, leagueName].filter(Boolean).join(" — ");
 
  return (
- <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
+ <div className="min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
  {/* Header */}
- <header className="bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 px-6 py-4 transition-colors duration-300">
+ <header className="bg-white bg-carbon-1 border-b border-slate-line px-6 py-4 transition-colors duration-300">
  <div className="flex items-center justify-between">
  <div>
  {headingParts && (
- <p className="text-xs font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-0.5">
+ <p className="text-xs font-heading uppercase tracking-widest text-ink-dim mb-0.5">
  {headingParts}
  </p>
  )}
- <h1 className="text-lg font-heading font-bold text-gray-900 dark:text-white">
+ <h1 className="text-lg font-heading font-bold text-ink">
  {isLeagueFixture
  ? t("match.roundSummary")
  : t("match.otherMatches")}
@@ -218,7 +218,7 @@ export default function RoundDigestScreen({
  <button
  type="button"
  onClick={onFinish}
- className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-navy-700 dark:hover:bg-navy-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-gray-700 dark:text-gray-300 transition-colors"
+ className="px-4 py-2 bg-carbon-2 hover:bg-carbon-3 hover:bg-carbon-3 rounded font-heading font-bold uppercase tracking-wider text-sm text-ink-dim transition-colors"
  >
  {t("match.skip")}
  </button>
@@ -244,11 +244,11 @@ export default function RoundDigestScreen({
  ? "bg-linear-to-r from-primary-50 to-white dark:from-primary-900/30 dark: border-primary-200 dark:border-primary-700/50"
  : resultType === "loss"
  ? "bg-linear-to-r from-red-50 to-white dark:from-red-900/20 dark: border-danger-200 dark:border-danger-700/50"
- : "bg-white dark:bg-navy-800 border-gray-200 dark:border-navy-700"
+ : "bg-white bg-carbon-1 border-slate-line"
  }`}
  >
  <div className="flex items-center justify-between mb-4">
- <p className="text-xs font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading uppercase tracking-widest text-ink-dim">
  {t("match.yourResult")}
  </p>
  <div className="flex items-center gap-1.5">
@@ -269,9 +269,9 @@ export default function RoundDigestScreen({
  </div>
  )}
  {resultType === "draw" && (
- <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-200 dark:bg-gray-700/50 rounded-full">
- <Minus className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
- <span className="font-heading font-bold text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-carbon-3 dark:bg-carbon-3/50 rounded-full">
+ <Minus className="w-3.5 h-3.5 text-ink-dim" />
+ <span className="font-heading font-bold text-xs uppercase tracking-widest text-ink-dim">
  {t("match.draw")}
  </span>
  </div>
@@ -293,21 +293,21 @@ export default function RoundDigestScreen({
  borderWidth: 2,
  }}
  />
- <p className="font-heading font-bold text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-ink text-ink">
  {snapshot.home_team.name}
  </p>
  </div>
  <div className="flex items-center gap-4">
- <span className="text-5xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-5xl font-heading font-bold text-ink tabular-nums">
  {snapshot.home_score}
  </span>
- <span className="text-2xl font-heading text-gray-400">–</span>
- <span className="text-5xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-2xl font-heading text-ink-faint">–</span>
+ <span className="text-5xl font-heading font-bold text-ink tabular-nums">
  {snapshot.away_score}
  </span>
  </div>
  <div className="flex items-center gap-3">
- <p className="font-heading font-bold text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-ink text-ink">
  {snapshot.away_team.name}
  </p>
  <TeamLogo
@@ -333,7 +333,7 @@ export default function RoundDigestScreen({
  ) : positionChange < 0 ? (
  <ArrowDown className="w-4 h-4 text-danger-400" />
  ) : null}
- <p className="text-sm font-heading font-bold text-gray-600 dark:text-gray-400">
+ <p className="text-sm font-heading font-bold text-ink-dim">
  #{userStanding.current_position} ·{" "}
  <span className="text-accent-400">
  {userStanding.points} {t("match.pts")}
@@ -347,7 +347,7 @@ export default function RoundDigestScreen({
  <div className="grid grid-cols-3 gap-6">
  {/* Other Results — 2 cols for league (leaves room for table), full width for friendly */}
  <div className={`flex flex-col gap-3 ${isLeagueFixture ? "col-span-2" : "col-span-3"}`}>
- <h2 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h2 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {isLeagueFixture
  ? t("match.otherMatchesToday")
  : t("match.otherMatches")}
@@ -362,10 +362,10 @@ export default function RoundDigestScreen({
  return (
  <div
  key={entry.fixture.id}
- className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm px-4 py-3 transition-colors duration-300"
+ className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm px-4 py-3 transition-colors duration-300"
  >
  <div className="flex items-center justify-between gap-2 mb-1">
- <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-200 truncate">
+ <span className="font-heading font-bold text-sm text-ink text-ink truncate">
  {entry.homeTeamName}{" "}
  {entry.fixture.result?.home_goals} –{" "}
  {entry.fixture.result?.away_goals}{" "}
@@ -384,12 +384,12 @@ export default function RoundDigestScreen({
  )}
  </div>
  {scorerSummary && (
- <p className="text-[11px] text-gray-500 dark:text-gray-400">
+ <p className="text-[11px] text-ink-dim">
  {scorerSummary}
  </p>
  )}
  {statSummary && (
- <p className="mt-0.5 text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="mt-0.5 text-[10px] uppercase tracking-wider text-ink-faint">
  {statSummary}
  </p>
  )}
@@ -398,7 +398,7 @@ export default function RoundDigestScreen({
  })}
  </div>
  ) : (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {isLeagueFixture
  ? t("match.roundSummaryUnavailable")
  : t("match.otherMatchesUnavailable")}
@@ -410,8 +410,8 @@ export default function RoundDigestScreen({
  {isLeagueFixture && roundSummary && (
  <div className="flex flex-col gap-4">
  {/* Standings */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
- <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("tournaments.leagueTable")}
  </h3>
  <div className="flex flex-col gap-1.5">
@@ -428,7 +428,7 @@ export default function RoundDigestScreen({
  : ""
  }`}
  >
- <span className="w-4 text-right tabular-nums text-gray-500 dark:text-gray-400 font-heading">
+ <span className="w-4 text-right tabular-nums text-ink-dim font-heading">
  {entry.current_position}
  </span>
  {change > 0 ? (
@@ -439,11 +439,11 @@ export default function RoundDigestScreen({
  <span className="w-3 shrink-0" />
  )}
  <span
- className={`truncate flex-1 ${isUserTeam ? "text-primary-600 dark:text-primary-400" : "text-gray-700 dark:text-gray-300"}`}
+ className={`truncate flex-1 ${isUserTeam ? "text-primary-600 dark:text-primary-400" : "text-ink-dim"}`}
  >
  {entry.team_name}
  </span>
- <span className="font-mono font-mono font-bold tabular-nums text-gray-500 dark:text-gray-400">
+ <span className="font-mono font-mono font-bold tabular-nums text-ink-dim">
  {entry.points}
  </span>
  </div>
@@ -454,8 +454,8 @@ export default function RoundDigestScreen({
 
  {/* Top Scorers */}
  {roundSummary.top_scorer_delta.length > 0 && (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
- <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("tournaments.topScorers")}
  </h3>
  <div className="flex flex-col gap-1.5">
@@ -466,11 +466,11 @@ export default function RoundDigestScreen({
  key={entry.player_id}
  className="flex items-center gap-2 text-xs"
  >
- <span className="w-4 text-right tabular-nums text-gray-500 dark:text-gray-400 font-heading">
+ <span className="w-4 text-right tabular-nums text-ink-dim font-heading">
  {entry.current_rank}.
  </span>
  <span
- className={`truncate flex-1 ${isUserTeamScorer ? "font-bold text-primary-600 dark:text-primary-400" : "text-gray-700 dark:text-gray-300"}`}
+ className={`truncate flex-1 ${isUserTeamScorer ? "font-bold text-primary-600 dark:text-primary-400" : "text-ink-dim"}`}
  >
  {entry.player_name}
  </span>
@@ -489,7 +489,7 @@ export default function RoundDigestScreen({
 
  {/* Notable Upset */}
  {isLeagueFixture && roundSummary?.notable_upset && (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
  <div className="w-8 h-8 rounded bg-danger-100 dark:bg-danger-500/20 flex items-center justify-center shrink-0">
  <Flame className="w-4 h-4 text-danger-500 dark:text-danger-400" />
  </div>
@@ -497,7 +497,7 @@ export default function RoundDigestScreen({
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-danger-500 dark:text-danger-400 mb-0.5">
  {t("match.notableUpset")}
  </p>
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200">
+ <p className="text-sm font-heading font-bold text-ink text-ink">
  {roundSummary.notable_upset.underdog_team_name}{" "}
  {roundSummary.notable_upset.home_goals} –{" "}
  {roundSummary.notable_upset.away_goals}{" "}
@@ -519,15 +519,15 @@ export default function RoundDigestScreen({
  onClick={() => setSelectedOtherFixtureId(null)}
  >
  <div
- className="w-full max-w-3xl rounded border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-900 shadow-2xl transition-colors duration-300"
+ className="w-full max-w-3xl rounded border border-slate-line bg-white bg-carbon-0 shadow-2xl transition-colors duration-300"
  onClick={(e) => e.stopPropagation()}
  >
- <div className="flex items-center justify-between border-b border-gray-200 dark:border-navy-700 px-5 py-4">
+ <div className="flex items-center justify-between border-b border-slate-line px-5 py-4">
  <div>
- <p className="text-xs font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading uppercase tracking-widest text-ink-dim">
  {t("match.matchDetails")}
  </p>
- <p className="text-lg font-heading font-bold text-gray-900 dark:text-white">
+ <p className="text-lg font-heading font-bold text-ink">
  {getTeamNameById(selectedOtherFixture.home_team_id)}{" "}
  {selectedOtherFixture.result?.home_goals} –{" "}
  {selectedOtherFixture.result?.away_goals}{" "}
@@ -538,15 +538,15 @@ export default function RoundDigestScreen({
  ref={modalCloseRef}
  type="button"
  onClick={() => setSelectedOtherFixtureId(null)}
- className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-navy-800 dark:hover:text-white transition-colors"
+ className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-ink-faint hover:bg-carbon-2 hover:text-ink text-ink-faint dark:hover:bg-navy-800 hover:text-ink transition-colors"
  >
  {t("common.close")}
  </button>
  </div>
 
  <div className="grid gap-5 p-5 md:grid-cols-[1.15fr_0.85fr]">
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
- <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 transition-colors duration-300">
+ <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.matchEvents")}
  </h4>
  {selectedOtherFixtureReport.events.length > 0 ? (
@@ -569,7 +569,7 @@ export default function RoundDigestScreen({
  key={`${event.minute}-${event.event_type}-${index}`}
  className="flex items-center gap-2 text-xs"
  >
- <span className="w-8 text-right font-mono tabular-nums text-gray-500 dark:text-gray-400">
+ <span className="w-8 text-right font-mono tabular-nums text-ink-dim">
  {event.minute}'
  </span>
  <span>{display.icon}</span>
@@ -589,15 +589,15 @@ export default function RoundDigestScreen({
  })}
  </div>
  ) : (
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("match.quietMatch")}
  </p>
  )}
  </div>
 
  <div className="flex flex-col gap-4">
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
- <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 transition-colors duration-300">
+ <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.quickStats")}
  </h4>
  <QuickStat
@@ -632,16 +632,16 @@ export default function RoundDigestScreen({
  away={selectedOtherFixtureReport.away_stats.yellow_cards}
  />
  </div>
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-800 p-4 transition-colors duration-300">
- <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 transition-colors duration-300">
+ <h4 className="mb-3 text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.scorers")}
  </h4>
  {formatOtherMatchScorers(selectedOtherFixture) ? (
- <p className="text-xs text-gray-700 dark:text-gray-300">
+ <p className="text-xs text-ink-dim">
  {formatOtherMatchScorers(selectedOtherFixture)}
  </p>
  ) : (
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("match.noGoals")}
  </p>
  )}

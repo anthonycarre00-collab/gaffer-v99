@@ -18,7 +18,7 @@ export function MediaPulseCard() {
  <Card accent="accent">
  <CardHeader>{t("meaning.media.title")}</CardHeader>
  <CardBody>
- <div className="text-sm text-gray-500 dark:text-gray-400">
+ <div className="text-sm text-ink-dim">
  {t("meaning.loading")}
  </div>
  </CardBody>
@@ -46,15 +46,15 @@ export function MediaPulseCard() {
  {/* Top headline */}
  {headline ? (
  <div className="mb-3">
- <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+ <div className="text-xs uppercase tracking-wide text-ink-dim mb-1">
  {t("meaning.media.topHeadline")}
  </div>
- <div className="text-sm font-serif italic text-gray-900 dark:text-white leading-snug">
+ <div className="text-sm font-serif italic text-ink leading-snug">
  "{headline}"
  </div>
  </div>
  ) : (
- <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mb-3 text-sm text-ink-dim">
  {t("meaning.media.noActiveStories")}
  </div>
  )}
@@ -62,10 +62,10 @@ export function MediaPulseCard() {
  {/* Media signals grid */}
  <div className="grid grid-cols-2 gap-3 text-sm">
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.media.punditDisagreement")}
  </div>
- <div className="font-semibold text-gray-900 dark:text-white">
+ <div className="font-semibold text-ink">
  {disagreement ? (
  <span className="text-accent-600 dark:text-accent-400">
  {t("meaning.media.disagreementActive")}
@@ -78,10 +78,10 @@ export function MediaPulseCard() {
  </div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+ <div className="text-xs uppercase text-ink-dim">
  {t("meaning.media.bettingTrend")}
  </div>
- <div className="font-semibold text-gray-900 dark:text-white">
+ <div className="font-semibold text-ink">
  {bettingTrend}
  </div>
  </div>

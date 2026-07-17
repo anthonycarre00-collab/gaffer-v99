@@ -310,7 +310,7 @@ export function TraitList({
  <TraitBadge key={trait} trait={trait} size={size} />
  ))}
  {remaining > 0 ? (
- <span className="text-[10px] text-gray-500 font-heading self-center">
+ <span className="text-[10px] text-ink-faint font-heading self-center">
  +{remaining}
  </span>
  ) : null}

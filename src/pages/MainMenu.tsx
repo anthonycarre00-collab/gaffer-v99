@@ -638,7 +638,7 @@ export default function MainMenu() {
  };
 
  return (
- <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-navy-900 transition-colors duration-500 relative overflow-x-hidden">
+ <div className="min-h-screen flex items-center justify-center bg-carbon-2 bg-carbon-0 transition-colors duration-500 relative overflow-x-hidden">
  {/* Background — stadium at night */}
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute inset-0 stadium-bg opacity-35" />
@@ -654,12 +654,12 @@ export default function MainMenu() {
  {/* Top accent bar */}
  <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
- <div className="bg-white dark:bg-navy-800 p-8 rounded-b-lg border border-gray-200 dark:border-navy-600 border-t-0 transition-all duration-500">
+ <div className="bg-white bg-carbon-1 p-8 rounded-b-lg border border-slate-line border-t-0 transition-all duration-500">
  {/* Gaffer Crest — professional football association-style badge */}
  <GafferCrest size={96} className="mx-auto" withTagline />
  <div className="mb-2" />
 
- <div className="border-t border-gray-200 dark:border-navy-600 my-8 transition-colors duration-500" />
+ <div className="border-t border-slate-line my-8 transition-colors duration-500" />
 
  {/* Main Menu */}
  {menuState === "main" && (
@@ -679,7 +679,7 @@ export default function MainMenu() {
 
  <button
  onClick={handleOpenLoadMenu}
- className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
  >
  <div className="flex items-center gap-3">
  <FolderOpen className="w-6 h-6 text-accent-500 dark:text-accent-400" />
@@ -692,22 +692,22 @@ export default function MainMenu() {
 
  <button
  onClick={() => navigate("/settings", { state: { from: "/" } })}
- className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-gray-50 dark:hover:bg-navy-600 text-gray-800 dark:text-gray-200 rounded transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-gray-300 dark:hover:border-navy-600 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-slate-line dark:hover:border-navy-600 shadow-sm"
  >
  <div className="flex items-center gap-3">
- <Settings className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+ <Settings className="w-6 h-6 text-ink-faint" />
  <span className="font-heading font-bold text-lg uppercase tracking-wide">
  {t("menu.settings")}
  </span>
  </div>
- <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-70 group-hover:translate-x-0.5 transition-all text-gray-400" />
+ <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-70 group-hover:translate-x-0.5 transition-all text-ink-faint" />
  </button>
 
  <button
  onClick={() => {
  void handleExitApp();
  }}
- className="group flex items-center justify-between w-full p-4 bg-white dark:bg-navy-700 hover:bg-danger-50 dark:hover:bg-danger-500/10 text-gray-800 dark:text-gray-200 rounded transition-all duration-300 border border-gray-200 dark:border-navy-600 hover:border-danger-200 dark:hover:border-danger-500/30 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-danger-50 dark:hover:bg-danger-500/10 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-danger-200 dark:hover:border-danger-500/30 shadow-sm"
  >
  <div className="flex items-center gap-3">
  <Power className="w-6 h-6 text-danger-500 dark:text-danger-400" />
@@ -800,7 +800,7 @@ export default function MainMenu() {
  aria-label={t("menu.openDiscord")}
  title={t("menu.openDiscord")}
  onClick={() => { void openUrl(DISCORD_INVITE_URL); }}
- className="p-1.5 rounded text-gray-400 dark:text-gray-600 hover:text-[#5865F2] dark:hover:text-[#7289DA] hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-[#5865F2] dark:hover:text-[#7289DA] hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <DiscordIcon className="w-5 h-5" />
  </button>
@@ -809,14 +809,14 @@ export default function MainMenu() {
  aria-label={t("menu.openGithub")}
  title={t("menu.openGithub")}
  onClick={() => { void openUrl(GITHUB_REPO_URL); }}
- className="p-1.5 rounded text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <GithubIcon className="w-5 h-5" />
  </button>
  </div>
 
  {/* Version */}
- <div className="absolute bottom-4 right-4 text-gray-400 dark:text-gray-600 text-xs font-heading uppercase tracking-widest transition-colors">
+ <div className="absolute bottom-4 right-4 text-ink-faint text-xs font-heading uppercase tracking-widest transition-colors">
  {t("app.version")}
  </div>
  </div>

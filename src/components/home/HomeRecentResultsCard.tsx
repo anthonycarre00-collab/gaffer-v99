@@ -38,11 +38,11 @@ export default function HomeRecentResultsCard({
  </CardHeader>
  <CardBody className="p-0">
  {recentResults.length === 0 ? (
- <p className="text-gray-500 dark:text-gray-400 text-xs p-5">
+ <p className="text-ink-dim text-xs p-5">
  {t("home.noMatches")}
  </p>
  ) : (
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {recentResults
  .slice(-5)
  .reverse()
@@ -60,25 +60,25 @@ export default function HomeRecentResultsCard({
  ? "bg-success-500"
  : result.resultCode === "L"
  ? "bg-danger-500"
- : "bg-gray-400"
+ : "bg-carbon-3"
  }`}
  >
  {result.resultCode}
  </span>
- <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 w-6">
+ <span className="text-xs text-ink-dim flex-shrink-0 w-6">
  {result.isHome ? t("home.home").charAt(0) : t("home.away").charAt(0)}
  </span>
  {opponent ? (
  <TeamLogo
  team={opponent}
- className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300"
+ className="h-7 w-7 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim"
  imageClassName="h-5 w-5 object-contain drop-shadow"
  />
  ) : null}
- <span className="text-sm font-medium text-gray-800 dark:text-gray-200 flex-1 truncate">
+ <span className="text-sm font-medium text-ink text-ink flex-1 truncate">
  {opponent?.name ?? t("common.unknown")}
  </span>
- <span className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300 tabular-nums">
+ <span className="text-sm font-heading font-bold text-ink-dim tabular-nums">
  {result.myGoals} - {result.opponentGoals}
  </span>
  </div>

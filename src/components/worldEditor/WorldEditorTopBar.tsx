@@ -49,22 +49,22 @@ export function WorldEditorTopBar({
  const navigate = useNavigate();
 
  return (
- <div className="flex-shrink-0 h-18 flex items-center justify-between px-4 gap-2 border-b border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800">
+ <div className="flex-shrink-0 h-18 flex items-center justify-between px-4 gap-2 border-b border-slate-line bg-white bg-carbon-1">
  {/* Left: back + identity */}
  <div className="flex items-center gap-3 min-w-0">
  <button
  onClick={() => navigate("/")}
- className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex-shrink-0"
+ className="flex items-center gap-1.5 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors flex-shrink-0"
  >
  <ArrowLeft className="w-4 h-4" />
  {t("menu.mainMenu")}
  </button>
- <span className="text-gray-300 dark:text-navy-500 flex-shrink-0">·</span>
- <span className="font-heading font-bold text-sm uppercase tracking-wide text-gray-900 dark:text-white truncate">
+ <span className="text-ink-faint dark:text-navy-500 flex-shrink-0">·</span>
+ <span className="font-heading font-bold text-sm uppercase tracking-wide text-ink truncate">
  {packageName || t("worldEditor.title")}
  </span>
  {packageDir && (
- <span className="text-xs text-gray-400 dark:text-gray-500 truncate hidden md:block max-w-[200px]">
+ <span className="text-xs text-ink-faint truncate hidden md:block max-w-[200px]">
  {packageDir}
  </span>
  )}
@@ -83,7 +83,7 @@ export function WorldEditorTopBar({
  onClick={onUndo}
  disabled={!canUndo || isBusy}
  title={t("worldEditor.undo")}
- className="p-1.5 rounded text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+ className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
  >
  <Undo2 className="w-4 h-4" />
  </button>
@@ -91,19 +91,19 @@ export function WorldEditorTopBar({
  onClick={onRedo}
  disabled={!canRedo || isBusy}
  title={t("worldEditor.redo")}
- className="p-1.5 rounded text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-700 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+ className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
  >
  <Redo2 className="w-4 h-4" />
  </button>
  </div>
 
- <span className="w-px h-5 bg-gray-200 dark:bg-navy-600" />
+ <span className="w-px h-5 bg-carbon-3" />
 
  {/* Auto-save toggle */}
  <button
  onClick={onToggleAutoSave}
  title={autoSave ? t("worldEditor.autoSaveOn") : t("worldEditor.autoSaveOff")}
- className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+ className="flex items-center gap-1 text-xs text-ink-dim hover:text-ink hover:text-ink transition-colors"
  >
  {autoSave ? (
  <ToggleRight className="w-4 h-4 text-primary-500" />
@@ -118,7 +118,7 @@ export function WorldEditorTopBar({
  onClick={onSave}
  disabled={isBusy}
  title={t("worldEditor.save")}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-xs font-heading font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200 hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-40"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-white bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-40"
  >
  {saveState === "saving" ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -140,12 +140,12 @@ export function WorldEditorTopBar({
  )}
  </button>
 
- <span className="w-px h-5 bg-gray-200 dark:bg-navy-600" />
+ <span className="w-px h-5 bg-carbon-3" />
 
  <button
  onClick={onValidate}
  disabled={isBusy}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-xs font-heading font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200 hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-50"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-white bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-50"
  >
  {isBusy ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -175,7 +175,7 @@ export function WorldEditorTopBar({
  {t("worldEditor.build")}
  </button>
 
- <span className="w-px h-5 bg-gray-200 dark:bg-navy-600" />
+ <span className="w-px h-5 bg-carbon-3" />
 
  {/* Language picker */}
  <Select

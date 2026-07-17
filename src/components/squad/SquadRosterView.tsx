@@ -372,7 +372,7 @@ export default function SquadRosterView({
  };
 
  const renderPreferredPositionMeta = (player: PlayerData) => (
- <div className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1.5 flex-wrap">
+ <div className="text-xs text-ink-faint flex items-center gap-1.5 flex-wrap">
  <CountryFlag code={player.nationality} className="text-sm leading-none" />
  {getPreferredPositions(player).map((position, index) => (
  <Badge
@@ -392,7 +392,7 @@ export default function SquadRosterView({
  const styleFit = getPlayStyleFit(player, activePlayStyle, currentPos);
 
  return (
- <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-ink-dim">
  <span className="font-medium">
  {t("squad.bestRole")}: {translatePositionAbbreviation(t, bestRole)}
  </span>
@@ -414,7 +414,7 @@ export default function SquadRosterView({
 
  const SortHeader = ({ col, label }: { col: SquadListSortKey; label: string }) => (
  <th
- className={`py-2.5 px-4 font-heading font-bold uppercase tracking-wider cursor-pointer select-none hover:text-primary-400 transition-colors ${sortKey === col ? "text-primary-500 dark:text-primary-400" : "text-gray-500 dark:text-gray-400"}`}
+ className={`py-2.5 px-4 font-heading font-bold uppercase tracking-wider cursor-pointer select-none hover:text-primary-400 transition-colors ${sortKey === col ? "text-primary-500 dark:text-primary-400" : "text-ink-dim"}`}
  onClick={() => toggleSort(col)}
  >
  <div className="flex items-center gap-1">
@@ -435,7 +435,7 @@ export default function SquadRosterView({
  <Card plain>
  <div className="p-4 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_220px_220px_auto] gap-3 items-end">
  <div>
- <label className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 block">
+ <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("common.search")}
  </label>
  <input
@@ -443,11 +443,11 @@ export default function SquadRosterView({
  value={playerSearch}
  onChange={(event) => setPlayerSearch(event.target.value)}
  placeholder={t("squad.filterPlayers")}
- className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+ className="w-full rounded border border-slate-line bg-white bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30"
  />
  </div>
  <div>
- <label className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 block">
+ <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("squad.pos")}
  </label>
  <Select
@@ -464,7 +464,7 @@ export default function SquadRosterView({
  </Select>
  </div>
  <div>
- <label className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 block">
+ <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("common.status")}
  </label>
  <Select
@@ -504,8 +504,8 @@ export default function SquadRosterView({
  }}
  disabled={!hasActiveFilters}
  className={`px-3 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${hasActiveFilters
- ? "bg-gray-100 dark:bg-navy-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-navy-600"
- : "bg-gray-100 dark:bg-navy-700 text-gray-400 cursor-not-allowed"
+ ? "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
+ : "bg-carbon-2 text-ink-faint cursor-not-allowed"
  }`}
  >
  {t("common.clear")}
@@ -543,16 +543,16 @@ export default function SquadRosterView({
  </Card>
 
  <Card>
- <div className="p-4 border-b border-gray-100 dark:border-navy-600 bg-linear-to-r rounded-t-xl">
+ <div className="p-4 border-b border-slate-line-soft bg-linear-to-r rounded-t-xl">
  <h3 className="text-sm font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
  <Users className="w-4 h-4 text-accent-400" />
  {t("squad.title", { team: team.name })}
  </h3>
- <p className="text-xs text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-faint mt-0.5">
  {filteredRoster.length} / {roster.length}{" "}
  {t("squad.playersLabel")}
  </p>
- <p className="text-xs text-gray-400 mt-1">
+ <p className="text-xs text-ink-faint mt-1">
  {t("squad.currentPlan")}: {formation} /{" "}
  {currentPreset
  ? t(`tactics.presetNames.${currentPreset.id}`, currentPreset.id)
@@ -560,7 +560,7 @@ export default function SquadRosterView({
  </p>
  <div className="mt-3 flex flex-col gap-2">
  <div className="flex flex-wrap items-center gap-2">
- <span className="text-xs font-heading font-bold uppercase tracking-wider text-gray-300">
+ <span className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("squad.coverageTitle")}
  </span>
  <Badge
@@ -604,28 +604,28 @@ export default function SquadRosterView({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
+ <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  #
  </th>
  <SortHeader col="pos" label={t("squad.pos")} />
  <SortHeader col="name" label={t("common.name")} />
- <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("squad.tacticalFit")}
  </th>
  <SortHeader col="age" label={t("common.age")} />
  <SortHeader col="condition" label={t("common.condition")} />
  <SortHeader col="morale" label={t("common.morale")} />
- <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.contract")}
  </th>
- <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.actions")}
  </th>
  <SortHeader col="ovr" label={t("common.ovr")} />
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {filteredRoster.map((player, rowIndex) => {
  const inXI = xiIds.has(player.id);
  const currentPos = getCurrentPosition(player, xiActivePosition);
@@ -796,9 +796,9 @@ export default function SquadRosterView({
  >
  <tr
  onClick={() => onSelectPlayer(player.id)}
- className={`${rowIndex % 2 === 0 ? "bg-white dark:bg-navy-800" : "bg-gray-50 dark:bg-navy-700/30"} hover:bg-gray-100 dark:hover:bg-navy-700/50 transition-colors group cursor-pointer ${finalBorderClass}`}
+ className={`${rowIndex % 2 === 0 ? "bg-white bg-carbon-1" : "bg-carbon-2/30"} hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors group cursor-pointer ${finalBorderClass}`}
  >
- <td className="py-2.5 px-4 tabular-nums text-sm font-medium text-gray-600 dark:text-gray-400">
+ <td className="py-2.5 px-4 tabular-nums text-sm font-medium text-ink-dim">
  {player.jersey_number ?? "—"}
  </td>
  <td className="py-2.5 px-4">
@@ -823,7 +823,7 @@ export default function SquadRosterView({
  <div className="flex items-center gap-3">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
- <div className="flex items-center gap-1.5 font-semibold text-sm text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <div className="flex items-center gap-1.5 font-semibold text-sm text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {injuryDotClass && (
  <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${injuryDotClass}`} />
  )}
@@ -867,18 +867,18 @@ export default function SquadRosterView({
  {t("squad.slotLabel")}: {translatePositionAbbreviation(t, currentPos)}
  </span>
  </div>
- <div className="text-gray-500 dark:text-gray-400">
+ <div className="text-ink-dim">
  {t("squad.hasLabel")}: {getPreferredPositions(player).map((p) => translatePositionAbbreviation(t, p)).join(", ")}
  </div>
  </div>
  ) : (
- <div className="text-xs text-gray-500 dark:text-gray-400">
+ <div className="text-xs text-ink-dim">
  <span className="font-medium">{t("squad.bestRole")}:</span>{" "}
  {translatePositionAbbreviation(t, getBestRoleForFormation(player, formation))}
  </div>
  )}
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2.5 px-4 text-sm text-ink-dim tabular-nums">
  {age}
  </td>
  <td className="py-2.5 px-4 w-28" title={interpretCondition(player.condition).description}>
@@ -902,17 +902,17 @@ export default function SquadRosterView({
  );
  })()}
  </td>
- <td className="py-2.5 px-4 text-xs text-gray-600 dark:text-gray-400">
+ <td className="py-2.5 px-4 text-xs text-ink-dim">
  <div className="space-y-1">
  <div className="flex items-center gap-1.5">
- <span className="font-medium text-gray-700 dark:text-gray-300">
+ <span className="font-medium text-ink-dim">
  {getContractYearsRemaining(player.contract_end, clockDate)}
  </span>
  <Badge variant={getContractRiskBadgeVariant(contractRiskLevel)} size="sm">
  {contractRiskLabel}
  </Badge>
  </div>
- <div className="text-gray-500 dark:text-gray-400">
+ <div className="text-ink-dim">
  {player.contract_end
  ? t("finances.contractExpiresOn", { date: player.contract_end })
  : "—"}
@@ -927,7 +927,7 @@ export default function SquadRosterView({
  const rect = e.currentTarget.getBoundingClientRect();
  menuRefs.current.get(player.id)?.open(rect.left, rect.bottom + 4);
  }}
- className="relative rounded-md p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+ className="relative rounded-md p-1.5 text-ink-faint hover:text-ink hover:text-ink transition-colors"
  >
  <MoreVertical className="h-4 w-4" />
  {hasUrgentItems && (
@@ -950,7 +950,7 @@ export default function SquadRosterView({
  </tbody>
  </table>
  {filteredRoster.length === 0 ? (
- <div className="p-8 text-center text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider text-sm">
+ <div className="p-8 text-center text-ink-dim font-heading uppercase tracking-wider text-sm">
  {t("squad.noPlayers")}
  </div>
  ) : null}

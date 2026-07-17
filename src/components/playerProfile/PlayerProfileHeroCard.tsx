@@ -70,7 +70,7 @@ export default function PlayerProfileHeroCard({
  <div className="flex items-start gap-6">
  <PlayerAvatar
  player={player}
- className={`w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-lg border-2 overflow-hidden ${interpretOvr(ovr, player.natural_position || player.position).colorClass} bg-gray-500/10 border-current/30`}
+ className={`w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-lg border-2 overflow-hidden ${interpretOvr(ovr, player.natural_position || player.position).colorClass} bg-carbon-3 border-current/30`}
  fallback={<span className="text-center px-1 leading-tight">{shortOvrLabel(ovr, player.natural_position || player.position)}</span>}
  />
  {player.jersey_number != null && team != null && (
@@ -96,7 +96,7 @@ export default function PlayerProfileHeroCard({
  {translatePositionLabel(t, alternatePosition)}
  </Badge>
  ))}
- <span className="text-gray-400 text-sm">
+ <span className="text-ink-faint text-sm">
  <CountryFlag
  code={player.nationality}
  locale={language}
@@ -104,22 +104,22 @@ export default function PlayerProfileHeroCard({
  />
  {countryName(player.nationality, language)}
  </span>
- <span className="text-gray-500">•</span>
- <span className="text-gray-400 text-sm">
+ <span className="text-ink-faint">•</span>
+ <span className="text-ink-faint text-sm">
  {t("common.age")} {age}
  </span>
- <span className="text-gray-500">•</span>
- <span className="text-gray-400 text-sm">
+ <span className="text-ink-faint">•</span>
+ <span className="text-ink-faint text-sm">
  {t("common.footednessLabel")}: {" "}
  {footednessLabel}
  </span>
- <span className="text-gray-500">•</span>
- <span className="text-gray-400 text-sm">
+ <span className="text-ink-faint">•</span>
+ <span className="text-ink-faint text-sm">
  {t("common.weakFoot")}: {" "}
  {weakFootValue}/5
  </span>
  </div>
- <p className="text-gray-400 text-sm mt-2 flex items-center gap-1.5">
+ <p className="text-ink-faint text-sm mt-2 flex items-center gap-1.5">
  <Shield className="w-4 h-4" />
  {player.team_id && onSelectTeam ? (
  <ContextMenu items={teamContextItems}>
@@ -178,7 +178,7 @@ export default function PlayerProfileHeroCard({
  </div>
  </div>
 
- <div className="grid grid-cols-4 gap-px bg-gray-200 dark:bg-navy-600 md:hidden">
+ <div className="grid grid-cols-4 gap-px bg-carbon-3 md:hidden">
  <MobileQuickStat
  label={t("common.condition")}
  value={`${player.condition}%`}
@@ -192,12 +192,12 @@ export default function PlayerProfileHeroCard({
  <MobileQuickStat
  label={t("common.value")}
  value={formatPlayerMarketValue(player.market_value)}
- color="text-gray-700 dark:text-gray-200"
+ color="text-ink"
  />
  <MobileQuickStat
  label={t("common.wage")}
  value={formatPlayerAnnualWage(player.wage, annualSuffix)}
- color="text-gray-700 dark:text-gray-200"
+ color="text-ink"
  />
  </div>
  </Card>
@@ -215,7 +215,7 @@ function QuickStat({
 }) {
  return (
  <div className="bg-white/5 rounded px-5 py-3 text-center min-w-25">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>
  <p className={`font-heading font-bold text-xl mt-0.5 ${color}`}>
@@ -235,8 +235,8 @@ function MobileQuickStat({
  color: string;
 }) {
  return (
- <div className="bg-white dark:bg-navy-800 p-3 text-center">
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <div className="bg-white bg-carbon-1 p-3 text-center">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>
  <p className={`font-heading font-bold text-lg mt-0.5 ${color}`}>

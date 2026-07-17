@@ -234,7 +234,7 @@ export default function FinancesTab({
  );
  if (!myTeam)
  return (
- <p className="text-gray-500 dark:text-gray-400">{t("common.noTeam")}</p>
+ <p className="text-ink-dim">{t("common.noTeam")}</p>
  );
  const weeklySuffix = t("finances.perWeekSuffix");
  const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -692,12 +692,12 @@ export default function FinancesTab({
  {
  label: t("finances.wageBudget"),
  value: myTeam.wage_budget,
- color: "text-gray-800 dark:text-gray-200",
+ color: "text-ink text-ink",
  },
  {
  label: t("finances.transferBudget"),
  value: myTeam.transfer_budget,
- color: "text-gray-800 dark:text-gray-200",
+ color: "text-ink text-ink",
  },
  {
  label: t("finances.seasonIncome"),
@@ -721,9 +721,9 @@ export default function FinancesTab({
  {financeItems.map((item) => (
  <div
  key={item.label}
- className="bg-gray-50 dark:bg-navy-800 rounded p-4 text-center"
+ className="bg-carbon-2 rounded p-4 text-center"
  >
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint mb-1">
  {item.label}
  </p>
  <p className={`font-heading font-bold text-xl ${item.color}`}>
@@ -731,11 +731,11 @@ export default function FinancesTab({
  </p>
  </div>
  ))}
- <div className="bg-gray-50 dark:bg-navy-800 rounded p-4 text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+ <div className="bg-carbon-2 rounded p-4 text-center">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint mb-1">
  {t("finances.squadValue")}
  </p>
- <p className="font-heading font-bold text-xl text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-xl text-ink text-ink">
  {formatVal(totalValue)}
  </p>
  </div>
@@ -748,13 +748,13 @@ export default function FinancesTab({
  <CardHeader>{t("finances.wageBill")}</CardHeader>
  <CardBody>
  <div className="text-center mb-4">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("finances.weeklyTotal")}
  </p>
- <p className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100 mt-1">
+ <p className="font-heading font-bold text-2xl text-ink mt-1">
  {formatWeeklyAmount(formatVal(totalWages), weeklySuffix)}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+ <p className="text-xs text-ink-faint mt-1">
  {t("finances.budget")}:{" "}
  {formatWeeklyAmount(formatVal(weeklyWageBudget), weeklySuffix)}{" "}
  —{" "}
@@ -783,8 +783,8 @@ export default function FinancesTab({
  <CardHeader>{t("finances.cashFlow")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 text-center">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1">
  {t("finances.weeklyWageSpend")}
  </p>
  <p className="font-heading font-bold text-xl text-danger-500">
@@ -794,8 +794,8 @@ export default function FinancesTab({
  )}
  </p>
  </div>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 text-center">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1">
  {t("finances.weeklySponsorIncome")}
  </p>
  <p className="font-heading font-bold text-xl text-primary-500">
@@ -805,8 +805,8 @@ export default function FinancesTab({
  )}
  </p>
  </div>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 text-center">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1">
  {t("finances.projectedWeeklyNet")}
  </p>
  <p
@@ -818,11 +818,11 @@ export default function FinancesTab({
  )}
  </p>
  </div>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 text-center">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1">
  {t("finances.cashRunway")}
  </p>
- <p className="font-heading font-bold text-base text-gray-800 dark:text-gray-100">
+ <p className="font-heading font-bold text-base text-ink">
  {cashRunwayWeeks === null
  ? t("finances.runwayStable")
  : t("finances.runwayWeeks", { count: cashRunwayWeeks })}
@@ -838,17 +838,17 @@ export default function FinancesTab({
  />
  </div>
  )}
- <div className="mt-4 rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+ <div className="mt-4 rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
  <div className="space-y-1">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.boardSupport")}
  </p>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.boardSupportDescription")}
  </p>
  {boardSupportPreviewText ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {boardSupportPreviewText}
  </p>
  ) : null}
@@ -869,7 +869,7 @@ export default function FinancesTab({
  </p>
  ) : null}
  {!canRequestBoardSupport ? (
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("finances.boardSupportUnavailable")}
  </p>
  ) : null}
@@ -881,11 +881,11 @@ export default function FinancesTab({
  <CardHeader>{t("finances.wagePressure")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.wagePressure")}
  </p>
- <p className="font-heading font-bold text-2xl text-gray-900 dark:text-gray-100">
+ <p className="font-heading font-bold text-2xl text-ink">
  {t("finances.wageBudgetUsed", {
  percent: wageBudgetUsagePercent,
  })}
@@ -900,20 +900,20 @@ export default function FinancesTab({
  />
  </div>
 
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
  <div className="flex items-center justify-between gap-3">
  <div className="space-y-1">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.contractRisk")}
  </p>
  {delegatedRenewalsSummary ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {delegatedRenewalsSummary}
  </p>
  ) : null}
  </div>
  <div className="flex items-center gap-2">
- <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+ <p className="text-sm font-semibold text-ink-dim">
  {t("finances.atRiskWages", {
  amount: formatExactMoney(atRiskWages),
  })}
@@ -948,7 +948,7 @@ export default function FinancesTab({
  {contractRiskPlayers.map(({ player, riskLevel }) => (
  <div
  key={player.id}
- className="rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-3 flex items-start justify-between gap-3"
+ className="rounded border border-slate-line bg-white bg-carbon-2 p-3 flex items-start justify-between gap-3"
  >
  <div className="flex items-start gap-3">
  <Checkbox
@@ -960,15 +960,15 @@ export default function FinancesTab({
  className="mt-1"
  />
  <div className="space-y-1">
- <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+ <p className="font-semibold text-sm text-ink">
  {player.full_name}
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("finances.contractExpiresOn", {
  date: player.contract_end,
  })}
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("playerProfile.yearsRemaining")}:{" "}
  {getContractYearsRemaining(
  player.contract_end,
@@ -983,7 +983,7 @@ export default function FinancesTab({
  ? t("finances.contractRiskCritical")
  : t("finances.contractRiskWarning")}
  </Badge>
- <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+ <span className="text-xs font-semibold text-ink-dim">
  {formatWeeklyAmount(
  formatExactMoney(
  annualAmountToWeeklyCommitment(player.wage),
@@ -1010,7 +1010,7 @@ export default function FinancesTab({
  ))}
  </div>
  ) : (
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.noContractRisks")}
  </p>
  )}
@@ -1023,48 +1023,48 @@ export default function FinancesTab({
  <CardHeader>{t("finances.sponsors")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-2">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-2">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.activeSponsor")}
  </p>
  {activeSponsorship ? (
  <>
- <h3 className="font-heading font-bold text-base text-gray-900 dark:text-gray-100 uppercase tracking-wide">
+ <h3 className="font-heading font-bold text-base text-ink uppercase tracking-wide">
  {activeSponsorship.sponsor_name}
  </h3>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.sponsorWeeklyValue", {
  amount: formatExactMoney(activeSponsorship.base_value),
  })}
  </p>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.sponsorRemainingWeeks", {
  count: activeSponsorship.remaining_weeks,
  })}
  </p>
  </>
  ) : (
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.noActiveSponsor")}
  </p>
  )}
  </div>
 
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 space-y-3">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.pendingSponsorOffers")}
  </p>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-4 space-y-3">
+ <div className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3">
  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
  <div className="space-y-1">
- <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+ <h3 className="font-semibold text-sm text-ink">
  {t("finances.pitchSponsor")}
  </h3>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.sponsorPitchDescription")}
  </p>
  {sponsorPitchPreviewText ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {sponsorPitchPreviewText}
  </p>
  ) : null}
@@ -1081,7 +1081,7 @@ export default function FinancesTab({
  </Button>
  </div>
  {sponsorPitchDisabledReason ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {sponsorPitchDisabledReason}
  </p>
  ) : null}
@@ -1097,17 +1097,17 @@ export default function FinancesTab({
  </p>
  ) : null}
  </div>
- <div className="rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-4 space-y-3">
+ <div className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3">
  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
  <div className="space-y-1">
- <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+ <h3 className="font-semibold text-sm text-ink">
  {t("finances.marketingCampaign")}
  </h3>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.marketingCampaignDescription")}
  </p>
  {marketingCampaignPreviewText ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {marketingCampaignPreviewText}
  </p>
  ) : null}
@@ -1124,7 +1124,7 @@ export default function FinancesTab({
  </Button>
  </div>
  {marketingCampaignDisabledReason ? (
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {marketingCampaignDisabledReason}
  </p>
  ) : null}
@@ -1158,13 +1158,13 @@ export default function FinancesTab({
  return (
  <div
  key={message.id}
- className="rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-4 space-y-3"
+ className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3"
  >
  <div className="space-y-1">
- <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+ <h3 className="font-semibold text-sm text-ink">
  {message.subject}
  </h3>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {message.body}
  </p>
  </div>
@@ -1175,9 +1175,9 @@ export default function FinancesTab({
  return (
  <div
  key={option.id}
- className="min-w-55 flex-1 rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-3 space-y-2"
+ className="min-w-55 flex-1 rounded border border-slate-line bg-carbon-2 p-3 space-y-2"
  >
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {option.description}
  </p>
  <Button
@@ -1207,7 +1207,7 @@ export default function FinancesTab({
  );
  })
  ) : (
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.noPendingSponsorOffers")}
  </p>
  )}
@@ -1236,22 +1236,22 @@ export default function FinancesTab({
  return (
  <div
  key={facility.id}
- className="rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 p-4 flex flex-col gap-4"
+ className="rounded border border-slate-line bg-carbon-2 p-4 flex flex-col gap-4"
  >
  <div className="space-y-1">
- <h3 className="font-heading font-bold text-base text-gray-900 dark:text-gray-100 uppercase tracking-wide">
+ <h3 className="font-heading font-bold text-base text-ink uppercase tracking-wide">
  {t(facility.titleKey)}
  </h3>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("finances.facilityLevel", { level })}
  </p>
- <p className="text-sm text-gray-600 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t(facility.effectKey)}
  </p>
  </div>
 
  <div className="space-y-2 mt-auto">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.nextUpgradeCost", {
  amount: formatExactMoney(nextUpgradeCost),
  })}
@@ -1286,7 +1286,7 @@ export default function FinancesTab({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
  <SortableHeader label={t("common.player")} columnKey="name" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
  <SortableHeader label={t("common.position")} columnKey="position" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
  <SortableHeader label={t("finances.wagePerWeek")} columnKey="wage" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} numeric />
@@ -1294,7 +1294,7 @@ export default function FinancesTab({
  <SortableHeader label={t("common.contract")} columnKey="contractEnd" sortKey={payrollSortKey} sortDir={payrollSortDir} onSort={togglePayrollSort} />
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {topPayrollRows.map((row) => {
  const p = roster.find((rp) => rp.id === row.id);
  if (!p) return null;
@@ -1312,9 +1312,9 @@ export default function FinancesTab({
  <tr
  key={p.id}
  onClick={() => onSelectPlayer?.(p.id)}
- className={`hover:bg-gray-50 dark:hover:bg-navy-700/50 transition-colors ${onSelectPlayer ? "cursor-pointer group" : ""}`}
+ className={`hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors ${onSelectPlayer ? "cursor-pointer group" : ""}`}
  >
- <td className="py-3 px-5 font-semibold text-sm text-gray-800 dark:text-gray-200">
+ <td className="py-3 px-5 font-semibold text-sm text-ink text-ink">
  <span className="group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {p.full_name}
  </span>
@@ -1324,15 +1324,15 @@ export default function FinancesTab({
  {translatePositionAbbreviation(t, p.position)}
  </Badge>
  </td>
- <td className="py-3 px-5 text-sm font-medium text-gray-700 dark:text-gray-300">
+ <td className="py-3 px-5 text-sm font-medium text-ink-dim">
  {formatExactMoney(
  annualAmountToWeeklyCommitment(p.wage),
  )}
  </td>
- <td className="py-3 px-5 text-sm text-gray-600 dark:text-gray-400">
+ <td className="py-3 px-5 text-sm text-ink-dim">
  {formatVal(p.market_value)}
  </td>
- <td className="py-3 px-5 text-sm text-gray-500 dark:text-gray-400">
+ <td className="py-3 px-5 text-sm text-ink-dim">
  {p.contract_end
  ? t("finances.until", {
  year: p.contract_end.substring(0, 4),

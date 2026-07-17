@@ -35,7 +35,7 @@ function groupByDate(results: AdvanceMatchResultData[]): DayGroup[] {
 
 function SectionHeading({ children }: { children: string }): JSX.Element {
  return (
- <p className="font-heading text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="font-heading text-xs font-bold uppercase tracking-wider text-ink-dim">
  {children}
  </p>
  );
@@ -64,7 +64,7 @@ export default function DashboardResultsRecapModal({
  className={`flex items-center justify-between gap-3 py-1.5 text-sm ${
  transfer.involvesUser
  ? "font-bold text-primary-600 dark:text-primary-400"
- : "text-gray-700 dark:text-gray-300"
+ : "text-ink-dim"
  }`}
  >
  <span className="truncate">
@@ -83,7 +83,7 @@ export default function DashboardResultsRecapModal({
  const renderHeadline = (headline: RecapHeadline): JSX.Element => (
  <p
  key={headline.id}
- className="truncate py-1.5 text-sm text-gray-700 dark:text-gray-300"
+ className="truncate py-1.5 text-sm text-ink-dim"
  >
  {resolveHeadline(headline)}
  </p>
@@ -96,11 +96,11 @@ export default function DashboardResultsRecapModal({
  <RecapAutoDismiss onClose={onClose} />
  <div className="flex flex-col gap-4">
  <div className="flex flex-col gap-0.5">
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("dashboard.resultsRecapTitle")}
  </h3>
  {recap.advancedTo && (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("dashboard.recapAdvancedTo", {
  date: formatMatchDate(recap.advancedTo),
  })}
@@ -112,14 +112,14 @@ export default function DashboardResultsRecapModal({
  {days.map((day) => (
  <div key={day.date} className="flex flex-col gap-1.5">
  <SectionHeading>{formatMatchDate(day.date)}</SectionHeading>
- <div className="flex flex-col divide-y divide-gray-100 dark:divide-navy-700">
+ <div className="flex flex-col divide-y divide-slate-line-soft dark:divide-slate-line-soft">
  {day.matches.map((match, index) => (
  <div
  key={`${day.date}-${index}`}
  className={`flex items-center gap-3 py-1.5 text-sm ${
  match.involves_user
  ? "font-bold text-primary-600 dark:text-primary-400"
- : "text-gray-700 dark:text-gray-300"
+ : "text-ink-dim"
  }`}
  >
  <span className="flex-1 truncate text-right">
@@ -131,7 +131,7 @@ export default function DashboardResultsRecapModal({
  </span>
  {match.home_penalties != null &&
  match.away_penalties != null && (
- <span className="text-[10px] font-semibold text-gray-500 dark:text-gray-400">
+ <span className="text-[10px] font-semibold text-ink-dim">
  {t("match.shootout.shootoutScore", {
  h: match.home_penalties,
  a: match.away_penalties,
@@ -156,7 +156,7 @@ export default function DashboardResultsRecapModal({
  {recap.transfers.length > 0 && (
  <div className="flex flex-col gap-1.5">
  <SectionHeading>{t("dashboard.recapSectionTransfers")}</SectionHeading>
- <div className="flex flex-col divide-y divide-gray-100 dark:divide-navy-700">
+ <div className="flex flex-col divide-y divide-slate-line-soft dark:divide-slate-line-soft">
  {recap.transfers.map(renderTransfer)}
  </div>
  </div>
@@ -165,7 +165,7 @@ export default function DashboardResultsRecapModal({
  {recap.news.length > 0 && (
  <div className="flex flex-col gap-1.5">
  <SectionHeading>{t("dashboard.recapSectionNews")}</SectionHeading>
- <div className="flex flex-col divide-y divide-gray-100 dark:divide-navy-700">
+ <div className="flex flex-col divide-y divide-slate-line-soft dark:divide-slate-line-soft">
  {recap.news.map(renderHeadline)}
  </div>
  </div>
@@ -174,14 +174,14 @@ export default function DashboardResultsRecapModal({
  {recap.inbox.length > 0 && (
  <div className="flex flex-col gap-1.5">
  <SectionHeading>{t("dashboard.recapSectionInbox")}</SectionHeading>
- <div className="flex flex-col divide-y divide-gray-100 dark:divide-navy-700">
+ <div className="flex flex-col divide-y divide-slate-line-soft dark:divide-slate-line-soft">
  {recap.inbox.map(renderHeadline)}
  </div>
  </div>
  )}
 
  {!recap.hasEvents && (
- <p className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+ <p className="py-4 text-center text-sm text-ink-dim">
  {t("dashboard.recapNothingNotable")}
  </p>
  )}

@@ -241,7 +241,7 @@ describe("getEventDisplay", () => {
 
   it("returns default display for unknown event type", () => {
     const display = getEventDisplay({ minute: 1, event_type: "UnknownEvent", side: "Home", zone: "Midfield", player_id: null, secondary_player_id: null });
-    expect(display.color).toBe("text-gray-700 dark:text-gray-400");
+    expect(display.color).toBe("text-ink text-ink-faint");
     expect(display.important).toBe(false);
   });
 });

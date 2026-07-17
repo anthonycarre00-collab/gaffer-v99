@@ -99,12 +99,12 @@ export default function InboxMessageListPane({
 
  return (
  <div className={getListPaneClassName(hasSelectedMessage)}>
- <div className="bg-linear-to-r shrink-0 border-b border-gray-100 p-4 dark:border-navy-600">
+ <div className="bg-linear-to-r shrink-0 border-b border-slate-line-soft p-4 border-slate-line">
  <h3 className="text-sm font-heading font-bold text-white flex items-center gap-2 uppercase tracking-wide">
  <Mail className="w-4 h-4 text-accent-400" />
  {t("inbox.title")}
  </h3>
- <p className="text-xs text-gray-400 mt-0.5 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint mt-0.5 font-heading uppercase tracking-wider">
  {t("inbox.nMessages", { count: filteredMessages.length })}
  </p>
  </div>
@@ -112,8 +112,8 @@ export default function InboxMessageListPane({
  <div className="flex-1 overflow-y-auto">
  {filteredMessages.length === 0 ? (
  <div className="p-6 text-center">
- <MailOpen className="w-8 h-8 text-gray-300 dark:text-navy-600 mx-auto mb-2" />
- <p className="text-sm text-gray-400 dark:text-gray-500">
+ <MailOpen className="w-8 h-8 text-ink-faint dark:text-navy-600 mx-auto mb-2" />
+ <p className="text-sm text-ink-faint">
  {t("inbox.noMessages")}
  </p>
  </div>
@@ -172,7 +172,7 @@ export default function InboxMessageListPane({
  />
  {/* Category dot in the corner of the avatar */}
  <span
- className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white dark:border-navy-800 ${categoryColor} flex items-center justify-center text-[8px] text-white`}
+ className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-carbon-0 ${categoryColor} flex items-center justify-center text-[8px] text-white`}
  title={message.category}
  >
  {/* Tiny category glyph — replaced by full icon below in the detail pane */}
@@ -187,14 +187,14 @@ export default function InboxMessageListPane({
  className={`text-[10px] shrink-0 ${
  !message.read
  ? "text-accent-500 dark:text-accent-400 font-bold"
- : "text-gray-400 dark:text-gray-500"
+ : "text-ink-faint"
  }`}
  >
  {relativeDate(message.date, language)}
  </span>
  </div>
  <div className="flex items-center justify-between gap-2 mt-0.5">
- <p className="text-xs text-gray-500 dark:text-gray-400 truncate font-medium">
+ <p className="text-xs text-ink-dim truncate font-medium">
  {message.sender}
  </p>
  {!message.read ? (
@@ -202,7 +202,7 @@ export default function InboxMessageListPane({
  ) : null}
  </div>
  {/* Body preview — one line, muted. This is the WhatsApp touch. */}
- <p className="text-[11px] text-gray-400 dark:text-gray-500 truncate mt-0.5 italic">
+ <p className="text-[11px] text-ink-faint truncate mt-0.5 italic">
  {bodyPreview(message.body)}
  </p>
  </div>

@@ -36,13 +36,13 @@ export const POSITION_KEY_STATS: Record<
 
 export function statColor(v: number): string {
  if (v >= 75) return "text-primary-500 dark:text-primary-400 font-bold";
- if (v >= 60) return "text-gray-700 dark:text-gray-200";
- return "text-gray-500 dark:text-gray-400";
+ if (v >= 60) return "text-ink";
+ return "text-ink-dim";
 }
 
 export function starterOvrColor(ovr: number): string {
  if (ovr >= 70) return "text-primary-600 dark:text-primary-400";
- if (ovr >= 50) return "text-gray-700 dark:text-gray-300";
+ if (ovr >= 50) return "text-ink-dim";
  return "text-danger-600 dark:text-danger-400";
 }
 
@@ -185,7 +185,7 @@ export default function PreMatchLineup({
 
  const jerseyChip = (playerId: string) =>
  jerseyNumberById ? (
- <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+ <span className="w-6 shrink-0 rounded-md bg-carbon-2 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-ink-dim bg-carbon-2 text-ink-dim">
  {jerseyNumberById.get(playerId) ?? "–"}
  </span>
  ) : null;
@@ -194,8 +194,8 @@ export default function PreMatchLineup({
  <div className="flex flex-col gap-4">
  {/* Formation setup: formation/play-style controls, slot-fit counts, and
  auto-select — stacked so nothing clips in the narrow sidebar. */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
- <span className="text-[10px] font-heading uppercase tracking-widest text-gray-700 dark:text-gray-500">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
+ <span className="text-[10px] font-heading uppercase tracking-widest text-ink text-ink-faint">
  {t("match.formationFit")}
  </span>
  {formationControls}
@@ -210,9 +210,9 @@ export default function PreMatchLineup({
  return (
  <div
  key={pos}
- className="flex flex-col items-center gap-0.5 rounded bg-gray-50 py-1.5 dark:bg-navy-700/40"
+ className="flex flex-col items-center gap-0.5 rounded bg-carbon-2 py-1.5 bg-carbon-2/40"
  >
- <span className="text-[10px] font-heading uppercase tracking-widest text-gray-600 dark:text-gray-400">
+ <span className="text-[10px] font-heading uppercase tracking-widest text-ink-dim">
  {translatePositionAbbreviation(t, pos)}
  </span>
  <span
@@ -230,7 +230,7 @@ export default function PreMatchLineup({
  onClick={onAutoSelect}
  disabled={isAutoSelecting}
  className={`flex w-full items-center justify-center gap-2 px-4 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${isAutoSelecting
- ? "bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-400 cursor-wait"
+ ? "bg-carbon-3 text-ink-dim cursor-wait"
  : "bg-accent-100 text-accent-700 hover:bg-accent-200 dark:bg-accent-500/20 dark:text-accent-300 dark:hover:bg-accent-500/30"
  }`}
  >
@@ -241,16 +241,16 @@ export default function PreMatchLineup({
 
  {/* Starting XI */}
  {showStartingList && (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center justify-between mb-3">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.startingXI")}
  </h3>
  <div className="flex items-center gap-2">
  {selectedStarterId && (
  <button
  onClick={() => onSelectStarter(null)}
- className="text-[10px] text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 font-heading uppercase tracking-wider"
+ className="text-[10px] text-ink-faint hover:text-ink hover:text-ink-dim font-heading uppercase tracking-wider"
  >
  {t("match.cancel")}
  </button>
@@ -275,7 +275,7 @@ export default function PreMatchLineup({
  <div key={pos} className="mb-3">
  <div className="flex items-center justify-between mb-1">
  <div className="flex items-center gap-1.5">
- <p className="text-[10px] font-heading uppercase tracking-widest text-gray-600">
+ <p className="text-[10px] font-heading uppercase tracking-widest text-ink-dim">
  {t(`common.positionGroups.${pos}`)}
  </p>
  {!balanced && (
@@ -289,18 +289,18 @@ export default function PreMatchLineup({
  </div>
  {/* Stat column headers */}
  <div className="flex items-center gap-0">
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-600 dark:text-gray-500 w-7 text-center">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-dim text-ink-faint w-7 text-center">
  OVR
  </span>
  {keyStats.map((s) => (
  <span
  key={s.label}
- className="text-[8px] font-heading uppercase tracking-widest text-gray-600 w-7 text-center"
+ className="text-[8px] font-heading uppercase tracking-widest text-ink-dim w-7 text-center"
  >
  {s.label}
  </span>
  ))}
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-600 w-8 text-right">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-dim w-8 text-right">
  COND
  </span>
  </div>
@@ -316,7 +316,7 @@ export default function PreMatchLineup({
  onClick={() => onSelectStarter(isSelected ? null : p.id)}
  className={`flex items-center gap-2 py-1.5 px-2 rounded w-full text-left transition-all ${isSelected
  ? "bg-primary-500/20 ring-1 ring-primary-500/50"
- : "hover:bg-gray-100 dark:hover:bg-navy-700/50"
+ : "hover:bg-carbon-2 hover:bg-carbon-3/50"
  }`}
  >
  <div
@@ -327,7 +327,7 @@ export default function PreMatchLineup({
  {shortOvrLabel(posOvr, p.position)}
  </div>
  {jerseyChip(p.id)}
- <span className="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1 truncate">
+ <span className="text-sm text-ink text-ink font-medium flex-1 truncate">
  {p.name}
  </span>
  {isSelected && (
@@ -380,9 +380,9 @@ export default function PreMatchLineup({
  )}
 
  {/* Bench */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center justify-between mb-3">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.substitutes")}
  </h3>
  <Badge variant="neutral" size="sm">
@@ -390,7 +390,7 @@ export default function PreMatchLineup({
  </Badge>
  </div>
  {userBench.length === 0 ? (
- <p className="text-xs text-gray-600 dark:text-gray-500">
+ <p className="text-xs text-ink-dim text-ink-faint">
  {t("match.noBenchAvailable2")}
  </p>
  ) : (
@@ -400,10 +400,10 @@ export default function PreMatchLineup({
  <span className="flex-1" />
  {/* Key stats hide at xl, where this panel is a narrow sidebar —
  with them the player name gets truncated to nothing. */}
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-600 w-[84px] text-center xl:hidden">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-dim w-[84px] text-center xl:hidden">
  {t("match.keyStats")}
  </span>
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-600 w-8 text-right">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-dim w-8 text-right">
  COND
  </span>
  </div>
@@ -432,7 +432,7 @@ export default function PreMatchLineup({
  {translatePositionAbbreviation(t, bp.position)}
  </Badge>
  {jerseyChip(bp.id)}
- <span className="min-w-0 text-sm text-gray-700 dark:text-gray-300 font-medium flex-1 truncate">
+ <span className="min-w-0 text-sm text-ink-dim font-medium flex-1 truncate">
  {bp.name}
  </span>
  <div className="flex items-center gap-0 xl:hidden">
@@ -451,7 +451,7 @@ export default function PreMatchLineup({
  ? "bg-primary-500 text-white"
  : posOvr >= 60
  ? "bg-accent-500/20 text-accent-600 dark:text-accent-400"
- : "bg-gray-100 text-gray-500 dark:bg-navy-700 dark:text-gray-400"
+ : "bg-carbon-2 text-ink-faint bg-carbon-2 text-ink-faint"
  }`}
  title={interpretOvr(posOvr, bp.position).description}
  >

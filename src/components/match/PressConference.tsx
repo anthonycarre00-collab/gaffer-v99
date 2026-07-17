@@ -440,18 +440,18 @@ export default function PressConference({
  userSide === "Home" ? snapshot.home_team.name : snapshot.away_team.name;
 
  return (
- <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
+ <div className="min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
  {/* Header */}
- <header className="bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800 border-b border-gray-200 dark:border-navy-700 px-4 py-6 transition-colors duration-300">
+ <header className="bg-linear-to-r from-gray-200 via-white to-gray-200 dark:via-navy-900 dark:from-gray-800 dark:to-gray-800 border-b border-slate-line px-4 py-6 transition-colors duration-300">
  <div className="max-w-3xl mx-auto text-center relative">
  <ThemeToggle className="absolute right-0 top-0" />
- <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-200 dark:bg-navy-700 rounded-full mb-3 transition-colors duration-300">
+ <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-carbon-3 rounded-full mb-3 transition-colors duration-300">
  <Mic className="w-4 h-4 text-accent-400" />
- <span className="font-heading font-bold text-xs uppercase tracking-widest text-gray-700 dark:text-gray-300">
+ <span className="font-heading font-bold text-xs uppercase tracking-widest text-ink-dim">
  {t("match.pressConference")}
  </span>
  </div>
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("match.pressSubtitle", { team: userTeamName })}
  </p>
  <div className="flex items-center justify-center gap-1 mt-3">
@@ -463,7 +463,7 @@ export default function PressConference({
  ? "bg-primary-500"
  : i === currentIdx
  ? "bg-primary-400"
- : "bg-gray-300 dark:bg-navy-700"
+ : "bg-carbon-3 bg-carbon-2"
  }`}
  />
  ))}
@@ -477,19 +477,19 @@ export default function PressConference({
  <div className="max-w-2xl w-full">
  {/* Journalist */}
  <div className="flex items-start gap-4 mb-8">
- <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-navy-700 flex items-center justify-center flex-shrink-0 transition-colors duration-300">
- <MessageSquare className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+ <div className="w-12 h-12 rounded-full bg-carbon-3 flex items-center justify-center flex-shrink-0 transition-colors duration-300">
+ <MessageSquare className="w-5 h-5 text-ink-dim" />
  </div>
  <div>
  <div className="flex items-center gap-2 mb-1">
- <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-200">
+ <span className="font-heading font-bold text-sm text-ink text-ink">
  {currentQ.journalist}
  </span>
  <Badge variant="neutral" size="sm">
  {currentQ.outlet}
  </Badge>
  </div>
- <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed italic">
+ <p className="text-lg text-ink-dim leading-relaxed italic">
  "{currentQ.question}"
  </p>
  </div>
@@ -508,8 +508,8 @@ export default function PressConference({
  isSelected
  ? "bg-primary-500/20 ring-2 ring-primary-500/50"
  : hasAnswered
- ? "bg-gray-200/70 dark:bg-navy-800/50 opacity-40"
- : "bg-white hover:bg-gray-100 border border-gray-200 dark:bg-navy-800 dark:hover:bg-navy-700 dark:border-navy-700"
+ ? "bg-carbon-3/50 opacity-40"
+ : "bg-white hover:bg-carbon-2 border border-slate-line bg-carbon-1 hover:bg-carbon-3 border-slate-line"
  }`}
  >
  <div className="flex items-center gap-2 mb-1">
@@ -521,7 +521,7 @@ export default function PressConference({
  </Badge>
  </div>
  <p
- className={`text-sm ${isSelected ? "text-gray-800 dark:text-gray-200" : "text-gray-500 dark:text-gray-400"}`}
+ className={`text-sm ${isSelected ? "text-ink text-ink" : "text-ink-dim"}`}
  >
  "{r.text}"
  </p>
@@ -551,7 +551,7 @@ export default function PressConference({
  </div>
 
  {/* Footer — delegate to assistant, or skip without answering */}
- <footer className="bg-white dark:bg-navy-800 border-t border-gray-200 dark:border-navy-700 px-6 py-3 transition-colors duration-300">
+ <footer className="bg-white bg-carbon-1 border-t border-slate-line px-6 py-3 transition-colors duration-300">
  <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 flex-wrap">
  <div className="flex items-center gap-4 flex-wrap">
  <button
@@ -588,7 +588,7 @@ export default function PressConference({
  }
  }}
  disabled={submitting}
- className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-ink-faint hover:text-ink text-ink-faint hover:text-ink transition-colors disabled:opacity-50"
  title={t("match.permanentDelegateHint")}
  >
  <UserCheck className="w-4 h-4" />
@@ -598,7 +598,7 @@ export default function PressConference({
  <button
  onClick={onFinish}
  disabled={submitting}
- className="text-xs font-heading uppercase tracking-wider text-gray-600 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-300 transition-colors disabled:opacity-50"
+ className="text-xs font-heading uppercase tracking-wider text-ink-dim hover:text-ink text-ink-faint hover:text-ink-dim transition-colors disabled:opacity-50"
  >
  {t("match.skipConference")}
  </button>

@@ -174,34 +174,34 @@ export default function ScheduleCalendarGrid({
  ];
 
  return (
- <div className="rounded border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800 overflow-hidden">
+ <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1 overflow-hidden">
  {/* Header */}
- <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-navy-600">
+ <div className="flex items-center justify-between px-4 py-3 border-b border-slate-line-soft">
  <button
  onClick={prevMonth}
  aria-label={t("schedule.calendar.prevMonth", "Previous month")}
- className="p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+ className="p-1 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="font-heading font-bold text-sm uppercase tracking-wider text-gray-700 dark:text-gray-200">
+ <span className="font-heading font-bold text-sm uppercase tracking-wider text-ink">
  {monthLabel}
  </span>
  <button
  onClick={nextMonth}
  aria-label={t("schedule.calendar.nextMonth", "Next month")}
- className="p-1 rounded text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy-700 transition-colors"
+ className="p-1 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
  </div>
 
  {/* Weekday headers */}
- <div className="grid grid-cols-7 border-b border-gray-100 dark:border-navy-600">
+ <div className="grid grid-cols-7 border-b border-slate-line-soft">
  {weekdays.map((wd) => (
  <div
  key={wd}
- className="py-2 text-center font-heading text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500"
+ className="py-2 text-center font-heading text-xs font-bold uppercase tracking-wider text-ink-faint"
  >
  {wd}
  </div>
@@ -220,13 +220,13 @@ export default function ScheduleCalendarGrid({
  className={[
  "relative flex flex-col items-center py-2 gap-1 text-xs font-heading font-bold transition-colors",
  day.isCurrentMonth
- ? "text-gray-800 dark:text-gray-100"
- : "text-gray-300 dark:text-navy-600",
+ ? "text-ink"
+ : "text-ink-faint dark:text-navy-600",
  day.isToday
  ? "bg-primary-50 dark:bg-primary-500/10"
  : "",
  clickable
- ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-navy-700/50"
+ ? "cursor-pointer hover:bg-carbon-2 hover:bg-carbon-3/50"
  : "cursor-default",
  ]
  .filter(Boolean)
@@ -254,7 +254,7 @@ export default function ScheduleCalendarGrid({
  className={`w-1.5 h-1.5 rounded-full ${
  day.hasUserMatch
  ? "bg-primary-500"
- : "bg-gray-300 dark:bg-navy-500"
+ : "bg-carbon-3 bg-carbon-3"
  }`}
  aria-hidden="true"
  />
@@ -265,13 +265,13 @@ export default function ScheduleCalendarGrid({
  </div>
 
  {/* Legend */}
- <div className="flex items-center gap-4 border-t border-gray-100 dark:border-navy-600 px-4 py-2 text-xs text-gray-400 dark:text-gray-500">
+ <div className="flex items-center gap-4 border-t border-slate-line-soft px-4 py-2 text-xs text-ink-faint">
  <span className="flex items-center gap-1.5">
  <span className="w-2 h-2 rounded-full bg-primary-500" />
  {t("schedule.calendar.yourMatch", "Your match")}
  </span>
  <span className="flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full bg-gray-300 dark:bg-navy-500" />
+ <span className="w-2 h-2 rounded-full bg-carbon-3 bg-carbon-3" />
  {t("schedule.calendar.otherFixtures", "Other fixtures")}
  </span>
  </div>

@@ -324,10 +324,10 @@ export default function HomeTab({
  {obj.met ? (
  <CheckCircle2 className="w-4 h-4 text-success-500 flex-shrink-0" />
  ) : (
- <Circle className="w-4 h-4 text-gray-300 dark:text-navy-600 flex-shrink-0" />
+ <Circle className="w-4 h-4 text-ink-faint dark:text-navy-600 flex-shrink-0" />
  )}
  <span
- className={`text-sm ${obj.met ? "text-success-600 dark:text-success-400 line-through" : "text-gray-700 dark:text-gray-300"}`}
+ className={`text-sm ${obj.met ? "text-success-600 dark:text-success-400 line-through" : "text-ink-dim"}`}
  >
  {obj.description}
  </span>
@@ -341,8 +341,8 @@ export default function HomeTab({
  </div>
  ))}
  </div>
- <div className="mt-3 pt-2 border-t border-gray-100 dark:border-navy-700">
- <p className="text-[10px] text-gray-400 dark:text-gray-500">
+ <div className="mt-3 pt-2 border-t border-slate-line-soft">
+ <p className="text-[10px] text-ink-faint">
  {t("home.objectivesMet", {
  done: boardObjectives.filter((o) => o.met).length,
  total: boardObjectives.length,

@@ -466,5 +466,5 @@ export function getOverallRatingClassName(overallRating: number): string {
     return "text-accent-600 dark:text-accent-400";
   }
 
-  return "text-gray-500 dark:text-gray-400";
+  return "text-ink-dim";
 }

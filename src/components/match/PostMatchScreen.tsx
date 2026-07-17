@@ -239,7 +239,7 @@ export default function PostMatchScreen({
  ];
 
  return (
- <div className="postmatch-hero-bg min-h-screen bg-gray-100 text-gray-900 dark:bg-navy-900 dark:text-white flex flex-col transition-colors duration-300">
+ <div className="postmatch-hero-bg min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
  {/* Result Header */}
  <header
  // V99.10 UI-6: Replaced gradients with matte Gaffer palette backgrounds.
@@ -250,7 +250,7 @@ export default function PostMatchScreen({
  ? "bg-primary-500/15 dark:bg-primary-500/10"
  : resultType === "loss"
  ? "bg-danger-500/15 dark:bg-danger-500/10"
- : "bg-concrete/15 dark:bg-navy-700/50"
+ : "bg-concrete/15 bg-carbon-2/50"
  }`}
  >
  <div className="text-center relative">
@@ -276,9 +276,9 @@ export default function PostMatchScreen({
  </div>
  )}
  {resultType === "draw" && (
- <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-500/20 rounded-full">
- <Minus className="w-4 h-4 text-gray-400" />
- <span className="font-heading font-bold text-sm uppercase tracking-widest text-gray-400">
+ <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-carbon-3/20 rounded-full">
+ <Minus className="w-4 h-4 text-ink-faint" />
+ <span className="font-heading font-bold text-sm uppercase tracking-widest text-ink-faint">
  {t("match.draw")}
  </span>
  </div>
@@ -299,35 +299,35 @@ export default function PostMatchScreen({
  borderWidth: 2,
  }}
  />
- <p className="font-heading font-bold text-base text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-base text-ink text-ink">
  {snapshot.home_team.name}
  </p>
  </div>
 
  <div className="flex items-center gap-5">
- <span className="text-5xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-5xl font-heading font-bold text-ink tabular-nums">
  {snapshot.home_score}
  </span>
  <div className="text-center">
  <p className="text-xs font-heading uppercase tracking-widest text-accent-700 dark:text-accent-400">
  {t("match.fullTime")}
  </p>
- <p className="text-base font-heading font-bold text-gray-500 dark:text-gray-500">
+ <p className="text-base font-heading font-bold text-ink-faint text-ink-faint">
  {t("match.ft")}
  </p>
  {shootout && (
- <p className="text-sm font-heading font-bold text-gray-500 dark:text-gray-400 tabular-nums whitespace-nowrap">
+ <p className="text-sm font-heading font-bold text-ink-dim tabular-nums whitespace-nowrap">
  {t("match.pen")} {shootout.home_scored}–{shootout.away_scored}
  </p>
  )}
  </div>
- <span className="text-5xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">
+ <span className="text-5xl font-heading font-bold text-ink tabular-nums">
  {snapshot.away_score}
  </span>
  </div>
 
  <div className="flex items-center gap-4">
- <p className="font-heading font-bold text-base text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-base text-ink text-ink">
  {snapshot.away_team.name}
  </p>
  <TeamLogo
@@ -346,7 +346,7 @@ export default function PostMatchScreen({
  </header>
 
  {/* Sticky Action Bar */}
- <div className="sticky top-0 z-10 bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 shadow-sm transition-colors duration-300">
+ <div className="sticky top-0 z-10 bg-white bg-carbon-1 border-b border-slate-line shadow-sm transition-colors duration-300">
  <div className="px-6 py-3 flex items-center justify-center gap-3">
  {isSpectator ? (
  <button
@@ -362,7 +362,7 @@ export default function PostMatchScreen({
  <button
  type="button"
  onClick={onFinish}
- className="flex items-center gap-2 px-5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-navy-700 dark:hover:bg-navy-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-gray-700 dark:text-gray-300 transition-colors"
+ className="flex items-center gap-2 px-5 py-2 bg-carbon-2 hover:bg-carbon-3 hover:bg-carbon-3 rounded font-heading font-bold uppercase tracking-wider text-sm text-ink-dim transition-colors"
  >
  {t("match.skip")}
  </button>
@@ -380,7 +380,7 @@ export default function PostMatchScreen({
  </div>
 
  {/* Tab Bar */}
- <div className="bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 border-b border-slate-line transition-colors duration-300">
  <div className="px-6">
  <div className="flex gap-1" role="tablist">
  {tabs.map((tab) => (
@@ -395,7 +395,7 @@ export default function PostMatchScreen({
  className={`flex items-center gap-2 px-5 py-3 text-sm font-heading font-bold uppercase tracking-wider border-b-2 transition-colors ${
  activeTab === tab.id
  ? "border-primary-500 text-primary-600 dark:text-primary-400"
- : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+ : "border-transparent text-ink-dim hover:text-ink hover:text-ink"
  }`}
  >
  {tab.icon}
@@ -419,14 +419,14 @@ export default function PostMatchScreen({
  className="max-w-2xl mx-auto"
  >
  {!talkDelivered ? (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-6 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-6 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-4">
  <MessageCircle className="w-4 h-4 text-accent-400" />
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.postMatchTeamTalk")}
  </h3>
  </div>
- <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+ <p className="text-sm text-ink-dim mb-4">
  {t("match.addressPlayers")}
  </p>
  <div className="grid grid-cols-2 gap-3 mb-4">
@@ -440,7 +440,7 @@ export default function PostMatchScreen({
  className={`flex items-center gap-3 p-4 rounded text-left transition-all ${
  selectedTalk === opt.id
  ? "bg-primary-500/20 ring-2 ring-primary-500/50"
- : "bg-gray-50 hover:bg-gray-100 dark:bg-navy-700/50 dark:hover:bg-navy-700"
+ : "bg-carbon-2 hover:bg-carbon-2/50 hover:bg-carbon-3"
  }`}
  >
  <span className="text-2xl">
@@ -452,7 +452,7 @@ export default function PostMatchScreen({
  className={`text-sm font-heading font-bold truncate ${
  selectedTalk === opt.id
  ? "text-primary-400"
- : "text-gray-800 dark:text-gray-200"
+ : "text-ink text-ink"
  }`}
  >
  {opt.label}
@@ -461,7 +461,7 @@ export default function PostMatchScreen({
  <Star className="w-3 h-3 text-accent-400 shrink-0" />
  )}
  </div>
- <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">
+ <p className="text-[11px] text-ink-dim truncate">
  {opt.description}
  </p>
  </div>
@@ -476,7 +476,7 @@ export default function PostMatchScreen({
  disabled={talkPending}
  className={`w-full py-3 rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors ${
  talkPending
- ? "bg-gray-300 dark:bg-navy-600 text-gray-500 cursor-not-allowed"
+ ? "bg-carbon-3 bg-carbon-3 text-ink-faint cursor-not-allowed"
  : "bg-primary-500/20 hover:bg-primary-500/30 text-primary-400"
  }`}
  >
@@ -490,7 +490,7 @@ export default function PostMatchScreen({
  )}
  </div>
  ) : (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-6 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-6 transition-colors duration-300">
  <div className="flex items-center gap-3 mb-5">
  <span className="text-2xl">
  {getTalkIcon(selectedTalk || "")}
@@ -508,29 +508,29 @@ export default function PostMatchScreen({
  </div>
  </div>
  {talkResults.length > 0 && (
- <div className="rounded overflow-hidden border border-gray-200 dark:border-navy-700">
+ <div className="rounded overflow-hidden border border-slate-line">
  <table className="w-full text-xs">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-700/50">
- <th className="text-left px-3 py-2 font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <tr className="bg-carbon-2/50">
+ <th className="text-left px-3 py-2 font-heading uppercase tracking-wider text-ink-dim">
  {t("match.player")}
  </th>
- <th className="text-right px-3 py-2 font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="text-right px-3 py-2 font-heading uppercase tracking-wider text-ink-dim">
  Δ
  </th>
  <th className="px-3 py-2 w-24"></th>
- <th className="text-right px-3 py-2 font-heading uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="text-right px-3 py-2 font-heading uppercase tracking-wider text-ink-dim">
  %
  </th>
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-700">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line-soft">
  {talkResults.map((r) => (
  <tr
  key={r.player_id}
- className="hover:bg-gray-50 dark:hover:bg-navy-700/30 transition-colors"
+ className="hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors"
  >
- <td className="px-3 py-2 text-gray-700 dark:text-gray-300 font-medium truncate max-w-0 w-full">
+ <td className="px-3 py-2 text-ink-dim font-medium truncate max-w-0 w-full">
  {r.player_name}
  </td>
  <td
@@ -539,14 +539,14 @@ export default function PostMatchScreen({
  ? "text-success-500"
  : r.delta < 0
  ? "text-danger-400"
- : "text-gray-400"
+ : "text-ink-faint"
  }`}
  >
  {r.delta > 0 ? "+" : ""}
  {r.delta}
  </td>
  <td className="px-3 py-2">
- <div className="h-1.5 bg-gray-200 dark:bg-navy-600 rounded-full overflow-hidden">
+ <div className="h-1.5 bg-carbon-3 rounded-full overflow-hidden">
  <div
  className={`h-full rounded-full transition-all ${
  r.new_morale >= 70
@@ -595,28 +595,28 @@ export default function PostMatchScreen({
  t,
  );
  return (
- <div className="col-span-2 bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300 gaffer-card-texture">
+ <div className="col-span-2 bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300 gaffer-card-texture">
  <div className="flex items-center gap-2 mb-2">
  <Trophy className="w-4 h-4 text-accent-500" />
  <h3 className="text-sm font-heading font-bold uppercase tracking-widest text-accent-600 dark:text-accent-400">
  {highlights.headline}
  </h3>
  </div>
- <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+ <p className="text-sm text-ink-dim leading-relaxed">
  {highlights.summary}
  </p>
  {highlights.keyMoments.length > 0 && (
- <div className="mt-3 pt-3 border-t border-gray-100 dark:border-navy-700">
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+ <div className="mt-3 pt-3 border-t border-slate-line-soft">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-2">
  Key Moments
  </p>
  <div className="flex flex-col gap-1.5">
  {highlights.keyMoments.map((moment, i) => (
  <div key={i} className="flex items-start gap-2 text-xs">
- <span className="font-heading font-bold tabular-nums text-gray-500 dark:text-gray-400 w-8 shrink-0">
+ <span className="font-heading font-bold tabular-nums text-ink-dim w-8 shrink-0">
  {moment.minute}'
  </span>
- <span className={`flex-1 ${moment.important ? "font-medium text-gray-800 dark:text-gray-200" : "text-gray-600 dark:text-gray-400"}`}>
+ <span className={`flex-1 ${moment.important ? "font-medium text-ink text-ink" : "text-ink-dim"}`}>
  {moment.line}
  </span>
  </div>
@@ -628,8 +628,8 @@ export default function PostMatchScreen({
  );
  })()}
  {/* Scorers */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.scorers")}
  </h3>
  {renderScorers(snapshot, importantEvents, "Home")}
@@ -638,17 +638,17 @@ export default function PostMatchScreen({
  (e) =>
  e.event_type === "Goal" || e.event_type === "PenaltyGoal",
  ).length === 0 && (
- <p className="text-xs text-gray-600 dark:text-gray-500">
+ <p className="text-xs text-ink-dim text-ink-faint">
  {t("match.noGoals")}
  </p>
  )}
  </div>
 
  {/* Quick Stats */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-3">
- <BarChart3 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <BarChart3 className="w-4 h-4 text-ink-dim" />
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.quickStats")}
  </h3>
  </div>
@@ -681,12 +681,12 @@ export default function PostMatchScreen({
  </div>
 
  {/* Key Events */}
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.matchEvents")}
  </h3>
  {keyEvents.length === 0 ? (
- <p className="text-xs text-gray-600 dark:text-gray-500">
+ <p className="text-xs text-ink-dim text-ink-faint">
  {t("match.quietMatch")}
  </p>
  ) : (
@@ -695,7 +695,7 @@ export default function PostMatchScreen({
  const display = getEventDisplay(evt);
  return (
  <div key={i} className="flex items-center gap-2 text-xs">
- <span className="text-gray-600 dark:text-gray-500 tabular-nums w-6 text-right font-heading">
+ <span className="text-ink-dim text-ink-faint tabular-nums w-6 text-right font-heading">
  {evt.minute}'
  </span>
  <span>{display.icon}</span>
@@ -721,22 +721,22 @@ export default function PostMatchScreen({
 
  {/* Substitutions */}
  {snapshot.substitutions.length > 0 && (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.substitutions")}
  </h3>
  <div className="flex flex-col gap-2">
  {snapshot.substitutions.map((sub, i) => (
  <div key={i} className="flex items-center gap-2 text-xs">
- <span className="text-gray-600 dark:text-gray-500 tabular-nums w-6 text-right font-heading">
+ <span className="text-ink-dim text-ink-faint tabular-nums w-6 text-right font-heading">
  {sub.minute}'
  </span>
  <span className="text-success-400">↑</span>
- <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
+ <span className="text-ink-dim truncate flex-1">
  {getPlayerName(snapshot, sub.player_on_id)}
  </span>
  <span className="text-danger-400">↓</span>
- <span className="text-gray-500 dark:text-gray-400 truncate">
+ <span className="text-ink-dim truncate">
  {getPlayerName(snapshot, sub.player_off_id)}
  </span>
  </div>
@@ -786,10 +786,10 @@ export default function PostMatchScreen({
  { key: "penalties", label: t("match.penaltyGoals") },
  ];
  return (
- <div className="col-span-2 bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+ <div className="col-span-2 bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-3">
- <BarChart3 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <BarChart3 className="w-4 h-4 text-ink-dim" />
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.goalSources")}
  </h3>
  </div>
@@ -806,16 +806,16 @@ export default function PostMatchScreen({
  <div key={key} className="mb-1 last:mb-0">
  <div className="flex justify-between text-xs mb-0.5">
  <span className="font-mono font-bold text-primary-400 tabular-nums">
- {hv} <span className="font-normal text-gray-500">({homePct}%)</span>
+ {hv} <span className="font-normal text-ink-faint">({homePct}%)</span>
  </span>
- <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
+ <span className="text-ink-dim text-ink-faint font-heading uppercase tracking-wider text-[10px]">
  {label}
  </span>
  <span className="font-mono font-bold text-primary-400 tabular-nums">
- <span className="font-normal text-gray-500">({awayPct}%)</span> {av}
+ <span className="font-normal text-ink-faint">({awayPct}%)</span> {av}
  </span>
  </div>
- <div className="flex h-1 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden">
+ <div className="flex h-1 bg-carbon-3 bg-carbon-2 rounded-full overflow-hidden">
  <div className="h-full bg-primary-500" style={{ width: `${homeBarPct}%` }} />
  <div className="h-full bg-primary-500" style={{ width: `${awayBarPct}%` }} />
  </div>
@@ -834,25 +834,25 @@ export default function PostMatchScreen({
  return (
  <div
  key={side}
- className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300"
+ className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300"
  >
  <div className="flex items-center gap-2 mb-1">
  <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: teamColor }} />
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {team.name}
  </h3>
  </div>
- <p className="text-[10px] text-gray-500 dark:text-gray-500 font-heading uppercase tracking-wider mb-3">
+ <p className="text-[10px] text-ink-faint text-ink-faint font-heading uppercase tracking-wider mb-3">
  {team.formation} · {t(`common.playStyles.${team.play_style}` as never, team.play_style)}
  </p>
  <div className="flex flex-col gap-0.5 max-h-52 overflow-auto">
  {team.players.map((p) => (
  <div key={p.id} className="flex items-center gap-2 text-xs py-0.5">
- <span className="text-gray-500 dark:text-gray-500 text-[10px] font-heading uppercase w-6 shrink-0">
+ <span className="text-ink-faint text-ink-faint text-[10px] font-heading uppercase w-6 shrink-0">
  {p.position.charAt(0)}
  </span>
- <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{p.name}</span>
- <span className="text-gray-500 dark:text-gray-400 text-[10px] font-heading shrink-0">
+ <span className="text-ink-dim truncate flex-1">{p.name}</span>
+ <span className="text-ink-dim text-[10px] font-heading shrink-0">
  {t(`tactics.playerRoles.${p.role ?? "Standard"}` as never, p.role ?? "Standard")}
  </span>
  </div>

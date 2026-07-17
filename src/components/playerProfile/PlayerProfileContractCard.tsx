@@ -194,12 +194,12 @@ function InfoRow({
  value: React.ReactNode;
 }) {
  return (
- <div className="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-navy-600 last:border-0">
- <div className="text-gray-400 dark:text-gray-500">{icon}</div>
- <span className="text-sm text-gray-500 dark:text-gray-400 flex-1">
+ <div className="flex items-center gap-3 py-2 border-b border-slate-line-soft last:border-0">
+ <div className="text-ink-faint">{icon}</div>
+ <span className="text-sm text-ink-dim flex-1">
  {label}
  </span>
- <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+ <span className="text-sm font-semibold text-ink text-ink">
  {value}
  </span>
  </div>

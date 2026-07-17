@@ -53,10 +53,10 @@ export default function DashboardBlockerModal({
  <AlertCircle className="h-5 w-5 text-accent-500" />
  </div>
  <div>
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("notifications.attentionRequired")}
  </h3>
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("notifications.resolveBeforeContinuing")}
  </p>
  </div>
@@ -71,7 +71,7 @@ export default function DashboardBlockerModal({
  <p className={getBlockerTextClassName(blocker.severity)}>
  {getBlockerText(blocker)}
  </p>
- <p className="mt-1 text-[10px] font-heading uppercase tracking-widest text-gray-400">
+ <p className="mt-1 text-[10px] font-heading uppercase tracking-widest text-ink-faint">
  {t("notifications.goTo")} {getBlockerTabLabel(t, blocker.tab)} →
  </p>
  </button>
@@ -80,7 +80,7 @@ export default function DashboardBlockerModal({
  <div className="flex gap-3">
  <button
  onClick={onClose}
- className="flex-1 rounded bg-gray-100 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-gray-700 transition-colors hover:bg-gray-200 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600"
+ className="flex-1 rounded bg-carbon-2 px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:bg-carbon-3 text-ink-dim hover:bg-carbon-3"
  >
  {t("notifications.reviewIssues")}
  </button>

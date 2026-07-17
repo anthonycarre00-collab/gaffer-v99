@@ -75,21 +75,21 @@ function AdvancedStatCard({
  headerRight={
  <span
  title={percentile === null ? percentileUnavailableLabel : percentileLabel}
- className="font-heading font-bold text-sm tabular-nums text-gray-700 dark:text-gray-200"
+ className="font-heading font-bold text-sm tabular-nums text-ink"
  >
  {formatOrdinal(percentile, "-")}
  </span>
  }
  >
  <div className="mt-auto flex items-baseline justify-between gap-3">
- <span className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100 tabular-nums">
+ <span className="font-heading font-bold text-2xl text-ink tabular-nums">
  {primaryValue}
  </span>
  <span className="text-right">
- <span className="block text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <span className="block text-[11px] uppercase tracking-wider text-ink-faint">
  {secondaryLabel}
  </span>
- <span className="block font-heading font-bold text-sm text-gray-700 dark:text-gray-200 tabular-nums">
+ <span className="block font-heading font-bold text-sm text-ink tabular-nums">
  {secondaryValue}
  </span>
  </span>

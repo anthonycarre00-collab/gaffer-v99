@@ -43,20 +43,20 @@ export default function HomeUnavailablePlayersCard({
  {players.map((player) => (
  <div
  key={player.id}
- className="flex flex-col gap-2 rounded border border-gray-100 px-3 py-2.5 dark:border-navy-700 sm:flex-row sm:items-center sm:justify-between"
+ className="flex flex-col gap-2 rounded border border-slate-line-soft px-3 py-2.5 border-slate-line sm:flex-row sm:items-center sm:justify-between"
  >
  <div className="min-w-0 flex items-center gap-3">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <span className="truncate text-sm font-heading font-bold text-gray-800 dark:text-gray-200">
+ <span className="truncate text-sm font-heading font-bold text-ink text-ink">
  {player.full_name}
  </span>
  <Badge variant="danger" size="sm">
  {t("common.injured")}
  </Badge>
  </div>
- <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 text-xs text-ink-dim">
  {player.injury ? `${resolveInjuryName(player.injury.name)} - ` : ""}
  {t("home.daysUnavailable", {
  count: player.injury?.days_remaining ?? 0,
@@ -64,7 +64,7 @@ export default function HomeUnavailablePlayersCard({
  </p>
  </div>
  </div>
- <div className="text-xs font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t(`common.positions.${player.position}`, {
  defaultValue: player.position,
  })}

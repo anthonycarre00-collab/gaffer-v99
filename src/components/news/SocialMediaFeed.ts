@@ -298,7 +298,7 @@ export function getSocialTypeColor(type: SocialMediaType): string {
     case "fan_diehard": return "text-primary-600 dark:text-primary-400";
     case "fan_casual": return "text-accent-600 dark:text-accent-400";
     case "pundit": return "text-accent-700 dark:text-accent-500";
-    case "journalist": return "text-gray-700 dark:text-gray-300";
+    case "journalist": return "text-ink-dim";
     case "player_post": return "text-primary-500 dark:text-primary-300";
   }
 }

@@ -11,14 +11,14 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
 
  if (!playerId) {
  return (
- <Card className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+ <Card className="p-4 text-center text-sm text-ink-dim">
  {t('meaning.noPlayerSelected')}
  </Card>
  );
  }
  if (loading || !snapshot) {
  return (
- <Card className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+ <Card className="p-4 text-center text-sm text-ink-dim">
  {t('meaning.loading')}
  </Card>
  );
@@ -40,8 +40,8 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  <Card className="p-5 space-y-4">
  <div>
  <div className="flex items-baseline justify-between">
- <h2 className="text-xl font-bold text-gray-900 dark:text-white">{snapshot.display_name}</h2>
- <span className="text-xs text-gray-500 dark:text-gray-400">{snapshot.club}</span>
+ <h2 className="text-xl font-bold text-ink">{snapshot.display_name}</h2>
+ <span className="text-xs text-ink-dim">{snapshot.club}</span>
  </div>
  <div className="mt-1 flex flex-wrap gap-2">
  <Badge variant="primary">{snapshot.archetype_label}</Badge>
@@ -51,75 +51,75 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  </div>
 
  <div
- className="rounded border border-gray-200 p-3 dark:border-navy-600 cursor-help"
+ className="rounded border border-slate-line p-3 border-slate-line cursor-help"
  onClick={() => setExp(exp === 'stability' ? null : 'stability')}
  >
  <div className="flex justify-between">
- <span className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.stability')}</span>
- <span className="text-sm font-semibold text-gray-900 dark:text-white">{snapshot.stability_label}</span>
+ <span className="text-xs uppercase text-ink-dim">{t('meaning.stability')}</span>
+ <span className="text-sm font-semibold text-ink">{snapshot.stability_label}</span>
  </div>
- <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{snapshot.stability_description}</p>
+ <p className="mt-1 text-xs text-ink-dim">{snapshot.stability_description}</p>
  {exp === 'stability' &&
  snapshot.stability_explanation.entries.map((e, i) => (
- <div key={i} className="text-xs text-gray-400 mt-1">• {e.reason}</div>
+ <div key={i} className="text-xs text-ink-faint mt-1">• {e.reason}</div>
  ))}
  </div>
 
  <div className="grid grid-cols-2 gap-3 text-sm">
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.form')}</div>
- <div className="font-medium text-gray-900 dark:text-white">{snapshot.current_form_label}</div>
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.form')}</div>
+ <div className="font-medium text-ink">{snapshot.current_form_label}</div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.confidence')}</div>
- <div className="font-medium text-gray-900 dark:text-white">{snapshot.confidence_label}</div>
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.confidence')}</div>
+ <div className="font-medium text-ink">{snapshot.confidence_label}</div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.fatigue')}</div>
- <div className="font-medium text-gray-900 dark:text-white">{snapshot.fatigue_label}</div>
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.fatigue')}</div>
+ <div className="font-medium text-ink">{snapshot.fatigue_label}</div>
  </div>
  <div>
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.morale')}</div>
- <div className="font-medium text-gray-900 dark:text-white">{snapshot.morale_state}</div>
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.morale')}</div>
+ <div className="font-medium text-ink">{snapshot.morale_state}</div>
  </div>
  </div>
 
  <div
- className="rounded border border-gray-200 p-3 dark:border-navy-600 cursor-help"
+ className="rounded border border-slate-line p-3 border-slate-line cursor-help"
  onClick={() => setExp(exp === 'pressure' ? null : 'pressure')}
  >
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.pressureResponse')}</div>
- <div className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{pressureLabel}</div>
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.pressureResponse')}</div>
+ <div className="mt-1 text-sm font-medium text-ink">{pressureLabel}</div>
  {exp === 'pressure' &&
  snapshot.pressure_response_explanation.entries.map((e, i) => (
- <div key={i} className="text-xs text-gray-400 mt-1">• {e.reason}</div>
+ <div key={i} className="text-xs text-ink-faint mt-1">• {e.reason}</div>
  ))}
  </div>
 
  {/* Gaffer Phase 2 — Relationship panel */}
  {(snapshot.strongest_positive_link || snapshot.strongest_negative_link) && (
- <div className="rounded border border-gray-200 p-3 dark:border-navy-600">
- <div className="text-xs uppercase text-gray-500 dark:text-gray-400">{t('meaning.relationships')}</div>
+ <div className="rounded border border-slate-line p-3 border-slate-line">
+ <div className="text-xs uppercase text-ink-dim">{t('meaning.relationships')}</div>
  <div className="mt-1 space-y-1 text-xs">
  {snapshot.strongest_positive_link && (
  <div className="flex items-center gap-2">
  <span className="text-success-600 dark:text-success-400">★</span>
- <span className="text-gray-600 dark:text-gray-300">{t('meaning.closestAlly')}</span>
- <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_positive_link}</span>
+ <span className="text-ink-dim">{t('meaning.closestAlly')}</span>
+ <span className="font-medium text-ink">{snapshot.strongest_positive_link}</span>
  </div>
  )}
  {snapshot.strongest_negative_link && (
  <div className="flex items-center gap-2">
  <span className="text-danger-600 dark:text-danger-400">⚠</span>
- <span className="text-gray-600 dark:text-gray-300">{t('meaning.tensionWith')}</span>
- <span className="font-medium text-gray-900 dark:text-white">{snapshot.strongest_negative_link}</span>
+ <span className="text-ink-dim">{t('meaning.tensionWith')}</span>
+ <span className="font-medium text-ink">{snapshot.strongest_negative_link}</span>
  </div>
  )}
  {snapshot.chemistry_score !== 0 && (
  <div className="flex items-center gap-2">
- <span className="text-gray-400">◆</span>
- <span className="text-gray-600 dark:text-gray-300">{t('meaning.chemistry')}</span>
- <span className="font-medium text-gray-900 dark:text-white">
+ <span className="text-ink-faint">◆</span>
+ <span className="text-ink-dim">{t('meaning.chemistry')}</span>
+ <span className="font-medium text-ink">
  {snapshot.chemistry_score > 0 ? '+' : ''}{snapshot.chemistry_score}
  </span>
  </div>
@@ -127,8 +127,8 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  {snapshot.clique_membership.length > 0 && (
  <div className="flex items-center gap-2">
  <span className="text-primary-600 dark:text-primary-400">●</span>
- <span className="text-gray-600 dark:text-gray-300">{t('meaning.clique')}</span>
- <span className="font-medium text-gray-900 dark:text-white">{snapshot.clique_membership.join(', ')}</span>
+ <span className="text-ink-dim">{t('meaning.clique')}</span>
+ <span className="font-medium text-ink">{snapshot.clique_membership.join(', ')}</span>
  </div>
  )}
  </div>

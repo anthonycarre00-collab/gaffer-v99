@@ -3,9 +3,9 @@ import { useState, useRef, useEffect, useId } from "react";
 import { Select } from "../../../components/ui/Select";
 
 export const inputClass =
- "w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
+ "w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
 export const labelClass =
- "text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400";
+ "text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-ink-dim";
 
 interface LabeledInputProps {
  label: string;
@@ -106,13 +106,13 @@ export function InlineHelp({ text }: InlineHelpProps) {
  <button
  type="button"
  onClick={() => setOpen((v) => !v)}
- className="text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+ className="text-ink-faint hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
  aria-label="Help"
  >
  <HelpCircle className="w-3.5 h-3.5" />
  </button>
  {open && (
- <div className="absolute left-0 top-full mt-1 z-50 w-64 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 p-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+ <div className="absolute left-0 top-full mt-1 z-50 w-64 rounded border border-slate-line bg-white bg-carbon-1 p-3 text-xs text-ink-dim leading-relaxed">
  {text}
  </div>
  )}

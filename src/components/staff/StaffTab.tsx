@@ -149,7 +149,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  onClick={() => setView("mystaff")}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${view === "mystaff"
  ? "bg-primary-500 text-white "
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  <UserCog className="w-4 h-4" />{" "}
@@ -159,7 +159,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  onClick={() => setView("available")}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${view === "available"
  ? "bg-primary-500 text-white "
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  <UserPlus className="w-4 h-4" />{" "}
@@ -168,13 +168,13 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  </div>
 
  <div className="relative flex-1 min-w-[180px] max-w-xs">
- <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+ <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
  <input
  type="text"
  placeholder={t("staff.searchStaff")}
  value={search}
  onChange={(e) => setSearch(e.target.value)}
- className="w-full pl-9 pr-3 py-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
 
@@ -183,7 +183,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  onClick={() => setRoleFilter(null)}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${!roleFilter
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t("common.all")}
@@ -194,7 +194,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  onClick={() => setRoleFilter(roleFilter === r ? null : r)}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all flex items-center gap-1 ${roleFilter === r
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {ROLE_ICONS[r]} {t(`staff.roles.${r}`)}
@@ -206,8 +206,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  {/* Staff grid */}
  {filtered.length === 0 ? (
  <div className="py-12 text-center">
- <UserCog className="w-12 h-12 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-400 dark:text-gray-500">
+ <UserCog className="w-12 h-12 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-faint">
  {view === "mystaff"
  ? t("staff.noStaffMatch")
  : t("staff.noAvailableStaff")}
@@ -266,13 +266,13 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <div className="flex items-start gap-4">
  {/* Avatar */}
  <div
- className={`w-12 h-12 rounded flex items-center justify-center ${roleColor} bg-gray-100 dark:bg-navy-700`}
+ className={`w-12 h-12 rounded flex items-center justify-center ${roleColor} bg-carbon-2`}
  >
  {roleIcon}
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2">
- <h3 className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100 uppercase tracking-wide truncate">
+ <h3 className="font-heading font-bold text-sm text-ink uppercase tracking-wide truncate">
  {staff.first_name} {staff.last_name}
  </h3>
  <Badge
@@ -290,7 +290,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  </span>
  </Badge>
  </div>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {t(`staff.roles.${staff.role}`)} — {t("common.age")}{" "}
  {age}
  <span className="ml-1.5 inline-flex items-center gap-1 align-middle">
@@ -317,7 +317,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  </span>
  )}
  {staff.wage > 0 && (
- <span className="text-[10px] bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded font-heading uppercase tracking-wider">
+ <span className="text-[10px] bg-carbon-2 text-ink-dim px-1.5 py-0.5 rounded font-heading uppercase tracking-wider">
  {formatWeeklyAmount(
  formatVal(staff.wage),
  weeklySuffix,
@@ -364,9 +364,9 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  />
  </div>
 
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+ <p className="text-xs text-ink-faint mt-2">
  {t("staff.best")}:{" "}
- <span className="font-medium text-gray-600 dark:text-gray-300">
+ <span className="font-medium text-ink-dim">
  {t(`staff.attrs.${best.key}`)}
  </span>
  </p>
@@ -438,7 +438,7 @@ function AttrBar({
  return (
  <div>
  <div className="flex justify-between items-baseline text-xs mb-0.5">
- <span className="text-gray-500 dark:text-gray-400">{label}</span>
+ <span className="text-ink-dim">{label}</span>
  <span
  className={`font-heading font-bold ${tier.colorClass}`}
  title={tier.description}

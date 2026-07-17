@@ -65,7 +65,7 @@ export function PlayerForm({
  }
 
  const inputClass =
- "w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
+ "w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
 
  function toggleAttributes(checked: boolean) {
  setUseAttributes(checked);
@@ -135,17 +135,17 @@ export function PlayerForm({
  <label className={labelClass}>{t("worldEditor.playerPhoto")}</label>
  <div className="flex items-center gap-3">
  {photoDataUrl ? (
- <img src={photoDataUrl} alt="" className="w-12 h-12 rounded-full object-cover border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 flex-shrink-0" />
+ <img src={photoDataUrl} alt="" className="w-12 h-12 rounded-full object-cover border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
  ) : (
- <div className="w-12 h-12 rounded-full border border-dashed border-gray-300 dark:border-navy-600 bg-gray-50 dark:bg-navy-700 flex items-center justify-center flex-shrink-0">
- <ImagePlus className="w-5 h-5 text-gray-300 dark:text-navy-500" />
+ <div className="w-12 h-12 rounded-full border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
+ <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
  </div>
  )}
  <div className="flex gap-2">
  <button
  type="button"
  onClick={() => { void handlePickPhoto(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-navy-600 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>
@@ -153,7 +153,7 @@ export function PlayerForm({
  <button
  type="button"
  onClick={() => { updateField("photo", null); }}
- className="px-2 py-1.5 text-xs rounded border border-gray-200 dark:border-navy-600 text-gray-400 hover:text-danger-500 dark:hover:text-danger-400 transition"
+ className="px-2 py-1.5 text-xs rounded border border-slate-line text-ink-faint hover:text-danger-500 dark:hover:text-danger-400 transition"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -253,7 +253,7 @@ export function PlayerForm({
  <div className="grid grid-cols-2 gap-2">
  {keys.map((key) => (
  <div key={key} className="flex flex-col gap-0.5">
- <label className="text-[10px] font-heading uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <label className="text-[10px] font-heading uppercase tracking-wider text-ink-faint">
  {t(`common.attributes.${key}`)}
  </label>
  <div className="flex items-center gap-1.5">
@@ -265,7 +265,7 @@ export function PlayerForm({
  onChange={(e) => updateAttr(key as PlayerAttrKey, parseInt(e.target.value, 10))}
  className="flex-1 accent-primary-500"
  />
- <span className="text-xs font-mono text-gray-600 dark:text-gray-300 w-5 text-right">
+ <span className="text-xs font-mono text-ink-dim w-5 text-right">
  {attrs[key as keyof typeof attrs]}
  </span>
  </div>

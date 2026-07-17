@@ -53,8 +53,8 @@ function getPotentialLabel(
  if (potential >= 65)
  return { label: t("youthAcademy.potPromising"), color: "text-primary-400" };
  if (potential >= 55)
- return { label: t("youthAcademy.potDecent"), color: "text-gray-400" };
- return { label: t("youthAcademy.potLimited"), color: "text-gray-500" };
+ return { label: t("youthAcademy.potDecent"), color: "text-ink-faint" };
+ return { label: t("youthAcademy.potLimited"), color: "text-ink-faint" };
 }
 
 export default function YouthAcademyTab({
@@ -233,7 +233,7 @@ export default function YouthAcademyTab({
  {/* Header */}
  <div className="flex items-center gap-3">
  <GraduationCap className="w-5 h-5 text-primary-500" />
- <h2 className="gaffer-section-underline text-lg font-heading font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wider">
+ <h2 className="gaffer-section-underline text-lg font-heading font-bold text-ink uppercase tracking-wider">
  {t("youthAcademy.title")}
  </h2>
  <Badge variant="neutral" size="sm">
@@ -246,11 +246,11 @@ export default function YouthAcademyTab({
  <Card>
  <CardBody>
  <div className="text-center">
- <Users className="w-5 h-5 text-gray-400 dark:text-gray-500 mx-auto mb-1" />
- <p className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100">
+ <Users className="w-5 h-5 text-ink-faint mx-auto mb-1" />
+ <p className="font-heading font-bold text-2xl text-ink">
  {youthPlayers.length}
  </p>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.youthPlayers")}
  </p>
  </div>
@@ -260,10 +260,10 @@ export default function YouthAcademyTab({
  <CardBody>
  <div className="text-center">
  <Star className="w-5 h-5 text-accent-400 mx-auto mb-1" />
- <p className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100">
+ <p className="font-heading font-bold text-2xl text-ink">
  {avgOvr}
  </p>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.avgOvr")}
  </p>
  </div>
@@ -273,10 +273,10 @@ export default function YouthAcademyTab({
  <CardBody>
  <div className="text-center">
  <TrendingUp className="w-5 h-5 text-success-500 mx-auto mb-1" />
- <p className="font-heading font-bold text-2xl text-gray-800 dark:text-gray-100">
+ <p className="font-heading font-bold text-2xl text-ink">
  {avgPotential}
  </p>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.avgPotential")}
  </p>
  </div>
@@ -289,7 +289,7 @@ export default function YouthAcademyTab({
  <p className="font-heading font-bold text-2xl text-accent-500">
  {highPotential}
  </p>
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.highPotential")}
  </p>
  </div>
@@ -315,7 +315,7 @@ export default function YouthAcademyTab({
  {t("youthAcademy.recoveryTitle")}
  </CardHeader>
  <CardBody className="flex flex-col gap-4">
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("youthAcademy.recoveryDescription")}
  </p>
 
@@ -331,18 +331,18 @@ export default function YouthAcademyTab({
  {eligibleSeniorPlayers.slice(0, 4).map((player) => (
  <div
  key={player.id}
- className="flex items-center justify-between gap-3 rounded border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800/60 px-4 py-3"
+ className="flex items-center justify-between gap-3 rounded border border-slate-line bg-carbon-2/60 px-4 py-3"
  >
  <div className="min-w-0 flex items-center gap-3">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
  <button
  onClick={() => onSelectPlayer?.(player.id)}
- className="text-left font-heading font-bold text-sm text-gray-800 dark:text-gray-100 hover:text-primary-500 transition-colors truncate block"
+ className="text-left font-heading font-bold text-sm text-ink hover:text-primary-500 transition-colors truncate block"
  >
  {player.full_name}
  </button>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {translatePositionAbbreviation(
  t,
  player.natural_position || player.position,
@@ -364,7 +364,7 @@ export default function YouthAcademyTab({
  </div>
  </div>
  ) : (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("youthAcademy.noEligibleSeniorPlayers")}
  </p>
  )}
@@ -406,7 +406,7 @@ export default function YouthAcademyTab({
  <CardBody>
  <div className="flex items-center gap-2 text-xs">
  <GraduationCap className="w-3.5 h-3.5 text-primary-500" />
- <span className="text-gray-500 dark:text-gray-400">
+ <span className="text-ink-dim">
  {t("youthAcademy.youthCoach")}
  </span>
  {youthCoach.map((s) => (
@@ -425,42 +425,42 @@ export default function YouthAcademyTab({
  <CardBody className="p-0">
  {youthPlayers.length === 0 ? (
  <div className="flex flex-col items-center gap-3 py-12">
- <GraduationCap className="w-10 h-10 text-gray-300 dark:text-navy-600" />
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <GraduationCap className="w-10 h-10 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm text-ink-dim">
  {t("youthAcademy.noYouthPlayers")}
  </p>
  </div>
  ) : (
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("youthAcademy.player")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("youthAcademy.pos")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("youthAcademy.age")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("youthAcademy.ovr")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("youthAcademy.potential")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("youthAcademy.growth")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("youthAcademy.traits")}
  </th>
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
  {t("youthAcademy.condition")}
  </th>
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {youthPlayers.map((player) => {
  const potLabel = getPotentialLabel(player.potential, t);
  const growthRoom = player.potential - player.ovr;
@@ -475,16 +475,16 @@ export default function YouthAcademyTab({
  <ContextMenu items={contextItems} key={player.id}>
  <tr
  onClick={() => onSelectPlayer?.(player.id)}
- className="hover:bg-gray-50 dark:hover:bg-navy-700/50 cursor-pointer transition-colors"
+ className="hover:bg-carbon-2 hover:bg-carbon-3/50 cursor-pointer transition-colors"
  >
  <td className="py-2.5 px-4">
  <div className="flex items-center gap-3 min-w-0">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
- <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+ <p className="text-sm font-medium text-ink text-ink truncate">
  {player.full_name}
  </p>
- <div className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1 mt-0.5">
+ <div className="text-[10px] text-ink-faint flex items-center gap-1 mt-0.5">
  <CountryFlag
  code={player.nationality}
  locale={i18n.language}
@@ -511,7 +511,7 @@ export default function YouthAcademyTab({
  </Badge>
  </td>
  <td className="py-2.5 px-4 text-center">
- <span className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300 tabular-nums">
+ <span className="text-sm font-heading font-bold text-ink-dim tabular-nums">
  {player.age}
  </span>
  </td>

@@ -13,7 +13,7 @@ export function Badge({ children, variant = "neutral", size = "sm", className = 
  accent: "bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300",
  success: "bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-400",
  danger: "bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-400",
- neutral: "bg-gray-100 text-gray-600 dark:bg-navy-600 dark:text-gray-400",
+ neutral: "bg-carbon-2 text-ink-dim bg-carbon-3 text-ink-faint",
  };
 
  const sizes = {

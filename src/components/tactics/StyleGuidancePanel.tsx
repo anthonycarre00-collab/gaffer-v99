@@ -154,16 +154,16 @@ export function StyleGuidancePanel({
  );
 
  return (
- <div className="rounded-lg border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 overflow-hidden">
+ <div className="rounded-lg border border-slate-line bg-white bg-carbon-1 overflow-hidden">
  {/* Header */}
- <div className="px-4 py-3 border-b border-gray-100 dark:border-navy-700 bg-gray-50/60 dark:bg-navy-900/30">
+ <div className="px-4 py-3 border-b border-slate-line-soft bg-carbon-2/60 bg-carbon-0/30">
  <div className="flex items-center gap-2">
  <Activity className="w-4 h-4 text-primary-500 dark:text-primary-400" />
- <h3 className="font-heading font-bold uppercase tracking-wide text-sm text-gray-700 dark:text-gray-200">
+ <h3 className="font-heading font-bold uppercase tracking-wide text-sm text-ink">
  {t("tactics.styleGuidance", { defaultValue: "Style Guidance" })}
  </h3>
  </div>
- <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 text-xs text-ink-dim">
  {t("tactics.styleGuidanceHint", {
  defaultValue:
  "What this style asks of the side, and how your phase blueprint aligns.",
@@ -180,9 +180,9 @@ export function StyleGuidancePanel({
  {guidance.demands.map((demand, idx) => (
  <li
  key={idx}
- className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300"
+ className="flex items-start gap-2 text-xs text-ink-dim"
  >
- <ArrowUpRight className="w-3 h-3 mt-0.5 shrink-0 text-gray-400 dark:text-gray-500" />
+ <ArrowUpRight className="w-3 h-3 mt-0.5 shrink-0 text-ink-faint" />
  <span>{demand}</span>
  </li>
  ))}
@@ -195,7 +195,7 @@ export function StyleGuidancePanel({
  {t("tactics.blueprintAlignment", { defaultValue: "Blueprint Alignment" })}
  </h4>
  {alignedFields.length === 0 && mismatchedFields.length === 0 ? (
- <p className="text-xs text-gray-400 dark:text-gray-500 italic">
+ <p className="text-xs text-ink-faint italic">
  {t("tactics.noAlignmentData", {
  defaultValue: "No phase-blueprint fields to check against this style.",
  })}
@@ -205,7 +205,7 @@ export function StyleGuidancePanel({
  {alignedFields.map((field) => (
  <div
  key={`a-${field}`}
- className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300"
+ className="flex items-center gap-2 text-xs text-ink-dim"
  >
  <CheckCircle2 className="w-3.5 h-3.5 text-primary-500 dark:text-primary-400" />
  <span>
@@ -219,7 +219,7 @@ export function StyleGuidancePanel({
  {mismatchedFields.map((field) => (
  <div
  key={`m-${field}`}
- className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300"
+ className="flex items-center gap-2 text-xs text-ink-dim"
  >
  <CircleAlert className="w-3.5 h-3.5 text-accent-500 dark:text-accent-400" />
  <span>
@@ -235,10 +235,10 @@ export function StyleGuidancePanel({
  </div>
 
  {/* Formation reminder */}
- <div className="px-4 py-3 border-t border-gray-100 dark:border-navy-700 bg-gray-50/40 dark:bg-navy-900/20">
- <p className="text-[10px] text-gray-500 dark:text-gray-400">
+ <div className="px-4 py-3 border-t border-slate-line-soft bg-carbon-2/40 bg-carbon-0/20">
+ <p className="text-[10px] text-ink-dim">
  {t("tactics.currentFormation", { defaultValue: "Current formation" })}:{" "}
- <span className="font-heading font-bold text-gray-700 dark:text-gray-200">
+ <span className="font-heading font-bold text-ink">
  {formation}
  </span>
  </p>

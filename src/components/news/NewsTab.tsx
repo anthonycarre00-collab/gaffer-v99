@@ -44,7 +44,7 @@ const CAT_COLORS: Record<string, string> = {
  TransferRoundup: "text-primary-500",
  InjuryNews: "text-danger-500",
  SeasonPreview: "text-success-500",
- Editorial: "text-gray-500",
+ Editorial: "text-ink-faint",
  ManagerialChange: "text-danger-500",
  // V99.11 A2: Player milestone — brass/accent for achievement
  PlayerMilestone: "text-accent-500",
@@ -57,7 +57,7 @@ const CAT_BG: Record<string, string> = {
  TransferRoundup: "bg-primary-500/10",
  InjuryNews: "bg-danger-500/10",
  SeasonPreview: "bg-success-500/10",
- Editorial: "bg-gray-500/10",
+ Editorial: "bg-carbon-3",
  ManagerialChange: "bg-danger-500/10",
  // V99.11 A2: Player milestone
  PlayerMilestone: "bg-accent-500/10",
@@ -172,11 +172,11 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  if (sortedNews.length === 0) {
  return (
  <div className="text-center py-16">
- <GafferNewspaperIcon size={48} className="text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-gray-500 dark:text-gray-400 text-sm">
+ <GafferNewspaperIcon size={48} className="text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-ink-dim text-sm">
  {t("news.noNews")}
  </p>
- <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
+ <p className="text-ink-faint text-xs mt-1">
  {t("news.newsWillAppear")}
  </p>
  </div>
@@ -220,7 +220,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  }}
  className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-colors ${!filterCategory
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600"
+ : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >
  {t("common.all")}
@@ -234,7 +234,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  }}
  className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-colors ${filterCategory === cat
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600"
+ : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >
  {t(`news.categories.${cat}`)}
@@ -244,7 +244,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  {/* Team filter dropdown */}
  {teamsInNews.length > 1 && (
  <div className="relative ml-auto flex items-center gap-2">
- <Filter className="w-3.5 h-3.5 text-gray-400" />
+ <Filter className="w-3.5 h-3.5 text-ink-faint" />
  <Select
  value={filterTeamId || ""}
  onChange={(e) => {
@@ -266,7 +266,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  )}
 
  {!teamsInNews.length && (
- <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+ <span className="text-xs text-ink-faint ml-auto">
  {t("news.nArticles", { count: filtered.length })}
  </span>
  )}
@@ -303,17 +303,17 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  <button
  disabled={safePage === 0}
  onClick={() => setPage((p) => Math.max(0, p - 1))}
- className="p-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+ className="p-2 rounded bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <span className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {safePage + 1} / {totalPages}
  </span>
  <button
  disabled={safePage >= totalPages - 1}
  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
- className="p-2 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+ className="p-2 rounded bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
@@ -339,8 +339,8 @@ function HeroArticle({
  const contextItems = buildArticleTeamMenuItems(t, article, teamNames, onSelectTeam);
  const meta = {
  icon: CAT_ICONS[article.category] || <FileText className="w-4 h-4" />,
- color: CAT_COLORS[article.category] || "text-gray-500",
- bg: CAT_BG[article.category] || "bg-gray-500/10",
+ color: CAT_COLORS[article.category] || "text-ink-faint",
+ bg: CAT_BG[article.category] || "bg-carbon-3",
  label: t(`news.categories.${article.category}`),
  };
 
@@ -348,7 +348,7 @@ function HeroArticle({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group"
+ className="w-full text-left bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group"
  >
  <div className="p-6">
  <div className="flex items-center gap-2 mb-3">
@@ -358,7 +358,7 @@ function HeroArticle({
  {meta.icon}
  {meta.label}
  </span>
- <span className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1">
+ <span className="text-[10px] text-ink-faint flex items-center gap-1">
  <Clock className="w-3 h-3" />
  {formatNewsDate(article.date)}
  </span>
@@ -370,26 +370,26 @@ function HeroArticle({
 
  {/* Match score badge */}
  {article.match_score && (
- <div className="flex items-center gap-3 mb-3 p-3 bg-gray-50 dark:bg-navy-700/50 rounded">
- <span className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
+ <div className="flex items-center gap-3 mb-3 p-3 bg-carbon-2/50 rounded">
+ <span className="text-sm font-heading font-bold text-ink-dim">
  {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
  </span>
  <span className="text-lg font-heading font-bold text-primary-500 bg-primary-500/10 px-3 py-1 rounded">
  {article.match_score.home_goals} –{" "}
  {article.match_score.away_goals}
  </span>
- <span className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
+ <span className="text-sm font-heading font-bold text-ink-dim">
  {teamNames[article.match_score.away_team_id] ?? article.match_score.away_team_id}
  </span>
  </div>
  )}
 
- <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed">
+ <p className="text-sm text-ink-dim line-clamp-3 leading-relaxed">
  {article.body}
  </p>
 
- <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-navy-700">
- <p className="text-[10px] text-gray-400 dark:text-gray-600 font-heading uppercase tracking-widest">
+ <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-line-soft">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-widest">
  — {article.source}
  </p>
  {(article.team_ids ?? []).length > 0 && onSelectTeam && (
@@ -436,8 +436,8 @@ function ArticleCard({
  const contextItems = buildArticleTeamMenuItems(t, article, teamNames, onSelectTeam);
  const meta = {
  icon: CAT_ICONS[article.category] || <FileText className="w-4 h-4" />,
- color: CAT_COLORS[article.category] || "text-gray-500",
- bg: CAT_BG[article.category] || "bg-gray-500/10",
+ color: CAT_COLORS[article.category] || "text-ink-faint",
+ bg: CAT_BG[article.category] || "bg-carbon-3",
  label: t(`news.categories.${article.category}`),
  };
 
@@ -445,7 +445,7 @@ function ArticleCard({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group flex flex-col"
+ className="w-full text-left bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group flex flex-col"
  >
  <div className="p-4 flex-1 flex flex-col">
  <div className="flex items-center gap-2 mb-2">
@@ -463,28 +463,28 @@ function ArticleCard({
 
  {article.match_score && (
  <div className="flex items-center gap-2 mb-2">
- <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+ <span className="text-xs font-medium text-ink-dim">
  {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
  </span>
  <span className="text-xs font-heading font-bold text-primary-500 bg-primary-500/10 px-1.5 py-0.5 rounded">
  {article.match_score.home_goals} –{" "}
  {article.match_score.away_goals}
  </span>
- <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+ <span className="text-xs font-medium text-ink-dim">
  {teamNames[article.match_score.away_team_id] ?? article.match_score.away_team_id}
  </span>
  </div>
  )}
 
- <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed flex-1">
+ <p className="text-xs text-ink-dim line-clamp-2 leading-relaxed flex-1">
  {article.body}
  </p>
 
- <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100 dark:border-navy-700">
- <span className="text-[10px] text-gray-400 dark:text-gray-600 font-heading uppercase tracking-widest">
+ <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-line-soft">
+ <span className="text-[10px] text-ink-faint font-heading uppercase tracking-widest">
  {article.source}
  </span>
- <span className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1">
+ <span className="text-[10px] text-ink-faint flex items-center gap-1">
  <Clock className="w-3 h-3" />
  {formatNewsDate(article.date)}
  </span>
@@ -515,8 +515,8 @@ function ArticleDetail({
  const formatNewsDate = (d: string) => fmtMatchDate(d, i18n.language);
  const meta = {
  icon: CAT_ICONS[article.category] || <FileText className="w-4 h-4" />,
- color: CAT_COLORS[article.category] || "text-gray-500",
- bg: CAT_BG[article.category] || "bg-gray-500/10",
+ color: CAT_COLORS[article.category] || "text-ink-faint",
+ bg: CAT_BG[article.category] || "bg-carbon-3",
  label: t(`news.categories.${article.category}`),
  };
 
@@ -524,13 +524,13 @@ function ArticleDetail({
  <div className="max-w-3xl mx-auto">
  <button
  onClick={onBack}
- className="flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 mb-4 transition-colors"
+ className="flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-ink-dim hover:text-primary-500 dark:hover:text-primary-400 mb-4 transition-colors"
  >
  <ArrowLeft className="w-4 h-4" />
  {t("news.backToNews")}
  </button>
 
- <article className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm overflow-hidden">
+ <article className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
  <div className="p-8">
  {/* Category + date */}
  <div className="flex items-center gap-3 mb-4">
@@ -540,7 +540,7 @@ function ArticleDetail({
  {meta.icon}
  {meta.label}
  </span>
- <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+ <span className="text-xs text-ink-faint flex items-center gap-1">
  <Clock className="w-3.5 h-3.5" />
  {formatNewsDate(article.date)}
  </span>
@@ -553,9 +553,9 @@ function ArticleDetail({
 
  {/* Match score */}
  {article.match_score && (
- <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-gray-50 dark:bg-navy-700/50 rounded">
+ <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-carbon-2/50 rounded">
  <div className="text-center">
- <p className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
+ <p className="text-sm font-heading font-bold text-ink-dim">
  {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
  </p>
  </div>
@@ -564,7 +564,7 @@ function ArticleDetail({
  {article.match_score.away_goals}
  </div>
  <div className="text-center">
- <p className="text-sm font-heading font-bold text-gray-700 dark:text-gray-300">
+ <p className="text-sm font-heading font-bold text-ink-dim">
  {teamNames[article.match_score.away_team_id] ?? article.match_score.away_team_id}
  </p>
  </div>
@@ -572,13 +572,13 @@ function ArticleDetail({
  )}
 
  {/* Body */}
- <div className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed">
+ <div className="text-sm text-ink-dim whitespace-pre-line leading-relaxed">
  {article.body}
  </div>
 
  {/* Footer */}
- <div className="mt-6 pt-4 border-t border-gray-100 dark:border-navy-700 flex items-center justify-between">
- <p className="text-[10px] text-gray-400 dark:text-gray-600 font-heading uppercase tracking-widest">
+ <div className="mt-6 pt-4 border-t border-slate-line-soft flex items-center justify-between">
+ <p className="text-[10px] text-ink-faint font-heading uppercase tracking-widest">
  — {article.source}
  </p>
  {(article.team_ids ?? []).length > 0 && onSelectTeam && (

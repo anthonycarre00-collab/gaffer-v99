@@ -48,16 +48,16 @@ export default function HomeSeasonStatusCard({
  {t(`season.transferWindowStatus.${transferWindowStatus}`)}
  </Badge>
  </div>
- <p className="text-sm text-gray-700 dark:text-gray-300">
+ <p className="text-sm text-ink-dim">
  {t("season.preseasonFocus")}
  </p>
  </div>
  <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:min-w-[22rem]">
- <div className="rounded bg-gray-50 px-4 py-3 dark:bg-navy-700/50">
- <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 px-4 py-3 bg-carbon-2/50">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("season.opener")}
  </p>
- <p className="mt-1 text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="mt-1 text-sm font-heading font-bold text-ink">
  {seasonStartLabel
  ? t("season.startsOn", { date: seasonStartLabel })
  : t("season.noOpener")}
@@ -70,15 +70,15 @@ export default function HomeSeasonStatusCard({
  </p>
  )}
  </div>
- <div className="rounded bg-gray-50 px-4 py-3 dark:bg-navy-700/50">
- <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 px-4 py-3 bg-carbon-2/50">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">
  {t("transfers.centre")}
  </p>
- <p className="mt-1 text-sm font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="mt-1 text-sm font-heading font-bold text-ink">
  {transferWindowSummary}
  </p>
  {(transferWindowOpensOn || transferWindowClosesOn) && (
- <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-1 text-xs text-ink-dim">
  {transferWindowStatus === "Closed" && transferWindowOpensOn
  ? t("season.windowOpensOn", {
  date: formatDateShort(transferWindowOpensOn, lang),

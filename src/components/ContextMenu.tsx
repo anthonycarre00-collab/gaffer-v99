@@ -108,7 +108,7 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  <div
  ref={menuRef}
  role="menu"
- className="fixed z-50 min-w-[180px] bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-600 py-1 animate-in fade-in duration-100"
+ className="fixed z-50 min-w-[180px] bg-white bg-carbon-1 rounded border border-slate-line py-1 animate-in fade-in duration-100"
  style={{ left: pos.x, top: pos.y }}
  onClick={(e) => e.stopPropagation()}
  >
@@ -116,12 +116,12 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  item.divider ? (
  <div
  key={i}
- className="border-t border-gray-100 dark:border-navy-600 my-1"
+ className="border-t border-slate-line-soft my-1"
  />
  ) : item.type === "label" ? (
  <div
  key={i}
- className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400"
+ className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-ink-dim"
  >
  {item.icon && (
  <span className="h-4 w-4 flex-shrink-0 text-accent-500 dark:text-accent-400">
@@ -140,12 +140,12 @@ const ContextMenu = forwardRef<ContextMenuHandle, ContextMenuProps>(
  disabled={item.disabled}
  className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2.5 transition-colors ${
  item.disabled
- ? "text-gray-300 dark:text-gray-600 cursor-not-allowed"
+ ? "text-ink-faint cursor-not-allowed"
  : item.danger
  ? "text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-900/20"
  : item.urgent
  ? "text-accent-600 dark:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/20"
- : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-navy-700"
+ : "text-ink hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  {item.icon && (

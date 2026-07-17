@@ -159,7 +159,7 @@ export function GafferCrest({
  )}
  {withTagline && (
  <p
- className="mt-1 text-center text-sm italic text-gray-500 dark:text-gray-400"
+ className="mt-1 text-center text-sm italic text-ink-dim"
  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
  >
  Tactics. Touchlines. Trophies.
@@ -180,7 +180,7 @@ const GAFFER_TAGLINES = [
 export function GafferTagline({ className = "" }: { className?: string }) {
  return (
  <p
- className={`text-center text-sm italic text-gray-500 dark:text-gray-400 mt-1 ${className}`}
+ className={`text-center text-sm italic text-ink-dim mt-1 ${className}`}
  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
  >
  {GAFFER_TAGLINES[0]}

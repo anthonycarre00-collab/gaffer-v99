@@ -1067,16 +1067,16 @@ export default function TransfersTab({
  {t(`season.transferWindowStatus.${transferWindow.status}`)}
  </Badge>
  </div>
- <p className="text-gray-400 text-xs mt-0.5">
+ <p className="text-ink-faint text-xs mt-0.5">
  {t("transfers.transferWindow", { team: myTeam.name })}
  </p>
- <p className="text-gray-500 text-xs mt-1">
+ <p className="text-ink-faint text-xs mt-1">
  {transferWindowSummary}
  </p>
  </div>
  <div className="hidden md:flex gap-4">
  <div className="bg-white/5 rounded px-4 py-2 text-center">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("finances.transferBudget")}
  </p>
  <p className="font-heading font-bold text-lg text-accent-400">
@@ -1087,7 +1087,7 @@ export default function TransfersTab({
  data-testid="wage-budget-card"
  className="bg-white/5 rounded px-4 py-2 text-center"
  >
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("finances.wageBudget")}
  </p>
  <p className="font-heading font-bold text-lg text-white">
@@ -1098,7 +1098,7 @@ export default function TransfersTab({
  </p>
  </div>
  <div className="bg-white/5 rounded px-4 py-2 text-center">
- <p className="text-xs text-gray-400 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("transfers.listed")}
  </p>
  <p className="font-heading font-bold text-lg text-white">
@@ -1126,7 +1126,7 @@ export default function TransfersTab({
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  view === tab.id
  ? "bg-primary-700 text-white shadow-primary-700/20"
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600 hover:text-gray-700 dark:hover:text-gray-200"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line hover:text-ink hover:text-ink"
  }`}
  >
  {tab.icon} {tab.label} ({tab.count})
@@ -1137,7 +1137,7 @@ export default function TransfersTab({
  {/* Filters */}
  <div className="flex flex-wrap gap-3 mb-4 items-center">
  <div className="relative flex-1 min-w-[180px] max-w-xs">
- <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+ <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
  <input
  type="text"
  placeholder={t("transfers.searchByName")}
@@ -1146,7 +1146,7 @@ export default function TransfersTab({
  setSearch(e.target.value);
  setMarketPage(1);
  }}
- className="w-full pl-9 pr-3 py-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
  <div ref={positionFilterRef} className="flex gap-1.5">
@@ -1155,7 +1155,7 @@ export default function TransfersTab({
  onClick={() => handleSelectPositionGroup(null)}
  aria-pressed={specificPositions.length === 0}
  aria-label={t("transfers.allPositions")}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("common.all")}
  </button>
@@ -1191,7 +1191,7 @@ export default function TransfersTab({
  })
  : groupLabel
  }
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t(`common.posAbbr.${pos}`)}
  {isPartial && (
@@ -1209,7 +1209,7 @@ export default function TransfersTab({
  aria-label={t("transfers.refinePositionGroup", {
  group: groupLabel,
  })}
- className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 "
+ className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded bg-white bg-carbon-1 border border-slate-line "
  >
  <div className="flex flex-wrap gap-1.5">
  {groupSpecifics.map((position) => {
@@ -1228,7 +1228,7 @@ export default function TransfersTab({
  aria-pressed={selected}
  aria-label={positionLabel}
  title={positionLabel}
- className={`px-2.5 py-1 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${selected ? "bg-primary-700 text-white shadow-sm" : "bg-gray-50 dark:bg-navy-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600 hover:text-gray-700 dark:hover:text-gray-200"}`}
+ className={`px-2.5 py-1 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${selected ? "bg-primary-700 text-white shadow-sm" : "bg-carbon-2 text-ink-dim border border-slate-line hover:text-ink hover:text-ink"}`}
  >
  {t(`common.posAbbr.${position}`)}
  </button>
@@ -1251,7 +1251,7 @@ export default function TransfersTab({
  setAvailabilityFilter(filter.id);
  setMarketPage(1);
  }}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {filter.label} ({filter.count})
  </button>
@@ -1265,14 +1265,14 @@ export default function TransfersTab({
  }}
  aria-pressed={affordableOnly}
  title={t("transfers.affordableOnlyHint")}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.affordableOnly")}
  </button>
  )}
  </div>
  )}
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  <Filter className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
  {t("common.nResults", { count: filteredList.length })}
  </p>
@@ -1300,11 +1300,11 @@ export default function TransfersTab({
  <Card>
  <CardBody>
  <div className="text-center py-8">
- <ShoppingCart className="w-10 h-10 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <ShoppingCart className="w-10 h-10 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-dim">
  {t("transfers.noPlayersListed")}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+ <p className="text-xs text-ink-faint mt-1">
  {t("transfers.goToProfile")}
  </p>
  </div>
@@ -1316,8 +1316,8 @@ export default function TransfersTab({
  <Card>
  <CardBody>
  <div className="text-center py-8">
- <Handshake className="w-10 h-10 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <Handshake className="w-10 h-10 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-dim">
  {t("transfers.noOffers")}
  </p>
  </div>
@@ -1331,32 +1331,32 @@ export default function TransfersTab({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
  <SortableHeader label={t("common.position")} columnKey="position" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} />
  <SortableHeader label={t("common.player")} columnKey="name" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} />
  <SortableHeader label={t("common.age")} columnKey="age" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.team")}
  </th>
  <SortableHeader label={t("common.value")} columnKey="value" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
  <SortableHeader label={t("common.wage")} columnKey="wage" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
  <SortableHeader label={t("common.ovr")} columnKey="ovr" sortKey={marketSortKey} sortDir={marketSortDir} onSort={toggleMarketSort} numeric />
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.status")}
  </th>
  {view === "offers" && (
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("transfers.offers")}
  </th>
  )}
  {isScoutingView && (
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("scouting.action")}
  </th>
  )}
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {visibleList.map((player) => {
  const ovr = getPlayerOvr(player);
  const age = calcAge(player.date_of_birth);
@@ -1426,7 +1426,7 @@ export default function TransfersTab({
  const row = (
  <tr
  key={player.id}
- className="hover:bg-gray-50 dark:hover:bg-navy-700/50 transition-colors cursor-pointer group"
+ className="hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors cursor-pointer group"
  onClick={() => onSelectPlayer(player.id)}
  >
  <td className="py-2.5 px-4">
@@ -1446,10 +1446,10 @@ export default function TransfersTab({
  <div className="flex items-center gap-3">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
- <span className="block truncate font-semibold text-sm text-gray-800 dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="block truncate font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {player.full_name}
  </span>
- <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
+ <div className="text-xs text-ink-faint mt-0.5 flex items-center gap-1">
  <CountryFlag
  code={player.nationality}
  locale={i18n.language}
@@ -1465,7 +1465,7 @@ export default function TransfersTab({
  </div>
  </div>
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2.5 px-4 text-sm text-ink-dim tabular-nums">
  {age}
  </td>
  <td className="py-2.5 px-4">
@@ -1476,20 +1476,20 @@ export default function TransfersTab({
  e.stopPropagation();
  onSelectTeam(player.team_id!);
  }}
- className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 hover:underline transition-colors"
+ className="text-sm text-ink-dim hover:text-primary-500 hover:underline transition-colors"
  >
  {getTeamName(gameState.teams, player.team_id)}
  </button>
  ) : (
- <span className="text-sm text-gray-600 dark:text-gray-400">
+ <span className="text-sm text-ink-dim">
  {t("common.freeAgent")}
  </span>
  )}
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 font-medium tabular-nums">
+ <td className="py-2.5 px-4 text-sm text-ink-dim font-medium tabular-nums">
  {formatVal(player.market_value)}
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2.5 px-4 text-sm text-ink-dim tabular-nums">
  {formatAnnualAmount(
  formatVal(player.wage),
  annualSuffix,
@@ -1526,7 +1526,7 @@ export default function TransfersTab({
  <td className="py-2.5 px-4">
  <div className="flex flex-col gap-1">
  {!hasOffersForThisPlayer ? (
- <span className="text-xs text-gray-400">
+ <span className="text-xs text-ink-faint">
  {t("transfers.none")}
  </span>
  ) : (
@@ -1536,7 +1536,7 @@ export default function TransfersTab({
  key={offer.id}
  className="flex items-center gap-2"
  >
- <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+ <span className="text-xs text-ink-dim font-medium">
  {getTeamName(
  gameState.teams,
  offer.from_team_id,
@@ -1629,7 +1629,7 @@ export default function TransfersTab({
  key={`loan-${offer.id}`}
  className="flex items-center gap-2"
  >
- <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+ <span className="text-xs text-ink-dim font-medium">
  {getTeamName(
  gameState.teams,
  offer.from_team_id,
@@ -1780,8 +1780,8 @@ export default function TransfersTab({
  </table>
  </div>
  {showMarketPagination ? (
- <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3 dark:border-navy-600">
- <p className="text-xs font-heading text-gray-400 dark:text-gray-500">
+ <div className="flex items-center justify-between border-t border-slate-line-soft px-4 py-3 border-slate-line">
+ <p className="text-xs font-heading text-ink-faint">
  {t("players.showingRange", {
  from: marketRangeFrom,
  to: marketRangeTo,
@@ -1796,11 +1796,11 @@ export default function TransfersTab({
  }
  disabled={safeMarketPage === 1}
  aria-label={t("scouting.previousPage")}
- className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
+ className="rounded p-1.5 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink disabled:pointer-events-none disabled:opacity-30 hover:bg-carbon-3 hover:text-ink"
  >
  <ChevronLeft className="h-4 w-4" />
  </button>
- <span className="px-3 py-1 text-xs font-heading font-bold text-gray-600 dark:text-gray-300">
+ <span className="px-3 py-1 text-xs font-heading font-bold text-ink-dim">
  {safeMarketPage} / {marketTotalPages}
  </span>
  <button
@@ -1812,7 +1812,7 @@ export default function TransfersTab({
  }
  disabled={safeMarketPage === marketTotalPages}
  aria-label={t("scouting.nextPage")}
- className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-navy-700 dark:hover:text-white"
+ className="rounded p-1.5 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink disabled:pointer-events-none disabled:opacity-30 hover:bg-carbon-3 hover:text-ink"
  >
  <ChevronRight className="h-4 w-4" />
  </button>
@@ -1827,8 +1827,8 @@ export default function TransfersTab({
  <Card>
  <CardBody>
  <div className="text-center py-8">
- <TrendingUp className="w-10 h-10 text-gray-300 dark:text-navy-600 mx-auto mb-3" />
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <TrendingUp className="w-10 h-10 text-ink-faint dark:text-navy-600 mx-auto mb-3" />
+ <p className="text-sm text-ink-dim">
  {availabilityFilter === "transfer"
  ? t("transfers.noTransferMarket")
  : availabilityFilter === "free_agent"
@@ -1945,7 +1945,7 @@ export default function TransfersTab({
  }
 
  return (
- <div className="rounded bg-gray-50 p-6 text-sm text-gray-600 dark:bg-navy-900/50 dark:text-gray-300">
+ <div className="rounded bg-carbon-2 p-6 text-sm text-ink-dim bg-carbon-0/50 text-ink-dim">
  {t("transfers.dealChooserHint")}
  </div>
  );

@@ -44,17 +44,17 @@ export default function ScoutingScoutDetailsCard({
  return (
  <div
  key={scout.id}
- className="p-3 rounded border border-gray-200 dark:border-navy-600"
+ className="p-3 rounded border border-slate-line"
  >
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 rounded bg-accent-500/10 flex items-center justify-center">
  <Eye className="w-4 h-4 text-accent-500" />
  </div>
  <div className="flex-1">
- <p className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100">
+ <p className="font-heading font-bold text-sm text-ink">
  {scout.first_name} {scout.last_name}
  </p>
- <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
+ <div className="text-[10px] text-ink-faint mt-0.5 flex items-center gap-1">
  <CountryFlag
  code={scout.nationality}
  locale={i18n.language}
@@ -70,7 +70,7 @@ export default function ScoutingScoutDetailsCard({
  <div className="mt-2 grid grid-cols-2 gap-2">
  <div>
  <div className="flex items-baseline justify-between mb-0.5">
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase">
+ <p className="text-[10px] text-ink-faint font-heading uppercase">
  {t("scouting.judgingAbility")}
  </p>
  <span
@@ -88,7 +88,7 @@ export default function ScoutingScoutDetailsCard({
  </div>
  <div>
  <div className="flex items-baseline justify-between mb-0.5">
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-heading uppercase">
+ <p className="text-[10px] text-ink-faint font-heading uppercase">
  {t("scouting.judgingPotential")}
  </p>
  <span
@@ -115,10 +115,10 @@ export default function ScoutingScoutDetailsCard({
  return player ? (
  <p
  key={assignment.id}
- className="text-xs text-gray-500 dark:text-gray-400"
+ className="text-xs text-ink-dim"
  >
  {t("scouting.scoutLabel", { name: "" })}
- <span className="font-heading font-bold text-gray-700 dark:text-gray-300">
+ <span className="font-heading font-bold text-ink-dim">
  {player.full_name}
  </span>{" "}
  - {assignment.days_remaining}d

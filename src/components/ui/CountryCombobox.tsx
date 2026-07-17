@@ -90,7 +90,7 @@ export function CountryCombobox({ label, value, onChange, placeholder }: Country
 
  return (
  <div className="flex flex-col gap-1" ref={ref}>
- <label className="text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <label className="text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {label}
  </label>
  <div className="relative">
@@ -103,38 +103,38 @@ export function CountryCombobox({ label, value, onChange, placeholder }: Country
  onClick={(e) => {
  if (e.detail === 0) isOpen ? setIsOpen(false) : open();
  }}
- className="w-full rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 px-3 py-2 text-sm text-left transition focus:outline-none focus:ring-2 focus:ring-primary-400 min-h-[38px]"
+ className="w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-left transition focus:outline-none focus:ring-2 focus:ring-primary-400 min-h-[38px]"
  >
  {selectedLabel ? (
- <span className="flex items-center gap-2 text-gray-900 dark:text-white">
+ <span className="flex items-center gap-2 text-ink">
  {resources && <resources.CountryFlag code={value} locale={locale} className="text-base leading-none" />}
  <span>{selectedLabel}</span>
  </span>
  ) : (
- <span className="text-gray-400 dark:text-gray-500">{placeholder ?? "—"}</span>
+ <span className="text-ink-faint">{placeholder ?? "—"}</span>
  )}
  <ChevronDown
- className={`absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+ className={`absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint transition-transform ${isOpen ? "rotate-180" : ""}`}
  />
  </button>
 
  {isOpen && (
- <div className="absolute top-full left-0 right-0 z-50 mt-1 overflow-hidden rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 ">
+ <div className="absolute top-full left-0 right-0 z-50 mt-1 overflow-hidden rounded border border-slate-line bg-white bg-carbon-2 ">
  {resources ? (
  <>
- <div className="border-b border-gray-100 dark:border-navy-600 p-2">
+ <div className="border-b border-slate-line-soft p-2">
  <input
  type="text"
  autoFocus
  placeholder={t("worldEditor.searchCountries")}
  value={search}
  onChange={(e) => setSearch(e.target.value)}
- className="w-full rounded-md border border-gray-200 dark:border-navy-600 bg-gray-50 dark:bg-navy-800 px-3 py-1.5 text-sm text-gray-900 dark:text-white outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-primary-500"
+ className="w-full rounded-md border border-slate-line bg-carbon-2 px-3 py-1.5 text-sm text-ink outline-none placeholder:text-ink-faint dark:placeholder:text-ink-faint focus:border-primary-500"
  />
  </div>
  <div className="max-h-48 overflow-y-auto overscroll-contain">
  {filtered.length === 0 ? (
- <p className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500">
+ <p className="px-3 py-2 text-xs text-ink-faint">
  {t("menu.noResults")}
  </p>
  ) : (
@@ -150,7 +150,7 @@ export function CountryCombobox({ label, value, onChange, placeholder }: Country
  className={`flex w-full items-center justify-between px-3 py-2 text-sm transition-colors ${
  value === entry.code
  ? "bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400"
- : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-navy-600"
+ : "text-ink hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  <span className="flex items-center gap-2">

@@ -105,7 +105,7 @@ function PlayerRow({
  ? "bg-accent-500/15 ring-1 ring-accent-300/40"
  : isCompare
  ? "bg-primary-500/10 ring-1 ring-primary-300/30"
- : "hover:bg-gray-50 dark:hover:bg-navy-700/50"
+ : "hover:bg-carbon-2 hover:bg-carbon-3/50"
  }`;
 
  if (section === "xi") {
@@ -123,14 +123,14 @@ function PlayerRow({
  >
  {position}
  </Badge>
- <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+ <span className="w-6 shrink-0 rounded-md bg-carbon-2 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-ink-dim bg-carbon-2 text-ink-dim">
  {player.jersey_number ?? "–"}
  </span>
- <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+ <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">
  {player.match_name || player.full_name}
  </span>
  <span
- className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-gray-100 dark:bg-navy-700 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-carbon-2 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
  title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
  {shortOvrLabel(ovr, player.natural_position || player.position)}
@@ -159,17 +159,17 @@ function PlayerRow({
  <Badge variant="neutral" size="sm">
  {position}
  </Badge>
- <span className="w-6 shrink-0 rounded-md bg-gray-100 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-gray-600 dark:bg-navy-700 dark:text-gray-300">
+ <span className="w-6 shrink-0 rounded-md bg-carbon-2 py-0.5 text-center text-[11px] font-mono font-mono font-bold tabular-nums text-ink-dim bg-carbon-2 text-ink-dim">
  {player.jersey_number ?? "–"}
  </span>
- <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+ <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">
  {player.match_name || player.full_name}
  </span>
  {player.injury ? (
  <InjuryBadge injury={player.injury} />
  ) : (
  <span
- className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-gray-100 dark:bg-navy-700 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
+ className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold bg-carbon-2 ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
  title={interpretOvr(ovr, player.natural_position || player.position).description}
  >
  {shortOvrLabel(ovr, player.natural_position || player.position)}
@@ -227,9 +227,9 @@ export default function TacticsPlayerList({
  positionFilter={positionFilter}
  />
 
- <div className="rounded border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
- <div className="border-b border-gray-100 px-3 py-2 dark:border-navy-700">
- <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1">
+ <div className="border-b border-slate-line-soft px-3 py-2 border-slate-line">
+ <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-ink-dim">
  {t("preMatch.startingXI")} · {starters.length}
  </span>
  </div>
@@ -257,15 +257,15 @@ export default function TacticsPlayerList({
  </div>
  </div>
 
- <div className="rounded border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-800">
- <div className="border-b border-gray-100 px-3 py-2 dark:border-navy-700">
- <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1">
+ <div className="border-b border-slate-line-soft px-3 py-2 border-slate-line">
+ <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-ink-dim">
  {t("preMatch.substitutes")} · {bench.length}
  </span>
  </div>
  <div className="p-1.5 space-y-0.5">
  {bench.length === 0 ? (
- <p className="px-2 py-3 text-xs text-gray-500 dark:text-gray-400">
+ <p className="px-2 py-3 text-xs text-ink-dim">
  {t("preMatch.noBench")}
  </p>
  ) : (
@@ -293,7 +293,7 @@ export default function TacticsPlayerList({
  </div>
 
  {draggedPlayerId ? (
- <p className="text-center text-[10px] text-gray-400 dark:text-gray-500">
+ <p className="text-center text-[10px] text-ink-faint">
  {t("squad.dropPlayerHere")}
  </p>
  ) : null}

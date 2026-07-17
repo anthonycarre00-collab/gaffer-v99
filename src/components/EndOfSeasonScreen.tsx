@@ -95,12 +95,12 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  ? "bgc-accent-500"
  : " "
  }`}>
- {isChampion ? <Crown className="w-10 h-10 text-white" /> : <Trophy className="w-10 h-10 text-gray-300" />}
+ {isChampion ? <Crown className="w-10 h-10 text-white" /> : <Trophy className="w-10 h-10 text-ink-faint" />}
  </div>
- <h1 className="text-3xl font-heading font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide">
+ <h1 className="text-3xl font-heading font-bold text-ink uppercase tracking-wide">
  {t('endOfSeason.seasonComplete')}
  </h1>
- <p className="text-lg text-gray-500 dark:text-gray-400 mt-1">
+ <p className="text-lg text-ink-dim mt-1">
  {t("endOfSeason.seasonLine", {
  league: league ? competitionDisplayName(league, t) : "",
  season: league?.season ?? "",
@@ -117,25 +117,25 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <Card accent={isChampion ? "accent" : "primary"} className="mb-6">
  <CardBody>
  <div className="text-center">
- <p className="text-xs font-heading font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">
+ <p className="text-xs font-heading font-bold uppercase tracking-widest text-ink-faint mb-1">
  {userTeam?.name}
  </p>
  <div className="flex items-center justify-center gap-6 mb-4">
  <div>
- <p className="text-4xl font-heading font-bold text-gray-900 dark:text-gray-100">{posLabel(userPosition)}</p>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">{t('endOfSeason.position')}</p>
+ <p className="text-4xl font-heading font-bold text-ink">{posLabel(userPosition)}</p>
+ <p className="text-xs text-ink-faint font-heading uppercase">{t('endOfSeason.position')}</p>
  </div>
- <div className="w-px h-12 bg-gray-200 dark:bg-navy-600" />
+ <div className="w-px h-12 bg-carbon-3" />
  <div>
  <p className="text-4xl font-heading font-bold text-primary-500">{userStanding?.points || 0}</p>
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase">{t('endOfSeason.points')}</p>
+ <p className="text-xs text-ink-faint font-heading uppercase">{t('endOfSeason.points')}</p>
  </div>
  </div>
  <div className="flex items-center justify-center gap-8 text-sm">
  <span className="text-success-500 font-heading font-bold">{userStanding?.won || 0}{t('common.won')}</span>
- <span className="text-gray-500 font-heading font-bold">{userStanding?.drawn || 0}{t('common.drawn')}</span>
+ <span className="text-ink-faint font-heading font-bold">{userStanding?.drawn || 0}{t('common.drawn')}</span>
  <span className="text-danger-500 font-heading font-bold">{userStanding?.lost || 0}{t('common.lost')}</span>
- <span className="text-gray-400">
+ <span className="text-ink-faint">
  {userStanding?.goals_for || 0} {t('common.gf')} — {userStanding?.goals_against || 0} {t('common.ga')}
  </span>
  </div>
@@ -146,21 +146,21 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  {/* Final top 5 standings */}
  <Card className="mb-6">
  <CardBody>
- <h3 className="font-heading font-bold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">
+ <h3 className="font-heading font-bold text-sm uppercase tracking-wider text-ink-dim mb-3 flex items-center gap-2">
  <Trophy className="w-4 h-4 text-accent-500" /> {t('endOfSeason.finalStandings')}
  </h3>
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {standings.slice(0, 5).map((entry, idx) => {
  const teamName = gameState.teams.find(t => t.id === entry.team_id)?.name || "";
  const isUser = entry.team_id === userTeamId;
  const gd = entry.goals_for - entry.goals_against;
  return (
  <div key={entry.team_id} className={`flex items-center py-2.5 gap-3 ${isUser ? "bg-primary-50/50 dark:bg-primary-500/5 -mx-2 px-2 rounded" : ""}`}>
- <span className={`font-heading font-bold text-sm w-6 text-center ${idx === 0 ? "text-accent-500" : "text-gray-400"}`}>{idx + 1}</span>
- <span className={`flex-1 text-sm font-semibold ${isUser ? "text-primary-600 dark:text-primary-400" : "text-gray-800 dark:text-gray-200"}`}>{teamName}</span>
- <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums w-16 text-center">{entry.won}W {entry.drawn}D {entry.lost}L</span>
- <span className={`text-xs font-semibold tabular-nums w-8 text-center ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-gray-500"}`}>{gd > 0 ? `+${gd}` : gd}</span>
- <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100 tabular-nums w-8 text-right">{entry.points}</span>
+ <span className={`font-heading font-bold text-sm w-6 text-center ${idx === 0 ? "text-accent-500" : "text-ink-faint"}`}>{idx + 1}</span>
+ <span className={`flex-1 text-sm font-semibold ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}>{teamName}</span>
+ <span className="text-xs text-ink-dim tabular-nums w-16 text-center">{entry.won}W {entry.drawn}D {entry.lost}L</span>
+ <span className={`text-xs font-semibold tabular-nums w-8 text-center ${gd > 0 ? "text-primary-500" : gd < 0 ? "text-danger-500" : "text-ink-faint"}`}>{gd > 0 ? `+${gd}` : gd}</span>
+ <span className="font-heading font-bold text-sm text-ink tabular-nums w-8 text-right">{entry.points}</span>
  </div>
  );
  })}
@@ -175,7 +175,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <div className="flex items-center gap-3">
  <Crown className="w-6 h-6 text-accent-500" />
  <div>
- <p className="text-sm font-heading font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">{t('endOfSeason.leagueChampions')}</p>
+ <p className="text-sm font-heading font-bold text-ink text-ink uppercase tracking-wider">{t('endOfSeason.leagueChampions')}</p>
  <p className="text-lg font-heading font-bold text-accent-500">{championName}</p>
  </div>
  </div>
@@ -193,7 +193,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  {loading ? t('endOfSeason.processing') : t('endOfSeason.startNextSeason')}
  <ArrowRight className="w-5 h-5" />
  </button>
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
+ <p className="text-xs text-ink-faint mt-3">
  {t('endOfSeason.statsArchived')}
  </p>
  </div>
@@ -215,10 +215,10 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <div className="w-20 h-20 mx-auto rounded bgc-primary-500 flex items-center justify-center mb-4">
  <Star className="w-10 h-10 text-white" />
  </div>
- <h1 className="text-3xl font-heading font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wide mb-2">
+ <h1 className="text-3xl font-heading font-bold text-ink uppercase tracking-wide mb-2">
  {t('endOfSeason.newSeason', { n: summary.season + 1 })}
  </h1>
- <p className="text-gray-500 dark:text-gray-400 mb-4">
+ <p className="text-ink-dim mb-4">
  {t('endOfSeason.newScheduleReleased')}
  </p>
  {/* Gaffer Phase 8 — Academy intake notification */}
@@ -226,7 +226,7 @@ export default function EndOfSeasonScreen({ gameState, onGameUpdate }: EndOfSeas
  <p className="text-sm font-heading font-bold uppercase tracking-wide text-accent-600 dark:text-accent-400 mb-1">
  Academy Intake
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  New youth prospects have joined your academy. Check the Youth Academy tab to see this season's intake.
  </p>
  </div>

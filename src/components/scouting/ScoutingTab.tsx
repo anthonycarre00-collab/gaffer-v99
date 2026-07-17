@@ -205,7 +205,7 @@ export default function ScoutingTab({
  {/* Header */}
  <div className="flex items-center gap-3">
  <ScanSearch className="w-5 h-5 text-primary-500" />
- <h2 className="text-lg font-heading font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+ <h2 className="text-lg font-heading font-bold uppercase tracking-wider text-ink">
  {t("scouting.title")}
  </h2>
  </div>
@@ -271,8 +271,8 @@ export default function ScoutingTab({
  <Card>
  <CardBody>
  <div className="flex flex-col items-center gap-3 py-8">
- <Eye className="w-10 h-10 text-gray-300 dark:text-navy-600" />
- <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+ <Eye className="w-10 h-10 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm text-ink-dim text-center">
  {t("scouting.noScouts")}
  <br />
  <span className="text-xs">{t("scouting.noScoutsHint")}</span>

@@ -72,7 +72,7 @@ export function TransferBidForm({
  <>
  <h3
  id={titleId}
- className="text-sm font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3"
+ className="text-sm font-heading font-bold uppercase tracking-wider text-ink-dim mb-3"
  >
  {t("transfers.makeBid")}
  </h3>
@@ -83,10 +83,10 @@ export function TransferBidForm({
  {translatePositionAbbreviation(t, bidTarget.position)}
  </Badge>
  <div>
- <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+ <p className="font-semibold text-sm text-ink text-ink">
  {bidTarget.full_name}
  </p>
- <p className="text-xs text-gray-400">
+ <p className="text-xs text-ink-faint">
  {getTeamName(teams, bidTarget.team_id)} •{" "}
  {t("transfers.playerValue", {
  value: formatVal(bidTarget.market_value),
@@ -110,13 +110,13 @@ export function TransferBidForm({
  </div>
  ) : null}
  {hasExistingOffer ? (
- <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+ <p className="text-xs text-ink-dim mb-3">
  {t("transfers.resumeNegotiationHint")}
  </p>
  ) : null}
  <label
  htmlFor="bid-amount"
- className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 block"
+ className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-1 block"
  >
  {t("transfers.bidAmount")}
  </label>
@@ -127,14 +127,14 @@ export function TransferBidForm({
  min="0"
  value={bidAmount}
  onChange={(event) => onBidAmountChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  {myTeam && bidFee !== null && bidProjection ? (
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-white/70 dark:bg-navy-900/40 p-3 mb-3 space-y-2">
- <p className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-white/70 bg-carbon-0/40 p-3 mb-3 space-y-2">
+ <p className="text-[11px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("transfers.bidImpactTitle")}
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-300">
+ <p className="text-xs text-ink-dim">
  {t(
  bidProjection.pending_registration_date
  ? "transfers.bidImpactTransferBudgetDeferred"
@@ -146,7 +146,7 @@ export function TransferBidForm({
  },
  )}
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-300">
+ <p className="text-xs text-ink-dim">
  {t(
  bidProjection.pending_registration_date
  ? "transfers.bidImpactBalanceDeferred"
@@ -158,7 +158,7 @@ export function TransferBidForm({
  },
  )}
  </p>
- <p className="text-xs text-gray-600 dark:text-gray-300">
+ <p className="text-xs text-ink-dim">
  {t("transfers.bidImpactWagePressure", {
  percent: bidProjection.projected_wage_budget_usage_pct,
  })}
@@ -209,7 +209,7 @@ export function TransferBidForm({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 bg-gray-200 dark:bg-navy-700 text-gray-600 dark:text-gray-300 rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-gray-300 dark:hover:bg-navy-600 transition-colors"
+ className="px-4 py-2 bg-carbon-3 text-ink-dim rounded font-heading font-bold text-sm uppercase tracking-wider hover:bg-carbon-3 hover:bg-carbon-3 transition-colors"
  >
  {t("transfers.close")}
  </button>
@@ -231,7 +231,7 @@ export default function TransferBidModal(props: TransferBidModalProps) {
  role="dialog"
  aria-modal="true"
  aria-labelledby={titleId}
- className="bg-white dark:bg-navy-800 rounded shadow-2xl border border-gray-200 dark:border-navy-600 p-6 w-full max-w-sm"
+ className="bg-white bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
  onClick={(event) => event.stopPropagation()}
  >
  <TransferBidForm {...props} />

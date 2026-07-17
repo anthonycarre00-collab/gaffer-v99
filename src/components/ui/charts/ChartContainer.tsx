@@ -19,10 +19,10 @@ export function ChartContainer({
  if (isEmpty) {
  return (
  <div
- className={`flex items-center justify-center rounded bg-gray-50 dark:bg-navy-700 ${className}`}
+ className={`flex items-center justify-center rounded bg-carbon-2 ${className}`}
  style={{ height }}
  >
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("common.noChartData")}
  </p>
  </div>

@@ -57,11 +57,11 @@ export default function TeamProfileRosterCard({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
  <SortableHeader label={t("common.position")} columnKey="position" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
  <SortableHeader label={t("common.name")} columnKey="name" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
  <SortableHeader label={t("common.age")} columnKey="age" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
- <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-5 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.nationality")}
  </th>
  <SortableHeader label={t("common.value")} columnKey="value" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
@@ -71,7 +71,7 @@ export default function TeamProfileRosterCard({
  <SortableHeader label={t("common.ovr")} columnKey="ovr" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} numeric />
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {sortedRows.map(({ player }) => {
  const ovr = getPlayerOvr(player);
  const age = calcAge(player.date_of_birth);
@@ -84,7 +84,7 @@ export default function TeamProfileRosterCard({
  data-testid={`team-profile-roster-${player.id}`}
  onClick={() => onSelectPlayer?.(player.id)}
  className={`group transition-colors ${onSelectPlayer
- ? "hover:bg-gray-50 dark:hover:bg-navy-700/50 cursor-pointer"
+ ? "hover:bg-carbon-2 hover:bg-carbon-3/50 cursor-pointer"
  : ""
  }`}
  >
@@ -103,15 +103,15 @@ export default function TeamProfileRosterCard({
  <td className="py-3 px-5">
  <div className="flex items-center gap-3 min-w-0">
  <PlayerAvatar player={player} />
- <span className="block truncate font-semibold text-sm text-gray-800 dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="block truncate font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {player.full_name}
  </span>
  </div>
  </td>
- <td className="py-3 px-5 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-3 px-5 text-sm text-ink-dim tabular-nums">
  {age}
  </td>
- <td className="py-3 px-5 text-sm text-gray-500 dark:text-gray-400">
+ <td className="py-3 px-5 text-sm text-ink-dim">
  <div className="flex items-center gap-1">
  <CountryFlag
  code={player.nationality}
@@ -121,7 +121,7 @@ export default function TeamProfileRosterCard({
  <span>{countryName(player.nationality, locale)}</span>
  </div>
  </td>
- <td className="py-3 px-5 text-sm text-gray-600 dark:text-gray-400">
+ <td className="py-3 px-5 text-sm text-ink-dim">
  {formatVal(player.market_value)}
  </td>
  {isOwnTeam && (
@@ -139,7 +139,7 @@ export default function TeamProfileRosterCard({
  <span
  className={`font-heading font-bold text-xs ${isOwnTeam
  ? interpretOvr(ovr, player.natural_position || player.position).colorClass
- : "text-gray-400 dark:text-gray-500"
+ : "text-ink-faint"
  }`}
  title={isOwnTeam ? interpretOvr(ovr, player.natural_position || player.position).description : "Scout this player to reveal their rating"}
  >

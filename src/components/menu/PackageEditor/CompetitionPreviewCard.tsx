@@ -21,7 +21,7 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  null;
 
  return (
- <div className="rounded border border-gray-200 dark:border-navy-600 overflow-hidden bg-white dark:bg-navy-700 shadow-sm select-none">
+ <div className="rounded border border-slate-line overflow-hidden bg-white bg-carbon-2 shadow-sm select-none">
  {/* Header banner */}
  <div className="h-20 to-primary-800 flex items-center justify-center">
  {logoDataUrl ? (
@@ -40,11 +40,11 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  <div className="p-3 flex flex-col gap-2.5">
  {/* Name */}
  <div>
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-gray-900 dark:text-white leading-tight">
- {competition.name || <span className="text-gray-400 italic">New Competition</span>}
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink leading-tight">
+ {competition.name || <span className="text-ink-faint italic">New Competition</span>}
  </p>
  {competition.id && (
- <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-0.5">
+ <p className="text-[10px] text-ink-faint font-mono mt-0.5">
  {competition.id}
  </p>
  )}
@@ -55,36 +55,36 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  <span className="text-[10px] font-heading font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400">
  {t(`teamSelect.kinds.${competition.type}`, { defaultValue: competition.type })}
  </span>
- <span className="text-[10px] font-heading font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-100 dark:bg-navy-600 text-gray-500 dark:text-gray-400">
+ <span className="text-[10px] font-heading font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-carbon-2 bg-carbon-3 text-ink-dim">
  {t(`teamSelect.scopes.${competition.scope}`, { defaultValue: competition.scope })}
  </span>
  </div>
 
  {/* Format */}
- <div className="text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="text-[11px] text-ink-dim">
  <span className="uppercase tracking-wide">{t("worldEditor.competitionFormat")} </span>
- <span className="text-gray-700 dark:text-gray-200">
+ <span className="text-ink">
  {t(`worldEditor.competitionFormats.${competition.format.kind}`, { defaultValue: competition.format.kind })}
  </span>
  </div>
 
  {/* Participants */}
  {participantCount !== null && (
- <div className="text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="text-[11px] text-ink-dim">
  <span className="uppercase tracking-wide">{t("worldEditor.competitionExplicitTeams")} </span>
- <span className="text-gray-700 dark:text-gray-200 font-mono">{participantCount}</span>
+ <span className="text-ink font-mono">{participantCount}</span>
  </div>
  )}
 
  {/* Region / Country */}
  {(competition.regionId || competition.countryId) && (
- <div className="text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="text-[11px] text-ink-dim">
  <span className="uppercase tracking-wide">
  {competition.regionId
  ? t("worldEditor.competitionRegionId")
  : t("worldEditor.competitionCountryId")}{" "}
  </span>
- <span className="text-gray-700 dark:text-gray-200 font-mono">
+ <span className="text-ink font-mono">
  {competition.regionId ?? competition.countryId}
  </span>
  </div>
@@ -92,9 +92,9 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
 
  {/* Season start */}
  {competition.seasonStartMonth && (
- <div className="text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="text-[11px] text-ink-dim">
  <span className="uppercase tracking-wide">{t("worldEditor.competitionSeasonMonth")} </span>
- <span className="text-gray-700 dark:text-gray-200">
+ <span className="text-ink">
  {MONTH_NAMES[(competition.seasonStartMonth - 1) % 12]}
  {competition.seasonStartDay ? ` ${competition.seasonStartDay}` : ""}
  </span>
@@ -102,9 +102,9 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  )}
 
  {/* Priority */}
- <div className="text-[11px] text-gray-500 dark:text-gray-400">
+ <div className="text-[11px] text-ink-dim">
  <span className="uppercase tracking-wide">{t("worldEditor.competitionPriority")} </span>
- <span className="text-gray-700 dark:text-gray-200 font-mono">{competition.priority}</span>
+ <span className="text-ink font-mono">{competition.priority}</span>
  </div>
  </div>
  </div>

@@ -90,9 +90,9 @@ export default function JerseyNumberInput({
  onBlur={commit}
  onKeyDown={handleKeyDown}
  className="w-12 px-1.5 py-0.5 rounded text-sm font-mono font-mono font-bold tabular-nums text-center
- bg-gray-50 dark:bg-navy-700
- border border-gray-300 dark:border-navy-500
- text-gray-800 dark:text-gray-100
+ bg-carbon-2
+ border border-slate-line border-slate-line
+ text-ink
  focus:outline-none focus:ring-2 focus:ring-primary-500/30
  [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
  />
@@ -117,7 +117,7 @@ export default function JerseyNumberInput({
  size="sm"
  />
  ) : (
- <span className="text-gray-400 dark:text-gray-600 text-sm font-heading font-bold w-8 text-center">
+ <span className="text-ink-faint text-sm font-heading font-bold w-8 text-center">
  —
  </span>
  )}

@@ -17,10 +17,10 @@ interface TacticsFiltersProps {
 
 function getClearButtonClassName(isEnabled: boolean): string {
  if (isEnabled) {
- return "rounded bg-gray-100 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-600 transition-all hover:bg-gray-200 dark:bg-navy-700 dark:text-gray-300 dark:hover:bg-navy-600";
+ return "rounded bg-carbon-2 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-ink-dim transition-all hover:bg-carbon-3 text-ink-dim hover:bg-carbon-3";
  }
 
- return "cursor-not-allowed rounded bg-gray-100 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-gray-400 transition-all dark:bg-navy-700";
+ return "cursor-not-allowed rounded bg-carbon-2 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-all bg-carbon-2";
 }
 
 export default function TacticsFilters({
@@ -41,7 +41,7 @@ export default function TacticsFilters({
  value={playerSearch}
  onChange={(event) => onPlayerSearchChange(event.target.value)}
  placeholder={t("squad.filterPlayers")}
- className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200"
+ className="w-full rounded border border-slate-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30 border-slate-line bg-carbon-1 text-ink"
  />
  <div className="flex gap-2">
  <Select

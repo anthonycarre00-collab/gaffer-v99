@@ -128,8 +128,8 @@ export default function CreateManagerNationalityField({
  ? "border-danger-400 dark:border-danger-500"
  : isOpen
  ? "border-primary-500 ring-2 ring-primary-500/20"
- : "border-gray-300 dark:border-navy-600";
- const triggerClassName = `w-full rounded border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${triggerBorderClassName}`;
+ : "border-slate-line";
+ const triggerClassName = `w-full rounded border bg-carbon-2 p-3 text-left transition-all bg-carbon-0 ${triggerBorderClassName}`;
 
  const toggleDropdown = () => {
  if (!isOpen && !resources) {
@@ -146,7 +146,7 @@ export default function CreateManagerNationalityField({
  ref={nationalityRef}
  className={isOpen ? "relative z-50" : undefined}
  >
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.countryOfOrigin")}
  </label>
  <div className="relative">
@@ -167,8 +167,8 @@ export default function CreateManagerNationalityField({
  <span
  className={
  nationality
- ? "text-gray-900 dark:text-white"
- : "text-gray-400 dark:text-gray-500"
+ ? "text-ink"
+ : "text-ink-faint"
  }
  >
  {selectedNationalityLabel ? (
@@ -187,28 +187,28 @@ export default function CreateManagerNationalityField({
  )}
  </span>
  <ChevronDown
- className={`absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+ className={`absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint transition-transform ${isOpen ? "rotate-180" : ""}`}
  />
  </button>
 
  {isOpen ? (
- <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded border border-gray-200 bg-white dark:border-navy-600 dark:bg-navy-700">
+ <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded border border-slate-line bg-white border-slate-line bg-carbon-2">
  {resources ? (
  <>
- <div className="border-b border-gray-100 p-2 dark:border-navy-600">
+ <div className="border-b border-slate-line-soft p-2 border-slate-line">
  <input
  type="text"
  autoFocus
  placeholder={t("createManager.searchNationalities")}
  value={searchValue}
  onChange={(event) => setSearchValue(event.target.value)}
- className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-primary-500 dark:border-navy-600 dark:bg-navy-800 dark:text-white dark:placeholder:text-gray-500"
+ className="w-full rounded-md border border-slate-line bg-carbon-2 px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-primary-500 border-slate-line bg-carbon-1 text-ink dark:placeholder:text-ink-faint"
  />
  </div>
 
  <div className="max-h-[min(20rem,calc(100vh-9rem))] overflow-y-auto overscroll-contain">
  {filteredNationalities.length === 0 ? (
- <p className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500">
+ <p className="px-3 py-2 text-xs text-ink-faint">
  {t("menu.noResults")}
  </p>
  ) : (
@@ -226,7 +226,7 @@ export default function CreateManagerNationalityField({
  }}
  className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors ${nationality === entry.code
  ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400"
- : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-navy-600"
+ : "text-ink hover:bg-carbon-2 text-ink hover:bg-carbon-3"
  }`}
  >
  <span className="flex items-center gap-2">

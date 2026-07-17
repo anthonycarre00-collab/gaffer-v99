@@ -107,7 +107,7 @@ export default function TrainingTab({
 
  if (!team) {
  return (
- <p className="text-gray-500 dark:text-gray-400">{t("common.noTeam")}</p>
+ <p className="text-ink-dim">{t("common.noTeam")}</p>
  );
  }
 
@@ -204,7 +204,7 @@ export default function TrainingTab({
  ? t("training.staffWarning")
  : t("training.staffSuggestion")}
  </p>
- <p className="text-sm text-gray-700 dark:text-gray-300">
+ <p className="text-sm text-ink-dim">
  {staffAdvice.message}
  </p>
  </div>
@@ -259,7 +259,7 @@ export default function TrainingTab({
  <div className="flex flex-col gap-3">
  <div>
  <div className="flex justify-between text-sm mb-1">
- <span className="text-gray-600 dark:text-gray-400">
+ <span className="text-ink-dim">
  {t("training.avgCondition")}
  </span>
  <span
@@ -273,7 +273,7 @@ export default function TrainingTab({
  </div>
  <div>
  <div className="flex justify-between text-sm mb-1">
- <span className="text-gray-600 dark:text-gray-400">
+ <span className="text-ink-dim">
  {t("training.avgMorale")}
  </span>
  <span
@@ -286,7 +286,7 @@ export default function TrainingTab({
  <ProgressBar value={avgMorale} variant="auto" size="md" />
  </div>
  {exhaustedCount > 0 || criticalCount > 0 ? (
- <div className="mt-1 pt-2 border-t border-gray-100 dark:border-navy-700">
+ <div className="mt-1 pt-2 border-t border-slate-line-soft">
  {criticalCount > 0 ? (
  <p className="text-xs text-danger-500 dark:text-danger-400 flex items-center gap-1">
  <AlertTriangle className="w-3 h-3" />{" "}
@@ -308,7 +308,7 @@ export default function TrainingTab({
  <Card>
  <CardHeader>{t("training.playerFitness")}</CardHeader>
  <CardBody className="p-0 max-h-64 overflow-y-auto">
- <div className="divide-y divide-gray-100 dark:divide-navy-600">
+ <div className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {[...roster]
  .sort((left, right) => left.condition - right.condition)
  .map((player) => (
@@ -318,7 +318,7 @@ export default function TrainingTab({
  ? "text-danger-600 dark:text-danger-400"
  : player.condition < 40
  ? "text-accent-600 dark:text-accent-400"
- : "text-gray-800 dark:text-gray-200"
+ : "text-ink text-ink"
  }`}
  >
  {player.match_name}{player.jersey_number != null ? ` (#${player.jersey_number})` : ""}

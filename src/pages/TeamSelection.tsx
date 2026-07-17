@@ -546,20 +546,20 @@ export default function TeamSelection() {
  };
 
  return (
- <div className="min-h-screen bg-gray-100 transition-colors duration-300 dark:bg-navy-900">
- <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4 shadow-sm dark:border-navy-700 dark:bg-navy-800">
+ <div className="min-h-screen bg-carbon-2 transition-colors duration-300 bg-carbon-0">
+ <header className="flex items-center justify-between border-b border-slate-line bg-white px-6 py-4 shadow-sm border-slate-line bg-carbon-1">
  <div className="flex items-center gap-4">
  <button
  onClick={() => navigate("/")}
- className="rounded p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-700 dark:hover:text-gray-200"
+ className="rounded p-2 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink hover:bg-carbon-3 hover:text-ink"
  >
  <ArrowLeft className="h-5 w-5" />
  </button>
  <div>
- <h1 className="font-heading text-xl font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100">
+ <h1 className="font-heading text-xl font-bold uppercase tracking-wide text-ink">
  {t("teamSelect.title")}
  </h1>
- <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-0.5 text-xs text-ink-dim">
  {t("teamSelect.subtitle")}
  </p>
  </div>
@@ -593,7 +593,7 @@ export default function TeamSelection() {
  {scopeMessage && (
  <Card accent="accent">
  <CardBody className="py-3">
- <p className="text-sm text-gray-700 dark:text-gray-200">
+ <p className="text-sm text-ink">
  {t(scopeMessage.key, scopeMessage.values)}
  </p>
  </CardBody>
@@ -606,12 +606,12 @@ export default function TeamSelection() {
  onClick={() => setScopeExpanded((value) => !value)}
  className="flex w-full items-center justify-between gap-3 px-5 py-3 text-left"
  >
- <span className="font-heading text-sm font-bold uppercase tracking-wide text-gray-700 dark:text-gray-200">
+ <span className="font-heading text-sm font-bold uppercase tracking-wide text-ink">
  {t("teamSelect.simulationScope")}
  </span>
  <span className="flex items-center gap-2">
  {!scopeExpanded && (
- <span className="text-xs text-gray-500 dark:text-gray-400">
+ <span className="text-xs text-ink-dim">
  {[
  selectedHomeRegionId
  ? buildRegionLabel(t, selectedHomeRegionId)
@@ -625,7 +625,7 @@ export default function TeamSelection() {
  </span>
  )}
  <ChevronRight
- className={`h-4 w-4 text-gray-400 transition-transform ${
+ className={`h-4 w-4 text-ink-faint transition-transform ${
  scopeExpanded ? "rotate-90" : ""
  }`}
  />
@@ -634,7 +634,7 @@ export default function TeamSelection() {
  {scopeExpanded && (
  <CardBody className="grid gap-4 lg:grid-cols-4">
  <div>
- <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.homeRegion")}
  </p>
  <Select
@@ -655,7 +655,7 @@ export default function TeamSelection() {
  </div>
 
  <div>
- <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.homeCountry")}
  </p>
  <Select
@@ -676,7 +676,7 @@ export default function TeamSelection() {
  </div>
 
  <div>
- <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.simulatedRegions")}
  </p>
  <div className="space-y-2">
@@ -698,7 +698,7 @@ export default function TeamSelection() {
  handleRegionToggle(region.id);
  }
  }}
- className={`flex items-center justify-between rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+ className={`flex items-center justify-between rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm border-slate-line bg-carbon-1 ${!isLocked ? "cursor-pointer" : ""}`}
  >
  <span className="flex items-center gap-2">
  <Globe className="h-4 w-4 text-primary-500" />
@@ -727,7 +727,7 @@ export default function TeamSelection() {
  </div>
 
  <div>
- <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.simulatedCompetitions")}
  </p>
  <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
@@ -755,7 +755,7 @@ export default function TeamSelection() {
  handleCompetitionToggle(competition);
  }
  }}
- className={`block rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm dark:border-navy-600 dark:bg-navy-800 ${!isLocked ? "cursor-pointer" : ""}`}
+ className={`block rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm border-slate-line bg-carbon-1 ${!isLocked ? "cursor-pointer" : ""}`}
  >
  <div className="flex items-center justify-between gap-3">
  <span className="flex min-w-0 items-center gap-2">
@@ -819,21 +819,21 @@ export default function TeamSelection() {
  value={clubSearch}
  onChange={(event) => setClubSearch(event.target.value)}
  placeholder={t("teamSelect.searchClubs")}
- className="min-w-0 flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 dark:border-navy-600 dark:bg-navy-800 dark:text-gray-200"
+ className="min-w-0 flex-1 rounded border border-slate-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint border-slate-line bg-carbon-1 text-ink"
  />
- <span className="shrink-0 text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <span className="shrink-0 text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("teamSelect.clubCount", { n: filteredTeams.length })}
  </span>
  </div>
  {filteredTeams.length === 0 ? (
- <p className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+ <p className="py-10 text-center text-sm text-ink-dim">
  {t("teamSelect.noClubsMatch")}
  </p>
  ) : (
  <div className="max-h-[640px] space-y-5 overflow-y-auto pr-1">
  {teamGroups.map((group) => (
  <div key={group.id}>
- <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-2 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {group.name}
  </p>
  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -866,7 +866,7 @@ export default function TeamSelection() {
  <TeamLogo
  team={team}
  className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded font-heading text-lg font-bold ${
- isSelected ? "bg-white/20 text-white" : "bg-white/10 text-gray-300"
+ isSelected ? "bg-white/20 text-white" : "bg-white/10 text-ink-faint"
  }`}
  />
  <div>
@@ -877,7 +877,7 @@ export default function TeamSelection() {
  city={team.city}
  countryCode={team.country}
  locale={i18n.language}
- className="mt-0.5 text-xs text-gray-300"
+ className="mt-0.5 text-xs text-ink-faint"
  iconClassName="w-3 h-3"
  flagClassName="text-xs leading-none"
  />
@@ -902,7 +902,7 @@ export default function TeamSelection() {
  icon={<Users className="h-3.5 w-3.5" />}
  label={t("teamSelect.squad")}
  value={
- <span className="font-heading font-bold text-gray-800 dark:text-gray-200">
+ <span className="font-heading font-bold text-ink text-ink">
  {playerCount}
  </span>
  }
@@ -911,7 +911,7 @@ export default function TeamSelection() {
  icon={<Landmark className="h-3.5 w-3.5" />}
  label={t("teamSelect.finances")}
  value={
- <span className="font-heading font-bold text-gray-800 dark:text-gray-200">
+ <span className="font-heading font-bold text-ink text-ink">
  {formatVal(team.finance)}
  </span>
  }
@@ -943,17 +943,17 @@ export default function TeamSelection() {
  {selectedTeam ? (
  <>
  <div>
- <p className="text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.selectedClub")}
  </p>
- <h2 className="mt-1 font-heading text-2xl font-bold text-gray-900 dark:text-white">
+ <h2 className="mt-1 font-heading text-2xl font-bold text-ink">
  {selectedTeam.name}
  </h2>
  <TeamLocation
  city={selectedTeam.city}
  countryCode={selectedTeam.country}
  locale={i18n.language}
- className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+ className="mt-2 text-sm text-ink-dim"
  />
  </div>
 
@@ -981,20 +981,20 @@ export default function TeamSelection() {
  </div>
 
  <div>
- <p className="mb-3 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-3 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.keyPlayers")}
  </p>
  <div className="space-y-2">
  {selectedTeamXi.slice(0, 5).map((player) => (
  <div
  key={player.id}
- className="flex items-center justify-between rounded bg-gray-50 px-3 py-2 dark:bg-navy-800"
+ className="flex items-center justify-between rounded bg-carbon-2 px-3 py-2 bg-carbon-1"
  >
  <div>
- <p className="font-semibold text-gray-900 dark:text-white">
+ <p className="font-semibold text-ink">
  {player.match_name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {player.position}
  </p>
  </div>
@@ -1005,7 +1005,7 @@ export default function TeamSelection() {
  </div>
 
  <div>
- <p className="mb-3 text-xs font-heading font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+ <p className="mb-3 text-xs font-heading font-bold uppercase tracking-[0.18em] text-ink-dim">
  {t("teamSelect.activeCompetitions")}
  </p>
  <div className="flex flex-wrap gap-2">
@@ -1015,13 +1015,13 @@ export default function TeamSelection() {
  </Badge>
  ))}
  </div>
- <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+ <p className="mt-3 text-xs text-ink-dim">
  {t("teamSelect.clubCompetitionsAlwaysSimulated")}
  </p>
  </div>
  </>
  ) : (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("teamSelect.selectClubPrompt")}
  </p>
  )}
@@ -1031,7 +1031,7 @@ export default function TeamSelection() {
 
  <Card>
  <CardBody className="flex flex-wrap items-center justify-between gap-3 py-3">
- <div className="text-sm text-gray-600 dark:text-gray-300">
+ <div className="text-sm text-ink-dim">
  {t("teamSelect.scopeSummary", {
  regionsCount: activeRegionIds.length,
  competitionsCount: enabledCompetitionIds.length,
@@ -1062,7 +1062,7 @@ function InfoStat({
 }) {
  return (
  <div className="flex flex-col gap-1">
- <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+ <span className="flex items-center gap-1 text-xs text-ink-faint">
  {icon} {label}
  </span>
  {value}
@@ -1080,11 +1080,11 @@ function DetailTile({
  value: string;
 }) {
  return (
- <div className="rounded bg-gray-50 px-3 py-3 dark:bg-navy-800">
- <p className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 px-3 py-3 bg-carbon-1">
+ <p className="flex items-center gap-1 text-xs text-ink-faint">
  {icon} {label}
  </p>
- <p className="mt-1 font-heading font-bold text-gray-900 dark:text-white">{value}</p>
+ <p className="mt-1 font-heading font-bold text-ink">{value}</p>
  </div>
  );
 }

@@ -696,7 +696,7 @@ export default function PlayerProfile({
  <div className="mb-4 flex items-center justify-between gap-3">
  <button
  onClick={onClose}
- className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+ className="flex items-center gap-2 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors"
  >
  <ArrowLeft className="w-4 h-4" />
  <span className="font-heading font-bold uppercase tracking-wider">
@@ -782,8 +782,8 @@ export default function PlayerProfile({
  ) : null}
 
  {isOwnClub && onGameUpdate && (
- <div className="mb-4 flex items-center gap-3 rounded border border-gray-200 bg-white px-4 py-3 dark:border-navy-600 dark:bg-navy-800">
- <span className="shrink-0 text-sm font-medium text-gray-600 dark:text-gray-300">
+ <div className="mb-4 flex items-center gap-3 rounded border border-slate-line bg-white px-4 py-3 border-slate-line bg-carbon-1">
+ <span className="shrink-0 text-sm font-medium text-ink-dim">
  {t("tactics.playerRoleLabel")}
  </span>
  <Select
@@ -851,7 +851,7 @@ export default function PlayerProfile({
  </div>
 
  {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}
- <div className="mt-5 rounded border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 p-5 gaffer-card-texture gaffer-framed">
+ <div className="mt-5 rounded border border-slate-line bg-white bg-carbon-2 p-5 gaffer-card-texture gaffer-framed">
  <HexAttributeCluster
  position={primaryPosition ?? undefined}
  attributes={{
@@ -957,10 +957,10 @@ export default function PlayerProfile({
  <DashboardModalFrame maxWidthClassName="max-w-lg">
  <div className="space-y-4">
  <div>
- <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-gray-100">
+ <h2 className="font-heading text-lg font-bold text-ink">
  {t("playerProfile.terminateContractTitle")}
  </h2>
- <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+ <p className="mt-1 text-sm text-ink-dim">
  {t("playerProfile.terminateContractBody", {
  name: player.full_name,
  })}
@@ -968,20 +968,20 @@ export default function PlayerProfile({
  </div>
 
  {terminationPreview ? (
- <div className="rounded border border-gray-200 bg-gray-50 p-4 text-sm dark:border-navy-600 dark:bg-navy-700/60">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 text-sm border-slate-line bg-carbon-2/60">
  <div className="flex items-center justify-between gap-4">
- <span className="text-gray-500 dark:text-gray-400">
+ <span className="text-ink-dim">
  {t("playerProfile.terminationSeverance")}
  </span>
- <span className="font-semibold text-gray-900 dark:text-gray-100">
+ <span className="font-semibold text-ink">
  {formatExactMoney(terminationPreview.severance_cost)}
  </span>
  </div>
  <div className="mt-3 flex items-center justify-between gap-4">
- <span className="text-gray-500 dark:text-gray-400">
+ <span className="text-ink-dim">
  {t("playerProfile.projectedHealthyPlayers")}
  </span>
- <span className="font-semibold text-gray-900 dark:text-gray-100">
+ <span className="font-semibold text-ink">
  {terminationPreview.squad_safety.healthy_players}/11
  </span>
  </div>
@@ -992,7 +992,7 @@ export default function PlayerProfile({
  ) : null}
  </div>
  ) : (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("common.loading")}
  </p>
  )}

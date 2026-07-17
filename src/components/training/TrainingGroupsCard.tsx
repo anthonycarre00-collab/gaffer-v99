@@ -141,9 +141,9 @@ export default function TrainingGroupsCard({
  return (
  <div
  key={group.id}
- className="flex items-center gap-2 bg-gray-50 dark:bg-navy-700/50 border border-gray-200 dark:border-navy-600 rounded px-3 py-1.5"
+ className="flex items-center gap-2 bg-carbon-2/50 border border-slate-line rounded px-3 py-1.5"
  >
- <div className="text-gray-400 dark:text-gray-500">
+ <div className="text-ink-faint">
  {trainingFocusIcons[group.focus] ? (
  <span className="[&>svg]:w-4 [&>svg]:h-4">
  {trainingFocusIcons[group.focus]}
@@ -158,7 +158,7 @@ export default function TrainingGroupsCard({
  onChange={(event) =>
  updateGroupName(group.id, event.target.value)
  }
- className="bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 border-none outline-none w-20"
+ className="bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-ink text-ink border-none outline-none w-20"
  />
  <Select
  value={group.focus}
@@ -176,7 +176,7 @@ export default function TrainingGroupsCard({
  </option>
  ))}
  </Select>
- <span className="text-[10px] text-gray-400 tabular-nums">
+ <span className="text-[10px] text-ink-faint tabular-nums">
  {count}
  </span>
  <button
@@ -194,32 +194,32 @@ export default function TrainingGroupsCard({
  )}
 
  {groups.length === 0 ? (
- <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+ <p className="text-sm text-ink-dim mb-3">
  {t("training.groups.noGroups")}
  </p>
  ) : (
- <div className="overflow-x-auto rounded border border-gray-200 dark:border-navy-600">
+ <div className="overflow-x-auto rounded border border-slate-line">
  <table className="w-full text-left text-sm">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-700/50">
- <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <tr className="bg-carbon-2/50">
+ <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("common.player")}
  </th>
- <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("common.position")}
  </th>
- <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("common.condition")}
  </th>
- <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("training.groups.group")}
  </th>
- <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <th className="py-2 px-3 text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("training.effectiveFocus")}
  </th>
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {sortedRoster.map((player) => {
  const playerGroup = playerGroupMap.get(player.id);
  const hasIndividualFocus = !!player.training_focus;
@@ -228,12 +228,12 @@ export default function TrainingGroupsCard({
  return (
  <tr
  key={player.id}
- className="hover:bg-gray-50 dark:hover:bg-navy-700/30 transition-colors"
+ className="hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors"
  >
- <td className="py-1.5 px-3 text-sm font-medium text-gray-800 dark:text-gray-200 truncate max-w-[160px]">
+ <td className="py-1.5 px-3 text-sm font-medium text-ink text-ink truncate max-w-[160px]">
  {player.match_name}{player.jersey_number != null ? ` (#${player.jersey_number})` : ""}
  </td>
- <td className="py-1.5 px-3 text-xs text-gray-500 dark:text-gray-400">
+ <td className="py-1.5 px-3 text-xs text-ink-dim">
  {translatePositionAbbreviation(
  t,
  player.natural_position || player.position,
@@ -297,7 +297,7 @@ export default function TrainingGroupsCard({
  </table>
  </div>
  )}
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
+ <p className="text-xs text-ink-faint mt-3">
  {t("training.groups.trainingGroupsDesc")}
  </p>
  </CardBody>

@@ -53,8 +53,8 @@ export default function HomePlayerMomentumCard({
  key={player.id}
  className="flex items-center gap-2 px-2 py-1.5 rounded bg-success-500/5 dark:bg-success-500/10"
  >
- <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
- <span className="text-xs font-medium text-gray-800 dark:text-gray-200 flex-1 truncate">
+ <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim" />
+ <span className="text-xs font-medium text-ink text-ink flex-1 truncate">
  {player.full_name}
  </span>
  <Badge variant="success" size="sm">
@@ -85,8 +85,8 @@ export default function HomePlayerMomentumCard({
  key={player.id}
  className="flex items-center gap-2 px-2 py-1.5 rounded bg-danger-500/5 dark:bg-danger-500/10"
  >
- <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
- <span className="text-xs font-medium text-gray-800 dark:text-gray-200 flex-1 truncate">
+ <PlayerAvatar player={player} className="h-7 w-7 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim" />
+ <span className="text-xs font-medium text-ink text-ink flex-1 truncate">
  {player.full_name}
  </span>
  <Badge variant="danger" size="sm">

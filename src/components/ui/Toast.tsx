@@ -95,16 +95,16 @@ function ToastContainer() {
  return (
  <div
  key={item.id}
- className={`pointer-events-auto flex items-center gap-3 rounded-lg bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 shadow-lg px-4 py-3 min-w-[280px] max-w-[400px] animate-in slide-in-from-bottom-2 duration-200`}
+ className={`pointer-events-auto flex items-center gap-3 rounded-lg bg-white bg-carbon-1 border border-slate-line shadow-lg px-4 py-3 min-w-[280px] max-w-[400px] animate-in slide-in-from-bottom-2 duration-200`}
  >
  <Icon className={`h-5 w-5 shrink-0 ${config.color} ${item.type === "loading" ? "animate-spin" : ""}`} />
- <span className="text-sm font-medium text-gray-800 dark:text-gray-200 flex-1">
+ <span className="text-sm font-medium text-ink text-ink flex-1">
  {item.message}
  </span>
  {item.duration === 0 && (
  <button
  onClick={() => removeToast(item.id)}
- className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+ className="text-ink-faint hover:text-ink-dim hover:text-ink transition-colors"
  >
  <X className="h-4 w-4" />
  </button>

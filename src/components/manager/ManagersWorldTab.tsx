@@ -101,7 +101,7 @@ export default function ManagersWorldTab({
  <p className="text-xs font-heading font-bold uppercase tracking-[0.25em] text-primary-500">
  {t("managersWorld.title")}
  </p>
- <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("managersWorld.subtitle")}
  </h2>
  </div>
@@ -115,7 +115,7 @@ export default function ManagersWorldTab({
 
  {entries.length === 0 ? (
  <Card>
- <CardBody className="py-12 text-center text-sm text-gray-500 dark:text-gray-400">
+ <CardBody className="py-12 text-center text-sm text-ink-dim">
  {t("managersWorld.noManagers")}
  </CardBody>
  </Card>
@@ -133,7 +133,7 @@ export default function ManagersWorldTab({
  <CardBody className="space-y-4">
  <div className="flex items-start justify-between gap-4">
  <div>
- <p className="text-xs font-heading font-bold uppercase tracking-[0.22em] text-gray-400 dark:text-gray-500">
+ <p className="text-xs font-heading font-bold uppercase tracking-[0.22em] text-ink-faint">
  {t("managersWorld.currentClub")}
  </p>
  <button
@@ -186,7 +186,7 @@ export default function ManagersWorldTab({
  <CardBody className="space-y-4">
  <div className="flex items-start justify-between gap-4">
  <div>
- <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="flex items-center gap-2 text-sm text-ink-dim">
  <CountryFlag
  code={manager.nationality}
  locale={i18n.language}
@@ -203,7 +203,7 @@ export default function ManagersWorldTab({
  {team.name}
  </button>
  ) : (
- <p className="mt-2 text-xl font-heading font-bold uppercase tracking-wide text-gray-700 dark:text-gray-200">
+ <p className="mt-2 text-xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("managersWorld.unemployed")}
  </p>
  )}
@@ -248,14 +248,14 @@ interface StatTileProps {
 
 function StatTile({ icon, label, value }: StatTileProps) {
  return (
- <div className="rounded bg-gray-50 p-3 dark:bg-navy-800/70">
- <div className="mb-2 flex items-center gap-2 text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-carbon-2 p-3 bg-carbon-1/70">
+ <div className="mb-2 flex items-center gap-2 text-ink-faint">
  {icon}
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.18em]">
  {label}
  </span>
  </div>
- <p className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="text-lg font-heading font-bold text-ink">
  {value}
  </p>
  </div>

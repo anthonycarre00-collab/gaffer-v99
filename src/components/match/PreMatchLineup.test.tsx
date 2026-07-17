@@ -111,20 +111,20 @@ describe("statColor", () => {
   });
 
   it("returns theme-safe neutral for medium stats (60-74)", () => {
-    expect(statColor(60)).toBe("text-gray-700 dark:text-gray-200");
-    expect(statColor(74)).toBe("text-gray-700 dark:text-gray-200");
+    expect(statColor(60)).toBe("text-ink");
+    expect(statColor(74)).toBe("text-ink");
   });
 
   it("returns subdued but readable neutral for low stats (< 60)", () => {
-    expect(statColor(59)).toBe("text-gray-500 dark:text-gray-400");
-    expect(statColor(0)).toBe("text-gray-500 dark:text-gray-400");
+    expect(statColor(59)).toBe("text-ink-dim");
+    expect(statColor(0)).toBe("text-ink-dim");
   });
 });
 
 describe("starterOvrColor", () => {
   it("uses theme-safe colors for each OVR tier", () => {
     expect(starterOvrColor(72)).toBe("text-primary-600 dark:text-primary-400");
-    expect(starterOvrColor(58)).toBe("text-gray-700 dark:text-gray-300");
+    expect(starterOvrColor(58)).toBe("text-ink-dim");
     expect(starterOvrColor(44)).toBe("text-red-600 dark:text-red-400");
   });
 });

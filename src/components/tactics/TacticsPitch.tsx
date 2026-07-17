@@ -105,7 +105,7 @@ function getRoleMarkers(
  markers.push({
  key: "vice_captain",
  shortLabel: "VC",
- toneClassName: "border-white/60 bg-gray-800/85 text-white",
+ toneClassName: "border-white/60 bg-carbon-2/85 text-white",
  });
  }
 
@@ -293,13 +293,13 @@ export default function TacticsPitch({
 
  return (
  <Card className="overflow-hidden">
- <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-xl border-b border-gray-100 bg-linear-to-r px-5 py-4 dark:border-navy-600">
+ <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-xl border-b border-slate-line-soft bg-linear-to-r px-5 py-4 border-slate-line">
  <div>
  <h3 className="flex items-center gap-2 text-sm font-heading font-bold uppercase tracking-wide text-white">
  <Star className="h-4 w-4 fill-current text-accent-400" />
  {t("preMatch.startingXI")} - {formation}
  </h3>
- <p className="mt-0.5 text-xs text-gray-400">
+ <p className="mt-0.5 text-xs text-ink-faint">
  {t("tactics.pitchInteractionHint")}
  </p>
  </div>

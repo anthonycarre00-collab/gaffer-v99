@@ -388,9 +388,9 @@ export default function PreMatchSetup({
  );
 
  const renderSetPieces = () => (
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 p-4 shadow-sm transition-colors duration-300">
+ <div className="rounded border border-slate-line bg-white bg-carbon-1 p-4 shadow-sm transition-colors duration-300">
  <div className="flex items-center justify-between mb-2.5">
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.setPiecesCaptain")}
  </p>
  <button
@@ -404,7 +404,7 @@ export default function PreMatchSetup({
  <div className="grid grid-cols-2 gap-3">
  {setPieceItems.map(({ role, label, Icon, current }) => (
  <div key={role}>
- <label className="mb-1.5 flex items-center gap-1 text-[10px] font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 flex items-center gap-1 text-[10px] font-heading uppercase tracking-widest text-ink-dim">
  <Icon className="h-3 w-3" />
  {label}
  </label>
@@ -501,9 +501,9 @@ export default function PreMatchSetup({
  {/* Right: set pieces + phase blueprint */}
  <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
  {renderSetPieces()}
- <div className="rounded border border-gray-200 dark:border-navy-700 bg-white dark:bg-navy-800 shadow-sm transition-colors duration-300">
- <div className="border-b border-gray-100 dark:border-navy-700 px-3 py-2.5">
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <div className="rounded border border-slate-line bg-white bg-carbon-1 shadow-sm transition-colors duration-300">
+ <div className="border-b border-slate-line-soft px-3 py-2.5">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("tactics.phaseBlueprint")}
  </p>
  </div>
@@ -522,10 +522,10 @@ export default function PreMatchSetup({
  {/* Left: opponent shape */}
  <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
  <div>
- <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {oppTeam.name}
  </p>
- <p className="text-[10px] text-gray-500 dark:text-gray-400 font-heading mt-0.5">
+ <p className="text-[10px] text-ink-dim font-heading mt-0.5">
  {oppTeam.formation} ·{" "}
  {t(`common.playStyles.${oppTeam.play_style}`, oppTeam.play_style)}
  </p>
@@ -548,22 +548,22 @@ export default function PreMatchSetup({
  return (
  <div key={pos} className="mb-3">
  <div className="flex items-center justify-between mb-1 px-2">
- <p className="text-[10px] font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <p className="text-[10px] font-heading uppercase tracking-widest text-ink-dim">
  {t(`common.positionGroups.${pos}`)}
  </p>
  <div className="flex items-center">
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-400 dark:text-gray-600 w-7 text-center">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-faint w-7 text-center">
  OVR
  </span>
  {keyStats.map((s) => (
  <span
  key={s.label}
- className="text-[8px] font-heading uppercase tracking-widest text-gray-400 dark:text-gray-600 w-7 text-center"
+ className="text-[8px] font-heading uppercase tracking-widest text-ink-faint w-7 text-center"
  >
  {s.label}
  </span>
  ))}
- <span className="text-[8px] font-heading uppercase tracking-widest text-gray-400 dark:text-gray-600 w-8 text-right">
+ <span className="text-[8px] font-heading uppercase tracking-widest text-ink-faint w-8 text-right">
  COND
  </span>
  </div>
@@ -571,15 +571,15 @@ export default function PreMatchSetup({
  {players.map((p) => (
  <div
  key={p.id}
- className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-100 dark:hover:bg-navy-700/30 transition-colors"
+ className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors"
  >
  <div
- className="h-7 w-7 shrink-0 rounded-full bg-gray-200 dark:bg-navy-600 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-400 transition-colors duration-300"
+ className="h-7 w-7 shrink-0 rounded-full bg-carbon-3 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim transition-colors duration-300"
  title={interpretOvr(p.ovr, p.position).description}
  >
  {shortOvrLabel(p.ovr, p.position)}
  </div>
- <span className="flex-1 truncate text-sm text-gray-700 dark:text-gray-300">
+ <span className="flex-1 truncate text-sm text-ink-dim">
  {p.name}
  </span>
  <div className="flex items-center">
@@ -640,9 +640,9 @@ export default function PreMatchSetup({
  ];
 
  return (
- <div className="stadium-bg flex h-screen flex-col bg-gray-100 dark:bg-navy-900 text-gray-900 dark:text-white transition-colors duration-300">
+ <div className="stadium-bg flex h-screen flex-col bg-carbon-2 bg-carbon-0 text-ink transition-colors duration-300">
  {/* Header */}
- <header className="gaffer-header-gradient shrink-0 border-b border-accent-500/20 bg-white/95 dark:border-accent-500/30 dark:bg-navy-800/95 transition-colors duration-300 backdrop-blur-sm">
+ <header className="gaffer-header-gradient shrink-0 border-b border-accent-500/20 bg-white/95 dark:border-accent-500/30 bg-carbon-1/95 transition-colors duration-300 backdrop-blur-sm">
  <div className="flex items-center gap-6 px-6 pt-5 pb-4">
  {/* Home team */}
  <div className="flex flex-1 items-center gap-4 min-w-0">
@@ -657,10 +657,10 @@ export default function PreMatchSetup({
  }}
  />
  <div className="min-w-0">
- <p className="font-heading font-bold text-lg text-gray-900 dark:text-white truncate">
+ <p className="font-heading font-bold text-lg text-ink truncate">
  {homeTeam.name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {homeTeam.formation} ·{" "}
  {t(`common.playStyles.${homeTeam.play_style}`, homeTeam.play_style)}
  </p>
@@ -673,11 +673,11 @@ export default function PreMatchSetup({
  <p className="text-[10px] font-heading uppercase tracking-widest text-accent-600 dark:text-accent-400">
  {fixtureLabel}
  </p>
- <p className="text-2xl font-heading font-bold text-gray-400 dark:text-gray-600">
+ <p className="text-2xl font-heading font-bold text-ink-faint">
  VS
  </p>
  {currentFixture?.weather && currentFixture.weather !== "clear" && currentFixture.weather !== "" && (
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-1" title={weatherCommentaryLine(currentFixture.weather as WeatherCondition)}>
+ <p className="text-xs text-ink-dim mt-1" title={weatherCommentaryLine(currentFixture.weather as WeatherCondition)}>
  {getWeatherInfo(currentFixture.weather as WeatherCondition).icon}{" "}
  {getWeatherInfo(currentFixture.weather as WeatherCondition).label}
  </p>
@@ -710,10 +710,10 @@ export default function PreMatchSetup({
  }}
  />
  <div className="min-w-0 text-right">
- <p className="font-heading font-bold text-lg text-gray-900 dark:text-white truncate">
+ <p className="font-heading font-bold text-lg text-ink truncate">
  {awayTeam.name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+ <p className="text-xs text-ink-dim mt-0.5">
  {awayTeam.formation} ·{" "}
  {t(`common.playStyles.${awayTeam.play_style}`, awayTeam.play_style)}
  </p>
@@ -727,7 +727,7 @@ export default function PreMatchSetup({
  </header>
 
  {/* Your Team / Opponent tabs */}
- <div className="shrink-0 flex items-center gap-1 border-b border-gray-200 dark:border-navy-700 bg-gray-50/80 dark:bg-navy-800/50 px-4">
+ <div className="shrink-0 flex items-center gap-1 border-b border-slate-line bg-carbon-2/80 bg-carbon-1/50 px-4">
  {([
  { id: "team" as const, label: userTeam.name },
  { id: "opponent" as const, label: `${t("match.opponent")} · ${oppTeam.name}` },
@@ -739,7 +739,7 @@ export default function PreMatchSetup({
  className={`-mb-px border-b-2 px-4 py-2.5 text-[11px] font-heading font-bold uppercase tracking-widest transition-colors ${
  activeTab === tab.id
  ? "border-primary-500 text-primary-600 dark:text-primary-400"
- : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+ : "border-transparent text-ink-faint hover:text-ink text-ink-faint hover:text-ink"
  }`}
  >
  {tab.label}

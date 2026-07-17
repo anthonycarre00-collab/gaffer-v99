@@ -31,7 +31,7 @@ export default function PlayerProfileInjuryBanner({
  <p className="font-semibold text-sm text-danger-600 dark:text-danger-400">
  {resolvePlayerInjuryName(injury.name, t)}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400">
+ <p className="text-xs text-ink-dim">
  {t("playerProfile.daysRemaining", {
  count: injury.days_remaining,
  })}

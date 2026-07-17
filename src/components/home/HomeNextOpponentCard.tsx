@@ -49,14 +49,14 @@ export default function HomeNextOpponentCard({
  <div className="min-w-0 flex items-center gap-3">
  <TeamLogo
  team={nextOpponent.opponent}
- className="h-11 w-11 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-xs font-heading font-bold text-gray-500 dark:text-gray-300"
+ className="h-11 w-11 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-xs font-heading font-bold text-ink-dim"
  imageClassName="h-9 w-9 object-contain drop-shadow"
  />
  <div className="min-w-0">
- <p className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100 truncate">
+ <p className="text-lg font-heading font-bold text-ink truncate">
  {nextOpponent.opponent.name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+ <p className="text-xs text-ink-dim mt-1">
  {fixtureLabel} - {formatDateShort(nextOpponent.fixture.date, lang)}
  </p>
  </div>
@@ -73,14 +73,14 @@ export default function HomeNextOpponentCard({
 
  {(nextOpponent.standingPosition !== null ||
  nextOpponent.standingPoints !== null) && (
- <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+ <div className="flex items-center gap-2 text-xs text-ink-dim">
  {nextOpponent.standingPosition !== null && (
  <Badge variant="neutral" size="sm">
  #{nextOpponent.standingPosition}
  </Badge>
  )}
  {nextOpponent.standingPoints !== null && (
- <span className="font-heading font-bold text-gray-700 dark:text-gray-300">
+ <span className="font-heading font-bold text-ink-dim">
  {nextOpponent.standingPoints} {t("common.pts")}
  </span>
  )}
@@ -97,7 +97,7 @@ export default function HomeNextOpponentCard({
  ? "bg-success-500"
  : result === "L"
  ? "bg-danger-500"
- : "bg-gray-400"
+ : "bg-carbon-3"
  }`}
  >
  {result}
@@ -107,7 +107,7 @@ export default function HomeNextOpponentCard({
  )}
  </div>
  ) : (
- <p className="text-sm text-gray-500 dark:text-gray-400 py-4 text-center">
+ <p className="text-sm text-ink-dim py-4 text-center">
  {t("home.noUpcomingOpponent")}
  </p>
  )}

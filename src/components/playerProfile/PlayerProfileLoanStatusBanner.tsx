@@ -49,15 +49,15 @@ export default function PlayerProfileLoanStatusBanner({
  <ArrowRightLeft className="h-5 w-5 text-primary-500" />
  </div>
  <div>
- <p className="font-heading text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="font-heading text-xs font-bold uppercase tracking-wider text-ink-dim">
  {t("playerProfile.loanStatus")}
  </p>
- <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+ <p className="text-sm font-semibold text-ink">
  {relationship}
  </p>
  </div>
  </div>
- <div className="grid gap-2 text-xs text-gray-500 dark:text-gray-400 sm:grid-cols-3 sm:text-right">
+ <div className="grid gap-2 text-xs text-ink-dim sm:grid-cols-3 sm:text-right">
  <span className="inline-flex items-center gap-1 sm:justify-end">
  <CalendarDays className="h-3.5 w-3.5" />
  {t("playerProfile.loanUntil", {

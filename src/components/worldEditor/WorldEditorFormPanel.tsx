@@ -113,7 +113,7 @@ export function WorldEditorFormPanel({
  if (formPanel === "metadata") {
  return (
  <div className="max-w-4xl">
- <h2 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white mb-5">
+ <h2 className="text-lg font-heading font-bold uppercase tracking-wide text-ink mb-5">
  {t("worldEditor.metadata")}
  </h2>
  <MetadataForm
@@ -137,11 +137,11 @@ export function WorldEditorFormPanel({
  if (formPanel === "issues") {
  return (
  <div className="max-w-2xl">
- <h2 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white mb-5">
+ <h2 className="text-lg font-heading font-bold uppercase tracking-wide text-ink mb-5">
  {t("worldEditor.issuesTitle")}
  </h2>
  {issues.length === 0 ? (
- <p className="text-sm text-gray-400 dark:text-gray-500">
+ <p className="text-sm text-ink-faint">
  {t("worldEditor.noIssues")}
  </p>
  ) : (
@@ -278,8 +278,8 @@ export function WorldEditorFormPanel({
 
  return (
  <div className="flex flex-col items-center justify-center h-full text-center gap-3">
- <MousePointerClick className="w-10 h-10 text-gray-300 dark:text-navy-600" />
- <p className="text-sm text-gray-400 dark:text-gray-500">
+ <MousePointerClick className="w-10 h-10 text-ink-faint dark:text-navy-600" />
+ <p className="text-sm text-ink-faint">
  {t("worldEditor.noItemSelected")}
  </p>
  </div>

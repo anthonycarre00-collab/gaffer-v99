@@ -45,19 +45,19 @@ function NationalityFieldFallback({
 
  return (
  <div id="create-manager-field-nationality">
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.countryOfOrigin")}
  </label>
  <div className="relative">
  <button
  type="button"
  disabled
- className={`w-full rounded border bg-gray-50 p-3 text-left transition-all dark:bg-navy-900 ${error
+ className={`w-full rounded border bg-carbon-2 p-3 text-left transition-all bg-carbon-0 ${error
  ? "border-danger-400 dark:border-danger-500"
- : "border-gray-300 dark:border-navy-600"
+ : "border-slate-line"
  }`}
  >
- <span className="text-gray-400 dark:text-gray-500">
+ <span className="text-ink-faint">
  {t("createManager.selectCountry")}
  </span>
  </button>
@@ -94,13 +94,13 @@ export default function CreateManagerForm({
  return (
  <form onSubmit={onSubmit} className="flex flex-col gap-4">
  <div className="mb-2 flex items-center justify-between">
- <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-gray-900 transition-colors dark:text-white">
+ <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-ink transition-colors text-ink">
  {t("createManager.title")}
  </h2>
  <button
  type="button"
  onClick={onClose}
- className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-600 dark:hover:text-white"
+ className="rounded p-1 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink hover:bg-carbon-3 hover:text-ink"
  >
  <X className="h-5 w-5" />
  </button>
@@ -110,8 +110,8 @@ export default function CreateManagerForm({
  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white">
  1
  </div>
- <div className="h-0.5 flex-1 bg-gray-200 dark:bg-navy-600" />
- <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-400 dark:bg-navy-600 dark:text-gray-500">
+ <div className="h-0.5 flex-1 bg-carbon-3" />
+ <div className="flex h-6 w-6 items-center justify-center rounded-full bg-carbon-3 text-xs font-bold text-ink-faint bg-carbon-3 text-ink-faint">
  2
  </div>
  </div>
@@ -125,14 +125,14 @@ export default function CreateManagerForm({
 
  <div className="flex gap-3">
  <div className="flex-1" id="create-manager-field-firstName">
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.firstName")}
  </label>
  <input
  maxLength={30}
- className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.firstName
+ className={`w-full rounded border bg-carbon-2 p-3 text-ink outline-none transition-all placeholder:text-ink-faint focus:ring-2 bg-carbon-0 text-ink dark:placeholder:text-ink-faint ${formErrors.firstName
  ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
- : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
+ : "border-slate-line focus:border-primary-500 focus:ring-primary-500/20 border-slate-line"
  }`}
  placeholder={t("createManager.placeholderFirst")}
  value={formData.firstName}
@@ -150,14 +150,14 @@ export default function CreateManagerForm({
  </div>
 
  <div className="flex-1" id="create-manager-field-lastName">
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.lastName")}
  </label>
  <input
  maxLength={30}
- className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.lastName
+ className={`w-full rounded border bg-carbon-2 p-3 text-ink outline-none transition-all placeholder:text-ink-faint focus:ring-2 bg-carbon-0 text-ink dark:placeholder:text-ink-faint ${formErrors.lastName
  ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
- : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
+ : "border-slate-line focus:border-primary-500 focus:ring-primary-500/20 border-slate-line"
  }`}
  placeholder={t("createManager.placeholderLast")}
  value={formData.lastName}
@@ -176,7 +176,7 @@ export default function CreateManagerForm({
  </div>
 
  <div id="create-manager-field-dob">
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.dob")}
  </label>
  <DatePicker
@@ -196,11 +196,11 @@ export default function CreateManagerForm({
  </div>
 
  {/* Advanced options — collapsible */}
- <div className="rounded border border-gray-200 dark:border-navy-600">
+ <div className="rounded border border-slate-line">
  <button
  type="button"
  onClick={() => setShowAdvanced(!showAdvanced)}
- className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink text-ink-faint hover:text-ink"
  >
  {t("createManager.advancedOptions")}
  <ChevronDown
@@ -208,11 +208,11 @@ export default function CreateManagerForm({
  />
  </button>
  {showAdvanced && (
- <div className="flex gap-3 border-t border-gray-200 p-3 dark:border-navy-600">
+ <div className="flex gap-3 border-t border-slate-line p-3 border-slate-line">
  <div className="flex-1" id="create-manager-field-startYear">
  <label
  htmlFor="create-manager-start-year"
- className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+ className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim"
  >
  {t("createManager.startYear")}
  </label>
@@ -222,9 +222,9 @@ export default function CreateManagerForm({
  type="text"
  pattern="[0-9]*"
  inputMode="numeric"
- className={`w-full rounded border bg-gray-50 p-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:ring-2 dark:bg-navy-900 dark:text-white dark:placeholder:text-gray-500 ${formErrors.startYear
+ className={`w-full rounded border bg-carbon-2 p-3 text-ink outline-none transition-all placeholder:text-ink-faint focus:ring-2 bg-carbon-0 text-ink dark:placeholder:text-ink-faint ${formErrors.startYear
  ? "border-danger-400 focus:border-danger-500 focus:ring-danger-500/20 dark:border-danger-500"
- : "border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-navy-600"
+ : "border-slate-line focus:border-primary-500 focus:ring-primary-500/20 border-slate-line"
  }`}
  value={formData.startYear}
  onChange={(event) => {
@@ -241,7 +241,7 @@ export default function CreateManagerForm({
  </div>
 
  <div className="flex-1" id="create-manager-field-startPhase">
- <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <label className="mb-1.5 block text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("createManager.startPhase")}
  </label>
  <Select

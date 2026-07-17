@@ -103,7 +103,7 @@ describe("PlayerProfile renewal helpers", () => {
       "text-accent-600 dark:text-accent-400",
     );
     expect(getRenewalStatusClassName("idle")).toBe(
-      "text-gray-500 dark:text-gray-400",
+      "text-ink-dim",
     );
   });
 

@@ -98,7 +98,7 @@ export function TouchlineReaction({ trigger, onSelect, onDismiss }: TouchlineRea
 
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom duration-300">
-      <div className="bg-white dark:bg-navy-800 rounded-lg border border-gray-200 dark:border-navy-600 shadow-lg p-4 max-w-md gaffer-card-texture">
+      <div className="bg-white bg-carbon-1 rounded-lg border border-slate-line shadow-lg p-4 max-w-md gaffer-card-texture">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-accent-600 dark:text-accent-400">
             {triggerLabel}
@@ -108,7 +108,7 @@ export function TouchlineReaction({ trigger, onSelect, onDismiss }: TouchlineRea
               setVisible(false);
               onDismiss();
             }}
-            className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors text-xs"
+            className="text-ink-faint hover:text-ink hover:text-ink transition-colors text-xs"
           >
             Skip
           </button>
@@ -121,17 +121,17 @@ export function TouchlineReaction({ trigger, onSelect, onDismiss }: TouchlineRea
                 onSelect(option);
                 setVisible(false);
               }}
-              className="flex flex-col items-center gap-1 p-3 rounded border border-gray-200 dark:border-navy-600 hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all text-center"
+              className="flex flex-col items-center gap-1 p-3 rounded border border-slate-line hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all text-center"
               title={option.description}
             >
               <span className="text-primary-500 dark:text-primary-400">{option.icon}</span>
-              <span className="text-xs font-heading font-bold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+              <span className="text-xs font-heading font-bold uppercase tracking-wide text-ink-dim">
                 {option.label}
               </span>
             </button>
           ))}
         </div>
-        <p className="mt-2 text-[10px] text-gray-400 dark:text-gray-500 text-center">
+        <p className="mt-2 text-[10px] text-ink-faint text-center">
           Quick shout — modifier lasts 10 minutes
         </p>
       </div>

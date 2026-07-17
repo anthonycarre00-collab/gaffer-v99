@@ -27,7 +27,7 @@ export function EntityListShell({
  <div className="flex flex-col gap-2">
  <button
  onClick={onAdd}
- className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-gray-300 dark:border-navy-500 rounded text-sm text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+ className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-slate-line border-slate-line rounded text-sm text-ink-dim hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
  >
  <Plus className="w-4 h-4" />
  <span className="font-heading font-bold uppercase tracking-wider">{addLabel}</span>
@@ -36,7 +36,7 @@ export function EntityListShell({
  {searchSlot && <div>{searchSlot}</div>}
 
  {isEmpty && (
- <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-4">{emptyLabel}</p>
+ <p className="text-xs text-ink-faint text-center py-4">{emptyLabel}</p>
  )}
 
  <div className="flex flex-col gap-2">{children}</div>
@@ -95,17 +95,17 @@ export function EntityRow({
  className={`flex items-center gap-3 p-3 rounded border transition-colors ${
  isSelected
  ? "border-primary-400 dark:border-primary-500 bg-primary-50 dark:bg-primary-500/10"
- : "border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-700 hover:border-gray-300 dark:hover:border-navy-500"
+ : "border-slate-line bg-white bg-carbon-2 hover:border-slate-line dark:hover:border-navy-500"
  } ${onClick ? "cursor-pointer" : ""}`}
  onClick={confirming ? undefined : onClick}
  >
  {badge}
  <div className="flex-1 min-w-0">
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-gray-800 dark:text-gray-200 truncate">
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink text-ink truncate">
  {title}
  </p>
  {subtitle && (
- <p className="text-[10px] text-gray-400 dark:text-gray-500">{subtitle}</p>
+ <p className="text-[10px] text-ink-faint">{subtitle}</p>
  )}
  </div>
  {confirming ? (
@@ -119,7 +119,7 @@ export function EntityRow({
  </button>
  <button
  onClick={handleCancelDelete}
- className="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+ className="p-1 rounded-md text-ink-faint hover:text-ink-dim hover:text-ink transition-colors"
  title={t("common.cancel")}
  >
  <X className="w-3.5 h-3.5" />
@@ -129,14 +129,14 @@ export function EntityRow({
  <>
  <button
  onClick={(e) => { e.stopPropagation(); onEdit(); }}
- className="text-gray-400 hover:text-primary-500 transition-colors flex-shrink-0"
+ className="text-ink-faint hover:text-primary-500 transition-colors flex-shrink-0"
  title={editLabel}
  >
  <Edit2 className="w-4 h-4" />
  </button>
  <button
  onClick={handleDeleteClick}
- className="text-gray-400 hover:text-danger-500 transition-colors flex-shrink-0"
+ className="text-ink-faint hover:text-danger-500 transition-colors flex-shrink-0"
  title={deleteLabel}
  >
  <Trash2 className="w-4 h-4" />
@@ -175,11 +175,11 @@ export function EntityFormShell({
  <div className="flex items-center gap-2 mb-2">
  <button
  onClick={onBack}
- className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1 rounded hover:bg-gray-100 dark:hover:bg-navy-600"
+ className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
- <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h2 className="text-xl font-heading font-bold uppercase tracking-wide text-ink">
  {title}
  </h2>
  </div>

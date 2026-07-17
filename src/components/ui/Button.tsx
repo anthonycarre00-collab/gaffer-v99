@@ -27,9 +27,9 @@ export function Button({
  accent:
  "bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-white focus:ring-accent-500 dark:focus:ring-offset-navy-800",
  ghost:
- "bg-transparent hover:bg-gray-100 dark:hover:bg-navy-600 text-gray-700 dark:text-gray-300 focus:ring-gray-300 dark:focus:ring-offset-navy-800",
+ "bg-transparent hover:bg-carbon-2 hover:bg-carbon-3 text-ink-dim focus:ring-gray-300 dark:focus:ring-offset-navy-800",
  outline:
- "bg-transparent border border-gray-300 dark:border-navy-600 hover:border-primary-500 dark:hover:border-primary-400 text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 focus:ring-primary-500 dark:focus:ring-offset-navy-800",
+ "bg-transparent border border-slate-line hover:border-primary-500 dark:hover:border-primary-400 text-ink-dim hover:text-primary-500 dark:hover:text-primary-400 focus:ring-primary-500 dark:focus:ring-offset-navy-800",
  };
 
  const sizes = {

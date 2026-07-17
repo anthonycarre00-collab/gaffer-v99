@@ -31,10 +31,10 @@ export default function SwitchClubConfirmModal({
  <DashboardModalFrame maxWidthClassName="max-w-md">
  <div className="space-y-4" data-testid="switch-club-confirm-modal">
  <div>
- <h3 className="text-lg font-heading font-bold text-gray-900 dark:text-gray-100">
+ <h3 className="text-lg font-heading font-bold text-ink">
  {t("jobs.switchConfirmTitle")}
  </h3>
- <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+ <p className="mt-2 text-sm text-ink-dim">
  {t("jobs.switchConfirmBody", {
  currentClub: currentClubName,
  newClub: newClubName,

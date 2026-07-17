@@ -32,14 +32,14 @@ export function QuickStat({
  <span className="font-mono font-bold text-primary-400 tabular-nums">
  {home}
  </span>
- <span className="text-gray-600 dark:text-gray-500 font-heading uppercase tracking-wider text-[10px]">
+ <span className="text-ink-dim text-ink-faint font-heading uppercase tracking-wider text-[10px]">
  {label}
  </span>
  <span className="font-mono font-bold text-primary-400 tabular-nums">
  {away}
  </span>
  </div>
- <div className="flex h-1 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden transition-colors duration-300">
+ <div className="flex h-1 bg-carbon-3 bg-carbon-2 rounded-full overflow-hidden transition-colors duration-300">
  <div className="h-full bg-primary-500" style={{ width: `${pct}%` }} />
  <div
  className="h-full bg-primary-500"
@@ -78,11 +78,11 @@ export function renderScorers(
  </p>
  {goals.map((g, i) => (
  <div key={i} className="flex items-center gap-2 text-xs py-0.5">
- <span className="text-gray-600 dark:text-gray-500 tabular-nums w-6 text-right font-heading">
+ <span className="text-ink-dim text-ink-faint tabular-nums w-6 text-right font-heading">
  {g.minute}'
  </span>
  <Circle className="w-3 h-3 fill-current text-accent-400" />
- <span className="text-gray-800 dark:text-gray-200 font-medium">
+ <span className="text-ink text-ink font-medium">
  {getPlayerName(snapshot, g.player_id)}
  </span>
  {g.event_type === "PenaltyGoal" && (
@@ -166,10 +166,10 @@ export function PlayerRatingsPanel({
  const motm = sorted[0];
 
  return (
- <div className="bg-white dark:bg-navy-800 rounded border border-gray-200 dark:border-navy-700 shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-3">
  <Star className="w-4 h-4 text-accent-700 dark:text-accent-400" />
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.ratings", { team: team.name })}
  </h3>
  <div
@@ -188,7 +188,7 @@ export function PlayerRatingsPanel({
  <p className="text-xs font-heading font-bold text-accent-700 dark:text-accent-400 uppercase tracking-wider">
  {t("match.motm")}
  </p>
- <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">{motm.name}</p>
+ <p className="text-sm text-ink text-ink font-medium">{motm.name}</p>
  </div>
  </div>
  )}
@@ -204,8 +204,8 @@ export function PlayerRatingsPanel({
  >
  {interpretMatchRating(p.rating).short}
  </span>
- <span className="text-gray-600 dark:text-gray-400 truncate flex-1">{p.name}</span>
- <span className="text-gray-600 dark:text-gray-500 text-[10px] font-heading uppercase">
+ <span className="text-ink-dim truncate flex-1">{p.name}</span>
+ <span className="text-ink-dim text-ink-faint text-[10px] font-heading uppercase">
  {translatePositionAbbreviation(t, p.position)}
  </span>
  </div>

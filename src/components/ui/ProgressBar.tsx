@@ -24,7 +24,7 @@ export function ProgressBar({
  accent: "bg-accent-400",
  success: "bg-success-400",
  danger: "bg-danger-500",
- muted: "bg-gray-300 dark:bg-navy-500",
+ muted: "bg-carbon-3 bg-carbon-3",
  };
 
  const heights = {
@@ -35,14 +35,14 @@ export function ProgressBar({
 
  return (
  <div className={`flex items-center gap-2 ${className}`}>
- <div className={`flex-1 bg-gray-200 dark:bg-navy-600 rounded-full ${heights[size]} overflow-hidden`}>
+ <div className={`flex-1 bg-carbon-3 rounded-full ${heights[size]} overflow-hidden`}>
  <div
  className={`${barColors[resolvedVariant]} ${heights[size]} rounded-full transition-all duration-500`}
  style={{ width: `${clamped}%` }}
  />
  </div>
  {showLabel && (
- <span className="text-xs font-bold text-gray-500 dark:text-gray-400 tabular-nums min-w-[2.5rem] text-right">
+ <span className="text-xs font-bold text-ink-dim tabular-nums min-w-[2.5rem] text-right">
  {clamped}%
  </span>
  )}

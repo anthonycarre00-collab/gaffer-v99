@@ -186,9 +186,9 @@ export function DatePicker({ value, onChange, error }: DatePickerProps) {
  value={day}
  onChange={handleDayChange}
  onBlur={() => setDay(normaliseDayOnBlur(day))}
- className={`w-full bg-gray-50 dark:bg-navy-900 border text-gray-900 dark:text-white rounded p-3 outline-none focus:ring-2 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 text-center ${error
+ className={`w-full bg-carbon-0 border text-ink rounded p-3 outline-none focus:ring-2 transition-all placeholder:text-ink-faint dark:placeholder:text-ink-faint text-center ${error
  ? "border-danger-400 dark:border-danger-500 focus:border-danger-500 focus:ring-danger-500/20"
- : "border-gray-300 dark:border-navy-600 focus:border-primary-500 focus:ring-primary-500/20"
+ : "border-slate-line focus:border-primary-500 focus:ring-primary-500/20"
  }`}
  />
  </div>
@@ -198,21 +198,21 @@ export function DatePicker({ value, onChange, error }: DatePickerProps) {
  <button
  type="button"
  onClick={() => setMonthOpen(!monthOpen)}
- className={`w-full flex items-center justify-between bg-gray-50 dark:bg-navy-900 border text-left rounded p-3 outline-none transition-all ${error
+ className={`w-full flex items-center justify-between bg-carbon-0 border text-left rounded p-3 outline-none transition-all ${error
  ? "border-danger-400 dark:border-danger-500"
  : monthOpen
  ? "border-primary-500 ring-2 ring-primary-500/20"
- : "border-gray-300 dark:border-navy-600"
+ : "border-slate-line"
  }`}
  >
- <span className={month ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"}>
+ <span className={month ? "text-ink" : "text-ink-faint"}>
  {selectedMonthLabel}
  </span>
- <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${monthOpen ? "rotate-180" : ""}`} />
+ <ChevronDown className={`w-4 h-4 text-ink-faint transition-transform ${monthOpen ? "rotate-180" : ""}`} />
  </button>
 
  {monthOpen && (
- <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-white dark:bg-navy-700 rounded border border-gray-200 dark:border-navy-600 overflow-hidden">
+ <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-white bg-carbon-2 rounded border border-slate-line overflow-hidden">
  <div className="max-h-48 overflow-y-auto">
  {months.map(m => (
  <button
@@ -232,7 +232,7 @@ export function DatePicker({ value, onChange, error }: DatePickerProps) {
  }}
  className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between transition-colors ${(month === m.value || month === m.value.padStart(2, '0'))
  ? "bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400"
- : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-navy-600"
+ : "text-ink hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  <span>{m.label}</span>
@@ -260,9 +260,9 @@ export function DatePicker({ value, onChange, error }: DatePickerProps) {
  }
  }
  }}
- className={`w-full bg-gray-50 dark:bg-navy-900 border text-gray-900 dark:text-white rounded p-3 outline-none focus:ring-2 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 text-center ${error
+ className={`w-full bg-carbon-0 border text-ink rounded p-3 outline-none focus:ring-2 transition-all placeholder:text-ink-faint dark:placeholder:text-ink-faint text-center ${error
  ? "border-danger-400 dark:border-danger-500 focus:border-danger-500 focus:ring-danger-500/20"
- : "border-gray-300 dark:border-navy-600 focus:border-primary-500 focus:ring-primary-500/20"
+ : "border-slate-line focus:border-primary-500 focus:ring-primary-500/20"
  }`}
  />
  </div>

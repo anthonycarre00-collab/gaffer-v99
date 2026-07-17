@@ -44,20 +44,20 @@ export default function HomeSquadOverviewCard({
  <CardBody>
  <div className="flex flex-col gap-3">
  <div className="flex items-center justify-between">
- <span className="text-xs text-gray-500 dark:text-gray-400">
+ <span className="text-xs text-ink-dim">
  {t("home.avgCondition")}
  </span>
- <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100">
+ <span className="font-heading font-bold text-sm text-ink">
  {avgCondition}%
  </span>
  </div>
  <ProgressBar value={avgCondition} variant="auto" size="md" />
 
  <div className="flex items-center justify-between mt-1">
- <span className="text-xs text-gray-500 dark:text-gray-400">
+ <span className="text-xs text-ink-dim">
  {t("home.avgOvr")}
  </span>
- <span className="font-heading font-bold text-sm text-gray-800 dark:text-gray-100">
+ <span className="font-heading font-bold text-sm text-ink">
  {shortOvrLabel(avgOvr)}
  </span>
  </div>
@@ -71,15 +71,15 @@ export default function HomeSquadOverviewCard({
  </div>
  )}
 
- <div className="mt-2 pt-2 border-t border-gray-100 dark:border-navy-700 flex items-center gap-2">
- <Dumbbell className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
- <span className="text-xs text-gray-500 dark:text-gray-400">
+ <div className="mt-2 pt-2 border-t border-slate-line-soft flex items-center gap-2">
+ <Dumbbell className="w-3.5 h-3.5 text-ink-faint" />
+ <span className="text-xs text-ink-dim">
  {t("home.scheduleLabel")}
  </span>
  <span className={`text-xs font-heading font-bold flex items-center gap-1 ${scheduleColorClass}`}>
  {scheduleIcon} {scheduleLabel}
  </span>
- <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+ <span className="text-xs text-ink-faint ml-auto">
  {t(`common.trainingFocuses.${focus}`, focus)}
  </span>
  </div>

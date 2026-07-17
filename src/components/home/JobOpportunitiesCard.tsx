@@ -146,7 +146,7 @@ export default function JobOpportunitiesCard({
  <button
  onClick={handleRefresh}
  disabled={loading}
- className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+ className="text-ink-faint hover:text-ink-dim hover:text-ink-dim transition-colors"
  title={t("jobs.refresh")}
  >
  <RefreshCw
@@ -173,7 +173,7 @@ export default function JobOpportunitiesCard({
  <div className="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
  </div>
  ) : jobs.length === 0 ? (
- <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">
+ <p className="text-sm text-ink-faint text-center py-4">
  {t("jobs.noJobs")}
  </p>
  ) : (
@@ -183,14 +183,14 @@ export default function JobOpportunitiesCard({
  return (
  <div
  key={job.team_id}
- className="flex items-center justify-between rounded border border-gray-100 bg-gray-50 px-4 py-3 dark:border-navy-600 dark:bg-navy-700/50"
+ className="flex items-center justify-between rounded border border-slate-line-soft bg-carbon-2 px-4 py-3 border-slate-line bg-carbon-2/50"
  >
  <div className="min-w-0 flex-1">
- <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+ <p className="text-sm font-semibold text-ink text-ink">
  {job.team_name}
  </p>
  <div className="flex items-center gap-3 mt-0.5">
- <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+ <span className="flex items-center gap-1 text-xs text-ink-faint">
  <MapPin className="w-3 h-3" />
  {job.city}
  </span>
@@ -204,12 +204,12 @@ export default function JobOpportunitiesCard({
  {Array.from({ length: 5 - stars }, (_, i) => (
  <Star
  key={`e${i}`}
- className="w-3 h-3 text-gray-300 dark:text-navy-600"
+ className="w-3 h-3 text-ink-faint dark:text-navy-600"
  />
  ))}
  </span>
  {job.last_league_position && (
- <span className="text-xs text-gray-400 dark:text-gray-500">
+ <span className="text-xs text-ink-faint">
  {t("jobs.leaguePosition", {
  position: job.last_league_position,
  })}

@@ -23,11 +23,11 @@ export default function ProfileSaveConfirm({
 
  return (
  <DashboardModalFrame maxWidthClassName="max-w-sm">
- <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-white">
+ <h3 className="text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("managerProfiles.saveConfirm.title")}
  </h3>
 
- <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+ <p className="mt-2 text-sm text-ink-dim">
  {t("managerProfiles.saveConfirm.body", { name: profileName })}
  </p>
 
@@ -48,7 +48,7 @@ export default function ProfileSaveConfirm({
  <button
  type="button"
  onClick={onClose}
- className="mt-6 w-full text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors text-center"
+ className="mt-6 w-full text-sm text-ink-faint hover:text-ink-dim hover:text-ink-dim transition-colors text-center"
  >
  {t("menu.cancel")}
  </button>

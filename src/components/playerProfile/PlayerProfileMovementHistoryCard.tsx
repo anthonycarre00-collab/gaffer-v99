@@ -72,24 +72,24 @@ export default function PlayerProfileMovementHistoryCard({
  return (
  <div
  key={`${entry.date}-${entry.kind}-${index}`}
- className="rounded border border-gray-100 bg-gray-50/60 p-3 text-sm dark:border-navy-600 dark:bg-navy-800/50"
+ className="rounded border border-slate-line-soft bg-carbon-2/60 p-3 text-sm border-slate-line bg-carbon-1/50"
  >
  <div className="flex flex-wrap items-center gap-2">
  <Badge variant={MOVEMENT_BADGE_VARIANTS[entry.kind]}>
  {t(MOVEMENT_LABEL_KEYS[entry.kind])}
  </Badge>
- <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+ <span className="text-xs font-semibold text-ink-dim">
  {entry.date}
  </span>
  </div>
 
  {direction ? (
- <div className="mt-2 font-semibold text-gray-800 dark:text-gray-100">
+ <div className="mt-2 font-semibold text-ink">
  {direction}
  </div>
  ) : null}
 
- <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+ <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-dim">
  {entry.fee ? (
  <span>
  {t("playerProfile.movementFee", {
@@ -110,7 +110,7 @@ export default function PlayerProfileMovementHistoryCard({
  })}
  </div>
  ) : (
- <p className="py-4 text-center text-sm text-gray-400 dark:text-gray-500">
+ <p className="py-4 text-center text-sm text-ink-faint">
  {t("playerProfile.noMovementHistory")}
  </p>
  )}

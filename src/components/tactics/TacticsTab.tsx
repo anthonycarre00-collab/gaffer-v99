@@ -809,7 +809,7 @@ export default function TacticsTab({
 
  if (!team) {
  return (
- <p className="text-gray-500 dark:text-gray-400">{t("common.noTeam")}</p>
+ <p className="text-ink-dim">{t("common.noTeam")}</p>
  );
  }
 

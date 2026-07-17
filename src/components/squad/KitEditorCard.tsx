@@ -50,9 +50,9 @@ export default function KitEditorCard({
  }
 
  return (
- <div className="flex flex-col gap-3 p-4 rounded bg-white dark:bg-navy-800 border border-gray-100 dark:border-navy-700">
+ <div className="flex flex-col gap-3 p-4 rounded bg-white bg-carbon-1 border border-slate-line-soft">
  <div className="flex items-center gap-2">
- <p className="text-xs font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("squad.teamKit")}
  </p>
  {isLocked && (
@@ -70,7 +70,7 @@ export default function KitEditorCard({
  <div
  key={pat}
  className={`flex flex-col items-center gap-1 rounded p-1.5
- ${selected ? "ring-2 ring-gray-400 bg-gray-100 dark:bg-navy-700" : ""}`}
+ ${selected ? "ring-2 ring-gray-400 bg-carbon-2" : ""}`}
  >
  <JerseyIcon
  primaryColor={primaryColor}
@@ -78,7 +78,7 @@ export default function KitEditorCard({
  pattern={pat}
  size="md"
  />
- <span className="text-xs text-gray-500 dark:text-gray-400 font-heading">
+ <span className="text-xs text-ink-dim font-heading">
  {t(`squad.kitPatterns.${pat}`)}
  </span>
  </div>
@@ -100,7 +100,7 @@ export default function KitEditorCard({
  focus:outline-none focus:ring-2 focus:ring-primary-500/40
  ${selected
  ? "ring-2 ring-primary-500 bg-primary-500/10"
- : "hover:bg-gray-100 dark:hover:bg-navy-700"
+ : "hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  <JerseyIcon
@@ -109,7 +109,7 @@ export default function KitEditorCard({
  pattern={pat}
  size="md"
  />
- <span className="text-xs text-gray-500 dark:text-gray-400 font-heading">
+ <span className="text-xs text-ink-dim font-heading">
  {t(`squad.kitPatterns.${pat}`)}
  </span>
  </button>

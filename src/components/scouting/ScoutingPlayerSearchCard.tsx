@@ -85,7 +85,7 @@ export default function ScoutingPlayerSearchCard({
  onClick={() => onPositionFilterChange(position)}
  className={`px-2.5 py-1 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors ${posFilter === position
  ? "bg-primary-500 text-white"
- : "bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600"
+ : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >
  {position === "All"
@@ -98,13 +98,13 @@ export default function ScoutingPlayerSearchCard({
  </CardHeader>
  <CardBody>
  <div className="relative mb-3">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
  <input
  type="text"
  placeholder={t("scouting.searchPlaceholder")}
  value={searchQuery}
  onChange={(event) => onSearchQueryChange(event.target.value)}
- className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-navy-700 border border-gray-200 dark:border-navy-600 rounded focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
+ className="w-full pl-9 pr-4 py-2 text-sm bg-carbon-2 border border-slate-line rounded focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-ink placeholder:text-ink-faint"
  />
  </div>
 
@@ -120,7 +120,7 @@ export default function ScoutingPlayerSearchCard({
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
- <tr className="text-xs text-gray-500 dark:text-gray-400 font-heading uppercase tracking-wider border-b border-gray-100 dark:border-navy-700">
+ <tr className="text-xs text-ink-dim font-heading uppercase tracking-wider border-b border-slate-line-soft">
  <th className="text-left py-2 px-2">{t("scouting.player")}</th>
  <th className="text-left py-2 px-1">{t("scouting.pos")}</th>
  <th className="text-center py-2 px-1">{t("scouting.age")}</th>
@@ -179,19 +179,19 @@ export default function ScoutingPlayerSearchCard({
  const row = (
  <tr
  key={player.id}
- className="border-b border-gray-50 dark:border-navy-700/50 hover:bg-gray-50 dark:hover:bg-navy-700/30 transition-colors"
+ className="border-b border-slate-line-soft hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors"
  >
  <td className="py-2 px-2">
  <div className="flex items-center gap-2">
- <PlayerAvatar player={player} className="h-8 w-8 shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-navy-700 flex items-center justify-center text-[10px] font-heading font-bold text-gray-500 dark:text-gray-300" />
+ <PlayerAvatar player={player} className="h-8 w-8 shrink-0 overflow-hidden rounded bg-carbon-2 flex items-center justify-center text-[10px] font-heading font-bold text-ink-dim" />
  <div className="min-w-0">
  <button
  onClick={() => onSelectPlayer?.(player.id)}
- className="font-heading font-bold text-gray-800 dark:text-gray-100 hover:text-primary-500 transition-colors text-left"
+ className="font-heading font-bold text-ink hover:text-primary-500 transition-colors text-left"
  >
  {player.full_name}
  </button>
- <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
+ <div className="text-[10px] text-ink-faint mt-0.5 flex items-center gap-1">
  <CountryFlag
  code={player.nationality}
  locale={i18n.language}
@@ -218,13 +218,13 @@ export default function ScoutingPlayerSearchCard({
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
  </td>
- <td className="text-center py-2 px-1 text-gray-600 dark:text-gray-400">
+ <td className="text-center py-2 px-1 text-ink-dim">
  {calcAge(player.date_of_birth)}
  </td>
- <td className="py-2 px-1 text-gray-600 dark:text-gray-400 text-xs truncate max-w-[120px]">
+ <td className="py-2 px-1 text-ink-dim text-xs truncate max-w-[120px]">
  {team}
  </td>
- <td className="text-center py-2 px-1 text-gray-600 dark:text-gray-400 text-xs">
+ <td className="text-center py-2 px-1 text-ink-dim text-xs">
  {formatVal(player.market_value)}
  </td>
  <td className="text-right py-2 px-2">
@@ -233,7 +233,7 @@ export default function ScoutingPlayerSearchCard({
  {t("scouting.scoutingInProgress")}
  </span>
  ) : availableScoutCount === 0 ? (
- <span className="text-xs text-gray-400">
+ <span className="text-xs text-ink-faint">
  {t("scouting.noScoutsFree")}
  </span>
  ) : (
@@ -259,15 +259,15 @@ export default function ScoutingPlayerSearchCard({
  </tbody>
  </table>
  {players.length === 0 && (
- <p className="text-center text-sm text-gray-400 py-4">
+ <p className="text-center text-sm text-ink-faint py-4">
  {t("scouting.noPlayersFound")}
  </p>
  )}
  </div>
 
  {totalPages > 1 && (
- <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-navy-700 mt-3">
- <span className="text-xs text-gray-400 dark:text-gray-500">
+ <div className="flex items-center justify-between pt-3 border-t border-slate-line-soft mt-3">
+ <span className="text-xs text-ink-faint">
  {t("scouting.showingRange", {
  from: safePage * pageSize + 1,
  to: Math.min((safePage + 1) * pageSize, totalPlayers),
@@ -279,18 +279,18 @@ export default function ScoutingPlayerSearchCard({
  aria-label={t("scouting.previousPage")}
  disabled={safePage === 0}
  onClick={onPreviousPage}
- className="p-1.5 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+ className="p-1.5 rounded bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-xs font-heading font-bold text-gray-500 dark:text-gray-400 tabular-nums">
+ <span className="text-xs font-heading font-bold text-ink-dim tabular-nums">
  {safePage + 1} / {totalPages}
  </span>
  <button
  aria-label={t("scouting.nextPage")}
  disabled={safePage >= totalPages - 1}
  onClick={onNextPage}
- className="p-1.5 rounded bg-gray-100 dark:bg-navy-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-navy-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+ className="p-1.5 rounded bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>

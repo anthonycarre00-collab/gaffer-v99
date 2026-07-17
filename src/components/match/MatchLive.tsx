@@ -208,7 +208,7 @@ export default function MatchLive({
  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger-500" />
  </span>
  )}
- <span className="text-xs font-heading uppercase tracking-widest text-gray-500 dark:text-gray-400">
+ <span className="text-xs font-heading uppercase tracking-widest text-ink-dim">
  {isRunning ? t('match.live') : t('match.paused')}
  </span>
  </div>
@@ -217,10 +217,10 @@ export default function MatchLive({
  <div className="flex items-center gap-6">
  <div className="flex items-center gap-3">
  <div className="text-right">
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
  {snapshot.home_team.name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400">{snapshot.home_team.formation}</p>
+ <p className="text-xs text-ink-dim">{snapshot.home_team.formation}</p>
  </div>
  <TeamLogo
  team={homeFullTeam ?? makeTeamFallback(snapshot.home_team.name)}
@@ -231,14 +231,14 @@ export default function MatchLive({
  </div>
 
  <div className="flex items-center gap-3">
- <span className="text-4xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">{snapshot.home_score}</span>
+ <span className="text-4xl font-heading font-bold text-ink tabular-nums">{snapshot.home_score}</span>
  <div className="flex flex-col items-center">
  <span className="text-xs font-heading uppercase tracking-widest text-accent-700 dark:text-accent-400">
  {phaseLabel(snapshot.phase, t)}
  </span>
- <span className="text-2xl font-heading font-bold text-gray-500 dark:text-gray-400">{snapshot.current_minute}'</span>
+ <span className="text-2xl font-heading font-bold text-ink-dim">{snapshot.current_minute}'</span>
  </div>
- <span className="text-4xl font-heading font-bold text-gray-900 dark:text-white tabular-nums">{snapshot.away_score}</span>
+ <span className="text-4xl font-heading font-bold text-ink tabular-nums">{snapshot.away_score}</span>
  </div>
 
  <div className="flex items-center gap-3">
@@ -249,17 +249,17 @@ export default function MatchLive({
  style={{ backgroundColor: awayTeamColor + "30", borderColor: awayTeamColor, borderWidth: 1 }}
  />
  <div className="text-left">
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-gray-800 dark:text-gray-200">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
  {snapshot.away_team.name}
  </p>
- <p className="text-xs text-gray-500 dark:text-gray-400">{snapshot.away_team.formation}</p>
+ <p className="text-xs text-ink-dim">{snapshot.away_team.formation}</p>
  </div>
  </div>
  </div>
 
  <div className="flex items-center gap-2">
- <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
- <span className="text-sm font-heading text-gray-500 dark:text-gray-400 tabular-nums w-8">{snapshot.current_minute}'</span>
+ <Clock className="w-4 h-4 text-ink-dim" />
+ <span className="text-sm font-heading text-ink-dim tabular-nums w-8">{snapshot.current_minute}'</span>
  </div>
  </div>
 
@@ -274,7 +274,7 @@ export default function MatchLive({
  >
  {snapshot.home_possession_pct.toFixed(0)}%
  </span>
- <div className="flex-1 h-1.5 bg-gray-300 dark:bg-navy-700 rounded-full overflow-hidden flex transition-colors duration-300">
+ <div className="flex-1 h-1.5 bg-carbon-3 bg-carbon-2 rounded-full overflow-hidden flex transition-colors duration-300">
  <div
  className="h-full transition-all duration-500"
  style={{
@@ -306,7 +306,7 @@ export default function MatchLive({
  <div className="pitch-grass-bg flex-1 flex overflow-hidden">
  {/* Left Panel: Event Feed + Stats */}
  <div className="flex-1 flex flex-col">
- <div className="flex bg-white dark:bg-navy-800 border-b border-gray-200 dark:border-navy-700 transition-colors duration-300">
+ <div className="flex bg-white bg-carbon-1 border-b border-slate-line transition-colors duration-300">
  {([
  { id: "events" as ActivePanel, label: t('match.events'), icon: <MessageSquare className="w-4 h-4" /> },
  { id: "stats" as ActivePanel, label: t('match.stats'), icon: <BarChart3 className="w-4 h-4" /> },
@@ -316,8 +316,8 @@ export default function MatchLive({
  key={tab.id}
  onClick={() => setActivePanel(tab.id)}
  className={`flex items-center gap-2 px-5 py-3 font-heading font-bold text-xs uppercase tracking-wider transition-colors border-b-2 ${activePanel === tab.id
- ? "text-primary-500 dark:text-primary-400 border-primary-500 bg-primary-50 dark:bg-navy-700/50"
- : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300"
+ ? "text-primary-500 dark:text-primary-400 border-primary-500 bg-primary-50 bg-carbon-2/50"
+ : "text-ink-dim border-transparent hover:text-ink hover:text-ink-dim"
  }`}
  >
  {tab.icon}
@@ -334,10 +334,10 @@ export default function MatchLive({
  </div>
 
  {/* Right Panel: Controls */}
- <aside className="w-72 bg-white dark:bg-navy-800 border-l border-gray-200 dark:border-navy-700 flex flex-col transition-colors duration-300">
+ <aside className="w-72 bg-white bg-carbon-1 border-l border-slate-line flex flex-col transition-colors duration-300">
  {/* Speed Controls */}
- <div className="p-4 border-b border-gray-200 dark:border-navy-700">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">{t('match.simSpeed')}</h3>
+ <div className="p-4 border-b border-slate-line">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">{t('match.simSpeed')}</h3>
  <div className="flex gap-1">
  {([
  { id: "paused" as SimSpeed, icon: <Pause className="w-4 h-4" />, label: t('match.pause') },
@@ -355,7 +355,7 @@ export default function MatchLive({
  onPreferredSpeedChange?.(s.id);
  }
  }}
- className={`flex-1 flex flex-col items-center gap-1 py-2 rounded text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-700"
+ className={`flex-1 flex flex-col items-center gap-1 py-2 rounded text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-ink-dim hover:text-ink hover:text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  {s.icon}
@@ -366,7 +366,7 @@ export default function MatchLive({
  {speed === "paused" && (
  <button
  onClick={stepMatch}
- className="w-full mt-2 flex items-center justify-center gap-2 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
+ className="w-full mt-2 flex items-center justify-center gap-2 py-2 bg-carbon-3 hover:bg-carbon-3 bg-carbon-2 hover:bg-carbon-3 rounded text-sm font-heading uppercase tracking-wider text-ink-dim transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  {t('match.step1Min')}
@@ -376,30 +376,30 @@ export default function MatchLive({
 
  {/* User Controls */}
  {!isSpectator && userSide && (
- <div className="p-4 border-b border-gray-200 dark:border-navy-700 flex flex-col gap-2">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">{t('match.teamControls')}</h3>
+ <div className="p-4 border-b border-slate-line flex flex-col gap-2">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-1">{t('match.teamControls')}</h3>
  <button
  onClick={() => setShowSubPanel(!showSubPanel)}
- className="flex items-center gap-2 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-navy-700 dark:hover:bg-navy-600 rounded text-sm font-heading uppercase tracking-wider text-gray-700 dark:text-gray-300 transition-colors"
+ className="flex items-center gap-2 px-3 py-2 bg-carbon-3 hover:bg-carbon-3 bg-carbon-2 hover:bg-carbon-3 rounded text-sm font-heading uppercase tracking-wider text-ink-dim transition-colors"
  >
  <RefreshCw className="w-4 h-4" />
  {t('match.subs')} ({userSide === "Home" ? snapshot.home_subs_made : snapshot.away_subs_made}/{snapshot.max_subs})
  </button>
  <div>
- <p className="text-[10px] font-heading uppercase tracking-widest text-gray-600 dark:text-gray-500 mb-1">{t('match.formation')}</p>
+ <p className="text-[10px] font-heading uppercase tracking-widest text-ink-dim text-ink-faint mb-1">{t('match.formation')}</p>
  <div className="flex flex-wrap gap-1">
  {FORMATIONS.map(f => {
  const cur = userSide === "Home" ? snapshot.home_team.formation : snapshot.away_team.formation;
  return (
  <button key={f} onClick={() => handleFormationChange(f)}
- className={`px-2 py-1 rounded text-xs font-heading transition-colors ${cur === f ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-700 dark:text-gray-400 dark:hover:text-gray-300"}`}
+ className={`px-2 py-1 rounded text-xs font-heading transition-colors ${cur === f ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "bg-carbon-2 text-ink-dim hover:text-ink bg-carbon-2 text-ink-faint hover:text-ink-dim"}`}
  >{f}</button>
  );
  })}
  </div>
  </div>
  <div>
- <p className="text-[10px] font-heading uppercase tracking-widest text-gray-600 dark:text-gray-500 mb-1">{t('match.playStyle')}</p>
+ <p className="text-[10px] font-heading uppercase tracking-widest text-ink-dim text-ink-faint mb-1">{t('match.playStyle')}</p>
  <div className="flex flex-wrap gap-1">
  {[
  { id: "Balanced", icon: <Target className="w-3 h-3" /> },
@@ -412,7 +412,7 @@ export default function MatchLive({
  const cur = userSide === "Home" ? snapshot.home_team.play_style : snapshot.away_team.play_style;
  return (
  <button key={s.id} onClick={() => handlePlayStyleChange(s.id)}
- className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-heading transition-colors ${cur === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-700 dark:text-gray-400 dark:hover:text-gray-300"}`}
+ className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-heading transition-colors ${cur === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "bg-carbon-2 text-ink-dim hover:text-ink bg-carbon-2 text-ink-faint hover:text-ink-dim"}`}
  >{s.icon}{t(`common.playStyles.${s.id}`, s.id)}</button>
  );
  })}
@@ -423,7 +423,7 @@ export default function MatchLive({
 
  {/* Key Events sidebar */}
  <div className="p-4 flex-1 overflow-auto">
- <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">{t('match.keyEvents')}</h3>
+ <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">{t('match.keyEvents')}</h3>
  <div className="flex flex-col gap-1.5">
  {importantEvents
  .filter(e => ["Goal", "PenaltyGoal", "YellowCard", "RedCard", "SecondYellow", "Substitution", "PenaltyMiss", "Injury"].includes(e.event_type))
@@ -432,7 +432,7 @@ export default function MatchLive({
  const display = getEventDisplay(evt);
  return (
  <div key={i} className="flex items-center gap-2 text-xs">
- <span className="text-gray-600 dark:text-gray-500 tabular-nums w-6 text-right font-heading">{evt.minute}'</span>
+ <span className="text-ink-dim text-ink-faint tabular-nums w-6 text-right font-heading">{evt.minute}'</span>
  <span>{display.icon}</span>
  <span className={`${display.color} font-medium truncate`}>{getPlayerName(snapshot, evt.player_id)}</span>
  <Badge variant={evt.side === "Home" ? "primary" : "accent"} size="sm">
@@ -441,7 +441,7 @@ export default function MatchLive({
  </div>
  );
  })}
- {importantEvents.length === 0 && <p className="text-gray-600 dark:text-gray-500 text-xs">{t('match.noEventsYet')}</p>}
+ {importantEvents.length === 0 && <p className="text-ink-dim text-ink-faint text-xs">{t('match.noEventsYet')}</p>}
  </div>
  </div>
  </aside>

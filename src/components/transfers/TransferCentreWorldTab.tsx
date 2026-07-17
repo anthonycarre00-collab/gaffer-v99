@@ -57,7 +57,7 @@ export default function TransferCentreWorldTab({
  <p className="text-xs font-heading font-bold uppercase tracking-[0.25em] text-primary-500">
  {t("transferCentreWorld.title")}
  </p>
- <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
+ <h2 className="text-2xl font-heading font-bold uppercase tracking-wide text-ink">
  {t("transferCentreWorld.subtitle")}
  </h2>
  </div>
@@ -124,7 +124,7 @@ function TransferRumoursSection({
  </CardHeader>
  <CardBody className="space-y-4">
  {rumours.length === 0 ? (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("transferCentreWorld.noRumours")}
  </p>
  ) : (
@@ -133,7 +133,7 @@ function TransferRumoursSection({
  return (
  <div
  key={rumour.id}
- className="rounded border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
+ className="rounded border border-slate-line-soft bg-carbon-2 p-4 border-slate-line bg-carbon-1/70"
  >
  <div className="flex items-start justify-between gap-4">
  <div>
@@ -147,14 +147,14 @@ function TransferRumoursSection({
  >
  {rumour.player_name}
  </button>
- <div className="mt-2 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mt-2 flex items-center gap-2 text-sm text-ink-dim">
  <span className="font-heading font-bold uppercase tracking-[0.2em]">
  {t("transferCentreWorld.currentClub")}
  </span>
  <button
  type="button"
  onClick={() => onSelectTeam?.(rumour.team_id)}
- className="text-left font-semibold text-gray-700 transition-colors hover:text-primary-500 dark:text-gray-200"
+ className="text-left font-semibold text-ink transition-colors hover:text-primary-500 text-ink"
  >
  {rumour.team_name}
  </button>
@@ -210,7 +210,7 @@ function CompletedDealsSection({
  </CardHeader>
  <CardBody className="space-y-4">
  {deals.length === 0 ? (
- <p className="text-sm text-gray-500 dark:text-gray-400">
+ <p className="text-sm text-ink-dim">
  {t("transferCentreWorld.noCompletedDeals")}
  </p>
  ) : (
@@ -223,7 +223,7 @@ function CompletedDealsSection({
  return (
  <div
  key={`${deal.player_id}-${deal.date}`}
- className="rounded border border-gray-100 bg-gray-50 p-4 dark:border-navy-600 dark:bg-navy-800/70"
+ className="rounded border border-slate-line-soft bg-carbon-2 p-4 border-slate-line bg-carbon-1/70"
  >
  <div className="flex items-start justify-between gap-4">
  <div>
@@ -237,7 +237,7 @@ function CompletedDealsSection({
  >
  {playerName}
  </button>
- <div className="mt-2 grid gap-2 text-sm text-gray-500 dark:text-gray-400">
+ <div className="mt-2 grid gap-2 text-sm text-ink-dim">
  <TeamLine
  label={t("transferCentreWorld.sourceClub")}
  teamId={deal.from_team_id}
@@ -292,7 +292,7 @@ function TeamLine({ label, teamId, teamName, onSelectTeam }: TeamLineProps) {
  <button
  type="button"
  onClick={() => onSelectTeam?.(teamId)}
- className="text-left font-semibold text-gray-700 transition-colors hover:text-primary-500 dark:text-gray-200"
+ className="text-left font-semibold text-ink transition-colors hover:text-primary-500 text-ink"
  >
  {teamName}
  </button>
@@ -308,14 +308,14 @@ interface StatTileProps {
 
 function StatTile({ icon, label, value }: StatTileProps) {
  return (
- <div className="rounded bg-white p-3 dark:bg-navy-700/70">
- <div className="mb-2 flex items-center gap-2 text-gray-400 dark:text-gray-500">
+ <div className="rounded bg-white p-3 bg-carbon-2/70">
+ <div className="mb-2 flex items-center gap-2 text-ink-faint">
  {icon}
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.18em]">
  {label}
  </span>
  </div>
- <p className="text-lg font-heading font-bold text-gray-800 dark:text-gray-100">
+ <p className="text-lg font-heading font-bold text-ink">
  {value}
  </p>
  </div>

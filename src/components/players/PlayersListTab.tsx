@@ -211,13 +211,13 @@ export default function PlayersListTab({
  {/* Filters */}
  <div className="flex flex-wrap gap-3 mb-4 items-center">
  <div className="relative flex-1 min-w-[200px] max-w-sm">
- <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+ <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
  <input
  type="text"
  placeholder={t("players.searchPlaceholder")}
  value={query.search ?? ""}
  onChange={(e) => patchQuery({ search: e.target.value || null })}
- className="w-full pl-9 pr-3 py-2 rounded bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
 
@@ -226,7 +226,7 @@ export default function PlayersListTab({
  onClick={() => patchQuery({ position: null })}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${!query.position
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t("players.allPos")}
@@ -239,7 +239,7 @@ export default function PlayersListTab({
  }
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.position === pos
  ? "bg-primary-500 text-white shadow-sm"
- : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"
+ : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t(`common.posAbbr.${pos}`)}
@@ -250,19 +250,19 @@ export default function PlayersListTab({
  <div className="flex gap-1.5">
  <button
  onClick={() => patchQuery({ status: "all" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("common.all")}
  </button>
  <button
  onClick={() => patchQuery({ status: "transfer" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.transfer")}
  </button>
  <button
  onClick={() => patchQuery({ status: "loan" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-primary-500 text-white shadow-sm" : "bg-white dark:bg-navy-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-navy-600"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-primary-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.loan")}
  </button>
@@ -283,7 +283,7 @@ export default function PlayersListTab({
  </Select>
  </div>
 
- <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink-faint mb-3 font-heading uppercase tracking-wider">
  <Filter className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
  {t("players.nPlayersFound", { count: total })}
  </p>
@@ -312,7 +312,7 @@ export default function PlayersListTab({
  <div className="overflow-x-auto">
  <table className="w-full text-left border-collapse">
  <thead>
- <tr className="bg-gray-50 dark:bg-navy-800 border-b border-gray-200 dark:border-navy-600 text-xs">
+ <tr className="bg-carbon-2 border-b border-slate-line text-xs">
  <SortHeader
  label={t("common.position")}
  sortKey="position"
@@ -334,7 +334,7 @@ export default function PlayersListTab({
  asc={query.sort_asc}
  onClick={handleSort}
  />
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.nationality")}
  </th>
  <SortHeader
@@ -358,12 +358,12 @@ export default function PlayersListTab({
  asc={query.sort_asc}
  onClick={handleSort}
  />
- <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+ <th className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.status")}
  </th>
  </tr>
  </thead>
- <tbody className="divide-y divide-gray-100 dark:divide-navy-600">
+ <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {items.map((summary) => {
  const age = calcAge(summary.date_of_birth);
  const scoutState = alreadyScoutingIds.has(summary.id)
@@ -444,7 +444,7 @@ export default function PlayersListTab({
  <tr
  key={summary.id}
  onClick={() => onSelectPlayer(summary.id)}
- className="hover:bg-gray-50 dark:hover:bg-navy-700/50 transition-colors cursor-pointer group"
+ className="hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors cursor-pointer group"
  >
  <td className="py-2.5 px-4">
  <Badge
@@ -462,16 +462,16 @@ export default function PlayersListTab({
  <td className="py-2.5 px-4">
  <div className="flex items-center gap-3">
  <PlayerAvatar player={summary} />
- <span className="font-semibold text-sm text-gray-800 dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {summary.full_name}
  </span>
  </div>
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 tabular-nums">
+ <td className="py-2.5 px-4 text-sm text-ink-dim tabular-nums">
  {age}
  </td>
  <td
- className="py-2.5 px-4 text-sm text-gray-500 dark:text-gray-400"
+ className="py-2.5 px-4 text-sm text-ink-dim"
  title={summary.nationality}
  >
  <CountryFlag
@@ -486,17 +486,17 @@ export default function PlayersListTab({
  e.stopPropagation();
  onSelectTeam(summary.team_id!);
  }}
- className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 hover:underline transition-colors"
+ className="text-sm text-ink-dim hover:text-primary-500 hover:underline transition-colors"
  >
  {summary.team_name ?? ""}
  </button>
  ) : (
- <span className="text-sm text-gray-600 dark:text-gray-400">
+ <span className="text-sm text-ink-dim">
  {t("common.freeAgent")}
  </span>
  )}
  </td>
- <td className="py-2.5 px-4 text-sm text-gray-600 dark:text-gray-400 font-medium">
+ <td className="py-2.5 px-4 text-sm text-ink-dim font-medium">
  {formatVal(summary.market_value)}
  </td>
  <td className="py-2.5 px-4">
@@ -536,14 +536,14 @@ export default function PlayersListTab({
  </tbody>
  </table>
  {total === 0 && (
- <div className="p-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+ <div className="p-8 text-center text-ink-dim text-sm">
  {t("players.noMatch")}
  </div>
  )}
  </div>
  {totalPages > 1 && (
- <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-navy-600">
- <p className="text-xs text-gray-400 dark:text-gray-500 font-heading">
+ <div className="flex items-center justify-between px-4 py-3 border-t border-slate-line-soft">
+ <p className="text-xs text-ink-faint font-heading">
  {t("players.showingRange", {
  from: (page - 1) * pageSize + 1,
  to: Math.min(page * pageSize, total),
@@ -554,31 +554,31 @@ export default function PlayersListTab({
  <button
  onClick={() => patchQuery({ page: 1 })}
  disabled={page === 1}
- className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronsLeft className="w-4 h-4" />
  </button>
  <button
  onClick={() => patchQuery({ page: Math.max(1, page - 1) })}
  disabled={page === 1}
- className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="px-3 py-1 text-xs font-heading font-bold text-gray-600 dark:text-gray-300">
+ <span className="px-3 py-1 text-xs font-heading font-bold text-ink-dim">
  {page} / {totalPages}
  </span>
  <button
  onClick={() => patchQuery({ page: Math.min(totalPages, page + 1) })}
  disabled={page === totalPages}
- className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
  <button
  onClick={() => patchQuery({ page: totalPages })}
  disabled={page === totalPages}
- className="p-1.5 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-navy-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronsRight className="w-4 h-4" />
  </button>
@@ -644,12 +644,12 @@ function SortHeader({
  return (
  <th
  onClick={() => onClick(sortKey)}
- className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 transition-colors select-none"
+ className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim cursor-pointer hover:text-ink hover:text-ink transition-colors select-none"
  >
  <span className="flex items-center gap-1">
  {label}
  <ArrowUpDown
- className={`w-3 h-3 ${isActive ? "text-primary-500" : "text-gray-300 dark:text-navy-600"}`}
+ className={`w-3 h-3 ${isActive ? "text-primary-500" : "text-ink-faint dark:text-navy-600"}`}
  />
  </span>
  </th>

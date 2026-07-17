@@ -36,7 +36,7 @@ export default function HomeOnboardingChecklistCard({
  </div>
  </CardHeader>
  <CardBody>
- <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+ <p className="text-xs text-ink-dim mb-3">
  {t("onboarding.description")}
  </p>
  <div className="flex items-center gap-2 mb-4">
@@ -45,7 +45,7 @@ export default function HomeOnboardingChecklistCard({
  variant="accent"
  size="sm"
  />
- <span className="text-xs font-heading font-bold text-gray-500 dark:text-gray-400 flex-shrink-0">
+ <span className="text-xs font-heading font-bold text-ink-dim flex-shrink-0">
  {completedSteps}/{totalSteps}
  </span>
  </div>
@@ -57,11 +57,11 @@ export default function HomeOnboardingChecklistCard({
  className={`flex items-center gap-3 p-3 rounded text-left transition-all ${
  step.done
  ? "bg-primary-50 dark:bg-primary-500/5 opacity-70"
- : "bg-gray-50 dark:bg-navy-700/50 hover:bg-gray-100 dark:hover:bg-navy-700"
+ : "bg-carbon-2/50 hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  <div
- className={`flex-shrink-0 ${step.done ? "text-primary-500" : "text-gray-400 dark:text-gray-500"}`}
+ className={`flex-shrink-0 ${step.done ? "text-primary-500" : "text-ink-faint"}`}
  >
  {step.done ? (
  <CheckCircle2 className="w-5 h-5" />
@@ -70,17 +70,17 @@ export default function HomeOnboardingChecklistCard({
  )}
  </div>
  <div
- className={`flex-shrink-0 ${step.done ? "text-primary-500" : "text-gray-500 dark:text-gray-400"}`}
+ className={`flex-shrink-0 ${step.done ? "text-primary-500" : "text-ink-dim"}`}
  >
  {step.icon}
  </div>
  <div className="min-w-0 flex-1">
  <p
- className={`text-sm font-heading font-bold ${step.done ? "text-gray-400 dark:text-gray-500 line-through" : "text-gray-800 dark:text-gray-200"}`}
+ className={`text-sm font-heading font-bold ${step.done ? "text-ink-faint line-through" : "text-ink text-ink"}`}
  >
  {step.label}
  </p>
- <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+ <p className="text-xs text-ink-faint mt-0.5">
  {step.description}
  </p>
  </div>

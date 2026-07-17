@@ -20,7 +20,7 @@ export default function NextMatchDisplay({
 
  if (!userTeamId || !league) {
  return (
- <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-4">
+ <p className="text-ink-dim text-sm text-center py-4">
  {t("home.noLeagueSchedule")}
  </p>
  );
@@ -29,7 +29,7 @@ export default function NextMatchDisplay({
  const nextFixture = getUserNextFixture(gameState);
  if (!nextFixture) {
  return (
- <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-4">
+ <p className="text-ink-dim text-sm text-center py-4">
  {t(
  isSeasonComplete(league)
  ? "home.seasonComplete"
@@ -53,7 +53,7 @@ export default function NextMatchDisplay({
  : t("season.friendly");
 
  return (
- <div className="flex items-center justify-between py-6 px-4 bg-gray-50 dark:bg-navy-800 rounded border border-gray-100 dark:border-navy-600 transition-colors">
+ <div className="flex items-center justify-between py-6 px-4 bg-carbon-2 rounded border border-slate-line-soft transition-colors">
  <div className="text-center flex-1">
  {userTeam && (
  <TeamLogo
@@ -71,11 +71,11 @@ export default function NextMatchDisplay({
  </div>
 
  <div className="text-center px-4 flex flex-col items-center gap-1.5">
- <span className="font-heading font-bold text-2xl text-gray-300 dark:text-navy-600">
+ <span className="font-heading font-bold text-2xl text-ink-faint dark:text-navy-600">
  VS
  </span>
  <Badge variant="neutral">{formatMatchDate(nextFixture.date)}</Badge>
- <span className="text-xs text-gray-400 dark:text-gray-500">
+ <span className="text-xs text-ink-faint">
  {fixtureLabel}
  </span>
  <Badge variant={isHome ? "success" : "accent"} size="sm">
@@ -87,13 +87,13 @@ export default function NextMatchDisplay({
  {opponentTeam && (
  <TeamLogo
  team={opponentTeam}
- className="w-16 h-16 rounded-full mx-auto mb-2 flex items-center justify-center overflow-hidden border-2 border-gray-300 dark:border-navy-600"
+ className="w-16 h-16 rounded-full mx-auto mb-2 flex items-center justify-center overflow-hidden border-2 border-slate-line"
  imageClassName="h-12 w-12 object-contain drop-shadow"
  style={{ backgroundColor: opponentTeam.colors.primary }}
  />
  )}
  <p
- className="font-heading font-bold uppercase tracking-wide text-sm text-gray-500 dark:text-gray-400"
+ className="font-heading font-bold uppercase tracking-wide text-sm text-ink-dim"
  >
  {getTeamName(gameState.teams, opponentId)}
  </p>
