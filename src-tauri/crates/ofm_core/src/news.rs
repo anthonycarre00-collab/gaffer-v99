@@ -798,6 +798,42 @@ pub fn injury_news_article(
     )
 }
 
+/// V99.11 A2: Generate a player milestone news article (100th appearance,
+/// 50th goal, debut goal, etc.).
+///
+/// The article ID is `milestone_{player_id}_{kind}_{value}` so duplicate
+/// detection via `game.news.iter().any(|n| n.id == article_id)` works
+/// naturally — the same milestone can only fire once per player.
+pub fn player_milestone_article(
+    player_id: &str,
+    player_name: &str,
+    team_id: &str,
+    team_name: &str,
+    milestone_kind: &str, // "appearances" | "goals" | "debut_goal"
+    value: u32,
+    date: &str,
+) -> NewsArticle {
+    let milestone_word = match milestone_kind {
+        "appearances" => format!("{}th appearance", value),
+        "goals" => format!("{}th goal", value),
+        "debut_goal" => "debut goal".to_string(),
+        _ => format!("{}: {}", milestone_kind, value),
+    };
+    NewsArticle::new(
+        format!("milestone_{}_{}_{}", player_id, milestone_kind, value),
+        format!("{} reaches {}", player_name, milestone_word),
+        format!(
+            "{} notched up his {} for {}. A milestone worth marking.",
+            player_name, milestone_word, team_name
+        ),
+        "League Wire".to_string(),
+        date.to_string(),
+        NewsCategory::PlayerMilestone,
+    )
+    .with_teams(vec![team_id.to_string()])
+    .with_players(vec![player_id.to_string()])
+}
+
 #[cfg(test)]
 mod tests {
     use super::{

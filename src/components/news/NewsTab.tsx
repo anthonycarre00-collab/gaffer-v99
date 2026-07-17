@@ -33,6 +33,8 @@ const CAT_ICONS: Record<string, React.ReactNode> = {
  SeasonPreview: <FileText className="w-4 h-4" />,
  Editorial: <FileText className="w-4 h-4" />,
  ManagerialChange: <FileText className="w-4 h-4" />,
+ // V99.11 A2: Player milestone category
+ PlayerMilestone: <GafferTrophyIcon size={16} />,
 };
 const CAT_COLORS: Record<string, string> = {
  MatchReport: "text-primary-500",
@@ -44,6 +46,8 @@ const CAT_COLORS: Record<string, string> = {
  SeasonPreview: "text-success-500",
  Editorial: "text-gray-500",
  ManagerialChange: "text-danger-500",
+ // V99.11 A2: Player milestone — brass/accent for achievement
+ PlayerMilestone: "text-accent-500",
 };
 const CAT_BG: Record<string, string> = {
  MatchReport: "bg-primary-500/10",
@@ -55,6 +59,8 @@ const CAT_BG: Record<string, string> = {
  SeasonPreview: "bg-success-500/10",
  Editorial: "bg-gray-500/10",
  ManagerialChange: "bg-danger-500/10",
+ // V99.11 A2: Player milestone
+ PlayerMilestone: "bg-accent-500/10",
 };
 
 interface NewsTabProps {

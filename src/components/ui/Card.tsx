@@ -4,9 +4,7 @@ interface CardProps {
  children: ReactNode;
  className?: string;
  accent?: "primary" | "accent" | "success" | "danger" | "none";
- /** V99.8: Opt out of the default Gaffer card texture. Use sparingly —
-  *  the texture is what makes cards feel like they belong to the Gaffer
-  *  office rather than a generic SaaS dashboard. */
+ /** V99.11: Opt out of the default card texture. */
  plain?: boolean;
 }
 
@@ -19,26 +17,13 @@ export function Card({ children, className = "", accent = "none", plain = false 
  none: "",
  }[accent];
 
- // V99.8: Gaffer card aesthetic — keep the Tailwind border/bg/shadow from
- // above (they're tuned per dark/light mode), and layer the paper texture
- // on top so every card has the dugout/broadsheet feel without each caller
- // needing to opt in. The `plain` prop is the escape hatch for cards that
- // sit on top of their own texture (e.g. tactics board, scouting dossier)
- // where doubling up looks muddy.
+ // V99.11 A6: Use .gaffer-surface as single source of truth for card
+ // surfaces. The texture is opt-in via the `plain` prop (false = texture on).
  const surface = plain ? "" : "gaffer-card-texture";
 
  return (
  <div
- className={`
- bg-white dark:bg-navy-700
- border border-gray-200 dark:border-navy-600
- ${accentBorder}
- rounded-lg
- shadow-sm
- transition-all duration-200
- ${surface}
- ${className}
- `}
+ className={`gaffer-surface ${accentBorder} transition-all duration-200 ${surface} ${className}`}
  >
  {children}
  </div>
@@ -52,16 +37,20 @@ interface CardHeaderProps {
 }
 
 export function CardHeader({ children, action, className = "" }: CardHeaderProps) {
- // V99.8: Brass-tinted header band with the Gaffer header gradient.
- // Adds depth to every card top — the brass tint reads as "framed
- // document" rather than "SaaS panel".
+ // V99.11: Brass-tinted header band. Uses gaffer-header-gradient for
+ // subtle depth + brass-marker bar (the signature motif from the UI spec).
  return (
  <div
- className={`gaffer-header-gradient px-6 py-4 border-b border-accent-500/15 dark:border-accent-500/20 flex items-center justify-between ${className}`}
+ className={`gaffer-header-gradient px-3.5 py-2.5 border-b border-accent-500/15 dark:border-accent-500/20 flex items-center justify-between ${className}`}
  >
- <h3 className="text-base font-heading font-bold uppercase tracking-[0.08em] text-gray-800 dark:text-chalk">
+ <div className="flex items-center gap-2">
+ {/* V99.11: Brass marker bar — 3×11px brass rectangle before every
+     card title (UI spec §4 signature motif) */}
+ <span className="inline-block h-[11px] w-[3px] bg-accent-500 shrink-0" />
+ <h3 className="text-xs font-heading font-bold uppercase tracking-[0.09em] text-concrete dark:text-chalk">
  {children}
  </h3>
+ </div>
  {action}
  </div>
  );
@@ -73,5 +62,6 @@ interface CardBodyProps {
 }
 
 export function CardBody({ children, className = "" }: CardBodyProps) {
- return <div className={`p-6 ${className}`}>{children}</div>;
+ // V99.11: Padding per UI spec §1.3 (13-14px)
+ return <div className={`p-3.5 ${className}`}>{children}</div>;
 }

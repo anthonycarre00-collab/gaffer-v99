@@ -16,7 +16,8 @@ describe("Card", () => {
   it("applies 'none' accent by default (no top border)", () => {
     const { container } = render(<Card>Default</Card>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-gray-200");
+    // V99.11: Card now uses .gaffer-surface class instead of inline border classes
+    expect(el.className).toContain("gaffer-surface");
     expect(el.className).not.toContain("border-t-2");
   });
 
@@ -98,7 +99,8 @@ describe("CardBody", () => {
   it("applies default padding", () => {
     const { container } = render(<CardBody>Padded</CardBody>);
     const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("p-6");
+    // V99.11: CardBody padding changed from p-6 to p-3.5 per UI spec §1.3
+    expect(el.className).toContain("p-3.5");
   });
 
   it("merges custom className", () => {

@@ -427,6 +427,10 @@ fn apply_player_stats(
     let today = game.clock.current_date.format("%Y-%m-%d").to_string();
     let season = game.clock.current_date.year() as u32;
 
+    // V99.11 A2: Collect milestone news articles to push after the loop
+    // (can't push to game.news inside the iter_mut loop due to borrow rules).
+    let mut milestone_articles: Vec<domain::news::NewsArticle> = Vec::new();
+
     for player in game.players.iter_mut() {
         if let Some(ps) = report.player_stats.get(&player.id) {
             // V99.4 T2.1: Track career events before stats are incremented.
@@ -547,8 +551,61 @@ fn apply_player_stats(
                         team_name: team_name.clone(),
                         description: format!("Reached {} goals for {}.", milestone, team_name.as_deref().unwrap_or("his club")),
                     });
+                    // V99.11 A2: Generate milestone news article.
+                    if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
+                        milestone_articles.push(crate::news::player_milestone_article(
+                            &player.id,
+                            &player.full_name(),
+                            tid,
+                            tname,
+                            "goals",
+                            milestone as u32,
+                            &today,
+                        ));
+                    }
                 }
             }
+
+            // V99.11 A2: Also generate news for milestone appearances (50, 100, 250).
+            for milestone in [50u32, 100, 250] {
+                if prev_appearances < milestone && player.stats.appearances >= milestone {
+                    if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
+                        milestone_articles.push(crate::news::player_milestone_article(
+                            &player.id,
+                            &player.full_name(),
+                            tid,
+                            tname,
+                            "appearances",
+                            milestone,
+                            &today,
+                        ));
+                    }
+                }
+            }
+
+            // V99.11 A2: Debut goal — first-ever goal for the club.
+            if prev_goals == 0 && player.stats.goals > 0 && prev_appearances == 0 {
+                if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
+                    milestone_articles.push(crate::news::player_milestone_article(
+                        &player.id,
+                        &player.full_name(),
+                        tid,
+                        tname,
+                        "debut_goal",
+                        1,
+                        &today,
+                    ));
+                }
+            }
+        }
+    }
+
+    // V99.11 A2: Push milestone news articles (collected during the loop
+    // to avoid borrow conflicts with game.players.iter_mut).
+    // Dedup: only push if an article with the same ID doesn't already exist.
+    for article in milestone_articles {
+        if !game.news.iter().any(|n| n.id == article.id) {
+            game.news.push(article);
         }
     }
 

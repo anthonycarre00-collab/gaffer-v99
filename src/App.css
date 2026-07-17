@@ -160,15 +160,16 @@
     border-radius: 9999px;
   }
 
-  /* Gaffer card — 1px hairline border, 4px corners, no shadow */
-  .gaffer-card {
-    border: 1px solid #d1ccc2;
-    border-radius: 4px;
-    background: #ffffff;
-  }
+  /* V99.11 A6: Removed unused .gaffer-card class — Card.tsx builds its own
+     surface styling via Tailwind utilities. Use .gaffer-surface instead
+     for the standard surface pattern. */
 
-  .dark .gaffer-card {
-    border-color: var(--color-navy-600);
+  /* V99.11 A6: .gaffer-surface — the single source of truth for card/panel
+     surfaces. Replaces the recurring bg-white dark:bg-navy-700 border-gray-200
+     dark:border-navy-600 rounded-lg shadow-sm pattern. */
+  .gaffer-surface {
+    border: 1px solid var(--color-navy-600);
+    border-radius: 3px;
     background: var(--color-navy-700);
   }
 

@@ -192,17 +192,12 @@ impl WorldHistoryArchive {
     }
 
     /// V99.10 Item 17: Get all league tables for a given season.
-    pub fn league_tables_for_season(&self, season: u32) -> &[HistoricalLeagueTableRecord] {
-        // Can't return a filtered slice directly, so we use a workaround:
-        // filter into a Vec and leak it. Since this is called rarely (UI
-        // archive view), the leak is acceptable. Alternatively, callers
-        // can iterate past_league_tables directly.
-        // For safety, we return an empty slice if nothing matches.
+    /// V99.11 A1: Fixed — now returns a filtered Vec instead of all tables.
+    pub fn league_tables_for_season(&self, season: u32) -> Vec<&HistoricalLeagueTableRecord> {
         self.past_league_tables
             .iter()
-            .find(|t| t.season == season)
-            .map(|_| &self.past_league_tables[..])
-            .unwrap_or(&[])
+            .filter(|t| t.season == season)
+            .collect()
     }
 
     pub fn record_world_cup_champion(&mut self, record: WorldCupChampionRecord) {

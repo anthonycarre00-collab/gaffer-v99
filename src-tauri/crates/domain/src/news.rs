@@ -12,6 +12,8 @@ pub enum NewsCategory {
     ManagerialChange,
     SeasonPreview,
     Editorial,
+    /// V99.11 A2: Player milestone — 100th appearance, 50th goal, etc.
+    PlayerMilestone,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
