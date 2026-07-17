@@ -449,7 +449,7 @@ export default function TournamentsTab({
  };
 
  return (
- <div className="gaffer-card-texture">
+ <div className="">
  {isPreseason && (
  <Card accent="accent" className="mb-5">
  <CardBody>

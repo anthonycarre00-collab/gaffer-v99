@@ -71,7 +71,7 @@ export default function AwardsCeremonyScreen({
  );
 
  return (
- <div className="awards-bg mx-auto max-w-5xl space-y-5 py-6">
+ <div className="mx-auto max-w-5xl space-y-5 py-6">
  <Card accent="accent">
  <CardBody className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
  <div>

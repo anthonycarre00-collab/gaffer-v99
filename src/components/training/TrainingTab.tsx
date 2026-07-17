@@ -171,7 +171,7 @@ export default function TrainingTab({
  });
 
  return (
- <div className="pitch-grass-bg grid grid-cols-1 lg:grid-cols-3 gap-5">
+ <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
  <div className="lg:col-span-2 flex flex-col gap-5">
  {staffAdvice ? (
  <div

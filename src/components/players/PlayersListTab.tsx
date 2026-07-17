@@ -207,7 +207,7 @@ export default function PlayersListTab({
  const positions = ["Goalkeeper", "Defender", "Midfielder", "Forward"];
 
  return (
- <div className="gaffer-card-texture">
+ <div className="">
  {/* Filters */}
  <div className="flex flex-wrap gap-3 mb-4 items-center">
  <div className="relative flex-1 min-w-[200px] max-w-sm">

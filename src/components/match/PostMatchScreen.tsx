@@ -239,7 +239,7 @@ export default function PostMatchScreen({
  ];
 
  return (
- <div className="postmatch-hero-bg min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
+ <div className="min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
  {/* Result Header */}
  <header
  // V99.10 UI-6: Replaced gradients with matte Gaffer palette backgrounds.

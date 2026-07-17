@@ -1052,7 +1052,7 @@ export default function TransfersTab({
  };
 
  return (
- <div className="transfer-market-bg">
+ <div className="">
  {/* Budget header */}
  {myTeam && (
  <Card accent="primary" className="mb-5">

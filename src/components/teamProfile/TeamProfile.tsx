@@ -26,7 +26,7 @@ export default function TeamProfile({
  const { teamStatsOverview, recentMatches } = useTeamProfileStats(team.id);
 
  return (
- <div className="gaffer-card-texture max-w-6xl mx-auto">
+ <div className="max-w-6xl mx-auto">
  <button
  onClick={onClose}
  className="flex items-center gap-2 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors mb-4"

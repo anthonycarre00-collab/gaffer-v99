@@ -219,7 +219,7 @@ export default function HomeTab({
  const hasMomentum = roster.length > 0 && (hotPlayers.length > 0 || coldPlayers.length > 0);
 
  return (
- <div className="gaffer-card-texture flex flex-col gap-5">
+ <div className="flex flex-col gap-5">
  {myTeam && isPreseason && (
  <HomeSeasonStatusCard
  phase={seasonContext.phase}

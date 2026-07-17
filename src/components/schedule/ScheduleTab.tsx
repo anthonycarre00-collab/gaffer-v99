@@ -164,7 +164,7 @@ export default function ScheduleTab({ gameState, onSelectTeam }: ScheduleTabProp
  );
 
  return (
- <div className="gaffer-card-texture">
+ <div className="">
  {isPreseason && (
  <Card accent="accent" className="mb-5">
  <CardBody>
