@@ -9,6 +9,8 @@ export interface FacilitiesData {
   training: number;
   medical: number;
   scouting: number;
+  /** V99.11 A5: Youth academy facility level (1-5) */
+  youth: number;
 }
 
 export interface SponsorshipData {

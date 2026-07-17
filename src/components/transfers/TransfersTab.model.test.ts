@@ -38,6 +38,7 @@ function createTeam(overrides: Partial<TeamData> = {}): TeamData {
       training: 1,
       medical: 1,
       scouting: 1,
+      youth: 1,
     },
     starting_xi_ids: [],
     match_roles: {

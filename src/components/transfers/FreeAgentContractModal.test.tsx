@@ -59,7 +59,7 @@ function createTeam(overrides: Partial<TeamData> = {}): TeamData {
     training_schedule: "Balanced",
     founded_year: 1900,
     colors: { primary: "#111111", secondary: "#ffffff" },
-    facilities: { training: 1, medical: 1, scouting: 1 },
+    facilities: { training: 1, medical: 1, scouting: 1, youth: 1 },
     starting_xi_ids: [],
     match_roles: {
       captain: null,

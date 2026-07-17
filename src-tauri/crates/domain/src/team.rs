@@ -507,6 +507,8 @@ pub enum FacilityType {
     Training,
     Medical,
     Scouting,
+    /// V99.11 A5: Youth academy facility — affects newgen potential bias.
+    Youth,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -515,6 +517,8 @@ pub struct Facilities {
     pub training: u8,
     pub medical: u8,
     pub scouting: u8,
+    /// V99.11 A5: Youth academy level (1-5). Higher = better newgen potential.
+    pub youth: u8,
 }
 
 impl Default for Facilities {
@@ -523,6 +527,7 @@ impl Default for Facilities {
             training: 1,
             medical: 1,
             scouting: 1,
+            youth: 1,
         }
     }
 }

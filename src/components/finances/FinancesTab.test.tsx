@@ -162,7 +162,7 @@ function createTeam(overrides: Partial<TeamData> = {}): TeamData {
     facilities: {
       training: 2,
       medical: 1,
-      scouting: 3,
+      scouting: 3, youth: 1,
     },
     starting_xi_ids: [],
     match_roles: {
@@ -370,7 +370,7 @@ describe("FinancesTab facilities", () => {
       facilities: {
         training: 2,
         medical: 2,
-        scouting: 3,
+        scouting: 3, youth: 1,
       },
       season_expenses: 750000,
     });

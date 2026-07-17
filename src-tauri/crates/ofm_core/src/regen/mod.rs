@@ -173,11 +173,17 @@ pub fn generate_academy_intake_regens(
     team_country: &str,
     season: u32,
     current_gk_count: usize,
+    youth_facility: u8,
     rng: &mut impl Rng,
 ) -> Vec<Player> {
     use rand::RngExt;
     let count: usize = rng.random_range(3..=5);
     let mut regens = Vec::with_capacity(count);
+
+    // V99.11 A5: Youth facility bias — each level above 1 adds +1 to
+    // the potential min/max band, capped at +5. A club with youth
+    // facility level 5 gets +4 to their newgen potential range.
+    let youth_bias = (youth_facility.saturating_sub(1) as i8).min(5);
 
     // V99.10 Item 20: Decide whether to include a GK in this intake,
     // weighted by current GK depth.
@@ -232,8 +238,12 @@ pub fn generate_academy_intake_regens(
         let birth_year = season as i32 - age;
         regen.date_of_birth = format!("{}-{:02}-{:02}", birth_year, rng.random_range(1..=12), rng.random_range(1..=28));
 
-        // Potential
-        let potential = roll_potential(&pos, team_reputation, rng);
+        // Potential — V99.11 A5: Add youth facility bias to the roll
+        let mut potential = roll_potential(&pos, team_reputation, rng);
+        // V99.11 A5: Apply youth facility bias (each level above 1 adds
+        // +1 to potential, capped at +5 total). This makes investing in
+        // the youth academy facility genuinely improve newgen quality.
+        potential = (potential as i16 + youth_bias as i16).clamp(1, 99) as u8;
         regen.potential = potential;
 
         // Attributes
@@ -485,14 +495,17 @@ pub fn generate_season_regens(game: &mut Game, season: u32) {
 pub fn generate_academy_intake(game: &mut Game, _season: u32) {
     let mut rng = rand::rng();
 
-    let team_info: Vec<(String, u32, String)> = game
+    // V99.11 A5: Include youth facility level in team_info so it can
+    // bias newgen potential. Higher youth facility = better academy
+    // prospects.
+    let team_info: Vec<(String, u32, String, u8)> = game
         .teams
         .iter()
-        .map(|t| (t.id.clone(), t.reputation, t.country.clone()))
+        .map(|t| (t.id.clone(), t.reputation, t.country.clone(), t.facilities.youth))
         .collect();
 
     let mut all_new_regens = Vec::new();
-    for (team_id, reputation, country) in &team_info {
+    for (team_id, reputation, country, youth_facility) in &team_info {
         // V99.10 Item 20: Count current senior GKs (under age 23) at this
         // team so the intake can vary GK count by depth. A club with 3+ GKs
         // has 0% chance of producing another; a club with 0-1 has 50%.
@@ -514,6 +527,7 @@ pub fn generate_academy_intake(game: &mut Game, _season: u32) {
             &country,
             _season,
             current_gk_count,
+            *youth_facility,
             &mut rng,
         );
         all_new_regens.extend(regens);
@@ -912,7 +926,7 @@ mod tests {
     #[test]
     fn academy_intake_contract_end_uses_season_year() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("team_1", 60, "England", 2031, 0, &mut rng);
+        let regens = generate_academy_intake_regens("team_1", 60, "England", 2031, 0, 1, &mut rng);
         assert!(!regens.is_empty());
         for regen in &regens {
             let contract_end = regen.contract_end.as_ref().expect("academy regen should have contract_end");
@@ -944,7 +958,7 @@ mod tests {
     fn academy_intake_generates_3_to_5_per_team() {
         let mut rng = rand::rng();
         for _ in 0..20 {
-            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, 1, &mut rng);
             assert!((3..=5).contains(&regens.len()), "intake count {} out of range", regens.len());
         }
     }
@@ -952,7 +966,7 @@ mod tests {
     #[test]
     fn academy_intake_all_youth_role() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
+        let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, 1, &mut rng);
         for r in &regens {
             assert_eq!(r.squad_role, SquadRole::Youth);
         }
@@ -961,7 +975,7 @@ mod tests {
     #[test]
     fn academy_intake_all_assigned_to_team() {
         let mut rng = rand::rng();
-        let regens = generate_academy_intake_regens("arsenal", 85, "England", 2024, 0, &mut rng);
+        let regens = generate_academy_intake_regens("arsenal", 85, "England", 2024, 0, 1, &mut rng);
         for r in &regens {
             assert_eq!(r.team_id, Some("arsenal".to_string()));
         }
@@ -975,7 +989,7 @@ mod tests {
         // 0% chance of GK → no GKs should appear in any intake.
         let mut total_gks = 0;
         for _ in 0..100 {
-            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 5, &mut rng);
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 5, 1, &mut rng);
             total_gks += regens.iter()
                 .filter(|r| r.position.to_group_position() == Position::Goalkeeper)
                 .count();
@@ -995,7 +1009,7 @@ mod tests {
         // Just verify at least SOME GKs are produced (probabilistic).
         let mut total_gks = 0;
         for _ in 0..100 {
-            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, &mut rng);
+            let regens = generate_academy_intake_regens("team_1", 60, "England", 2024, 0, 1, &mut rng);
             total_gks += regens.iter()
                 .filter(|r| r.position.to_group_position() == Position::Goalkeeper)
                 .count();

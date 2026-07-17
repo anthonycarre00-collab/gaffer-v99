@@ -28,6 +28,8 @@ pub fn upgrade_facility_internal(state: &StateManager, facility: &str) -> Result
             "Training" => domain::team::FacilityType::Training,
             "Medical" => domain::team::FacilityType::Medical,
             "Scouting" => domain::team::FacilityType::Scouting,
+            // V99.11 A5: Youth academy facility
+            "Youth" => domain::team::FacilityType::Youth,
             _ => return Err("be.error.unknownFacilityType".to_string()),
         };
 

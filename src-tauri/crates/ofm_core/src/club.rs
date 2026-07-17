@@ -20,6 +20,8 @@ fn facility_level(facilities: &Facilities, facility_type: &FacilityType) -> u8 {
         FacilityType::Training => facilities.training,
         FacilityType::Medical => facilities.medical,
         FacilityType::Scouting => facilities.scouting,
+        // V99.11 A5: Youth academy facility
+        FacilityType::Youth => facilities.youth,
     }
 }
 
@@ -45,6 +47,10 @@ pub fn upgrade_facility(team: &mut Team, facility_type: FacilityType) -> Result<
         }
         FacilityType::Scouting => {
             team.facilities.scouting = team.facilities.scouting.saturating_add(1);
+        }
+        // V99.11 A5: Youth academy facility upgrade
+        FacilityType::Youth => {
+            team.facilities.youth = team.facilities.youth.saturating_add(1);
         }
     }
 

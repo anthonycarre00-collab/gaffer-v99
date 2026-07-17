@@ -3614,6 +3614,16 @@
             "3": "Neither Side Can Find a Winner at {{home}}",
             "4": "Points Shared as {{home}} and {{away}} Cancel Each Other Out",
             "5": "Frustration for Both Sides in Goalless Stalemate"
+          },
+          "comeback": {
+            "0": "{{winner}} Storm Back to Stun {{loser}}",
+            "1": "Incredible Comeback: {{winner}} Turn It Around Against {{loser}}",
+            "2": "{{loser}} Left Shell-Shocked as {{winner}} Fight Back"
+          },
+          "thriller": {
+            "0": "Goal Frenzy: {{home}} {{homeGoals}}-{{awayGoals}} {{away}}",
+            "1": "Seven-Goal Thriller: {{home}} Edge {{away}} in Classic",
+            "2": "Goalfest at {{home}}: {{homeGoals}}-{{awayGoals}} Drama Unfolds"
           }
         },
         "body0": "In Matchday {{matchday}} action, the match ended {{home}} {{homeGoals}} - {{awayGoals}} {{away}}. The result could have implications on the league standings as the season progresses.\n\nGoals: {{scorers}}",

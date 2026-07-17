@@ -75,6 +75,61 @@ fn outcome_key(home_goals: u8, away_goals: u8) -> &'static str {
     }
 }
 
+/// V99.11 A3: Detect if the match featured a comeback (the eventual winner
+/// was ≥2 goals behind at some point). Uses scorer minutes to reconstruct
+/// the running scoreline chronologically.
+///
+/// Returns `Some(true)` if a comeback occurred, `None` otherwise.
+fn detect_comeback(
+    home_goals: u8,
+    away_goals: u8,
+    home_scorers: &[(String, u32)],
+    away_scorers: &[(String, u32)],
+) -> bool {
+    // Only check if there's a winner (not a draw)
+    if home_goals == away_goals {
+        return false;
+    }
+
+    // Build a chronological list of (minute, is_home_goal)
+    let mut events: Vec<(u32, bool)> = Vec::new();
+    for (_, minute) in home_scorers {
+        events.push((*minute, true));
+    }
+    for (_, minute) in away_scorers {
+        events.push((*minute, false));
+    }
+    events.sort_by_key(|(minute, _)| *minute);
+
+    // Track running score and check if the eventual winner was ever ≥2 behind
+    let mut home_score: i32 = 0;
+    let mut away_score: i32 = 0;
+    let home_won = home_goals > away_goals;
+
+    for (_, is_home) in &events {
+        if *is_home {
+            home_score += 1;
+        } else {
+            away_score += 1;
+        }
+        let diff = if home_won {
+            home_score - away_score
+        } else {
+            away_score - home_score
+        };
+        // If the eventual winner was ever 2+ goals behind, it's a comeback
+        if diff <= -2 {
+            return true;
+        }
+    }
+    false
+}
+
+/// V99.11 A3: Detect if the match was a high-scoring thriller (6+ total goals).
+fn is_thriller(home_goals: u8, away_goals: u8) -> bool {
+    (home_goals as u32 + away_goals as u32) >= 6
+}
+
 /// Generate a match report news article for a completed fixture.
 #[allow(clippy::too_many_arguments)]
 pub fn match_report_article(
@@ -165,7 +220,27 @@ pub fn match_report_article(
 
     // Determine outcome for i18n key
     let outcome = outcome_key(home_goals, away_goals);
-    let headline_variant = rng.random_range(0..3u8);
+
+    // V99.11 A3: Detect comeback/thriller narratives and use dedicated
+    // headline variants when they occur. These override the standard
+    // outcome-based headlines to add variety to the news feed.
+    let is_comeback = detect_comeback(home_goals, away_goals, home_scorers, away_scorers);
+    let is_thriller_match = is_thriller(home_goals, away_goals);
+
+    let headline_key = if is_comeback {
+        // Comeback: use a dedicated comeback headline variant
+        let comeback_variant = rng.random_range(0..3u8);
+        format!("be.news.matchReport.headline.comeback.{}", comeback_variant)
+    } else if is_thriller_match {
+        // Thriller: 6+ goals, use a thriller headline variant
+        let thriller_variant = rng.random_range(0..3u8);
+        format!("be.news.matchReport.headline.thriller.{}", thriller_variant)
+    } else {
+        // Standard: outcome-based headline
+        let headline_variant = rng.random_range(0..3u8);
+        format!("be.news.matchReport.headline.{}.{}", outcome, headline_variant)
+    };
+
     let body_key = if scorer_parts.is_empty() {
         format!("be.news.matchReport.body{}.noScorers", idx)
     } else {
@@ -189,10 +264,8 @@ pub fn match_report_article(
         away_goals,
     })
     .with_i18n(
-        &format!(
-            "be.news.matchReport.headline.{}.{}",
-            outcome, headline_variant
-        ),
+        // V99.11 A3: Use pre-computed headline_key (may be comeback/thriller variant)
+        &headline_key,
         &body_key,
         source_key,
         {
