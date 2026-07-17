@@ -555,7 +555,7 @@ fn apply_player_stats(
                     if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
                         milestone_articles.push(crate::news::player_milestone_article(
                             &player.id,
-                            &player.full_name(),
+                            &player.full_name,
                             tid,
                             tname,
                             "goals",
@@ -572,7 +572,7 @@ fn apply_player_stats(
                     if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
                         milestone_articles.push(crate::news::player_milestone_article(
                             &player.id,
-                            &player.full_name(),
+                            &player.full_name,
                             tid,
                             tname,
                             "appearances",
@@ -588,7 +588,7 @@ fn apply_player_stats(
                 if let (Some(tid), Some(tname)) = (&player.team_id, &team_name) {
                     milestone_articles.push(crate::news::player_milestone_article(
                         &player.id,
-                        &player.full_name(),
+                        &player.full_name,
                         tid,
                         tname,
                         "debut_goal",

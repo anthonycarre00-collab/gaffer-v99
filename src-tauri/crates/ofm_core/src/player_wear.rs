@@ -6,6 +6,8 @@
 
 use domain::player::{Injury, Player};
 use rand::{Rng, RngExt};
+// V99.11 A4 fix: Need Datelike trait for chrono::Utc::now().year()
+use chrono::Datelike;
 
 /// i18n keys for minor match injuries. These mirror the training-ground injury
 /// pool so the UI renders them with existing translations.

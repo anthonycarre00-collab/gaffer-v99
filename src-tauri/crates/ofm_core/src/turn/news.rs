@@ -394,6 +394,8 @@ fn world_news_category_priority(category: &domain::news::NewsCategory) -> i64 {
         domain::news::NewsCategory::Editorial => 500_000,
         domain::news::NewsCategory::TransferRoundup => 400_000,
         domain::news::NewsCategory::ManagerialChange => 350_000,
+        // V99.11 A2: Player milestone news — high priority so it shows up
+        domain::news::NewsCategory::PlayerMilestone => 325_000,
         domain::news::NewsCategory::InjuryNews => 300_000,
         domain::news::NewsCategory::TransferRumour => 200_000,
         domain::news::NewsCategory::LeagueRoundup => 150_000,
