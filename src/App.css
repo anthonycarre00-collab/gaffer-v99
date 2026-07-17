@@ -31,78 +31,116 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* ===== Typography ===== */
+  /* ===== Typography (V99.11 B1: per UI spec §1.2) ===== */
   --font-sans: "Inter", "Avenir", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-  --font-heading: "Barlow Condensed", "Inter", "Arial Narrow", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-heading: "Oswald", "Barlow Condensed", "Inter", "Arial Narrow", sans-serif;
   --font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
-  --font-mono: "IBM Plex Mono", "SF Mono", "Consolas", "Courier New", monospace;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", "SF Mono", "Consolas", "Courier New", monospace;
 
-  /* ===== Primary: Pitch Green ===== */
-  --color-primary-50: #e8f0ec;
-  --color-primary-100: #c5d9ce;
-  --color-primary-200: #9bb8a7;
-  --color-primary-300: #6e947f;
-  --color-primary-400: #4a7b5e;
-  --color-primary-500: #2d5a3d;  /* Pitch Green — the Gaffer green */
-  --color-primary-600: #244930;
-  --color-primary-700: #1d3a26;
-  --color-primary-800: #162c1d;
-  --color-primary-900: #0e1f13;
+  /* ===== V99.11 B1: Carbon palette (UI spec §1.1) ===== */
+  /* Replaces the old navy tokens with warmer carbons */
+  --color-carbon-0: #0f1216;   /* app background */
+  --color-carbon-1: #161b21;   /* sidebar, topbar, card background */
+  --color-carbon-2: #1c222a;   /* recessed elements: inputs, chips, nested panels */
+  --color-carbon-3: #232b34;   /* hover/active fill, track backgrounds */
 
-  /* ===== Accent: Brass ===== */
+  /* ===== V99.11 B1: Structure lines (UI spec §1.1) ===== */
+  --color-slate-line: #333e4a;      /* primary borders */
+  --color-slate-line-soft: #2a323c; /* internal dividers, table row lines */
+
+  /* ===== V99.11 B1: Text hierarchy (UI spec §1.1) ===== */
+  --color-ink: #e9e6dd;        /* primary text, off-white */
+  --color-ink-dim: #9aa4b2;    /* secondary text, labels */
+  --color-ink-faint: #5f6b7a;  /* tertiary/meta text, placeholders */
+
+  /* ===== V99.11 B1: Brass accent (UI spec §1.1) ===== */
   --color-accent-50: #faf3e4;
   --color-accent-100: #f0e0bc;
   --color-accent-200: #e4c98e;
   --color-accent-300: #d4af5e;
-  --color-accent-400: #c49e45;
-  --color-accent-500: #b8924a;  /* Brass — warm, old-school */
-  --color-accent-600: #9a7a3c;
+  --color-accent-400: #e0bd7c;  /* brass-bright — highlights */
+  --color-accent-500: #c6a15b;  /* brass — the Gaffer accent */
+  --color-accent-600: #8a744a;  /* brass-dim — borders */
   --color-accent-700: #7c6230;
   --color-accent-800: #5e4a24;
   --color-accent-900: #40331a;
 
-  /* ===== Danger: Mahogany ===== */
+  /* ===== V99.11 B1: Status colours (muted, UI spec §1.1) ===== */
+  /* Primary: Pitch Green (muted for status, not neon) */
+  --color-primary-50: #e8f0ec;
+  --color-primary-100: #c5d9ce;
+  --color-primary-200: #9bb8a7;
+  --color-primary-300: #6e947f;
+  --color-primary-400: #5c9a6d;  /* green — positive status text */
+  --color-primary-500: #5c9a6d;  /* green — status */
+  --color-primary-600: #3a5d43;  /* green-dim — status backgrounds */
+  --color-primary-700: #1d3a26;
+  --color-primary-800: #162c1d;
+  --color-primary-900: #0e1f13;
+
+  /* Danger: muted red (UI spec) */
   --color-danger-50: #f5e6e2;
   --color-danger-100: #e8c5bc;
   --color-danger-200: #d49b8e;
   --color-danger-300: #c06f5e;
-  --color-danger-400: #a64a37;
-  --color-danger-500: #7a2e1f;  /* Mahogany — injury, danger, red card */
-  --color-danger-600: #632519;
+  --color-danger-400: #b5544a;  /* red — negative status text */
+  --color-danger-500: #b5544a;  /* red — status */
+  --color-danger-600: #6b3630;  /* red-dim — status backgrounds */
   --color-danger-700: #4d1d14;
   --color-danger-800: #36140f;
   --color-danger-900: #200c08;
 
-  /* ===== Success: Pitch Green (lighter shade) ===== */
-  --color-success-400: #4a7b5e;
-  --color-success-500: #2d5a3d;
-  --color-success-600: #244930;
+  /* Success: same as primary green */
+  --color-success-400: #5c9a6d;
+  --color-success-500: #5c9a6d;
+  --color-success-600: #3a5d43;
 
-  /* ===== Neutrals: Chalk / Concrete / Ink ===== */
-  --color-chalk: #e8e4dc;        /* warm off-white for light backgrounds */
-  --color-cream: #f4e9c9;        /* floodlight cream — editorial highlight */
-  --color-concrete: #6b6660;     /* mid neutral — labels, secondary text */
-  --color-ink: #1a1a1a;          /* near-black for text in light mode */
-  --color-pitch-black: #0e1410;  /* dark mode background — green-tinged black */
+  /* ===== V99.11 B1: Legacy compat aliases ===== */
+  /* Map old token names to new values so existing dark: utilities work */
+  --color-chalk: var(--color-ink);
+  --color-cream: #f4e9c9;
+  --color-concrete: var(--color-ink-dim);
+  --color-ink-legacy: #1a1a1a;
+  --color-pitch-black: var(--color-carbon-0);
 
-  /* ===== Dark mode navy (legacy compat — mapped to pitch-black tones) ===== */
-  --color-navy-900: #0e1410;     /* pitch-black */
-  --color-navy-800: #141b17;     /* slightly lighter */
-  --color-navy-700: #1d2620;     /* card backgrounds in dark */
-  --color-navy-600: #2a3530;     /* borders, dividers in dark */
+  /* Navy tokens mapped to carbons for backward compat */
+  --color-navy-900: var(--color-carbon-0);
+  --color-navy-800: var(--color-carbon-1);
+  --color-navy-700: var(--color-carbon-1);
+  --color-navy-600: var(--color-slate-line);
 }
 
 /* ===== Base styles ===== */
 @layer base {
+  /* V99.11 B1: Dark-first per UI spec §0.5 — "never light theme".
+     Body always uses the carbon palette + pitch-mow background (§8.1). */
   body {
-    @apply antialiased transition-colors duration-300;
-    background-color: #f5f5f0;
-    color: #1a1a1a;
+    @apply antialiased;
+    /* V99.11 B1: Pitch-mow background (UI spec §8.1) — subtle diagonal
+       mowing stripes + brass radial glow. Reads as "pitch from a stand"
+       ambiance, not a visible pattern. */
+    background:
+      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.05), transparent 60%),
+      repeating-linear-gradient(100deg,
+        rgba(255,255,255,0.012) 0px,
+        rgba(255,255,255,0.012) 40px,
+        transparent 40px,
+        transparent 80px),
+      var(--color-carbon-0);
+    color: var(--color-ink);
   }
 
   .dark body {
-    background-color: var(--color-pitch-black);
-    color: #e8e4dc;
+    /* Same as body — dark-first means .dark is always on */
+    background:
+      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.05), transparent 60%),
+      repeating-linear-gradient(100deg,
+        rgba(255,255,255,0.012) 0px,
+        rgba(255,255,255,0.012) 40px,
+        transparent 40px,
+        transparent 80px),
+      var(--color-carbon-0);
+    color: var(--color-ink);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -165,12 +203,12 @@
      for the standard surface pattern. */
 
   /* V99.11 A6: .gaffer-surface — the single source of truth for card/panel
-     surfaces. Replaces the recurring bg-white dark:bg-navy-700 border-gray-200
-     dark:border-navy-600 rounded-lg shadow-sm pattern. */
+     surfaces. V99.11 B1: Updated with spec shadow (§1.4). */
   .gaffer-surface {
-    border: 1px solid var(--color-navy-600);
+    border: 1px solid var(--color-slate-line);
     border-radius: 3px;
-    background: var(--color-navy-700);
+    background: var(--color-carbon-1);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 6px 16px rgba(0,0,0,0.35);
   }
 
   /* Gaffer button — matte, no gradient, 4px corners */
@@ -759,4 +797,65 @@ input[type="number"] {
    frame numbers and labels in a "broadsheet stat" style. */
 .gaffer-stat-bracket::before { content: "["; color: var(--color-accent-500); margin-right: 0.15em; font-weight: 600; }
 .gaffer-stat-bracket::after  { content: "]"; color: var(--color-accent-500); margin-left: 0.15em; font-weight: 600; }
+
+/* ============================================================================
+   V99.11 B1: Signature motifs (UI spec §4 + §8)
+   Two recurring details that carry the "premium football manager" identity:
+   1. Brass marker bar — 3×11px brass rectangle before every card/section title
+   2. Hero panel — corner brackets on the most important panel per screen
+   Plus the dossier-panel texture for document-like screens (§8.2).
+   ============================================================================ */
+
+/* §4: Brass marker bar — the single recurring structural device.
+   Applied automatically by CardHeader's inline span. Can also be used
+   standalone via .brass-marker class. */
+.brass-marker {
+  display: inline-block;
+  width: 3px;
+  height: 11px;
+  background-color: var(--color-accent-500);
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* §8.3: Hero panel — corner brackets on the single most important panel
+   per screen (next fixture on dashboard, pitch on tactics, offer on transfers).
+   Apply .hero-panel to the panel container. NOT on every card. */
+.hero-panel {
+  position: relative;
+}
+.hero-panel::before,
+.hero-panel::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-top: 1.5px solid var(--color-accent-500);
+  border-left: 1.5px solid var(--color-accent-500);
+  top: -1px;
+  left: -1px;
+  pointer-events: none;
+}
+.hero-panel::after {
+  top: auto;
+  left: auto;
+  bottom: -1px;
+  right: -1px;
+  border: none;
+  border-bottom: 1.5px solid var(--color-accent-500);
+  border-right: 1.5px solid var(--color-accent-500);
+}
+
+/* §8.2: Dossier panel — faint paper-fibre grain for scouting reports,
+   player profiles, and contract screens. Restrict to document-like screens. */
+.dossier-panel {
+  background-color: #1a1a17; /* warmed carbon, not blue-grey */
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.85  0 0 0 0 0.7  0 0 0 0.03 0'/></filter><rect width='80' height='80' filter='url(%23n)' opacity='0.5'/></svg>");
+  background-size: 80px 80px;
+  background-repeat: repeat;
+  border: 1px solid var(--color-slate-line);
+  border-radius: 3px;
+}
 
