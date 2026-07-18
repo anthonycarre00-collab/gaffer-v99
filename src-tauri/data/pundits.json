@@ -1,0 +1,276 @@
+{
+  "$schema": "pundits-v1",
+  "description": "V100 P1 (Issue #12): Rotating pundit cast with personalities. Each pundit has a name, personality archetype, bias profile, and catchphrases. The commentary engine picks a pundit per match (rotating) and uses their personality to color the commentary.",
+  "pundits": [
+    {
+      "id": "pundit_keane",
+      "name": "Roy Keano-type",
+      "archetype": "fiery",
+      "bias": {
+        "praises_work_rate": 1.4,
+        "praises_defending": 1.3,
+        "criticizes_lazy": 1.5,
+        "criticizes_poor_defending": 1.4,
+        "praises_flair": 0.7,
+        "praises_youth": 0.8
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Right, let's see who actually fancies it today.",
+          "No hiding places out there — show me what you've got.",
+          "I want to see tackles flying in. Get stuck in."
+        ],
+        "goal": [
+          "Proper finish that. Took his chance like a man.",
+          "About time someone stepped up. Quality.",
+          "That's what happens when you get in the box."
+        ],
+        "miss": [
+          "Should've done better. Simple as.",
+          "That's a shocking miss. Week in, week out.",
+          "He'll be having nightmares about that one."
+        ],
+        "halftime": [
+          "I've seen enough. Some of them are hiding out there.",
+          "Get a grip. Pass it forward, not sideways.",
+          "The gaffer needs to have words. That's not good enough."
+        ],
+        "fulltime_win": [
+          "Job done. Nothing more to say.",
+          "That's three points. Move on.",
+          "Proper performance. They wanted it more."
+        ],
+        "fulltime_loss": [
+          "Not good enough. Simple as that.",
+          "Some of them should be looking at themselves.",
+          "The fans deserve better than that."
+        ]
+      }
+    },
+    {
+      "id": "pundit_carragher",
+      "name": "Carra-type",
+      "archetype": "tactical",
+      "bias": {
+        "praises_work_rate": 1.2,
+        "praises_defending": 1.4,
+        "criticizes_lazy": 1.2,
+        "criticizes_poor_defending": 1.5,
+        "praises_flair": 1.0,
+        "praises_youth": 1.1
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Interesting setup today — let's see how they line up.",
+          "The shape will be key. Can they keep it compact?",
+          "Watch the transition play — that's where this will be won."
+        ],
+        "goal": [
+          "Great build-up. Worked the overload perfectly.",
+          "That's been coming. The press finally told.",
+          "Quality finish — but look at the run that created it."
+        ],
+        "miss": [
+          "Should've hit the target. Got his technique wrong.",
+          "That's the wrong option — pass was on.",
+          "Got caught under it. Textbook stuff, that."
+        ],
+        "halftime": [
+          "The shape's all over the place. Needs sorting.",
+          "They're getting overrun in midfield. Change it.",
+          "Defensive line's too high. They'll get done."
+        ],
+        "fulltime_win": [
+          "Professional performance. Did the basics right.",
+          "Tactical discipline won that. Simple as.",
+          "Good shape, good pressing. That's how you do it."
+        ],
+        "fulltime_loss": [
+          "Tactically naive. Got found out.",
+          "The setup was wrong from the start.",
+          "Couldn't adapt. That's on the gaffer."
+        ]
+      }
+    },
+    {
+      "id": "pundit_richards",
+      "name": "Micah-type",
+      "archetype": "enthusiastic",
+      "bias": {
+        "praises_work_rate": 1.1,
+        "praises_defending": 1.0,
+        "criticizes_lazy": 0.8,
+        "criticizes_poor_defending": 0.9,
+        "praises_flair": 1.5,
+        "praises_youth": 1.4
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Oh I'm buzzing for this one! Should be a cracker!",
+          "What a atmosphere! The fans are up for it!",
+          "Love this fixture — always produces something special!"
+        ],
+        "goal": [
+          "WOW! What a hit! Absolute scenes!",
+          "Oh that is BEAUTIFUL! Take a bow, son!",
+          "YES! That's why we love football! Magnificent!"
+        ],
+        "miss": [
+          "Oh no! How's he missed that?!",
+          "Aww, so close! Inches away!",
+          "He'll be fuming with that — should've buried it!"
+        ],
+        "halftime": [
+          "What a half! End-to-end stuff!",
+          "This is brilliant — neither side's sitting back!",
+          "More of the same, please! What a game!"
+        ],
+        "fulltime_win": [
+          "What a performance! They were electric today!",
+          "Loved that — proper football!",
+          "The fans will be talking about that for weeks!"
+        ],
+        "fulltime_loss": [
+          "Ah, gutting. They gave it everything though.",
+          "No shame in that — just wasn't their day.",
+          "Heads up — they'll bounce back from that."
+        ]
+      }
+    },
+    {
+      "id": "pundit_neville",
+      "name": "Gary N-type",
+      "archetype": "analytical",
+      "bias": {
+        "praises_work_rate": 1.3,
+        "praises_defending": 1.2,
+        "criticizes_lazy": 1.3,
+        "criticizes_poor_defending": 1.2,
+        "praises_flair": 0.9,
+        "praises_youth": 1.0
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Let's see how they set up. The first 10 minutes will tell us.",
+          "Interesting selection. The gaffer's gone for it.",
+          "Watch the full-backs — that's where the space is."
+        ],
+        "goal": [
+          "That's a coach's goal. Worked on the training ground.",
+          "Great movement. The rotation dragged the defender out.",
+          "Quality. That's how you finish."
+        ],
+        "miss": [
+          "Got his body shape wrong. Should've hit the target.",
+          "That's a poor touch. Took it too wide.",
+          "Wrong decision — pass was the better option."
+        ],
+        "halftime": [
+          "The structure's good. Just need more quality in the final third.",
+          "Defensive shape is sound. They're just not creating enough.",
+          "The gaffer will want more intensity in the second half."
+        ],
+        "fulltime_win": [
+          "Professional. Did what they needed to do.",
+          "Solid performance. The basics were right.",
+          "Good three points. Onto the next one."
+        ],
+        "fulltime_loss": [
+          "Not good enough. The basics weren't there.",
+          "They'll be disappointed with that. Too many mistakes.",
+          "The gaffer needs to look at himself too."
+        ]
+      }
+    },
+    {
+      "id": "pundit_lineker",
+      "name": "Lineker-type",
+      "archetype": "witty",
+      "bias": {
+        "praises_work_rate": 1.0,
+        "praises_defending": 1.0,
+        "criticizes_lazy": 1.0,
+        "criticizes_poor_defending": 1.0,
+        "praises_flair": 1.2,
+        "praises_youth": 1.0
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Welcome back. Should be an interesting one today.",
+          "Let's see if they can put on a show for us.",
+          "The stage is set. Let's hope for goals."
+        ],
+        "goal": [
+          "Oh that's lovely. Couldn't have hit it sweeter.",
+          "Goal of the season contender? Maybe.",
+          "That's why we watch the game. Beautiful."
+        ],
+        "miss": [
+          "Oh dear. He'll not want to see that again.",
+          "The keeper would've been worried — until it flew wide.",
+          "Sometimes the goal moves. Apparently."
+        ],
+        "halftime": [
+          "A half of two halves, as they say.",
+          "Plenty to chew on at the break.",
+          "The gaffer's got some thinking to do."
+        ],
+        "fulltime_win": [
+          "Three points and a clean sheet. Can't ask for more.",
+          "Job done. They'll sleep well tonight.",
+          "A professional performance. Onto the next."
+        ],
+        "fulltime_loss": [
+          "One to forget. They'll want to put it behind them.",
+          "Not their day. The breaks didn't go their way.",
+          "Back to the drawing board."
+        ]
+      }
+    },
+    {
+      "id": "pundit_souness",
+      "name": "Souey-type",
+      "archetype": "critical",
+      "bias": {
+        "praises_work_rate": 1.3,
+        "praises_defending": 1.2,
+        "criticizes_lazy": 1.6,
+        "criticizes_poor_defending": 1.3,
+        "praises_flair": 0.8,
+        "praises_youth": 0.9
+      },
+      "catchphrases": {
+        "kickoff": [
+          "Let's see who fancies it today. Someone has to.",
+          "I want to see players taking responsibility. Not hiding.",
+          "The first 20 minutes will tell me everything."
+        ],
+        "goal": [
+          "About time. Should've been more proactive earlier.",
+          "Took his chance. That's what strikers are paid for.",
+          "Decent finish. Nothing special."
+        ],
+        "miss": [
+          "Poor. Simple as that. Should've scored.",
+          "That's not good enough at this level.",
+          "He's forgotten how to finish, apparently."
+        ],
+        "halftime": [
+          "I've seen better. Much better.",
+          "Too many players hiding out there. Stand up and be counted.",
+          "The gaffer should be fuming. I would be."
+        ],
+        "fulltime_win": [
+          "Won. Didn't impress. There's a difference.",
+          "Three points. They won't care how.",
+          "Did enough. Nothing more."
+        ],
+        "fulltime_loss": [
+          "Shambolic. No other word for it.",
+          "Some of those players shouldn't be playing at this level.",
+          "The board will be asking questions. Rightly so."
+        ]
+      }
+    }
+  ]
+}

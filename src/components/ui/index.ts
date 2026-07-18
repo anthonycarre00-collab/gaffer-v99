@@ -21,3 +21,5 @@ export type { SortDir, UseSortableTableResult } from "./SortableTable";
 export { GeneratedAvatar } from "./GeneratedAvatar";
 export { Tooltip } from "./Tooltip";
 export { toast } from "./Toast";
+// V100 P1 (Issue #35): Reusable entity hyperlink components.
+export { EntityLink, PlayerLink, TeamLink } from "./EntityLink";

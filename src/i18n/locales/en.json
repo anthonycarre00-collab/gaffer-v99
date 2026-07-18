@@ -423,6 +423,7 @@
       "3": "3rd",
       "other": "{{n}}th"
     },
+    "clickToView": "Click to view profile",
     "pts": "Pts",
     "played": "P",
     "won": "W",

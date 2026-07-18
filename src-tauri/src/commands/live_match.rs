@@ -105,6 +105,45 @@ pub fn get_match_snapshot(
     get_match_snapshot_service(&state)
 }
 
+/// V100 P1 (Issue #12): Get the active pundit for a fixture. Returns the
+/// pundit's name, archetype, and a catchphrase for the given event key.
+/// The frontend uses this to display the pundit's name and commentary.
+#[tauri::command]
+pub fn get_pundit_for_fixture(
+    fixture_id: String,
+    event_key: Option<String>,
+) -> Result<serde_json::Value, String> {
+    let pundit = ofm_core::media::pundits::pick_pundit_for_match(&fixture_id);
+    match pundit {
+        Some(p) => {
+            let catchphrase = event_key
+                .as_deref()
+                .and_then(|key| {
+                    // Use a stable seed from fixture_id + event_key so the
+                    // same fixture+event always returns the same catchphrase.
+                    let seed = fixture_id
+                        .bytes()
+                        .chain(key.bytes())
+                        .map(|b| b as u64)
+                        .fold(0u64, |acc, b| acc.wrapping_mul(31).wrapping_add(b));
+                    ofm_core::media::pundits::PunditDatabase::get_catchphrase(p, key, seed)
+                });
+            Ok(serde_json::json!({
+                "id": p.id,
+                "name": p.name,
+                "archetype": format!("{:?}", p.archetype),
+                "catchphrase": catchphrase,
+            }))
+        }
+        None => Ok(serde_json::json!({
+            "id": null,
+            "name": null,
+            "archetype": null,
+            "catchphrase": null,
+        })),
+    }
+}
+
 /// Finish the live match: generate report, update game state, clean up.
 #[tauri::command]
 pub fn finish_live_match(

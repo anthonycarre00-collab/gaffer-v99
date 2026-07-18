@@ -155,6 +155,12 @@ pub struct Manager {
     /// V99.4 T1.7: Manager personality — drives tactical style, transfers, media.
     #[serde(default = "default_personality")]
     pub personality: ManagerPersonality,
+
+    /// V100 P1 (Issue #24/#33): Head-to-head records against other managers.
+    /// Keyed by rival manager id. Updated whenever two managed teams play
+    /// each other. Surfaces on the "Other Gaffers" screen.
+    #[serde(default)]
+    pub head_to_head: std::collections::HashMap<String, ManagerHeadToHead>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -178,6 +184,26 @@ pub struct ManagerCareerEntry {
     pub draws: u32,
     pub losses: u32,
     pub best_league_position: Option<u32>,
+}
+
+/// V100 P1 (Issue #24/#33): Head-to-head record between two managers.
+/// Tracks W/D/L from THIS manager's perspective against a specific rival.
+/// Stored as a map on the Manager struct: rival_manager_id -> record.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ManagerHeadToHead {
+    /// Wins (from this manager's perspective).
+    pub wins: u32,
+    /// Draws.
+    pub draws: u32,
+    /// Losses.
+    pub losses: u32,
+    /// Goals scored by this manager's teams.
+    pub goals_for: u32,
+    /// Goals scored by the rival's teams.
+    pub goals_against: u32,
+    /// Last meeting date (ISO 8601). None if no meetings yet.
+    #[serde(default)]
+    pub last_meeting_date: Option<String>,
 }
 
 impl ManagerCareerEntry {

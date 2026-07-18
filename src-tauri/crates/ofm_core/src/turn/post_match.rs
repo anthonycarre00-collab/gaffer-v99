@@ -118,6 +118,53 @@ pub fn apply_match_report_with_capture<F>(
         home_penalties: report.home_penalties,
         away_penalties: report.away_penalties,
     };
+
+    // V100 P1 (Issue #24/#33): Update manager head-to-head records.
+    // Find the managers of both teams and update their H2H maps.
+    // Skip if either team has no manager (e.g. international sides).
+    let home_manager_id: Option<String> = game
+        .teams
+        .iter()
+        .find(|t| t.id == home_team_id)
+        .and_then(|t| t.manager_id.clone());
+    let away_manager_id: Option<String> = game
+        .teams
+        .iter()
+        .find(|t| t.id == away_team_id)
+        .and_then(|t| t.manager_id.clone());
+
+    if let (Some(home_mgr), Some(away_mgr)) = (&home_manager_id, &away_manager_id) {
+        if home_mgr != away_mgr {
+            // Don't record H2H for a manager vs themselves (e.g. friendly
+            // between two of their teams — shouldn't happen but defensive).
+            let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+            let home_won = report.home_goals > report.away_goals;
+            let away_won = report.away_goals > report.home_goals;
+            let draw = report.home_goals == report.away_goals;
+
+            // Update home manager's H2H vs away manager.
+            if let Some(home_manager) = game.managers.iter_mut().find(|m| &m.id == home_mgr) {
+                let h2h = home_manager.head_to_head.entry(away_mgr.clone()).or_default();
+                if home_won { h2h.wins += 1; }
+                else if draw { h2h.draws += 1; }
+                else { h2h.losses += 1; }
+                h2h.goals_for += report.home_goals as u32;
+                h2h.goals_against += report.away_goals as u32;
+                h2h.last_meeting_date = Some(today.clone());
+            }
+            // Update away manager's H2H vs home manager (mirror image).
+            if let Some(away_manager) = game.managers.iter_mut().find(|m| &m.id == away_mgr) {
+                let h2h = away_manager.head_to_head.entry(home_mgr.clone()).or_default();
+                if away_won { h2h.wins += 1; }
+                else if draw { h2h.draws += 1; }
+                else { h2h.losses += 1; }
+                h2h.goals_for += report.away_goals as u32;
+                h2h.goals_against += report.home_goals as u32;
+                h2h.last_meeting_date = Some(today);
+            }
+        }
+    }
+
     let mut counts_for_standings = false;
     let mut generates_match_news = false;
 

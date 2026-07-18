@@ -7,6 +7,9 @@
 // See: docs/gaffer/BIBLE_CURATED.md §14, §25-28, §29
 // ===========================================================================
 
+// V100 P1 (Issue #12): Pundit database loaded from data/pundits.json.
+pub mod pundits;
+
 use serde::{Deserialize, Serialize};
 use rand::RngExt;
 

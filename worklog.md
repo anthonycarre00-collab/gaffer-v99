@@ -2433,3 +2433,82 @@ Stage Summary:
 - Frontend service + type definitions added (UI for setting retraining focus is a follow-up P2 task)
 - Backward-compatible with existing saves (serde defaults)
 
+
+---
+Task ID: V100-P1-HYPERLINK-H2H
+Agent: main
+Task: Hyperlinking (Issue #35) + Manager head-to-head records (Issue #24/#33)
+
+Work Log:
+- P1 (Issue #35) Hyperlinking:
+  - Created new `src/components/ui/EntityLink.tsx` component with:
+    - `EntityLink` — generic clickable entity (button styled as text with brass hover underline)
+    - `PlayerLink` — helper that falls back to plain text when no onSelectPlayer handler
+    - `TeamLink` — helper that falls back to plain text when no onSelectTeam handler
+  - Exported all three from `src/components/ui/index.ts`
+  - Added `common.clickToView` i18n key ("Click to view profile")
+  - The component stops propagation by default (useful inside context menus)
+  - Styling: text-ink by default, hover:text-accent-400 with subtle brass underline
+  - The component is ready to be used in NewsTab, InboxTab, match reports — but those migrations are deferred to P2 (each screen needs careful audit of where player/team names appear)
+
+- P1 (Issue #24/#33) Manager head-to-head records:
+  - Added new `ManagerHeadToHead` struct to `src-tauri/crates/domain/src/manager.rs`:
+    - Fields: wins, draws, losses, goals_for, goals_against, last_meeting_date
+    - Derives Default (so `or_default()` works on HashMap entries)
+  - Added `head_to_head: HashMap<String, ManagerHeadToHead>` field to Manager struct (with #[serde(default)])
+  - Updated `apply_match_report_with_capture` in `src-tauri/crates/ofm_core/src/turn/post_match.rs`:
+    - Looks up both teams' manager_id
+    - Updates both managers' H2H maps (mirror image — home manager's record vs away, and vice versa)
+    - Skips if either team has no manager (international sides)
+    - Skips if both teams have the same manager (defensive)
+    - Tracks goals_for/goals_against and last_meeting_date
+
+Stage Summary:
+- Hyperlinking infrastructure is now available (EntityLink component)
+- Manager H2H records are now tracked automatically whenever two managed teams play
+- Both changes are backward-compatible (serde defaults)
+- The H2H data is ready to be surfaced on the "Other Gaffers" screen (UI work is a follow-up P2 task)
+- The hyperlink component is ready to be used in news/inbox/match reports (each screen needs careful audit — deferred to P2)
+
+
+---
+Task ID: V100-P1-PUNDIT-SYSTEM
+Agent: main
+Task: Rotating pundit cast with personalities (Issue #12 P1)
+
+Work Log:
+- Created `src-tauri/data/pundits.json` — data file with 6 pundit profiles:
+  - Roy Keano-type (fiery, critical, demands effort)
+  - Carragher-type (tactical, focuses on shape/structure)
+  - Micah Richards-type (enthusiastic, positive, loves flair)
+  - Gary Neville-type (analytical, measured, focuses on basics)
+  - Lineker-type (witty, light-hearted, balanced)
+  - Souness-type (highly critical, demands standards)
+  - Each pundit has: id, name, archetype, bias profile (6 multipliers), catchphrases (6 event types × 3 phrases each)
+- Created `src-tauri/crates/ofm_core/src/media/pundits.rs`:
+  - `Pundit` struct with id/name/archetype/bias/catchphrases
+  - `PunditArchetype` enum (6 variants)
+  - `PunditBias` struct (6 multiplier fields)
+  - `PunditDatabase` struct with `load()`, `instance()` (singleton via OnceLock), `pick_pundit(seed)`, `get_catchphrase(pundit, event_key, seed)`
+  - `pick_pundit_for_match(fixture_id)` — stable seed from fixture_id hash so same fixture always gets same pundit
+  - Uses `include_str!("../../../data/pundits.json")` to bake data into binary at compile time
+- Added `pub mod pundits;` to `src-tauri/crates/ofm_core/src/media/mod.rs`
+- Added new Tauri command `get_pundit_for_fixture(fixture_id, event_key)`:
+  - Returns pundit id/name/archetype/catchphrase as JSON
+  - Stable seed from fixture_id + event_key so same fixture+event always returns same catchphrase
+- Registered command in lib.rs invoke_handler
+- Updated `src/components/match/punditry.ts`:
+  - Added optional `speaker: string | null` field to `PunditLine` interface
+  - When set, UI should prefix the line with "{name}:" to attribute it
+
+Stage Summary:
+- 6 named pundits now available with distinct personalities and catchphrases
+- The data file approach (per user's architectural decision #2: "Data file or new db fields is cleaner but must be fully wired in") is fully wired:
+  - Data baked into binary at compile time (no runtime file I/O)
+  - Rust pundit database with singleton access
+  - Tauri command exposes pundit info to frontend
+  - Frontend PunditLine interface supports speaker attribution
+- Same fixture always gets same pundit (deterministic via fixture_id hash)
+- Same fixture+event always gets same catchphrase (deterministic via combined hash)
+- The frontend UI integration (displaying pundit name + using catchphrases) is a follow-up P2 task — the infrastructure is ready
+

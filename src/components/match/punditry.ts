@@ -20,6 +20,12 @@ export interface PunditLine {
  line: string;
  /** Tone: positive / neutral / negative / amazed / furious — drives styling. */
  tone: "positive" | "neutral" | "negative" | "amazed" | "furious";
+ /**
+  * V100 P1 (Issue #12): The pundit's display name (e.g. "Roy Keano-type").
+  * When set, the UI should prefix the line with "{name}:" to attribute it.
+  * When null, the line is from the default (unnamed) co-commentator.
+  */
+ speaker?: string | null;
 }
 
 /** Stable hash so the same event always gets the same pundit line. */
