@@ -21,3 +21,19 @@ export async function hireStaff(staffId: string): Promise<GameStateData> {
 export async function releaseStaff(staffId: string): Promise<GameStateData> {
   return invoke<GameStateData>("release_staff", { staffId });
 }
+/**
+ * V100 P2 (Issue #17): Assistant manager advice response.
+ */
+export interface AssistantAdviceData {
+    advice: string;
+    topic: string;
+    tone: "warning" | "positive" | "neutral";
+}
+
+/**
+ * V100 P2 (Issue #17): Get weekly advice from the assistant manager.
+ * Returns Gaffer-voice advice based on the squad's current state.
+ */
+export async function getAssistantManagerAdvice(): Promise<AssistantAdviceData> {
+    return invoke<AssistantAdviceData>("get_assistant_manager_advice");
+}

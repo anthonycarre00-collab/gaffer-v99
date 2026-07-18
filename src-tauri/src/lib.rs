@@ -247,6 +247,8 @@ pub fn run() {
             set_team_kit_pattern,
             hire_staff,
             release_staff,
+            // V100 P2 (Issue #17): Assistant manager advice command.
+            get_assistant_manager_advice,
             mark_message_read,
             delete_message,
             delete_messages,

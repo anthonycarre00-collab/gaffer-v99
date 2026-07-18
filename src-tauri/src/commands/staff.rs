@@ -282,3 +282,126 @@ pub fn release_staff_internal(state: &StateManager, staff_id: &str) -> Result<Ga
         Ok(())
     })
 }
+
+/// V100 P2 (Issue #17): Assistant manager advice response.
+#[derive(Debug, Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AssistantAdviceResponse {
+    /// Gaffer-voice advice from the assistant manager.
+    pub advice: String,
+    /// Topic: "squad_depth", "form", "training", "transfers", "youth".
+    pub topic: String,
+    /// Whether the advice is a warning (red) or positive (green).
+    pub tone: String,
+}
+
+/// V100 P2 (Issue #17): Get weekly advice from the assistant manager.
+/// Returns advice based on the squad's current state — injuries, form,
+/// squad depth, contract situations. The advice is Gaffer-voice and
+/// varies based on the assistant manager's coaching attribute (higher =
+/// more insightful advice).
+#[tauri::command]
+pub fn get_assistant_manager_advice(
+    state: State<'_, Arc<StateManager>>,
+) -> Result<AssistantAdviceResponse, String> {
+    info!("[cmd] get_assistant_manager_advice");
+    let game = state
+        .get_game(|g| g.clone())
+        .ok_or("be.error.noActiveGameSession".to_string())?;
+
+    let team_id = game
+        .manager
+        .team_id
+        .clone()
+        .ok_or("be.error.noTeamAssigned".to_string())?;
+
+    // Find the assistant manager.
+    let assistant = game
+        .staff
+        .iter()
+        .find(|s| {
+            s.team_id.as_deref() == Some(team_id.as_str())
+                && s.role == domain::staff::StaffRole::AssistantManager
+        });
+
+    let coaching_level = assistant
+        .map(|a| a.attributes.coaching)
+        .unwrap_or(50);
+
+    // Gather squad state.
+    let squad_players: Vec<&domain::player::Player> = game
+        .players
+        .iter()
+        .filter(|p| p.team_id.as_deref() == Some(team_id.as_str()) && !p.retired)
+        .collect();
+
+    let injured_count = squad_players.iter().filter(|p| p.injury.is_some()).count();
+    let low_morale_count = squad_players.iter().filter(|p| p.morale < 40).count();
+    let low_condition_count = squad_players.iter().filter(|p| p.condition < 50).count();
+    let squad_size = squad_players.len();
+
+    // Find the team's recent form.
+    let team = game.teams.iter().find(|t| t.id == team_id);
+    let recent_form = team
+        .map(|t| t.form.clone())
+        .unwrap_or_default();
+    let recent_losses = recent_form.iter().rev().take(5).filter(|r| r.as_str() == "L").count();
+    let recent_wins = recent_form.iter().rev().take(5).filter(|r| r.as_str() == "W").count();
+
+    // Generate advice based on the most pressing issue.
+    let (advice, topic, tone) = if injured_count >= 4 {
+        (
+            format!("We've got {} lads in the treatment room, boss. The physios are run off their feet — might be worth resting a few in the next match and rotating the squad.", injured_count),
+            "squad_depth".to_string(),
+            "warning".to_string(),
+        )
+    } else if recent_losses >= 3 {
+        (
+            "The lads are low on confidence after those results. I'd suggest a calm team talk — don't go ripping into them, they need their belief back.".to_string(),
+            "form".to_string(),
+            "warning".to_string(),
+        )
+    } else if low_morale_count >= 3 {
+        (
+            format!("There's {} players with morale below 40, boss. Might be worth having a word with them individually — find out what's eating them.", low_morale_count),
+            "morale".to_string(),
+            "warning".to_string(),
+        )
+    } else if low_condition_count >= 5 {
+        (
+            format!("Half the squad's running on fumes, boss. {} lads are below 50 condition — we need to ease off training intensity for a few days.", low_condition_count),
+            "training".to_string(),
+            "warning".to_string(),
+        )
+    } else if squad_size < 20 {
+        (
+            "We're thin on the ground, boss. One or two injuries and we'll be scraping the barrel. Might be worth dipping into the market for some cover.".to_string(),
+            "transfers".to_string(),
+            "warning".to_string(),
+        )
+    } else if recent_wins >= 3 {
+        (
+            "The lads are flying, boss. Confidence is high, the dressing room's buzzing. Keep doing what you're doing — don't change a thing.".to_string(),
+            "form".to_string(),
+            "positive".to_string(),
+        )
+    } else if coaching_level >= 80 {
+        (
+            "Looking at the training ground, I think we can push the intensity up a notch. The lads are responding well to the sessions — let's capitalise on it.".to_string(),
+            "training".to_string(),
+            "positive".to_string(),
+        )
+    } else {
+        (
+            "Squad looks in decent shape, boss. No major concerns from where I'm standing. We'll keep an eye on things and let you know if anything crops up.".to_string(),
+            "general".to_string(),
+            "neutral".to_string(),
+        )
+    };
+
+    Ok(AssistantAdviceResponse {
+        advice,
+        topic,
+        tone,
+    })
+}

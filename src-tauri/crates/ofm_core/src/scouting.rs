@@ -368,6 +368,9 @@ pub fn process_scouting(game: &mut Game) {
                 team_name.as_deref(),
                 &today,
                 tier_after,
+                // V100 P2 (Issue #18): Pass the scout's bias profile so the
+                // report reflects their personality (overrates pace, etc.).
+                scout.scout_bias.as_ref(),
             );
             game.messages.push(msg);
         }
@@ -780,6 +783,10 @@ fn build_scout_report(
     team_name: Option<&str>,
     date: &str,
     reveal_tier: RevealTier,
+    /// V100 P2 (Issue #18): Scout bias profile. When present, the scout's
+    /// attribute readings are shifted by their bias multipliers and extra
+    /// noise is added based on their noise_level. None = neutral scout.
+    scout_bias: Option<&domain::staff::ScoutBias>,
 ) -> InboxMessage {
     let mut rng = rand::rng();
 
@@ -794,19 +801,40 @@ fn build_scout_report(
         12
     };
 
-    let mut fuzz = |val: u8| -> u8 {
-        let delta: i16 = rng.random_range(-(noise_range as i16)..=(noise_range as i16));
-        ((val as i16) + delta).clamp(1, 99) as u8
+    // V100 P2 (Issue #18): Apply scout bias. Each attribute gets a
+    // bias multiplier from the scout's profile (1.0 = neutral).
+    // The fuzz closure applies both the bias shift and the noise.
+    let bias_for = |attr_name: &str| -> f32 {
+        scout_bias
+            .map(|b| match attr_name {
+                "pace" | "burst" => b.pace_bias,
+                "power" => b.power_bias,
+                "defending" | "aerial" => b.defending_bias,
+                "finishing" | "passing" | "touch" | "distribution" => b.attacking_bias,
+                _ => 1.0,
+            })
+            .unwrap_or(1.0)
+    };
+    let extra_noise: f32 = scout_bias.map(|b| b.noise_level).unwrap_or(0.0);
+
+    let mut fuzz = |val: u8, attr_name: &str| -> u8 {
+        let bias = bias_for(attr_name);
+        let biased = (val as f32 * bias).round() as i16;
+        let base_noise = noise_range as i16;
+        let extra = (extra_noise * 10.0) as i16;
+        let total_noise = base_noise + extra;
+        let delta: i16 = rng.random_range(-total_noise..=total_noise);
+        (biased + delta).clamp(1, 99) as u8
     };
 
     // Build fuzzed attribute values
     let all_fuzzed: [(u8, &str); 6] = [
-        (fuzz(attrs.pace), "Pace"),
-        (fuzz(attrs.finishing), "Shooting"),
-        (fuzz(attrs.passing), "Passing"),
-        (fuzz(attrs.touch), "Dribbling"),
-        (fuzz(attrs.defending), "Defending"),
-        (fuzz(attrs.power), "Physical"),
+        (fuzz(attrs.pace, "pace"), "Pace"),
+        (fuzz(attrs.finishing, "finishing"), "Shooting"),
+        (fuzz(attrs.passing, "passing"), "Passing"),
+        (fuzz(attrs.touch, "touch"), "Dribbling"),
+        (fuzz(attrs.defending, "defending"), "Defending"),
+        (fuzz(attrs.power, "power"), "Physical"),
     ];
 
     // Phase 7: Progressive reveal — reveal depth is determined by tier, not scout ability.
@@ -1019,6 +1047,8 @@ mod tests {
             Some("London FC"),
             "2026-08-01",
             RevealTier::Complete,
+            // V100 P2 (Issue #18): Pass None for scout_bias in test (neutral scout).
+            None,
         );
 
         assert_eq!(message.subject, "");

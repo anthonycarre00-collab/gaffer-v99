@@ -2716,3 +2716,43 @@ Stage Summary:
 - Tactics pitch has a subtle 3D perspective effect
 - All changes backward-compatible
 
+
+---
+Task ID: V100-P2-BATCH-3
+Agent: main
+Task: Scout report flavour + Assistant manager advice
+
+Work Log:
+- P2-4 (Issue #18): Scout report flavour by personality
+  - Updated `build_scout_report` in `src-tauri/crates/ofm_core/src/scouting.rs`:
+    - Added `scout_bias: Option<&ScoutBias>` parameter
+    - Updated the `fuzz` closure to apply bias multipliers per attribute
+    - Pace/burst → pace_bias, Power → power_bias, Defending/aerial → defending_bias, Finishing/passing/touch/distribution → attacking_bias
+    - Extra noise added from scout's noise_level (0.0-1.0 → 0-10 extra noise points)
+  - Updated the production caller to pass `scout.scout_bias.as_ref()`
+  - Updated the test caller to pass `None` (neutral scout)
+  - Different scouts now produce different reports for the same player (per user requirement)
+
+- P2-5 (Issue #17): Staff interaction — assistant manager advice
+  - Added `AssistantAdviceResponse` struct (advice, topic, tone)
+  - Added `get_assistant_manager_advice` Tauri command in `src-tauri/src/commands/staff.rs`:
+    - Finds the user's assistant manager (if hired)
+    - Gathers squad state: injured count, low morale count, low condition count, squad size, recent form
+    - Generates Gaffer-voice advice based on the most pressing issue:
+      - 4+ injuries → squad depth warning
+      - 3+ recent losses → form warning (calm team talk advice)
+      - 3+ low morale players → morale warning
+      - 5+ low condition players → training intensity warning
+      - Squad < 20 → transfer market advice
+      - 3+ recent wins → positive form feedback
+      - High coaching attribute → training push advice
+      - Default → neutral "squad looks decent" message
+  - Registered command in lib.rs
+  - Added `getAssistantManagerAdvice` service function in staffService.ts
+
+Stage Summary:
+- Scout reports now reflect the scout's personality (bias multipliers shift attribute readings)
+- Users can get weekly advice from their assistant manager (Gaffer-voice, varies by squad state)
+- Both features are fully wired (backend + frontend service)
+- UI for displaying assistant advice is a follow-up task (the backend is ready)
+
