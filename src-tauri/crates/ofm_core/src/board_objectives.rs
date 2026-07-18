@@ -10,27 +10,44 @@ struct ObjectiveTargets {
     win_target: u32,
     goals_target: u32,
     finance_target: u32,
+    /// V100 P1 (Issue #37): Cup target — the round the board expects the
+    /// team to reach in their primary domestic cup. 0 = no cup expectation
+    /// (lower-league teams with no cup entry). Encoded as round index:
+    /// 1 = 3rd round, 2 = 4th round, 3 = QF, 4 = SF, 5 = Final, 6 = Win.
+    cup_target_round: u32,
 }
 
 impl ObjectiveTargets {
     fn new(reputation: u32, num_teams: u32) -> Self {
-        const HIGH_REPUTATION: u32 = 800;
-        const MEDIUM_REPUTATION: u32 = 650;
-        const LOW_REPUTATION: u32 = 400;
+        // V100 P1 (Issue #37): Tighter reputation tiers for more variation.
+        // Old: 800/650/400 — too coarse, mid-table clubs got same targets
+        //      as relegation candidates.
+        // New: 750/600/500 — produces 4 distinct tiers matching V100 P0-2
+        //      per-club reputation (Elite 900, Mid 700, Lower-mid 600, Relegation 550).
+        const ELITE_REPUTATION: u32 = 800;
+        const UPPER_MID_REPUTATION: u32 = 750;
+        const MID_REPUTATION: u32 = 600;
+        const LOWER_REPUTATION: u32 = 500;
 
         // Degenerate worlds can reach this with a single team (the league
         // participant count is only used when > 1, but the fallback is the raw
         // team count) — clamp the position into the table and drop the win/goal
         // floors when there are no matchdays, or the objectives are impossible.
         let league_size = num_teams.max(1);
-        let expected_pos = if reputation >= HIGH_REPUTATION {
-            1
-        } else if reputation >= MEDIUM_REPUTATION {
-            (league_size / 4).max(2)
-        } else if reputation >= LOW_REPUTATION {
+        let expected_pos = if reputation >= ELITE_REPUTATION {
+            1 // Elite clubs: win the league
+        } else if reputation >= UPPER_MID_REPUTATION {
+            // Upper-mid (Arsenal, Atlético): top 4
+            (league_size / 5).max(1).min(4)
+        } else if reputation >= MID_REPUTATION {
+            // Mid-table: top half
             (league_size / 2).max(1)
+        } else if reputation >= LOWER_REPUTATION {
+            // Lower-mid: top 12 (or top 2/3 for small leagues)
+            (league_size * 2 / 3).max(1)
         } else {
-            (league_size * 3 / 4).max(league_size / 2 + 1)
+            // Relegation candidate: survival (17th in a 20-team league)
+            (league_size * 4 / 5).max(league_size / 2 + 1).min(league_size)
         }
         .min(league_size);
 
@@ -42,24 +59,48 @@ impl ObjectiveTargets {
 
         let win_target = if total_matchdays == 0 {
             0
-        } else if reputation >= HIGH_REPUTATION {
-            (total_matchdays * 60 / 100).max(1)
-        } else if reputation >= MEDIUM_REPUTATION {
-            (total_matchdays * 45 / 100).max(1)
-        } else if reputation >= LOW_REPUTATION {
-            (total_matchdays * 30 / 100).max(1)
+        } else if reputation >= ELITE_REPUTATION {
+            (total_matchdays * 65 / 100).max(1) // Elite: 65% wins
+        } else if reputation >= UPPER_MID_REPUTATION {
+            (total_matchdays * 55 / 100).max(1) // Upper-mid: 55%
+        } else if reputation >= MID_REPUTATION {
+            (total_matchdays * 45 / 100).max(1) // Mid: 45%
+        } else if reputation >= LOWER_REPUTATION {
+            (total_matchdays * 35 / 100).max(1) // Lower-mid: 35%
         } else {
-            (total_matchdays * 10 / 100).max(1)
+            (total_matchdays * 25 / 100).max(1) // Relegation: 25% (survival scrap)
         };
 
         let goals_target = if total_matchdays == 0 {
             0
-        } else if reputation >= HIGH_REPUTATION {
+        } else if reputation >= ELITE_REPUTATION {
             (total_matchdays * 3 / 2).max(20)
-        } else if reputation >= MEDIUM_REPUTATION {
-            (total_matchdays / 2).max(15)
+        } else if reputation >= UPPER_MID_REPUTATION {
+            (total_matchdays * 5 / 4).max(18)
+        } else if reputation >= MID_REPUTATION {
+            (total_matchdays * 3 / 4).max(15)
+        } else if reputation >= LOWER_REPUTATION {
+            (total_matchdays / 2).max(12)
         } else {
-            (total_matchdays / 5).max(10)
+            (total_matchdays / 3).max(10)
+        };
+
+        // V100 P1 (Issue #37): Cup target by reputation tier.
+        // Elite clubs are expected to reach the final or win it.
+        // Upper-mid clubs: semi-final.
+        // Mid-table: quarter-final.
+        // Lower-mid: 4th round (R16).
+        // Relegation candidate: 3rd round (just being in the hat is enough).
+        let cup_target_round = if reputation >= ELITE_REPUTATION {
+            6 // Win the cup
+        } else if reputation >= UPPER_MID_REPUTATION {
+            5 // Final
+        } else if reputation >= MID_REPUTATION {
+            4 // Semi-final
+        } else if reputation >= LOWER_REPUTATION {
+            3 // Quarter-final
+        } else {
+            2 // 4th round (survival mindset)
         };
 
         Self {
@@ -67,6 +108,7 @@ impl ObjectiveTargets {
             win_target,
             goals_target,
             finance_target: 100,
+            cup_target_round,
         }
     }
 }

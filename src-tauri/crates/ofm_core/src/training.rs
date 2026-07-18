@@ -365,6 +365,42 @@ fn train_player(
         * condition_rec
         * fitness_rec) as u8;
     player.condition = (player.condition + recovery).min(100);
+
+    // V100 P1 (Issue #3): Position retraining. If the player has a
+    // `training_position_focus` set, accumulate XP toward learning that
+    // position. When XP reaches 100, roll for success (80% chance — never
+    // 100% per user requirement). On success, add the position to
+    // `alternate_positions` and reset focus. On failure, halve XP (keep
+    // training — they'll get another chance).
+    if let Some(target_pos) = player.training_position_focus.clone() {
+        // Don't accumulate XP if the player already knows the position.
+        if player.alternate_positions.contains(&target_pos)
+            || player.natural_position == target_pos
+        {
+            player.training_position_focus = None;
+            player.retraining_xp = 0;
+        } else if is_training_day {
+            // XP gain scales with age (younger players learn faster) and
+            // intensity. Range: ~1-3 XP per training day.
+            let age_xp_mult = if age <= 21 { 3 } else if age <= 25 { 2 } else { 1 };
+            let xp_gain = (intensity_mult * age_xp_mult as f64) as u8;
+            player.retraining_xp = player.retraining_xp.saturating_add(xp_gain).min(100);
+
+            if player.retraining_xp >= 100 {
+                // Roll for success — 80% chance (never 100% per user requirement).
+                if rng.random_range(0.0..1.0f64) < 0.80 {
+                    // Success! Add to alternate_positions, clear focus.
+                    player.alternate_positions.push(target_pos.clone());
+                    player.training_position_focus = None;
+                    player.retraining_xp = 0;
+                } else {
+                    // Failure — reset XP to 50 (player keeps training, gets
+                    // another chance after 50 more XP).
+                    player.retraining_xp = 50;
+                }
+            }
+        }
+    }
 }
 
 /// Apply fitness changes based on training focus.

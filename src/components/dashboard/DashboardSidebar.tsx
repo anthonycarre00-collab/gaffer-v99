@@ -191,9 +191,9 @@ export default function DashboardSidebar({
  <h1 className="text-sm font-heading font-bold text-accent-400 uppercase tracking-wider">
  Gaffer
  </h1>
- {/* V99.11: Gaffer-voice tagline */}
+ {/* V100 P1 (Issue #10): New tagline — "Every Result Tells a Story" */}
  <p className="text-[9px] text-ink-faint font-heading uppercase tracking-widest">
- The Beautiful Game, Ugly Truths
+ Every Result Tells a Story
  </p>
  </div>
  )}

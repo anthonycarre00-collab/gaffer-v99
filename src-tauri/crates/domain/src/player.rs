@@ -24,11 +24,37 @@ pub struct Player {
     #[serde(default)]
     pub alternate_positions: Vec<Position>,
 
+    /// V100 P1 (Issue #3): Position the player is currently retraining to.
+    /// When set, training sessions accumulate "learning XP" toward adding
+    /// this position to `alternate_positions`. None = no active retraining.
+    /// Persisted across saves (serde default = None) so progress isn't lost
+    /// on continue game (per user requirement).
+    #[serde(default)]
+    pub training_position_focus: Option<Position>,
+
+    /// V100 P1 (Issue #3): Accumulated retraining XP (0-100). When XP reaches
+    /// 100, the position is added to `alternate_positions` and XP resets.
+    /// Success is NEVER 100% guaranteed — even at XP=100 there's a 20%
+    /// chance the retraining fails and XP resets to 50 (per user requirement).
+    #[serde(default)]
+    pub retraining_xp: u8,
+
     #[serde(default)]
     pub footedness: Footedness,
 
     #[serde(default = "default_weak_foot")]
     pub weak_foot: u8,
+
+    /// V100 P1 (Issue #1): Player height in centimeters. 0 = unknown (will
+    /// be generated from position + power attribute on first load). Range
+    /// typically 165-200cm for senior pros; GKs and CBs tend to be taller.
+    #[serde(default)]
+    pub height_cm: u8,
+
+    /// V100 P1 (Issue #1): Player weight in kilograms. 0 = unknown (will
+    /// be generated from height + power attribute). Range typically 65-90kg.
+    #[serde(default)]
+    pub weight_kg: u8,
 
     // Core attributes 0-100
     pub attributes: PlayerAttributes,
@@ -893,8 +919,15 @@ impl Player {
             natural_position: position.clone(),
             position,
             alternate_positions: Vec::new(),
+            // V100 P1 (Issue #3): Retraining fields default to None/0.
+            training_position_focus: None,
+            retraining_xp: 0,
             footedness: Footedness::default(),
             weak_foot: default_weak_foot(),
+            // V100 P1 (Issue #1): height/weight default to 0 — generated
+            // later by refresh_player_derived when first needed.
+            height_cm: 0,
+            weight_kg: 0,
             attributes,
             condition: 100,
             morale: 100,

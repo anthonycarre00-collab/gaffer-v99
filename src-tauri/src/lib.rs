@@ -233,6 +233,8 @@ pub fn run() {
             set_training_schedule,
             set_training_groups,
             set_player_training_focus,
+            // V100 P1 (Issue #3): Position retraining command.
+            set_player_training_position,
             set_player_squad_role,
             set_player_role,
             set_tactics_phase,

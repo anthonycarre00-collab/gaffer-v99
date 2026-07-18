@@ -107,6 +107,32 @@ pub fn refresh_player_derived(player: &mut Player, current_year: u32) {
         let max_mv = (old_mv * 1.25) as u64;
         player.market_value = new_market_value.clamp(min_mv, max_mv).max(1);
     }
+
+    // V100 P1 (Issue #1): Generate height/weight if not set (0 = unknown).
+    // Derived from position + power attribute so it's deterministic and
+    // matches the player's profile. GKs and CBs are taller; wingers and
+    // full-backs are shorter. Higher power = heavier build.
+    if player.height_cm == 0 {
+        let base_height: u8 = match player.position {
+            domain::player::Position::Goalkeeper => 188,
+            domain::player::Position::Defender => 184,
+            domain::player::Position::Midfielder => 178,
+            domain::player::Position::Forward => 180,
+        };
+        // Power attribute (0-100) shifts height ±5cm. Powerful players tend
+        // to be taller (and heavier).
+        let power_mod: i16 = ((player.attributes.power as i16) - 50) / 10;
+        let height = (base_height as i16 + power_mod).clamp(165, 205) as u8;
+        player.height_cm = height;
+    }
+    if player.weight_kg == 0 {
+        // BMI-based: weight = height² × BMI / 10000. Target BMI 23-25
+        // (athletic range). Higher power attribute → higher BMI.
+        let bmi = 23.0 + (player.attributes.power as f64 / 100.0) * 2.5;
+        let height_m = player.height_cm as f64 / 100.0;
+        let weight = (height_m * height_m * bmi).round().clamp(60.0, 100.0) as u8;
+        player.weight_kg = weight;
+    }
 }
 
 /// Returns `true` when a player qualifies as a wonderkid: they are at or below

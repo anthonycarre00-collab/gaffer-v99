@@ -2348,3 +2348,88 @@ Stage Summary:
 - The full events list (used for live commentary) includes them
 - Anti-spam logic prevents the same event from firing every minute
 
+
+---
+Task ID: V100-P1-BATCH-1
+Agent: main
+Task: P1 batch — tagline + pre-game restyle + board expectations + morale tuning + round_summary fix + height/weight
+
+Work Log:
+- P1 (Issue #10) Tagline: Changed "The Beautiful Game, Ugly Truths" → "Every Result Tells a Story" in DashboardSidebar
+- P1 (Issue #10) Pre-game restyle: Updated MainMenu.tsx:
+  - Removed `bg-carbon-2` duplicate (kept `bg-carbon-0`)
+  - Replaced `bg-gradient-to-b from-transparent via-white/30 to-white/70 dark:from-transparent dark:via-navy-900/30 dark:to-navy-900/70` with carbon-based gradient
+  - Added brass radial glow (Gaffer signature touch)
+- P1 (Issue #37) Varied board expectations: Updated `ObjectiveTargets::new` in board_objectives.rs:
+  - Tightened reputation tiers: 800/750/600/500 (was 800/650/400 — too coarse)
+  - 5 tiers now: Elite (win league), Upper-mid (top 4), Mid (top half), Lower-mid (top 2/3), Relegation (survival)
+  - Win targets: 65%/55%/45%/35%/25% of matchdays (was 60%/45%/30%/10%)
+  - Added `cup_target_round` field (Win/Final/SF/QF/R16/R3 by tier)
+- P1 (Issue #30) Morale difficulty tuning: Updated streak morale in post_match.rs:
+  - 3L = -15..-8 (was -10..-5, harder to recover)
+  - 3W = +3..+6 (was +2..+5, slight boost)
+  - Added crisis state: 5+ losses = -18..-12 (bigger hit)
+  - Recovery from crisis requires 2 consecutive wins (not just 3)
+- P1 (Issue #11 fix from P0-17 audit) Round summary: Updated `build_round_summary` in round_summary.rs:
+  - Now scans game.competitions for the user's competition (containing their team_id)
+  - Falls back to game.league for backward-compat
+  - Cup matchday results no longer silently dropped from round recap
+- P1 (Issue #1) Player height/weight:
+  - Added `height_cm: u8` and `weight_kg: u8` fields to Player struct (with #[serde(default)])
+  - Added initialization to 0 in Player::new
+  - Updated `refresh_player_derived` to generate height/weight from position + power attribute:
+    - Base heights: GK 188cm, DEF 184cm, MID 178cm, FWD 180cm
+    - Power attribute shifts height ±5cm (clamped 165-205)
+    - Weight from BMI formula (target BMI 23-25, higher power = higher BMI)
+  - Added to frontend PlayerData type
+  - Added display in PlayerProfileHeroCard ("180cm / 75kg")
+
+Stage Summary:
+- Tagline now reads "Every Result Tells a Story" (was "The Beautiful Game, Ugly Truths")
+- Pre-game screen uses proper carbon palette + brass glow (was washed-out white gradient)
+- Board expectations now have 5 tiers (was 3) — elite clubs must win, relegation candidates must survive
+- Cup target added to ObjectiveTargets struct (not yet surfaced to UI — that's a separate P1 task)
+- Morale is harder to recover from loss streaks (crisis state at 5+ losses)
+- Round summary now correctly shows cup matchday results (was silently dropping them)
+- Players now have height/weight (generated from position + power; displayed on profile)
+- All changes backward-compatible (serde defaults, no migrations needed for height/weight since they default to 0 and get generated on first refresh)
+
+
+---
+Task ID: V100-P1-POSITION-RETRAINING
+Agent: main
+Task: Position retraining system (Issue #3 P1)
+
+Work Log:
+- Edited `src-tauri/crates/domain/src/player.rs`:
+  - Added `training_position_focus: Option<Position>` field (with #[serde(default)])
+  - Added `retraining_xp: u8` field (with #[serde(default)])
+  - Added initialization to None/0 in Player::new
+  - Both fields are persisted across saves (per user requirement: "ensure new trained positions are not lost on continue game")
+- Edited `src-tauri/crates/ofm_core/src/training.rs`:
+  - Added retraining XP accumulation logic at the end of `train_player`:
+    - Only accumulates on training days (respects schedule)
+    - XP gain scales with age (younger = faster): age<=21 = 3xp, age<=25 = 2xp, else 1xp
+    - XP gain also scales with intensity (Low=0.5x, Medium=1x, High=1.5x)
+    - When XP reaches 100, roll for success (80% chance — NEVER 100% per user requirement)
+    - On success: position added to alternate_positions, focus cleared, XP reset
+    - On failure: XP reset to 50 (player keeps training, gets another chance)
+    - Auto-clears focus if player already knows the position
+- Added new Tauri command `set_player_training_position`:
+  - Accepts player_id + position (Goalkeeper/Defender/Midfielder/Forward) or None to cancel
+  - Validates player is owned by user
+  - Rejects if player already knows the position
+  - Resets XP when switching focus
+- Registered command in lib.rs invoke_handler
+- Added `setPlayerTrainingPosition` service function in squadService.ts
+- Added `training_position_focus` and `retraining_xp` fields to frontend PlayerData type
+
+Stage Summary:
+- Users can now retrain players to learn new positions
+- Success is NEVER 100% (80% chance at XP=100) per user requirement
+- Progress persists across saves (both fields are #[serde(default)])
+- XP gain is age-weighted (younger players learn faster)
+- The system integrates with the existing training schedule (only accumulates on training days)
+- Frontend service + type definitions added (UI for setting retraining focus is a follow-up P2 task)
+- Backward-compatible with existing saves (serde defaults)
+

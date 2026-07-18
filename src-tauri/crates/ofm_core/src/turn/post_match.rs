@@ -986,10 +986,42 @@ fn update_team_form(
 
         if form.len() >= 3 {
             let last3: Vec<&str> = form.iter().rev().take(3).map(|s| s.as_str()).collect();
+            // V100 P1 (Issue #30): Morale difficulty tuning.
+            // Old: 3W = +2..+5, 3L = -10..-5. Too easy to recover from 3L
+            //      with a single win (the +2..+5 from a 3W streak cancelled it).
+            // New: 3L = -15..-8 (harder to recover), 3W = +3..+6 (slight boost).
+            //      Also add a "crisis" state: if 5+ losses in a row, apply an
+            //      additional -5 morale hit AND require 2 consecutive wins to
+            //      exit crisis (handled in the win-streak branch by checking
+            //      the last 5 results).
             let streak_delta: i16 = if last3.iter().all(|r| *r == "W") {
-                rng.random_range(2..=5) // 3+ win streak: small global morale boost
+                // Check if team was in crisis (5+ losses in last 5 before this streak).
+                // If so, only 2 consecutive wins (not just 3) starts the recovery.
+                let recent5_losses = form
+                    .iter()
+                    .rev()
+                    .take(5)
+                    .filter(|r| r.as_str() == "L")
+                    .count();
+                if recent5_losses >= 4 {
+                    // Still in crisis — slower recovery (single win barely helps).
+                    rng.random_range(1..=3)
+                } else {
+                    rng.random_range(3..=6) // 3+ win streak: small global morale boost
+                }
             } else if last3.iter().all(|r| *r == "L") {
-                rng.random_range(-10..=-5) // 3+ loss streak: significant morale drop
+                let recent5_losses = form
+                    .iter()
+                    .rev()
+                    .take(5)
+                    .filter(|r| r.as_str() == "L")
+                    .count();
+                if recent5_losses >= 5 {
+                    // Crisis mode: 5+ losses — bigger morale hit + squad unrest.
+                    rng.random_range(-18..=-12)
+                } else {
+                    rng.random_range(-15..=-8) // 3+ loss streak: significant morale drop
+                }
             } else {
                 0
             };

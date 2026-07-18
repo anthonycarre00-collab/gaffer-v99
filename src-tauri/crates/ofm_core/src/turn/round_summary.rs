@@ -76,7 +76,26 @@ pub fn build_round_summary(
     matchday: u32,
     previous_standings: &[StandingEntry],
 ) -> Option<RoundSummary> {
-    let league = game.league.as_ref()?;
+    // V100 P1 (Issue #11 fix from P0-17 audit): Build round summary from ALL
+    // competitions, not just the legacy `game.league` mirror. The old code
+    // used `game.league.as_ref()?` which (after sync_legacy_league) always
+    // points at the user's domestic league — cup matchday results were
+    // silently dropped from the round recap.
+    //
+    // Now we scan game.competitions for the user's fixtures on this matchday.
+    // The "user's competition" is the one containing their team_id, which
+    // `game.user_competition_index()` resolves. If we can't find one, fall
+    // back to the legacy league mirror for backward-compat.
+    let user_team_id = game.manager.team_id.as_deref();
+    let user_comp = if let Some(tid) = user_team_id {
+        game.competitions
+            .iter()
+            .find(|c| (c.participant_ids.iter().any(|p| p == tid)))
+            .or_else(|| game.league.as_ref())
+    } else {
+        game.league.as_ref()
+    };
+    let league = user_comp?;
     let round_fixtures: Vec<&Fixture> = league
         .fixtures
         .iter()

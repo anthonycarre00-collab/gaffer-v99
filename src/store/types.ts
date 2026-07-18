@@ -244,6 +244,14 @@ export interface PlayerData {
   alternate_positions: string[];
   footedness?: string;
   weak_foot?: number;
+  /** V100 P1 (Issue #1): Player height in centimeters. */
+  height_cm?: number;
+  /** V100 P1 (Issue #1): Player weight in kilograms. */
+  weight_kg?: number;
+  /** V100 P1 (Issue #3): Position the player is retraining to (null = no retraining). */
+  training_position_focus?: string | null;
+  /** V100 P1 (Issue #3): Accumulated retraining XP (0-100). */
+  retraining_xp?: number;
   training_focus: string | null;
   attributes: {
     pace: number; burst: number; engine: number; power: number; agility: number;

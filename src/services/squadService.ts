@@ -33,6 +33,21 @@ export async function setPlayerRole(
     });
 }
 
+/**
+ * V100 P1 (Issue #3): Set the position a player is retraining to learn.
+ * Pass null to cancel retraining. Success is never 100% guaranteed (80%
+ * chance at XP=100). The player accumulates XP during training sessions.
+ */
+export async function setPlayerTrainingPosition(
+    playerId: string,
+    position: string | null,
+): Promise<GameStateData> {
+    return invoke<GameStateData>("set_player_training_position", {
+        playerId,
+        position: position ?? undefined,
+    });
+}
+
 export async function assignJerseyNumber(
     playerId: string,
     jerseyNumber: number | null,

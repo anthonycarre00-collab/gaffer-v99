@@ -638,12 +638,16 @@ export default function MainMenu() {
  };
 
  return (
- <div className="min-h-screen flex items-center justify-center bg-carbon-2 bg-carbon-0 transition-colors duration-500 relative overflow-x-hidden">
+ <div className="min-h-screen flex items-center justify-center bg-carbon-0 transition-colors duration-500 relative overflow-x-hidden">
  {/* Background — stadium at night */}
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute inset-0 stadium-bg opacity-35" />
- {/* Subtle dark overlay so the menu card stays legible */}
- <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-white/70 dark:from-transparent dark:via-navy-900/30 dark:to-navy-900/70" />
+ {/* V100 P1 (Issue #10): Carbon overlay instead of white/navy gradient.
+     The previous gradient (from-white via-white/30 to-white/70) washed
+     out the stadium texture and broke the dark-first design. */}
+ <div className="absolute inset-0 bg-gradient-to-b from-transparent via-carbon-0/30 to-carbon-0/80" />
+ {/* Brass radial glow — Gaffer signature touch */}
+ <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--color-accent-500)_0%,_transparent_55%)] opacity-10" />
  </div>
 
  {/* Theme Toggle */}
@@ -651,7 +655,7 @@ export default function MainMenu() {
 
  {/* Main Card */}
  <div className="relative z-10 w-full max-w-md">
- {/* Top accent bar */}
+ {/* Top accent bar — brass marker */}
  <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
  <div className="bg-carbon-1 p-8 rounded-b-lg border border-slate-line border-t-0 transition-all duration-500">

@@ -118,6 +118,15 @@ export default function PlayerProfileHeroCard({
  {t("common.weakFoot")}: {" "}
  {weakFootValue}/5
  </span>
+ {/* V100 P1 (Issue #1): Display height/weight when available (>0). */}
+ {player.height_cm ? (
+ <>
+ <span className="text-ink-faint">•</span>
+ <span className="text-ink-faint text-sm">
+ {player.height_cm}cm / {player.weight_kg}kg
+ </span>
+ </>
+ ) : null}
  </div>
  <p className="text-ink-faint text-sm mt-2 flex items-center gap-1.5">
  <Shield className="w-4 h-4" />

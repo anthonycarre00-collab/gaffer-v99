@@ -709,6 +709,82 @@ pub fn set_player_role_internal(
     })
 }
 
+/// V100 P1 (Issue #3): Set the position a player is retraining to learn.
+/// Pass `None` (null in JS) to cancel retraining. The player accumulates
+/// XP toward learning the position during training sessions; success is
+/// never 100% guaranteed (80% chance at XP=100).
+#[tauri::command]
+pub fn set_player_training_position(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+    position: Option<String>,
+) -> Result<Game, String> {
+    set_player_training_position_internal(&state, &player_id, position)
+}
+
+pub fn set_player_training_position_internal(
+    state: &StateManager,
+    player_id: &str,
+    position: Option<String>,
+) -> Result<Game, String> {
+    info!(
+        "[cmd] set_player_training_position: player={} position={:?}",
+        player_id, position
+    );
+    mutate_active_game(state, |game| {
+        let team_id = game
+            .manager
+            .team_id
+            .clone()
+            .ok_or("be.error.noTeamAssigned".to_string())?;
+
+        let target_pos = match position.as_deref() {
+            Some("Goalkeeper") => domain::player::Position::Goalkeeper,
+            Some("Defender") => domain::player::Position::Defender,
+            Some("Midfielder") => domain::player::Position::Midfielder,
+            Some("Forward") => domain::player::Position::Forward,
+            None => {
+                // Cancel retraining — clear focus + reset XP.
+                let player = game
+                    .players
+                    .iter_mut()
+                    .find(|p| p.id == player_id)
+                    .ok_or("be.error.playerNotFound".to_string())?;
+                if player.team_id.as_deref() != Some(team_id.as_str()) {
+                    return Err("be.error.playerNotOwnedByUser".to_string());
+                }
+                player.training_position_focus = None;
+                player.retraining_xp = 0;
+                return Ok(());
+            }
+            _ => return Err("be.error.invalidPosition".to_string()),
+        };
+
+        let player = game
+            .players
+            .iter_mut()
+            .find(|p| p.id == player_id)
+            .ok_or("be.error.playerNotFound".to_string())?;
+
+        if player.team_id.as_deref() != Some(team_id.as_str()) {
+            return Err("be.error.playerNotOwnedByUser".to_string());
+        }
+
+        // Don't allow retraining to a position the player already knows.
+        if player.natural_position == target_pos
+            || player.alternate_positions.contains(&target_pos)
+        {
+            return Err("be.error.alreadyKnowsPosition".to_string());
+        }
+
+        player.training_position_focus = Some(target_pos);
+        // V100 P1 (Issue #3): Reset XP when switching focus (don't carry
+        // over XP from a previous retraining attempt).
+        player.retraining_xp = 0;
+        Ok(())
+    })
+}
+
 #[tauri::command]
 pub fn set_tactics_phase(
     state: State<'_, Arc<StateManager>>,
