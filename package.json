@@ -18,6 +18,8 @@
     "@fontsource/barlow-condensed": "^5.2.8",
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/oswald": "^5.2.8",
     "@fontsource/source-serif-4": "^5.2.9",
     "@tauri-apps/api": "2.11",
     "@tauri-apps/plugin-dialog": "^2.7.1",

@@ -123,6 +123,19 @@ pub(crate) struct MatchContext<'a> {
     /// Team-level condition scalar (0.0–1.0). Starts from mean player condition, depletes per minute.
     pub(crate) home_condition: f64,
     pub(crate) away_condition: f64,
+    /// V100 P0-18 (Issue #12): Last minute a shot was attempted (any type).
+    /// Used to detect QuietMinute (5+ minutes without a shot).
+    pub(crate) last_shot_minute: u8,
+    /// V100 P0-18 (Issue #12): Counter for consecutive minutes the current
+    /// possession side has held the ball in their attacking third. Resets
+    /// when possession flips or ball leaves the attacking third. Used to
+    /// detect SustainedPressure (3+ consecutive minutes).
+    pub(crate) attacking_pressure_streak: u8,
+    /// V100 P0-18 (Issue #12): Last side to have possession. Used to detect
+    /// MomentumShift (possession flips 3+ times in 5 minutes).
+    pub(crate) last_possession: Side,
+    /// V100 P0-18 (Issue #12): Count of possession flips in the last 5 minutes.
+    pub(crate) recent_possession_flips: u8,
 }
 
 fn team_avg_condition(team: &TeamData) -> f64 {
@@ -150,6 +163,11 @@ impl<'a> MatchContext<'a> {
             sent_off: std::collections::HashSet::new(),
             home_condition: team_avg_condition(home),
             away_condition: team_avg_condition(away),
+            // V100 P0-18 (Issue #12): Narrative atmosphere tracking init.
+            last_shot_minute: 0,
+            attacking_pressure_streak: 0,
+            last_possession: Side::Home,
+            recent_possession_flips: 0,
         }
     }
 
@@ -251,13 +269,85 @@ fn simulate_minute<R: Rng>(ctx: &mut MatchContext, minute: u8, rng: &mut R) {
         if rewin > 0.0 && rng.random_range(0.0..1.0f64) < rewin {
             // Counter-press wins it straight back; nothing changes.
         } else {
+            // V100 P0-18 (Issue #12): Possession flipped — update tracking.
+            if ctx.last_possession != def_side {
+                ctx.recent_possession_flips = ctx.recent_possession_flips.saturating_add(1);
+                ctx.last_possession = def_side;
+            }
             ctx.possession = def_side;
             let breakaway = shared::tactics_break_speed_counter(&def_tactics);
             if breakaway > 0.0 && rng.random_range(0.0..1.0f64) < breakaway {
                 ctx.ball_zone = Zone::attacking_third(def_side);
+                // V100 P0-18 (Issue #12): Counter-attack signal. The defending
+                // side won the ball and broke forward at speed.
+                if minute > 5 && minute < 88 {
+                    ctx.emit(MatchEvent::new(
+                        minute,
+                        EventType::CounterAttack,
+                        def_side,
+                        Zone::attacking_third(def_side),
+                    ));
+                }
             } else {
                 ctx.ball_zone = Zone::Midfield;
             }
         }
+    }
+
+    // V100 P0-18 (Issue #12): Atmosphere event emission.
+    // Update attacking_pressure_streak based on current ball_zone.
+    // Zone::attacking_third(side) returns the opposing side's defense zone;
+    // Zone::attacking_box(side) returns the opposing side's box zone.
+    let is_attacking = match ctx.possession {
+        Side::Home => matches!(ctx.ball_zone, Zone::AwayBox | Zone::AwayDefense),
+        Side::Away => matches!(ctx.ball_zone, Zone::HomeBox | Zone::HomeDefense),
+    };
+    if is_attacking {
+        ctx.attacking_pressure_streak = ctx.attacking_pressure_streak.saturating_add(1);
+    } else {
+        ctx.attacking_pressure_streak = 0;
+    }
+
+    // QuietMinute: 5+ minutes since the last shot. Skip the first 10 minutes
+    // of the match (early quietness is normal) and the last 5 (late drama).
+    if minute > 10 && minute < 85 && minute.saturating_sub(ctx.last_shot_minute) >= 5 {
+        // Only emit once per quiet period (avoid spamming every minute).
+        let already_emitted_quiet = ctx.events.iter().rev().take(10).any(|e| {
+            e.event_type == EventType::QuietMinute
+                && minute.saturating_sub(e.minute) < 5
+        });
+        if !already_emitted_quiet {
+            ctx.emit(MatchEvent::new(minute, EventType::QuietMinute, ctx.possession, Zone::Midfield));
+        }
+    }
+
+    // SustainedPressure: ball has been in the attacking third for 3+ minutes
+    // for the current possession side.
+    if ctx.attacking_pressure_streak >= 3 {
+        let already_emitted_pressure = ctx.events.iter().rev().take(10).any(|e| {
+            e.event_type == EventType::SustainedPressure
+                && minute.saturating_sub(e.minute) < 5
+        });
+        if !already_emitted_pressure {
+            ctx.emit(MatchEvent::new(
+                minute,
+                EventType::SustainedPressure,
+                ctx.possession,
+                Zone::attacking_box(ctx.possession),
+            ));
+        }
+    }
+
+    // MomentumShift: 3+ possession flips in the last 5 minutes (game opening up).
+    if ctx.recent_possession_flips >= 3 && minute > 10 && minute < 88 {
+        let already_emitted_momentum = ctx.events.iter().rev().take(10).any(|e| {
+            e.event_type == EventType::MomentumShift
+                && minute.saturating_sub(e.minute) < 5
+        });
+        if !already_emitted_momentum {
+            ctx.emit(MatchEvent::new(minute, EventType::MomentumShift, ctx.possession, Zone::Midfield));
+        }
+        // Decay the flip counter so we don't re-emit every minute.
+        ctx.recent_possession_flips = ctx.recent_possession_flips.saturating_sub(1);
     }
 }

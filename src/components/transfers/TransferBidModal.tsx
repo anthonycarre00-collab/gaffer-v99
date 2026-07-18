@@ -130,7 +130,7 @@ export function TransferBidForm({
  className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  {myTeam && bidFee !== null && bidProjection ? (
- <div className="rounded border border-slate-line bg-white/70 bg-carbon-0/40 p-3 mb-3 space-y-2">
+ <div className="rounded border border-slate-line bg-carbon-0/40 p-3 mb-3 space-y-2">
  <p className="text-[11px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("transfers.bidImpactTitle")}
  </p>

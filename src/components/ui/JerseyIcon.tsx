@@ -102,7 +102,7 @@ export default function JerseyIcon({
  dominantBaseline="auto"
  fontSize={textSize}
  fontWeight="bold"
- fontFamily="'Barlow Condensed', 'Inter', sans-serif"
+ fontFamily="'Oswald', 'Inter', sans-serif"
  fill="white"
  stroke="rgba(0,0,0,0.3)"
  strokeWidth="1"

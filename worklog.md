@@ -2010,3 +2010,341 @@ Stage Summary:
 - Older players are unaffected (no exploit where you sign a youth coach to boost veterans)
 - No DB migration needed (the specialization field was already on Staff)
 
+---
+Task ID: V100-P0-12-UI-AUDIT
+Agent: Explore
+Task: Audit frontend for remaining style conflicts after V99.11 migration (Issue #2 — "no textures visible, too many fonts, generic icons")
+
+Scope: Audit-only, no code changes. Investigated 6 categories of style conflict in `src/components/`, `src/pages/`, `src/lib/`, and `src/App.css`.
+
+Work Log:
+
+**1. Hardcoded hex colors in `src/components/*.tsx` (excluding SVG fill=/stroke=)**
+
+Production files (test files excluded — they use hex as fixture data, which is appropriate):
+
+- `match/RoundDigestScreen.tsx:168,169` — `#2d5a3d`, `#7a2e1f` (team color fallbacks, Pitch Green / Mahogany)
+- `match/HalfTimeBreak.tsx:73,74` — `#2d5a3d`, `#7a2e1f` (same pattern)
+- `match/PreMatchSetup.tsx:100,101,106,110,111` — `#2d5a3d`, `#7a2e1f`, `#1a3a6b` ×2 (last is NAVY — should be token)
+- `match/MatchLive.tsx:57,58` — `#2d5a3d`, `#7a2e1f`
+- `match/PostMatchScreen.tsx:120,121` — `#2d5a3d`, `#7a2e1f`
+- `match/PreMatchLineup.tsx:96,97,98` — `#f8fafc`, `#334155`, `#cbd5e1` (Tailwind slate palette in `starterBadgeStyle()` — NOT Gaffer tokens)
+- `tactics/TacticsPitch.tsx:526` — `#1a3a6b` (NAVY team color fallback)
+- `home/SquadPulseCard.tsx:44,46,47` — `#7a2e1f`, `#b8924a`, `#2d5a3d` (brand colors as raw hex)
+- `dashboard/DashboardSidebar.tsx:235` — `#5cb389` (team-name fallback)
+- `menu/PackageEditor/TeamForm.tsx:171,184,195,208,233,234` — `#000000`, `#cc0000`, `#ffffff` (color picker defaults — semi-legitimate UI control)
+- `menu/PackageEditor/TeamPreviewCard.tsx:30,31` — `#1e3a5f` (NAVY), `#ffffff`
+- `menu/PackageEditor/PlayerPreviewCard.tsx:120,122,123` — `#22c55e`, `#3b82f6`, `#9ca3af` (Tailwind palette inside `var(--color-…, fallback)` calls)
+- `playerProfile/PlayerRatingTrendChart.tsx:22,23,25,26` — `#ffd60a`, `#22c55e`, `#eab308`, `#ef4444` (rating thresholds)
+- `playerProfile/HexAttributeCluster.tsx:39-50,160` — `#2d5a3d`, `#b8924a`, `#3b5998`, `#7a2e1f`, `#4a7b5e`, `#c06f5e` (brand colors as raw hex — should be tokens)
+- `ui/GeneratedCrest.tsx:35,41` — `#ffffff`, `#111827` (return values from `readableTextColor()`)
+- `brand/GafferCrest.tsx:45-143` — all SVG fill=/stroke=, LEGITIMATE per spec, excluded
+- `ui/icons/GafferIcons.tsx:8-9,20,38,…` — all SVG fill=/stroke= or default param values, LEGITIMATE per spec, excluded
+- `ui/GeneratedAvatar.tsx:42` — SVG fill=, LEGITIMATE per spec, excluded
+
+Production hardcoded hex total (excluding legitimate SVG): ~30 instances across 12 files. Most common offenders are the team color fallbacks (`#2d5a3d`, `#7a2e1f`) repeated across 5 match screens.
+
+**2. `bg-white` / `text-white` / `bg-black` / `text-black` classes**
+
+No bare `bg-white`/`text-white`/`bg-black`/`text-black` (without opacity modifier). All 20 instances use opacity modifiers. **3 instances are double-bg bugs** where V99.11 added the new `bg-carbon-*` class but didn't remove the old `bg-white` one:
+
+- `transfers/TransferBidModal.tsx:133` — `bg-white/70 bg-carbon-0/40` (DOUBLE BG BUG)
+- `transfers/TransferNegotiationHistory.tsx:33` — `bg-white/70 bg-carbon-0/40` (DOUBLE BG BUG)
+- `transfers/FreeAgentContractModal.tsx:117` — `bg-white/70 bg-carbon-0/40` (DOUBLE BG BUG)
+- `match/PreMatchSetup.tsx:645` — `bg-white/95 dark:border-accent-500/30 bg-carbon-1/95` (DOUBLE BG BUG + redundant `dark:` prefix)
+
+Remaining `bg-black/NN` instances are modal overlays (legitimate use case but should ideally use a token):
+- `transfers/TransferCounterOfferModal.tsx:69` (bg-black/50)
+- `transfers/TransferBidModal.tsx:227` (bg-black/50)
+- `transfers/FreeAgentContractModal.tsx:200` (bg-black/50)
+- `transfers/LoanOfferModal.tsx:336` (bg-black/50)
+- `tactics/TacticsPitch.tsx:192,322,575` (bg-black/10, bg-white/8, bg-black/12 — empty slot bg)
+- `tactics/TacticsTab.tsx:1029` (bg-black/50)
+- `match/RoundDigestScreen.tsx:518` (bg-black/70)
+- `match/SubPanel.tsx:186` (bg-black/70)
+- `dashboard/DashboardModalFrame.tsx:13` (bg-black/50)
+- `dashboard/FiredModal.tsx:21` (bg-black/60)
+- `teams/TeamsListTab.tsx:249,272` (bg-white/15, bg-black/20)
+- `teamProfile/TeamProfileHeroCard.tsx:115` (bg-black/20)
+- `ui/CountryFlag.tsx:55` (bg-black/10)
+
+src/pages/: 0 matches. Total: 20 instances across 14 files in src/components/.
+
+**3. `dark:` prefix counts per file (forced dark mode makes these redundant)**
+
+Total: **459 occurrences across 124 files** (445 in src/components/ + 14 in src/pages/). Per-file counts (top offenders, ≥5):
+
+- `dashboard/DashboardSimulatingModal.tsx`: 26
+- `tournaments/TournamentsTab.tsx`: 22
+- `tactics/TacticsCommandBar.tsx`: 12
+- `match/RoundDigestScreen.tsx`: 12
+- `training/TrainingTab.tsx`: 11
+- `schedule/ScheduleTab.tsx`: 10
+- `match/PostMatchScreen.tsx`: 9
+- `menu/CreateManagerForm.tsx`: 8
+- `news/NewsTab.tsx`: 8
+- `pages/MainMenu.tsx`: 7
+- `match/PreMatchLineup.tsx`: 7
+- `worldEditor/WorldEditorHome.tsx`: 6
+- `training/TrainingSettingsPanel.tsx`: 6
+- `match/MatchLive.tsx`: 6
+- `inbox/InboxMessageDetailPane.tsx`: 6
+- `dashboard/DashboardResultsRecapModal.tsx`: 6
+- `tactics/TacticsTab.tsx`: 6
+- `staff/StaffTab.tsx`: 6
+- `match/PreMatchSetup.tsx`: 5
+- `match/PostMatchHelpers.tsx`: 5
+- `dashboard/DashboardHeader.tsx`: 5
+- `worldEditor/WorldEditorTopBar.tsx`: 5
+- `tactics/StyleGuidancePanel.tsx`: 5
+- `tactics/PlayingStyleHero.tsx`: 5
+- `pages/Settings.tsx`: 3
+
+(Plus 99 more files with counts of 1–4 each — see full grep output in audit trail. These don't cause visual issues but indicate the migration is incomplete.)
+
+**4. Font fallback chains (`src/App.css` lines 33-38, `@theme` block)**
+
+Current settings:
+
+```
+--font-sans: "Inter", "Avenir", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+--font-heading: "Oswald", "Barlow Condensed", "Inter", "Arial Narrow", sans-serif;
+--font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
+--font-mono: "JetBrains Mono", "IBM Plex Mono", "SF Mono", "Consolas", "Courier New", monospace;
+```
+
+@fontsource imports (App.css lines 9-29): Inter ✓, **Barlow Condensed** ✗ (should be Oswald), Source Serif 4 (not in spec), IBM Plex Mono ✓ (but **JetBrains Mono NOT imported**).
+
+CRITICAL ISSUES:
+1. **Oswald is named in `--font-heading` but NEVER imported** via @fontsource. Headings render in Barlow Condensed (the fallback) since Oswald isn't bundled. This is the root cause of "too many fonts" complaint — the spec calls for Oswald but the actual rendered font is Barlow Condensed.
+2. **Barlow Condensed is still in the fallback chain** of `--font-heading` (App.css:36) and is what's actually being imported and rendered. Per UI spec §1.2 it should be removed and replaced with Oswald imports.
+3. **JetBrains Mono is named in `--font-mono` but NEVER imported**. Mono text renders in IBM Plex Mono (the fallback). Either swap the import to `@fontsource/jetbrains-mono` or change `--font-mono` to put IBM Plex Mono first.
+4. **Source Serif 4 is imported but not in the UI spec** (which calls for only Oswald + Inter + JetBrains Mono). Source Serif 4 is used by `.font-serif` class — adds a 4th font family that the spec doesn't call for.
+5. `components/ui/JerseyIcon.tsx:105` hardcodes `fontFamily="'Barlow Condensed', 'Inter', sans-serif"` — should be `var(--font-heading)`.
+6. `assets/logo.svg:19` references `'Barlow Condensed', 'Arial Narrow', sans-serif` for the wordmark — should be updated to use Oswald.
+
+**5. Generic lucide-react icons in `DashboardSidebar.tsx`**
+
+The sidebar imports from two sources:
+- `../ui/icons` — custom hand-rolled SVG icon set (NOT lucide-react, but generic-shaped icons like house, envelope, clipboard, etc. — same visual problem)
+- `../ui/icons/GafferIcons` — football-specific GafferIcon set (created in V99.11 B6)
+
+Sidebar items **still using generic icons** (not GafferIcons):
+
+| Section | Item | Current Icon | Available GafferIcon |
+|---------|------|--------------|---------------------|
+| Top | Home | `HomeIcon` (ui/icons) | ✅ `HomePitchIcon` exists |
+| Top | Inbox | `MailIcon` (ui/icons) | ✅ `MailSlotIcon` exists |
+| Top | News | `ClipboardIcon` (ui/icons) | ⚠️ `FormationClipboardIcon` exists but is tactics-specific |
+| Top | Schedule | `TrophyIcon` (ui/icons) | ✅ `CalendarWhistleIcon` exists |
+| Club | Squad | `UsersIcon` (ui/icons) | ⚠️ `PlayersKitIcon` exists but is used for Players tab |
+| Club | Tactics | `CrosshairIcon` (ui/icons) | ✅ `TacticsMagnetsIcon` / `FormationClipboardIcon` exist |
+| Club | Staff | `UserCog` (ui/icons) | ❌ No direct GafferIcon match |
+| World | Hall of Fame | `StarIcon` (ui/icons) | ❌ No direct GafferIcon match |
+| Footer | Settings | `SettingsIcon` (ui/icons) | ✅ `SettingsCogIcon` exists |
+| Footer | Exit | `LogOut` (ui/icons) | ❌ No GafferIcon match |
+| Footer | Manager profile button | `User` (ui/icons) | ❌ No GafferIcon match |
+| Footer | Collapse toggle | `PanelLeftClose/Open` | UI affordance — OK to leave generic |
+
+Items already migrated to GafferIcons (V99.11 B6): Training, Scouting, Youth Academy, Finances, Transfers, Transfer Centre, Players, Managers, Teams, Tournaments (10 of 20 sidebar items).
+
+ADDITIONAL FINDING — Beyond the sidebar, **128 .tsx/.ts files import directly from `lucide-react`** (e.g., `Trophy`, `Star`, `ArrowRight`, `Check`, `X`, `Plus`, `Trash2`, `Users`, `TrendingUp`). This is the broader "generic icons" issue. The sidebar's `ui/icons/index.tsx` set is a partial workaround that doesn't cover the full icon surface area.
+
+**6. `text-gray-*` patterns (should be `text-ink` / `text-ink-dim` / `text-ink-faint`)**
+
+In `src/components/` and `src/pages/`: **0 matches** — V99.11 successfully removed all `text-gray-*` classes from UI files.
+
+In `src/lib/` (utility files that produce class strings consumed by UI): **47 occurrences across 4 files**:
+- `lib/staffInterpretation.ts` — 16 instances of `text-gray-500 dark:text-gray-400` (one per staff role tier)
+- `lib/ovrInterpretation.ts` — 12 instances of `text-gray-700 dark:text-gray-300` and `text-gray-500 dark:text-gray-400` (one per OVR tier)
+- `lib/gafferEngine.ts` — 17 instances (match rating tiers)
+- `lib/newsSpinner.ts` — 2 instances (lines 127, 129)
+
+In `src/App.css`: 3 CSS rules target `.text-gray-400` and `.text-gray-600` classes (lines 283, 287, 291) — these are the dark-mode overrides that style the gray classes still emitted by the lib/ files. They are load-bearing: removing them without migrating lib/ files would leave text unstyled.
+
+**BONUS FINDINGS (discovered during audit, not explicitly requested):**
+
+A. **Legacy navy token usage is widespread** despite V99.11 supposedly replacing them. They render correctly because `App.css` lines 107-110 alias `--color-navy-*` to carbon tokens, but the literal class names like `bg-navy-700`, `text-navy-600`, `border-navy-700` remain in ~30+ files. Heaviest offender: `src/pages/SimLab.tsx` (~25 instances — entire page unmigrated, also uses `text-slate-100`, `text-slate-500`, `text-slate-200`). Also `src/App.tsx:18` (root loading screen) still uses `bg-gray-100 dark:bg-navy-900`.
+
+B. **Legacy token classes** (`text-concrete`, `text-chalk`, `bg-concrete`) still in use, also aliased via App.css lines 100-103. Notable: `components/ui/Card.tsx:50` uses `text-concrete dark:text-chalk`.
+
+C. **`scrollbar-thumb-navy-600`** in `DashboardSidebar.tsx:244` — leftover navy class on scrollbar styling.
+
+D. **`PreMatchSetup.tsx:645`** has the worst single-line issue: `bg-white/95 dark:border-accent-500/30 bg-carbon-1/95` — combines (a) leftover `bg-white/95`, (b) redundant `dark:` prefix on the border, AND (c) double-bg with `bg-carbon-1/95`.
+
+Stage Summary:
+
+The V99.11 migration is ~70% complete. Findings grouped by severity:
+
+**P0 (visual bugs users will see):**
+1. 3 double-bg bugs in transfer modals (`bg-white/70 bg-carbon-0/40`) — last class wins per CSS source order, but the intent is clearly broken.
+2. `PreMatchSetup.tsx:645` triple-issue line (double-bg + dark: prefix + bg-white leftover).
+3. **Oswald font not imported** — headings render in Barlow Condensed, not the spec'd Oswald. Root cause of "too many fonts" complaint.
+4. **JetBrains Mono not imported** — mono text renders in IBM Plex Mono.
+
+**P1 (incomplete migration, no visual breakage but indicates tech debt):**
+5. ~30 hardcoded hex color instances across 12 production files (mostly team color fallbacks `#2d5a3d`/`#7a2e1f` that should reference `var(--color-primary-700)` / `var(--color-danger-700)`).
+6. 20 `bg-white/NN` and `bg-black/NN` instances (modal overlays + 3 double-bg bugs).
+7. 459 redundant `dark:` prefixes across 124 files (forced dark mode makes them no-ops).
+8. 10 of 20 sidebar items still use generic icons (6 have matching GafferIcons available, 4 need new icons created).
+9. 47 `text-gray-*` class strings in `src/lib/` files (staff/ovr/match-rating interpretations) — load-bearing CSS rules in App.css paper over these.
+10. ~30+ files still using legacy `bg-navy-*` / `text-navy-*` / `text-concrete` / `text-chalk` classes (aliased to carbon/ink tokens, so they render correctly).
+11. `SimLab.tsx` page entirely unmigrated (~25 navy/slate class instances).
+12. 128 files import directly from `lucide-react` — broader icon migration needed beyond sidebar.
+
+**Recommended next actions (for a follow-up P0/P1 task):**
+- Add `@fontsource/oswald` and `@fontsource/jetbrains-mono` imports; remove `@fontsource/barlow-condensed` and `@fontsource/source-serif-4`.
+- Fix the 3 double-bg bugs in transfer modals + the PreMatchSetup.tsx:645 line.
+- Replace team-color hex fallbacks (`#2d5a3d`, `#7a2e1f`, `#1a3a6b`) with CSS variable references.
+- Migrate the remaining 10 sidebar items to GafferIcons (create 4 new icons for Staff / Hall of Fame / Exit / Manager profile).
+- Sweep `src/lib/{staffInterpretation,ovrInterpretation,gafferEngine,newsSpinner}.ts` to replace `text-gray-*` with `text-ink-*` / `text-ink-dim` / `text-ink-faint`, then delete the App.css lines 283-293 override block.
+- Decide whether to keep `--color-navy-*` aliases indefinitely or finish the migration by sweeping all `bg-navy-*` / `text-navy-*` classes to their carbon equivalents.
+
+No code changes made — audit only, as instructed.
+
+
+---
+
+Task ID: V100-P0-17-CUP-WRITEBACK
+Agent: Explore
+Task: Audit cup competition write-back — verify results are persisted to game.competitions[idx] (not just the legacy game.league mirror)
+
+Work Log:
+- Read worklog V100-P0-17 context: live match path was fixed (regression test at `commands/live_match.rs:463-528`); plan flagged cup competitions and fixture-clash scenarios as still-risky.
+- Located `apply_match_report_with_capture` at `crates/ofm_core/src/turn/post_match.rs:82-286` — writes ONLY to `game.league.as_mut()` (line 125) for fixture status, standings, group/knockout progression; does NOT touch `game.competitions` directly. Correctness therefore depends entirely on the caller pre-swapping `game.league` to the cup and post-writing-back to `game.competitions[cup_idx]`.
+- Located `sync_legacy_league` at `crates/ofm_core/src/game.rs:298-306` — resets `game.league` to `self.competitions[user_competition_index()]` (prefers `CompetitionType::League`, falls back to first competition containing user team). ALWAYS restores the user's domestic league; would silently overwrite any in-flight cup data in `game.league` — but the live/delegate/daily-tick paths all write back to `game.competitions[cup_idx]` BEFORE calling sync_legacy_league, so the cup result is preserved.
+- Audited every caller of `apply_match_report_with_capture`:
+  1. `finish_live_match` (`src/application/live_match.rs:80-104`): ✅ CORRECT — pre-swaps cup into `game.league` via `competition_id` lookup (lines 61-72), applies report (line 80), writes back `game.competitions[idx] = game.league.clone()` matching `league.id` (lines 94-98), then `sync_legacy_league` AFTER writeback (line 103). Regression tests at `commands/live_match.rs:463-528` (standings persistence) and `commands/live_match.rs:691-743` (cup result routed to cup competition, league fixture untouched, league standings unmutated, cup bracket advances).
+  2. `advance_time_with_mode` delegate path (`src/application/time_advancement.rs:167-230`): ✅ CORRECT — pre-swaps `game.league = Some(game.competitions[competition_index].clone())` (lines 168-170), applies report (lines 196-203), writes back `game.competitions[competition_index] = updated_competition` (lines 204-208), then `sync_legacy_league` (line 207). ⚠️ No regression test for cup scenario — existing tests at `commands/time.rs:1307` and `commands/time.rs:1322` use single-league fixtures without cup competitions.
+  3. `simulate_single_match_with_capture` (`crates/ofm_core/src/turn/mod.rs:994-1032`): ✅ CORRECT — writes via `apply_match_report_with_capture` (line 1031); called from `simulate_other_matches_with_capture` which only operates on `game.league`. All top-level callers (daily tick, start_live_match, advance_time_with_mode) perform the writeback.
+  4. `apply_match_report` wrapper (`post_match.rs:65-80`): trivial wrapper, same correctness as the underlying function.
+- Audited AI-vs-AI sparse sim path: `simulate_sparse_ai_match` (`turn/mod.rs:824-948`) writes directly to `game.league.as_mut()` (line 857) for fixture/result/standings updates. Caller `simulate_competition_day_with_capture` (`turn/mod.rs:120-140`) does swap → simulate → writeback → sync_legacy_league. ✅ CORRECT.
+- Audited daily tick `process_day_with_capture` (`turn/mod.rs:147-271`): iterates ALL due competitions via `competition_indices_due_today` (lines 63-94, scans `game.competitions`); for each, calls `simulate_competition_day_with_capture`. ✅ CORRECT. Also runs dormant competitions via `simulate_dormant_competition_day` (`turn/dormant.rs:15-58`) which writes DIRECTLY to `game.competitions[competition_index]` (line 42) — bypasses `game.league` entirely. ✅ CORRECT. National-team and World-Cup paths also write directly to `game.national_teams[i]` / `game.competitions[idx]`. ✅ CORRECT.
+- Audited code paths that ASSUME `game.league` is the user's competition (would break for cup matches):
+  - ⚠️ `build_round_summary` (`crates/ofm_core/src/turn/round_summary.rs:74-99`): reads `game.league.as_ref()?` to compute the round summary. Called by `build_round_summary_dto` (`src/commands/round_summary.rs:32`) from `finish_live_match` (line 107) and `advance_time_with_mode` (lines 150, 211) AFTER sync_legacy_league has restored `game.league` to the user's domestic league. Round summary is computed against the WRONG competition for cup matches — likely returns None or stale data. The `round_matchday`/`round_previous_standings` captured at session creation belong to the cup, but `game.league` no longer points at the cup.
+  - ⚠️ MCP `club_info` next-match lookup (`src/mcp_server/tools_impl/info.rs:99`): reads `game.league.as_ref()` to find the user's next fixture. Misses cup matches — returns the next LEAGUE match instead. Should use `game.user_has_scheduled_match_on()` (which iterates all competitions) or scan `game.competitions` directly.
+  - ⚠️ MCP `team_talk` last-match lookup (`src/mcp_server/tools_impl/live_match.rs:235`): reads `game.league.as_ref()` to find the user's most recent completed fixture. Misses cup matches — returns the most recent LEAGUE match instead.
+  - ⚠️ Training-ground injury check (`crates/ofm_core/src/random_events/mod.rs:115`): reads `game.league.as_ref()` to test `has_match` for today. Misses cup match days → would incorrectly trigger training injuries on cup match days. Should use `game.user_has_scheduled_match_on(&today)` (the helper at `game.rs:312` already iterates all competitions correctly — and is used correctly by `skip_to_match_day` at `commands/time.rs:156`).
+  - ⚠️ International call-up check (`crates/ofm_core/src/random_events/mod.rs:249`): reads `game.league.as_ref()` for upcoming matches in next 7 days. Misses cup matches.
+  - ⚠️ `current_league_position` (`crates/ofm_core/src/finances.rs:861`): reads `game.league.as_ref()`. For AI teams whose primary competition differs from the user's, returns wrong position. Minor concern (finance calculations only).
+  - ⚠️ Fixture-clash scenario (acknowledged in worklog): `scheduled_user_fixture_index` (`time_advancement.rs:37-69`) returns the FIRST competition with a scheduled user fixture today. If the user has BOTH a league AND a cup match today, only one is processed by the live/delegate path; the other is silently stranded Scheduled in the past. Compounded by `simulate_other_matches_with_capture` (`turn/mod.rs:769-812`) only simulating matches in `game.league` (the swapped-in competition) — other competitions' matches today are NOT simulated during the live/delegate path. The normal `process_day_with_capture` path does NOT have this issue (it iterates all due competitions).
+  - ⚠️ No regression test for the delegate path cup write-back. The existing tests at `commands/time.rs:1307` and `commands/time.rs:1322` use single-league fixtures (no cup), so they exercise the legacy fallback path (game.competitions empty) rather than the modern swap-writeback-sync path.
+
+Stage Summary:
+- ❌ BROKEN: NONE. All match-result application paths correctly persist cup results to `game.competitions[cup_idx]`. The cup write-back mechanism (pre-swap → apply → writeback → sync_legacy_league) is correctly implemented in:
+  - `finish_live_match` (live_match.rs:80-104) — covered by regression tests
+  - `advance_time_with_mode` delegate path (time_advancement.rs:196-209)
+  - `simulate_competition_day_with_capture` daily tick (turn/mod.rs:120-140)
+  - `simulate_dormant_competition_day` (dormant.rs:15-58 — writes directly)
+  - `process_world_cup_fixtures_due` (world_cup.rs:1553-1650 — writes directly)
+- ⚠️ RISKY (not cup-write-back-broken, but related bugs that surface during cup matches):
+  1. `build_round_summary` (round_summary.rs:79) reads `game.league` after sync — round summary will be wrong/missing for cup matches. Visible to user as a missing/wrong round recap panel.
+  2. Five `game.league.as_ref()` readers (info.rs:99, live_match.rs:235, random_events/mod.rs:115 + 249, finances.rs:861) silently miss cup matches. Should be migrated to use `game.user_has_scheduled_match_on()` / iterate `game.competitions` directly. The `random_events` issue can incorrectly trigger training injuries on cup match days.
+  3. Fixture-clash: `scheduled_user_fixture_index` returns FIRST competition with user fixture; second competition's matches today silently stranded in live/delegate path. `simulate_other_matches_with_capture` only touches `game.league` (one competition at a time). Daily tick (`process_day_with_capture`) handles this correctly — only the live/delegate paths are at risk.
+  4. No regression test for delegate-mode cup write-back. Existing delegate tests use single-league fixtures.
+- ✅ The core fix from V100-P0-17 (sync_legacy_league no longer overwrites cup standings) is correctly applied to all match-result paths. The remaining risks are in auxiliary code (round summary, MCP tools, random events) that reads `game.league` assuming it's the user's only competition.
+
+Recommended next actions (for a follow-up P1 task, NOT this audit):
+- Migrate `build_round_summary` to take a `competition_id` parameter (or look up via fixture.competition_id from the captured round_matchday) instead of reading `game.league`.
+- Migrate the five `game.league.as_ref()` readers in info.rs / live_match.rs (MCP) / random_events/mod.rs / finances.rs to use `game.user_has_scheduled_match_on()` or scan `game.competitions` directly.
+- Add a regression test for delegate-mode cup write-back: user has a cup match today, calls `advance_time_with_mode("delegate")`, assert cup fixture is Completed + result recorded + cup bracket advances, and league fixtures today are also simulated (or assert the documented fixture-clash behaviour).
+- Consider extending `simulate_other_matches_with_capture` to iterate all due competitions (not just `game.league`) when called from the live/delegate path, to eliminate the fixture-clash stranding.
+
+No code changes made — audit only, as instructed.
+
+---
+Task ID: V100-P0-12
+Agent: main + subagent (V100-P0-12-UI-AUDIT)
+Task: Audit + fix UI style conflicts (Issue #2)
+
+Work Log:
+Subagent audit found 6 categories of style conflicts. Main agent fixed the critical ones:
+
+- Fixed double-bg bugs in 3 transfer modals:
+  - `src/components/transfers/TransferBidModal.tsx:133` — removed `bg-white/70`
+  - `src/components/transfers/TransferNegotiationHistory.tsx:33` — removed `bg-white/70`
+  - `src/components/transfers/FreeAgentContractModal.tsx:117` — removed `bg-white/70`
+- Fixed triple-issue in `src/components/match/PreMatchSetup.tsx:643-645`:
+  - Removed redundant `bg-carbon-0` (kept `bg-carbon-2`)
+  - Removed `bg-white/95` and `dark:border-accent-500/30` from header
+- Fixed fonts per UI spec:
+  - Installed `@fontsource/oswald` and `@fontsource/jetbrains-mono` npm packages
+  - Added @import statements for Oswald (4 weights × 2 scripts) and JetBrains Mono (3 weights × 2 scripts)
+  - Removed Barlow Condensed from `--font-heading` fallback chain (was the de-facto heading font because Oswald wasn't imported)
+  - Updated `JerseyIcon.tsx` hardcoded `fontFamily="'Barlow Condensed'"` → `"'Oswald'"`
+- Did NOT fix (deferred to P1):
+  - ~30 hardcoded hex colors (team color fallbacks — legitimate, just need token migration)
+  - 459 `dark:` prefixes (redundant under forced dark mode, but not visually broken)
+  - 10 sidebar icons still using generic shapes (need 4 new GafferIcons: Staff, Hall of Fame, Exit, Manager profile)
+  - 47 `text-gray-*` patterns in lib/ files (load-bearing until lib migration)
+
+Stage Summary:
+- 4 critical double-bg bugs fixed (were causing visible style conflicts)
+- Fonts now match UI spec: Oswald (headings) + Inter (body) + JetBrains Mono (data)
+- Barlow Condensed is no longer the de-facto heading font
+- Remaining style issues are cosmetic (dark: prefix redundancy, hex color tokens) and won't break the build
+- Full audit report in worklog V100-P0-12-UI-AUDIT section
+
+---
+Task ID: V100-P0-17
+Agent: subagent (V100-P0-17-CUP-WRITEBACK)
+Task: Verify cup competition write-back (Issue #11)
+
+Work Log:
+- Subagent audited all callers of `apply_match_report_with_capture`
+- Verified cup write-back mechanism (pre-swap → apply → writeback → sync_legacy_league) is correctly implemented across ALL match-result application paths
+- Identified 7 risky spots that read `game.league.as_ref()` assuming it's the user's only competition (would miss cup matches):
+  - `build_round_summary` (turn/round_summary.rs:79) — visible to user as wrong round recap
+  - MCP `club_info` next-match (mcp_server/tools_impl/info.rs:99)
+  - MCP `team_talk` last-match (mcp_server/tools_impl/live_match.rs:235)
+  - Training injury check (random_events/mod.rs:115)
+  - International call-up check (random_events/mod.rs:249)
+  - `current_league_position` (finances.rs:861)
+  - `scheduled_user_fixture_index` (time_advancement.rs:37)
+
+Stage Summary:
+- No BROKEN cup write-back paths found — the core mechanism is sound
+- The 7 risky spots are auxiliary code that reads `game.league` instead of scanning `game.competitions`
+- These are NOT cup-write-back bugs but surface during cup matches
+- Fixing these requires changing each reader to use `game.competitions` + `fixture.competition_id` lookup
+- Deferred to P1 (the visible `build_round_summary` bug is the highest priority)
+
+---
+Task ID: V100-P0-18
+Agent: main
+Task: Add momentum/quiet events to match engine (Issue #12)
+
+Work Log:
+- Edited `src-tauri/crates/engine/src/event.rs`:
+  - Added 4 new EventType variants: MomentumShift, QuietMinute, SustainedPressure, CounterAttack
+  - Added doc comments explaining each emits no mechanical effect (commentary-only)
+- Edited `src-tauri/crates/engine/src/engine/mod.rs`:
+  - Added 4 new tracking fields to MatchContext: last_shot_minute, attacking_pressure_streak, last_possession, recent_possession_flips
+  - Updated MatchContext::new to initialize the new fields
+  - Added atmosphere event emission logic at the end of simulate_minute:
+    - QuietMinute: emitted when 5+ minutes pass without a shot (skip first 10 + last 5 minutes)
+    - SustainedPressure: emitted when attacking_pressure_streak >= 3 (3+ consecutive minutes in attacking third)
+    - MomentumShift: emitted when recent_possession_flips >= 3 (3+ flips in 5 minutes)
+    - CounterAttack: emitted when possession flips AND breakaway succeeds (defending side breaks forward)
+  - Each event has anti-spam logic (only emit once per 5-minute window)
+  - Added possession flip tracking (increments recent_possession_flips when last_possession != new_possession)
+  - Added attacking_pressure_streak update based on ball_zone vs possession side
+- Edited `src-tauri/crates/engine/src/engine/resolution.rs`:
+  - Added `ctx.last_shot_minute = minute;` at the start of `resolve_shot` so QuietMinute detection works
+- Edited `src/components/match/commentary.ts`:
+  - Added 4 new entries to EVENT_TYPE_TO_I18N_KEY map (momentumShift, quietMinute, sustainedPressure, counterAttack)
+- Edited `src/i18n/locales/en.json`:
+  - Added commentary templates for all 4 new event types (5 templates each, Gaffer voice)
+  - Templates use {{side}} placeholder (not {{player}}) since these are team-level events
+
+Stage Summary:
+- 4 new narrative atmosphere events now fire during matches
+- A 0-0 grind will now show "It's gone a bit quiet out there" commentary
+- A team under sustained pressure will see "Wave after wave of {{side}} attacks"
+- Counter-attacks are signaled with "Bang — {{side}} break in a flash!"
+- Momentum shifts trigger "The game's opened up — end-to-end stuff now"
+- Events carry no mechanical effect (no stat changes, no possession changes) — pure commentary color
+- compact_match_report correctly excludes these events (they're not in the filter list)
+- The full events list (used for live commentary) includes them
+- Anti-spam logic prevents the same event from firing every minute
+

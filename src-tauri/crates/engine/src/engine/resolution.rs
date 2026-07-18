@@ -404,6 +404,10 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     let def_side = att_side.opposite();
     let zone = Zone::attacking_box(att_side);
 
+    // V100 P0-18 (Issue #12): Track this as the last shot minute. Used by
+    // simulate_minute to detect QuietMinute (5+ minutes without a shot).
+    ctx.last_shot_minute = minute;
+
     // Box foul rate fixed at 3.6% per shot — independent of foul_probability (which tunes outfield fouls)
     if rng.random_range(0.0..1.0f64) < 0.036 {
         let fouler = snap_player(ctx, def_side, Position::Defender, rng);

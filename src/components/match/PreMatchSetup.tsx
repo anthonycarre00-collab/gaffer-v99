@@ -640,9 +640,9 @@ export default function PreMatchSetup({
  ];
 
  return (
- <div className="stadium-bg flex h-screen flex-col bg-carbon-2 bg-carbon-0 text-ink transition-colors duration-300">
+ <div className="stadium-bg flex h-screen flex-col bg-carbon-2 text-ink transition-colors duration-300">
  {/* Header */}
- <header className="gaffer-header-gradient shrink-0 border-b border-accent-500/20 bg-white/95 dark:border-accent-500/30 bg-carbon-1/95 transition-colors duration-300 backdrop-blur-sm">
+ <header className="gaffer-header-gradient shrink-0 border-b border-accent-500/20 bg-carbon-1/95 transition-colors duration-300 backdrop-blur-sm">
  <div className="flex items-center gap-6 px-6 pt-5 pb-4">
  {/* Home team */}
  <div className="flex flex-1 items-center gap-4 min-w-0">

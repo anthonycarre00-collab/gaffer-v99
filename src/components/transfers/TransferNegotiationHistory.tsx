@@ -30,7 +30,7 @@ export default function TransferNegotiationHistory({
  const clubFee = offer.suggested_counter_fee ?? offer.fee;
 
  return (
- <div className="rounded border border-slate-line bg-white/70 bg-carbon-0/40 p-3 mb-3 space-y-2">
+ <div className="rounded border border-slate-line bg-carbon-0/40 p-3 mb-3 space-y-2">
  <p className="text-[11px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("transfers.negotiationHistory")}
  </p>

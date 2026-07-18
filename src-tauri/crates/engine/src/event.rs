@@ -76,6 +76,22 @@ pub enum EventType {
     Injury,
     GoalKick,
     Substitution,
+
+    // --- V100 P0-18 (Issue #12): Narrative atmosphere events ---
+    // These events carry no mechanical effect (no stat changes, no possession
+    // changes). They exist purely to give the commentary engine signals to
+    // narrate the ebb and flow of a match — momentum shifts, quiet periods,
+    // sustained pressure, counter-attacks. Without them, a 0-0 grind feels
+    // the same as a 4-3 thriller at the event level.
+    /// Emitted when possession flips 3+ times in 5 minutes (game is opening up).
+    MomentumShift,
+    /// Emitted when 5+ minutes pass without a shot (game has gone quiet).
+    QuietMinute,
+    /// Emitted when one side has 3+ consecutive attacking actions in the box.
+    SustainedPressure,
+    /// Emitted when a side wins the ball deep in their own half and breaks
+    /// forward within 2 minutes (counter-attack signal).
+    CounterAttack,
 }
 
 /// Truthful, engine-derived qualifiers used to colour commentary.

@@ -2729,6 +2729,34 @@
         "{{player}} skied it! That's a shocking miss.",
         "Penalty saved! {{player}} can't believe it."
       ],
+      "momentumShift": [
+        "The game's opened up — end-to-end stuff now.",
+        "Momentum's swinging here — both sides going for it.",
+        "This is a proper basketball match now — nobody's sitting deep.",
+        "The tempo's up — this could go either way.",
+        "Five minutes of madness — the crowd's on their feet."
+      ],
+      "quietMinute": [
+        "It's gone a bit quiet out there — midfield stalemate.",
+        "Neither side's offering much — the crowd's murmuring.",
+        "The game's settled into a rut — passing sideways, nowhere to go.",
+        "A lull in play — both teams catching their breath.",
+        "Not much happening — the defences are on top."
+      ],
+      "sustainedPressure": [
+        "It's all {{side}} right now — wave after wave of pressure.",
+        "{{side}} are camped in the final third — the defence is under the cosh.",
+        "Relentless pressure from {{side}} — it feels like a goal's coming.",
+        "{{side}} won't let up — the keeper's up against it.",
+        "Wave after wave of {{side}} attacks — it's one-way traffic."
+      ],
+      "counterAttack": [
+        "Bang — {{side}} break in a flash! Three on two!",
+        "Lightning counter from {{side}} — the defence is caught cold!",
+        "{{side}} are away! The whole pitch opened up!",
+        "Against the run of play — {{side}} spring the trap!",
+        "Instant transition — {{side}} turn defence into attack in seconds!"
+      ],
       "headerWon": [
         "{{player}} wins the header — beats his man in the air!",
         "Powerful header from {{player}} — the defender couldn't compete.",

@@ -64,6 +64,11 @@ const EVENT_TYPE_TO_I18N_KEY: Record<string, string> = {
  // Penalty shootout
  ShootoutGoal: "shootoutGoal",
  ShootoutMiss: "shootoutMiss",
+ // V100 P0-18 (Issue #12): Narrative atmosphere events
+ MomentumShift: "momentumShift",
+ QuietMinute: "quietMinute",
+ SustainedPressure: "sustainedPressure",
+ CounterAttack: "counterAttack",
 };
 
 /** Event types that get the full headline + prose treatment. */

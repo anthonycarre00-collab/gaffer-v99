@@ -14,10 +14,24 @@
 @import "@fontsource/inter/latin-ext-500.css";
 @import "@fontsource/inter/latin-ext-600.css";
 @import "@fontsource/inter/latin-ext-700.css";
-@import "@fontsource/barlow-condensed/latin-600.css";
-@import "@fontsource/barlow-condensed/latin-700.css";
-@import "@fontsource/barlow-condensed/latin-ext-600.css";
-@import "@fontsource/barlow-condensed/latin-ext-700.css";
+/* V100 P0-12 (Issue #2): Replace Barlow Condensed with Oswald per UI spec.
+   Oswald is the proper Gaffer display font; Barlow Condensed was a fallback
+   that became the de-facto heading font because Oswald wasn't imported. */
+@import "@fontsource/oswald/latin-400.css";
+@import "@fontsource/oswald/latin-500.css";
+@import "@fontsource/oswald/latin-600.css";
+@import "@fontsource/oswald/latin-700.css";
+@import "@fontsource/oswald/latin-ext-400.css";
+@import "@fontsource/oswald/latin-ext-500.css";
+@import "@fontsource/oswald/latin-ext-600.css";
+@import "@fontsource/oswald/latin-ext-700.css";
+/* V100 P0-12 (Issue #2): Replace IBM Plex Mono with JetBrains Mono per UI spec. */
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+@import "@fontsource/jetbrains-mono/latin-600.css";
+@import "@fontsource/jetbrains-mono/latin-ext-400.css";
+@import "@fontsource/jetbrains-mono/latin-ext-500.css";
+@import "@fontsource/jetbrains-mono/latin-ext-600.css";
 @import "@fontsource/source-serif-4/latin-400.css";
 @import "@fontsource/source-serif-4/latin-400-italic.css";
 @import "@fontsource/source-serif-4/latin-600.css";
@@ -33,7 +47,9 @@
 @theme {
   /* ===== Typography (V99.11 B1: per UI spec §1.2) ===== */
   --font-sans: "Inter", "Avenir", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-  --font-heading: "Oswald", "Barlow Condensed", "Inter", "Arial Narrow", sans-serif;
+  /* V100 P0-12 (Issue #2): Remove Barlow Condensed from fallback chain now
+     that Oswald is properly imported via @fontsource. */
+  --font-heading: "Oswald", "Inter", "Arial Narrow", sans-serif;
   --font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", "SF Mono", "Consolas", "Courier New", monospace;
 
