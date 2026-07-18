@@ -45,7 +45,7 @@ export function CardHeader({ children, action, className = "" }: CardHeaderProps
  >
  <div className="flex items-center gap-2">
  {/* V99.11: Brass marker bar — 3×11px brass rectangle before every
-     card title (UI spec §4 signature motif) */}
+   card title (UI spec §4 signature motif) */}
  <span className="inline-block h-[11px] w-[3px] bg-accent-500 shrink-0" />
  <h3 className="text-xs font-heading font-bold uppercase tracking-[0.09em] text-concrete dark:text-chalk">
  {children}

@@ -293,7 +293,7 @@ export default function DashboardSimulatingModal({
  {digestEntries && digestEntries.length === 0 && !isRunning && !stopReason && (
  <div className="space-y-3">
  {/* V99.1: Instead of showing "Nothing to show", display useful
-     content — upcoming fixtures, recent results, latest news. */}
+   content — upcoming fixtures, recent results, latest news. */}
  <p className="text-xs text-ink-faint italic text-center py-2">
  {t("dashboard.simulating")}
  </p>

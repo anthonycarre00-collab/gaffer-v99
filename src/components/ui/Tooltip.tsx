@@ -6,12 +6,12 @@
  * elements that need more context.
  *
  * Usage:
- *   <Tooltip text="The gaffer's explanation of what this does">
- *     <button>...</button>
- *   </Tooltip>
+ *  <Tooltip text="The gaffer's explanation of what this does">
+ *   <button>...</button>
+ *  </Tooltip>
  *
  * Or for simple cases, just use the title attribute:
- *   <button title="The gaffer's explanation">...</button>
+ *  <button title="The gaffer's explanation">...</button>
  */
 
 import { useState, type ReactNode } from "react";

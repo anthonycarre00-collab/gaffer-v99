@@ -367,11 +367,11 @@ export default function PressConference({
  };
 
  /**
-  * Delegate the press conference to the assistant manager — picks the
-  * most boring/safe responses for every question and submits. Slight
-  * morale cost compared to doing it yourself, but saves the manager
-  * from sitting through the same questions every week.
-  */
+ * Delegate the press conference to the assistant manager — picks the
+ * most boring/safe responses for every question and submits. Slight
+ * morale cost compared to doing it yourself, but saves the manager
+ * from sitting through the same questions every week.
+ */
  const handleDelegate = async () => {
  setSubmitting(true);
  try {

@@ -312,11 +312,11 @@ export default function Dashboard(): JSX.Element {
  }, [markClean]);
 
  /**
-  * Save As — prompt for a name, create a new save slot, switch to it.
-  * The previous save remains intact on disk. Uses Tauri's dialog ask()
-  * for the name input rather than a custom modal — simpler and matches
-  * the platform's native feel.
-  */
+ * Save As — prompt for a name, create a new save slot, switch to it.
+ * The previous save remains intact on disk. Uses Tauri's dialog ask()
+ * for the name input rather than a custom modal — simpler and matches
+ * the platform's native feel.
+ */
  const handleSaveAs = useCallback(async () => {
  // Use a simple prompt — Tauri's ask() is yes/no, so we use the
  // browser's window.prompt as a cross-platform fallback. Tauri

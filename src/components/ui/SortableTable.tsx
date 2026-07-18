@@ -4,19 +4,19 @@
  * comparator you can pass to Array.prototype.sort.
  *
  * Usage:
- *   const { sortKey, sortDir, toggleSort, sortedRows } = useSortableTable(
- *     rows,
- *     { initialKey: 'name', initialDir: 'asc' }
- *   );
+ *  const { sortKey, sortDir, toggleSort, sortedRows } = useSortableTable(
+ *   rows,
+ *   { initialKey: 'name', initialDir: 'asc' }
+ *  );
  *
  * Then in your table header:
- *   <SortableHeader
- *     label="Player"
- *     columnKey="name"
- *     sortKey={sortKey}
- *     sortDir={sortDir}
- *     onSort={toggleSort}
- *   />
+ *  <SortableHeader
+ *   label="Player"
+ *   columnKey="name"
+ *   sortKey={sortKey}
+ *   sortDir={sortDir}
+ *   onSort={toggleSort}
+ *  />
  *
  * The hook attempts to compare values numerically when both sides parse as
  * numbers, otherwise falls back to string comparison (case-insensitive).

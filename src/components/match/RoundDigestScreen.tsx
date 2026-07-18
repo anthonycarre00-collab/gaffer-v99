@@ -538,7 +538,7 @@ export default function RoundDigestScreen({
  ref={modalCloseRef}
  type="button"
  onClick={() => setSelectedOtherFixtureId(null)}
- className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-ink-faint hover:bg-carbon-2 hover:text-ink-faint dark:hover:bg-navy-800 hover:text-ink transition-colors"
+ className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-ink-faint hover:bg-carbon-2 hover:text-ink-faint hover:text-ink transition-colors"
  >
  {t("common.close")}
  </button>

@@ -407,7 +407,7 @@ export default function Settings() {
  </button>
  <button
  onClick={() => setConfirmClear(false)}
- className="px-4 py-2 rounded bg-carbon-3 text-ink-dim text-sm font-heading font-bold uppercase tracking-wider hover:bg-carbon-3 dark:hover:bg-navy-500 transition-colors"
+ className="px-4 py-2 rounded bg-carbon-3 text-ink-dim text-sm font-heading font-bold uppercase tracking-wider hover:bg-carbon-3 transition-colors"
  >
  {t("common.cancel")}
  </button>

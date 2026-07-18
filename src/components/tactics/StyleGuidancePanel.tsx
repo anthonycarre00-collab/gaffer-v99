@@ -12,9 +12,9 @@ import {
  * StyleGuidancePanel — Gaffer-voice guidance for the selected playing style.
  *
  * Renders in the left column of the "Style" sub-tab. Shows:
- *  - What the style asks of the players (in plain English)
- *  - Which phase-blueprint settings are aligned with the style (✓)
- *  - Which phase-blueprint settings are mismatched (⚠)
+ * - What the style asks of the players (in plain English)
+ * - Which phase-blueprint settings are aligned with the style (✓)
+ * - Which phase-blueprint settings are mismatched (⚠)
  *
  * Helps the manager understand how their phase blueprint settings either
  * complement or fight against the chosen playing style.

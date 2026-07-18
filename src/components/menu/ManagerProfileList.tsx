@@ -69,7 +69,7 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  <button
  type="button"
  onClick={() => setConfirmDeleteId(null)}
- className="px-2.5 py-1 bg-carbon-3 hover:bg-carbon-3 bg-carbon-1 dark:hover:bg-navy-900 text-ink-dim text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="px-2.5 py-1 bg-carbon-3 hover:bg-carbon-3 bg-carbon-1 text-ink-dim text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t("menu.cancel")}
  </button>

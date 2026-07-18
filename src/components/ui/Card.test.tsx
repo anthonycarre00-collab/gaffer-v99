@@ -3,109 +3,109 @@ import { render, screen } from "@testing-library/react";
 import { Card, CardHeader, CardBody } from "./Card";
 
 describe("Card", () => {
-  it("renders children", () => {
-    render(<Card><p>Card content</p></Card>);
-    expect(screen.getByText("Card content")).toBeInTheDocument();
-  });
+ it("renders children", () => {
+  render(<Card><p>Card content</p></Card>);
+  expect(screen.getByText("Card content")).toBeInTheDocument();
+ });
 
-  it("renders as a div", () => {
-    const { container } = render(<Card>Content</Card>);
-    expect(container.firstChild?.nodeName).toBe("DIV");
-  });
+ it("renders as a div", () => {
+  const { container } = render(<Card>Content</Card>);
+  expect(container.firstChild?.nodeName).toBe("DIV");
+ });
 
-  it("applies 'none' accent by default (no top border)", () => {
-    const { container } = render(<Card>Default</Card>);
-    const el = container.firstChild as HTMLElement;
-    // V99.11: Card now uses .gaffer-surface class instead of inline border classes
-    expect(el.className).toContain("gaffer-surface");
-    expect(el.className).not.toContain("border-t-2");
-  });
+ it("applies 'none' accent by default (no top border)", () => {
+  const { container } = render(<Card>Default</Card>);
+  const el = container.firstChild as HTMLElement;
+  // V99.11: Card now uses .gaffer-surface class instead of inline border classes
+  expect(el.className).toContain("gaffer-surface");
+  expect(el.className).not.toContain("border-t-2");
+ });
 
-  it("applies primary accent border", () => {
-    const { container } = render(<Card accent="primary">Primary</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-2");
-    expect(el.className).toContain("border-t-primary-500");
-  });
+ it("applies primary accent border", () => {
+  const { container } = render(<Card accent="primary">Primary</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("border-t-2");
+  expect(el.className).toContain("border-t-primary-500");
+ });
 
-  it("applies accent accent border", () => {
-    const { container } = render(<Card accent="accent">Accent</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-accent-500");
-  });
+ it("applies accent accent border", () => {
+  const { container } = render(<Card accent="accent">Accent</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("border-t-accent-500");
+ });
 
-  it("applies success accent border", () => {
-    const { container } = render(<Card accent="success">Success</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-success-500");
-  });
+ it("applies success accent border", () => {
+  const { container } = render(<Card accent="success">Success</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("border-t-success-500");
+ });
 
-  it("applies danger accent border", () => {
-    const { container } = render(<Card accent="danger">Danger</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("border-t-danger-500");
-  });
+ it("applies danger accent border", () => {
+  const { container } = render(<Card accent="danger">Danger</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("border-t-danger-500");
+ });
 
-  it("V99.8: applies gaffer-card-texture by default", () => {
-    const { container } = render(<Card>Default</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("gaffer-card-texture");
-  });
+ it("V99.8: applies gaffer-card-texture by default", () => {
+  const { container } = render(<Card>Default</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("gaffer-card-texture");
+ });
 
-  it("V99.8: plain prop disables gaffer-card-texture", () => {
-    const { container } = render(<Card plain>Plain</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).not.toContain("gaffer-card-texture");
-  });
+ it("V99.8: plain prop disables gaffer-card-texture", () => {
+  const { container } = render(<Card plain>Plain</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).not.toContain("gaffer-card-texture");
+ });
 
-  it("merges custom className", () => {
-    const { container } = render(<Card className="my-card">Custom</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("my-card");
-  });
+ it("merges custom className", () => {
+  const { container } = render(<Card className="my-card">Custom</Card>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("my-card");
+ });
 });
 
 describe("CardHeader", () => {
-  it("renders children as heading text", () => {
-    render(<CardHeader>My Title</CardHeader>);
-    expect(screen.getByText("My Title")).toBeInTheDocument();
-  });
+ it("renders children as heading text", () => {
+  render(<CardHeader>My Title</CardHeader>);
+  expect(screen.getByText("My Title")).toBeInTheDocument();
+ });
 
-  it("renders action slot when provided", () => {
-    render(<CardHeader action={<button>Edit</button>}>Title</CardHeader>);
-    expect(screen.getByText("Edit")).toBeInTheDocument();
-  });
+ it("renders action slot when provided", () => {
+  render(<CardHeader action={<button>Edit</button>}>Title</CardHeader>);
+  expect(screen.getByText("Edit")).toBeInTheDocument();
+ });
 
-  it("does not render action when not provided", () => {
-    const { container } = render(<CardHeader>No Action</CardHeader>);
-    // Only the h3 child, no extra action element
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.children).toHaveLength(1);
-  });
+ it("does not render action when not provided", () => {
+  const { container } = render(<CardHeader>No Action</CardHeader>);
+  // Only the h3 child, no extra action element
+  const wrapper = container.firstChild as HTMLElement;
+  expect(wrapper.children).toHaveLength(1);
+ });
 
-  it("merges custom className", () => {
-    const { container } = render(<CardHeader className="custom-header">Title</CardHeader>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("custom-header");
-  });
+ it("merges custom className", () => {
+  const { container } = render(<CardHeader className="custom-header">Title</CardHeader>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("custom-header");
+ });
 });
 
 describe("CardBody", () => {
-  it("renders children", () => {
-    render(<CardBody><span>Body text</span></CardBody>);
-    expect(screen.getByText("Body text")).toBeInTheDocument();
-  });
+ it("renders children", () => {
+  render(<CardBody><span>Body text</span></CardBody>);
+  expect(screen.getByText("Body text")).toBeInTheDocument();
+ });
 
-  it("applies default padding", () => {
-    const { container } = render(<CardBody>Padded</CardBody>);
-    const el = container.firstChild as HTMLElement;
-    // V99.11: CardBody padding changed from p-6 to p-3.5 per UI spec §1.3
-    expect(el.className).toContain("p-3.5");
-  });
+ it("applies default padding", () => {
+  const { container } = render(<CardBody>Padded</CardBody>);
+  const el = container.firstChild as HTMLElement;
+  // V99.11: CardBody padding changed from p-6 to p-3.5 per UI spec §1.3
+  expect(el.className).toContain("p-3.5");
+ });
 
-  it("merges custom className", () => {
-    const { container } = render(<CardBody className="extra">Content</CardBody>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toContain("extra");
-  });
+ it("merges custom className", () => {
+  const { container } = render(<CardBody className="extra">Content</CardBody>);
+  const el = container.firstChild as HTMLElement;
+  expect(el.className).toContain("extra");
+ });
 });

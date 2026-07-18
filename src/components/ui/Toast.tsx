@@ -6,10 +6,10 @@
  * No interruption — just visual confirmation that something happened.
  *
  * Usage:
- *   import { toast } from "../ui/Toast";
- *   toast.success("Saved!");
- *   toast.error("Failed to save");
- *   toast.info("Loading...");
+ *  import { toast } from "../ui/Toast";
+ *  toast.success("Saved!");
+ *  toast.error("Failed to save");
+ *  toast.info("Loading...");
  *
  * The toast container mounts itself on first use — no provider needed.
  */

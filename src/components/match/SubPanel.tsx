@@ -673,8 +673,8 @@ export function SubPanel({
  </div>
  </div>
  {/* V99.7-4: Attribute comparison bars — all use Gaffer-voice labels,
-     no raw numbers shown. The bar widths still use the underlying values
-     for visual comparison, but the text shows interpretation tiers. */}
+   no raw numbers shown. The bar widths still use the underlying values
+   for visual comparison, but the text shows interpretation tiers. */}
  <div className="grid grid-cols-2 gap-x-4">
  <CompareBar
  label="OVR"

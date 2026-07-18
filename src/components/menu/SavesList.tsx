@@ -62,7 +62,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  </button>
  <button
  onClick={() => onConfirmDelete(null)}
- className="flex-1 py-2 bg-carbon-3 hover:bg-carbon-3 dark:hover:bg-navy-500 text-ink-dim text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="flex-1 py-2 bg-carbon-3 hover:bg-carbon-3 text-ink-dim text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t('menu.cancel')}
  </button>

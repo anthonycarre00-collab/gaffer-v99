@@ -143,11 +143,11 @@ export function PlayerMeaningCard({ playerId }: { playerId: string | null | unde
  )}
 
  {/* V99.1: Removed the "Show the numbers" / advanced section that displayed
-     raw attribute values. This violated the Gaffer constitution which
-     states players should NEVER see raw attribute numbers. The
-     interpretation layer in PlayerProfileAttributesCard is the only
-     place attributes should be displayed, and only as Gaffer-voice
-     descriptions (not numbers). */}
+   raw attribute values. This violated the Gaffer constitution which
+   states players should NEVER see raw attribute numbers. The
+   interpretation layer in PlayerProfileAttributesCard is the only
+   place attributes should be displayed, and only as Gaffer-voice
+   descriptions (not numbers). */}
 
  </Card>
  );

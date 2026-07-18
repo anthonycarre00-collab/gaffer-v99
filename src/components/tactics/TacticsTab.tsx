@@ -822,7 +822,7 @@ export default function TacticsTab({
  />
 
  {/* V99.2: Playing Style hero — prominent banner showing formation + style
-     + Gaffer-voice description. Always visible at the top of the screen. */}
+   + Gaffer-voice description. Always visible at the top of the screen. */}
  <PlayingStyleHero
  formation={formation}
  playStyle={activePlayStyle}
@@ -830,13 +830,13 @@ export default function TacticsTab({
  />
 
  {/* V99.7-7: Sub-tab navigation — removed "Set Pieces" tab since set pieces
-     are always visible in the right panel alongside the Phase Blueprint.
-     Three tabs: Pitch (formation + roles), Selection (squad management),
-     Style (playing style + guidance).
-     V99.8: Brass-on-chalk palette so labels stay readable against the
-     tactics-board texture in both light and dark mode. The active tab
-     uses a solid brass chip with a dark chalk inner; inactive tabs use
-     cream/chalk text that lifts off the dark chalkboard. */}
+   are always visible in the right panel alongside the Phase Blueprint.
+   Three tabs: Pitch (formation + roles), Selection (squad management),
+   Style (playing style + guidance).
+   V99.8: Brass-on-chalk palette so labels stay readable against the
+   tactics-board texture in both light and dark mode. The active tab
+   uses a solid brass chip with a dark chalk inner; inactive tabs use
+   cream/chalk text that lifts off the dark chalkboard. */}
  <div className="flex gap-1 border-b border-accent-500/30 dark:border-accent-500/20">
  {([
  { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
@@ -883,9 +883,9 @@ export default function TacticsTab({
  />
 
  {/* V99.7-7: Tab-conditional layout — wider center column for the pitch
-     (was 260px_1fr_280px, now 240px_1fr_300px for pitch tab to give the
-     formation pitch more room). Style tab uses 2-column with guidance
-     on left and blueprint on right. */}
+   (was 260px_1fr_280px, now 240px_1fr_300px for pitch tab to give the
+   formation pitch more room). Style tab uses 2-column with guidance
+   on left and blueprint on right. */}
  <div className={`grid grid-cols-1 gap-4 xl:items-start ${
  activeSubTab === "pitch"
  ? "xl:grid-cols-[240px_1fr_300px]"
@@ -982,7 +982,7 @@ export default function TacticsTab({
  )}
 
  {/* V99.7-7: Right panel — Phase Blueprint + Set Pieces + Roles.
-     Shown on pitch + style tabs (setPieces tab was removed). */}
+   Shown on pitch + style tabs (setPieces tab was removed). */}
  {(activeSubTab === "pitch" || activeSubTab === "style") && (
  <TacticsRightPanel
  allSquad={roster}
@@ -997,8 +997,8 @@ export default function TacticsTab({
  )}
 
  {/* Style tab — left column shows a Gaffer-voice style guidance panel so
-     the screen is no longer empty on the left when only the right panel
-     would otherwise be visible. */}
+   the screen is no longer empty on the left when only the right panel
+   would otherwise be visible. */}
  {activeSubTab === "style" && (
  <StyleGuidancePanel
  formation={formation}

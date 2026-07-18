@@ -8,608 +8,608 @@ const navigateMock = vi.fn();
 const setGameStateMock = vi.fn();
 let locationState: unknown = null;
 let gameStoreState: {
-  gameState: Record<string, unknown> | null;
-  setGameState: typeof setGameStateMock;
+ gameState: Record<string, unknown> | null;
+ setGameState: typeof setGameStateMock;
 };
 
 vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(),
+ invoke: vi.fn(),
 }));
 
 vi.mock("react-router-dom", () => ({
-  useNavigate: () => navigateMock,
-  useLocation: () => ({ state: locationState }),
+ useNavigate: () => navigateMock,
+ useLocation: () => ({ state: locationState }),
 }));
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string, fallback?: string) => fallback ?? key,
-    i18n: { language: "en" },
-  }),
+ useTranslation: () => ({
+  t: (key: string, fallback?: string) => fallback ?? key,
+  i18n: { language: "en" },
+ }),
 }));
 
 vi.mock("../store/gameStore", () => ({
-  useGameStore: () => gameStoreState,
+ useGameStore: () => gameStoreState,
 }));
 
 vi.mock("../store/settingsStore", () => ({
-  useSettingsStore: () => ({
-    settings: { match_speed: "normal" },
-  }),
+ useSettingsStore: () => ({
+  settings: { match_speed: "normal" },
+ }),
 }));
 
 vi.mock("../components/match/PreMatchSetup", () => ({
-  default: ({
-    snapshot,
-    onStart,
-  }: {
-    snapshot: { home_team: { name: string } };
-    onStart?: () => void;
-  }) => (
-    <div data-testid="prematch">
-      {snapshot.home_team.name}
-      <button data-testid="prematch-start" onClick={onStart}>
-        Start
-      </button>
-    </div>
-  ),
+ default: ({
+  snapshot,
+  onStart,
+ }: {
+  snapshot: { home_team: { name: string } };
+  onStart?: () => void;
+ }) => (
+  <div data-testid="prematch">
+   {snapshot.home_team.name}
+   <button data-testid="prematch-start" onClick={onStart}>
+    Start
+   </button>
+  </div>
+ ),
 }));
 
 vi.mock("../components/match/MatchLive", () => ({
-  default: ({
-    snapshot,
-    preferredSpeed,
-    onPreferredSpeedChange,
-    onHalfTime,
-    onFullTime,
-  }: {
-    snapshot: { home_team: { name: string } };
-    preferredSpeed?: string;
-    onPreferredSpeedChange?: (speed: string) => void;
-    onHalfTime?: () => void;
-    onFullTime?: () => void;
-  }) => (
-    <div data-testid="match-live-container" data-preferred-speed={preferredSpeed ?? "normal"}>
-      {snapshot.home_team.name}
-      <button data-testid="match-live" onClick={onFullTime}>Full Time</button>
-      <button data-testid="match-trigger-halftime" onClick={onHalfTime}>Half Time</button>
-      <button data-testid="match-trigger-speed-fast" onClick={() => onPreferredSpeedChange?.("fast")}>Fast</button>
-    </div>
-  ),
+ default: ({
+  snapshot,
+  preferredSpeed,
+  onPreferredSpeedChange,
+  onHalfTime,
+  onFullTime,
+ }: {
+  snapshot: { home_team: { name: string } };
+  preferredSpeed?: string;
+  onPreferredSpeedChange?: (speed: string) => void;
+  onHalfTime?: () => void;
+  onFullTime?: () => void;
+ }) => (
+  <div data-testid="match-live-container" data-preferred-speed={preferredSpeed ?? "normal"}>
+   {snapshot.home_team.name}
+   <button data-testid="match-live" onClick={onFullTime}>Full Time</button>
+   <button data-testid="match-trigger-halftime" onClick={onHalfTime}>Half Time</button>
+   <button data-testid="match-trigger-speed-fast" onClick={() => onPreferredSpeedChange?.("fast")}>Fast</button>
+  </div>
+ ),
 }));
 
 vi.mock("../components/match/HalfTimeBreak", () => ({
-  default: ({ onResume }: { onResume?: () => void }) => (
-    <div data-testid="halftime">
-      <button data-testid="halftime-resume" onClick={onResume}>Resume</button>
-    </div>
-  ),
+ default: ({ onResume }: { onResume?: () => void }) => (
+  <div data-testid="halftime">
+   <button data-testid="halftime-resume" onClick={onResume}>Resume</button>
+  </div>
+ ),
 }));
 
 vi.mock("../components/match/PostMatchScreen", () => ({
-  default: ({
-    onContinue,
-    onFinish,
-  }: {
-    onContinue?: () => void;
-    onFinish?: () => void;
-  }) => (
-    <div>
-      <button data-testid="postmatch-continue" onClick={onContinue}>
-        Continue
-      </button>
-      <button data-testid="postmatch-finish" onClick={onFinish}>
-        Finish Match
-      </button>
-    </div>
-  ),
+ default: ({
+  onContinue,
+  onFinish,
+ }: {
+  onContinue?: () => void;
+  onFinish?: () => void;
+ }) => (
+  <div>
+   <button data-testid="postmatch-continue" onClick={onContinue}>
+    Continue
+   </button>
+   <button data-testid="postmatch-finish" onClick={onFinish}>
+    Finish Match
+   </button>
+  </div>
+ ),
 }));
 
 vi.mock("../components/match/RoundDigestScreen", () => ({
-  default: ({
-    roundSummary,
-    isLeagueFixture,
-    onPressConference,
-    onFinish,
-  }: {
-    roundSummary?: unknown;
-    isLeagueFixture?: boolean;
-    onPressConference?: () => void;
-    onFinish?: () => void;
-  }) => (
-    <div>
-      <div data-testid="digest-round-summary">
-        {roundSummary ? JSON.stringify(roundSummary) : "null"}
-      </div>
-      <div data-testid="digest-is-league">
-        {isLeagueFixture ? "true" : "false"}
-      </div>
-      <button data-testid="digest-press" onClick={onPressConference}>
-        Press Conference
-      </button>
-      <button data-testid="digest-finish" onClick={onFinish}>
-        Skip
-      </button>
-    </div>
-  ),
+ default: ({
+  roundSummary,
+  isLeagueFixture,
+  onPressConference,
+  onFinish,
+ }: {
+  roundSummary?: unknown;
+  isLeagueFixture?: boolean;
+  onPressConference?: () => void;
+  onFinish?: () => void;
+ }) => (
+  <div>
+   <div data-testid="digest-round-summary">
+    {roundSummary ? JSON.stringify(roundSummary) : "null"}
+   </div>
+   <div data-testid="digest-is-league">
+    {isLeagueFixture ? "true" : "false"}
+   </div>
+   <button data-testid="digest-press" onClick={onPressConference}>
+    Press Conference
+   </button>
+   <button data-testid="digest-finish" onClick={onFinish}>
+    Skip
+   </button>
+  </div>
+ ),
 }));
 
 vi.mock("../components/match/PressConference", () => ({
-  default: () => <div data-testid="press" />,
+ default: () => <div data-testid="press" />,
 }));
 
 const mockedInvoke = vi.mocked(invoke);
 
 function makeEnginePlayer(
-  overrides: Partial<Record<string, unknown>> = {},
+ overrides: Partial<Record<string, unknown>> = {},
 ): Record<string, unknown> {
-  return {
-    id: "p1",
-    name: "Player One",
-    position: "Goalkeeper",
-    condition: 100,
-    // Engine uses old attribute names — see EnginePlayerData type
-    pace: 50, stamina: 50, strength: 50, agility: 50,
-    passing: 50, shooting: 50, tackling: 50, dribbling: 50,
-    defending: 50, positioning: 50, vision: 50, decisions: 50,
-    composure: 50, aggression: 50, teamwork: 50, leadership: 50,
-    handling: 50, reflexes: 50, aerial: 50,
-    traits: [],
-    ...overrides,
-  };
+ return {
+  id: "p1",
+  name: "Player One",
+  position: "Goalkeeper",
+  condition: 100,
+  // Engine uses old attribute names — see EnginePlayerData type
+  pace: 50, stamina: 50, strength: 50, agility: 50,
+  passing: 50, shooting: 50, tackling: 50, dribbling: 50,
+  defending: 50, positioning: 50, vision: 50, decisions: 50,
+  composure: 50, aggression: 50, teamwork: 50, leadership: 50,
+  handling: 50, reflexes: 50, aerial: 50,
+  traits: [],
+  ...overrides,
+ };
 }
 
 function makeSnapshot(
-  overrides: Partial<Record<string, unknown>> = {},
+ overrides: Partial<Record<string, unknown>> = {},
 ): Record<string, unknown> {
-  return {
-    phase: "PreKickOff",
-    current_minute: 0,
-    home_score: 0,
-    away_score: 0,
-    possession: "Home",
-    ball_zone: "Midfield",
-    home_team: {
-      id: "home1",
-      name: "Home FC",
-      formation: "4-4-2",
-      play_style: "Balanced",
-      players: [makeEnginePlayer({ id: "home-p1", name: "Home Keeper" })],
-    },
-    away_team: {
-      id: "away1",
-      name: "Away FC",
-      formation: "4-4-2",
-      play_style: "Balanced",
-      players: [makeEnginePlayer({ id: "away-p1", name: "Away Keeper" })],
-    },
-    home_bench: [],
-    away_bench: [],
-    home_possession_pct: 50,
-    away_possession_pct: 50,
-    events: [],
-    home_subs_made: 0,
-    away_subs_made: 0,
-    max_subs: 5,
-    home_set_pieces: {
-      free_kick_taker: null,
-      corner_taker: null,
-      penalty_taker: null,
-      captain: null,
-    },
-    away_set_pieces: {
-      free_kick_taker: null,
-      corner_taker: null,
-      penalty_taker: null,
-      captain: null,
-    },
-    substitutions: [],
-    allows_extra_time: false,
-    home_yellows: {},
-    away_yellows: {},
-    sent_off: [],
-    ...overrides,
-  };
+ return {
+  phase: "PreKickOff",
+  current_minute: 0,
+  home_score: 0,
+  away_score: 0,
+  possession: "Home",
+  ball_zone: "Midfield",
+  home_team: {
+   id: "home1",
+   name: "Home FC",
+   formation: "4-4-2",
+   play_style: "Balanced",
+   players: [makeEnginePlayer({ id: "home-p1", name: "Home Keeper" })],
+  },
+  away_team: {
+   id: "away1",
+   name: "Away FC",
+   formation: "4-4-2",
+   play_style: "Balanced",
+   players: [makeEnginePlayer({ id: "away-p1", name: "Away Keeper" })],
+  },
+  home_bench: [],
+  away_bench: [],
+  home_possession_pct: 50,
+  away_possession_pct: 50,
+  events: [],
+  home_subs_made: 0,
+  away_subs_made: 0,
+  max_subs: 5,
+  home_set_pieces: {
+   free_kick_taker: null,
+   corner_taker: null,
+   penalty_taker: null,
+   captain: null,
+  },
+  away_set_pieces: {
+   free_kick_taker: null,
+   corner_taker: null,
+   penalty_taker: null,
+   captain: null,
+  },
+  substitutions: [],
+  allows_extra_time: false,
+  home_yellows: {},
+  away_yellows: {},
+  sent_off: [],
+  ...overrides,
+ };
 }
 
 function makeGameState(): Record<string, unknown> {
-  return {
-    clock: {
-      current_date: "2026-08-01",
-      start_date: "2026-08-01",
-    },
-    manager: {
-      id: "mgr1",
-      first_name: "Test",
-      last_name: "Manager",
-      date_of_birth: "1980-01-01",
-      nationality: "GB",
-      reputation: 50,
-      satisfaction: 50,
-      fan_approval: 50,
-      team_id: "home1",
-      career_stats: {
-        matches_managed: 0,
-        wins: 0,
-        draws: 0,
-        losses: 0,
-        trophies: 0,
-        best_finish: null,
-      },
-      career_history: [],
-    },
-    teams: [
-      {
-        id: "home1",
-        name: "Home FC",
-        short_name: "HOM",
-        country: "England",
-        city: "Home City",
-        stadium_name: "Home Ground",
-        stadium_capacity: 20000,
-        finance: 1000000,
-        manager_id: "mgr1",
-        reputation: 50,
-        wage_budget: 100000,
-        transfer_budget: 500000,
-        season_income: 0,
-        season_expenses: 0,
-        formation: "4-4-2",
-        play_style: "Balanced",
-        training_focus: "General",
-        training_intensity: "Balanced",
-        training_schedule: "Balanced",
-        founded_year: 1900,
-        colors: { primary: "#00ff00", secondary: "#ffffff" },
-        starting_xi_ids: [],
-        form: [],
-        history: [],
-      },
-      {
-        id: "away1",
-        name: "Away FC",
-        short_name: "AWY",
-        country: "England",
-        city: "Away City",
-        stadium_name: "Away Ground",
-        stadium_capacity: 20000,
-        finance: 1000000,
-        manager_id: null,
-        reputation: 50,
-        wage_budget: 100000,
-        transfer_budget: 500000,
-        season_income: 0,
-        season_expenses: 0,
-        formation: "4-4-2",
-        play_style: "Balanced",
-        training_focus: "General",
-        training_intensity: "Balanced",
-        training_schedule: "Balanced",
-        founded_year: 1900,
-        colors: { primary: "#0000ff", secondary: "#ffffff" },
-        starting_xi_ids: [],
-        form: [],
-        history: [],
-      },
-    ],
-    players: [],
-    staff: [],
-    messages: [],
-    news: [],
-    league: null,
-    scouting_assignments: [],
-    board_objectives: [],
-  };
+ return {
+  clock: {
+   current_date: "2026-08-01",
+   start_date: "2026-08-01",
+  },
+  manager: {
+   id: "mgr1",
+   first_name: "Test",
+   last_name: "Manager",
+   date_of_birth: "1980-01-01",
+   nationality: "GB",
+   reputation: 50,
+   satisfaction: 50,
+   fan_approval: 50,
+   team_id: "home1",
+   career_stats: {
+    matches_managed: 0,
+    wins: 0,
+    draws: 0,
+    losses: 0,
+    trophies: 0,
+    best_finish: null,
+   },
+   career_history: [],
+  },
+  teams: [
+   {
+    id: "home1",
+    name: "Home FC",
+    short_name: "HOM",
+    country: "England",
+    city: "Home City",
+    stadium_name: "Home Ground",
+    stadium_capacity: 20000,
+    finance: 1000000,
+    manager_id: "mgr1",
+    reputation: 50,
+    wage_budget: 100000,
+    transfer_budget: 500000,
+    season_income: 0,
+    season_expenses: 0,
+    formation: "4-4-2",
+    play_style: "Balanced",
+    training_focus: "General",
+    training_intensity: "Balanced",
+    training_schedule: "Balanced",
+    founded_year: 1900,
+    colors: { primary: "#00ff00", secondary: "#ffffff" },
+    starting_xi_ids: [],
+    form: [],
+    history: [],
+   },
+   {
+    id: "away1",
+    name: "Away FC",
+    short_name: "AWY",
+    country: "England",
+    city: "Away City",
+    stadium_name: "Away Ground",
+    stadium_capacity: 20000,
+    finance: 1000000,
+    manager_id: null,
+    reputation: 50,
+    wage_budget: 100000,
+    transfer_budget: 500000,
+    season_income: 0,
+    season_expenses: 0,
+    formation: "4-4-2",
+    play_style: "Balanced",
+    training_focus: "General",
+    training_intensity: "Balanced",
+    training_schedule: "Balanced",
+    founded_year: 1900,
+    colors: { primary: "#0000ff", secondary: "#ffffff" },
+    starting_xi_ids: [],
+    form: [],
+    history: [],
+   },
+  ],
+  players: [],
+  staff: [],
+  messages: [],
+  news: [],
+  league: null,
+  scouting_assignments: [],
+  board_objectives: [],
+ };
 }
 
 function makeGameStateWithFriendly() {
-  const base = makeGameState();
-  return {
-    ...base,
-    league: {
-      id: "league1",
-      name: "Test League",
-      fixtures: [
-        {
-          id: "fix1",
-          competition: "Friendly",
-          home_team_id: "home1",
-          away_team_id: "away1",
-          date: "2026-08-01",
-          status: "Scheduled",
-          result: null,
-          round: 1,
-          matchday: null,
-        },
-      ],
-      standings: [],
-      top_scorers: [],
+ const base = makeGameState();
+ return {
+  ...base,
+  league: {
+   id: "league1",
+   name: "Test League",
+   fixtures: [
+    {
+     id: "fix1",
+     competition: "Friendly",
+     home_team_id: "home1",
+     away_team_id: "away1",
+     date: "2026-08-01",
+     status: "Scheduled",
+     result: null,
+     round: 1,
+     matchday: null,
     },
-  };
+   ],
+   standings: [],
+   top_scorers: [],
+  },
+ };
 }
 
 describe("MatchSimulation", function (): void {
-  beforeEach(function resetState(): void {
-    mockedInvoke.mockReset();
-    navigateMock.mockReset();
-    setGameStateMock.mockReset();
-    locationState = null;
-    gameStoreState = {
-      gameState: makeGameState(),
-      setGameState: setGameStateMock,
-    };
+ beforeEach(function resetState(): void {
+  mockedInvoke.mockReset();
+  navigateMock.mockReset();
+  setGameStateMock.mockReset();
+  locationState = null;
+  gameStoreState = {
+   gameState: makeGameState(),
+   setGameState: setGameStateMock,
+  };
+ });
+
+ it("renders the current live snapshot when get_match_snapshot succeeds", async function (): Promise<void> {
+  mockedInvoke.mockResolvedValueOnce(makeSnapshot());
+
+  render(<MatchSimulation />);
+
+  await waitFor(function (): void {
+   expect(mockedInvoke).toHaveBeenCalledWith("get_match_snapshot");
   });
 
-  it("renders the current live snapshot when get_match_snapshot succeeds", async function (): Promise<void> {
-    mockedInvoke.mockResolvedValueOnce(makeSnapshot());
+  await waitFor(function (): void {
+   expect(screen.getByTestId("prematch")).toHaveTextContent("Home FC");
+  });
+ });
 
-    render(<MatchSimulation />);
+ it("restores the live match session when no snapshot exists but fixture index is provided", async function (): Promise<void> {
+  const consoleWarnSpy = vi
+   .spyOn(console, "warn")
+   .mockImplementation(() => { });
+  try {
+   locationState = {
+    fixtureIndex: 4,
+    mode: "live",
+    snapshot: makeSnapshot({
+     home_team: {
+      id: "home1",
+      name: "Boot Snapshot FC",
+      formation: "4-4-2",
+      play_style: "Balanced",
+      players: [makeEnginePlayer({ id: "boot-p1", name: "Boot Keeper" })],
+     },
+    }),
+   };
 
-    await waitFor(function (): void {
-      expect(mockedInvoke).toHaveBeenCalledWith("get_match_snapshot");
+   mockedInvoke.mockRejectedValueOnce(new Error("No active live match"));
+   mockedInvoke.mockResolvedValueOnce(
+    makeSnapshot({
+     home_team: {
+      id: "home1",
+      name: "Restored FC",
+      formation: "4-4-2",
+      play_style: "Balanced",
+      players: [
+       makeEnginePlayer({ id: "restore-p1", name: "Restore Keeper" }),
+      ],
+     },
+    }),
+   );
+
+   render(<MatchSimulation />);
+
+   await waitFor(function (): void {
+    expect(mockedInvoke).toHaveBeenCalledWith("start_live_match", {
+     allowsExtraTime: false,
+     fixtureIndex: 4,
+     mode: "live",
+     homeTeamId: "home1",
+     awayTeamId: "away1",
     });
+   });
 
-    await waitFor(function (): void {
-      expect(screen.getByTestId("prematch")).toHaveTextContent("Home FC");
-    });
+   expect(screen.getByTestId("prematch")).toHaveTextContent("Restored FC");
+  } finally {
+   consoleWarnSpy.mockRestore();
+  }
+ });
+
+ it("moves spectators straight into the live match stage", async function (): Promise<void> {
+  locationState = {
+   mode: "spectator",
+   snapshot: makeSnapshot(),
+  };
+
+  mockedInvoke.mockResolvedValueOnce(makeSnapshot());
+
+  render(<MatchSimulation />);
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
+  });
+ });
+
+ it("navigates away from postmatch after the finalized game has been stored", async function (): Promise<void> {
+  locationState = {
+   mode: "spectator",
+   snapshot: makeSnapshot(),
+  };
+
+  const finishedGame = makeGameState();
+  mockedInvoke.mockResolvedValueOnce(makeSnapshot()).mockResolvedValueOnce({
+   game: finishedGame,
+   round_summary: {
+    matchday: 1,
+    is_complete: true,
+    pending_fixture_count: 0,
+    completed_results: [],
+    standings_delta: [],
+    notable_upset: null,
+    top_scorer_delta: [],
+   },
   });
 
-  it("restores the live match session when no snapshot exists but fixture index is provided", async function (): Promise<void> {
-    const consoleWarnSpy = vi
-      .spyOn(console, "warn")
-      .mockImplementation(() => { });
-    try {
-      locationState = {
-        fixtureIndex: 4,
-        mode: "live",
-        snapshot: makeSnapshot({
-          home_team: {
-            id: "home1",
-            name: "Boot Snapshot FC",
-            formation: "4-4-2",
-            play_style: "Balanced",
-            players: [makeEnginePlayer({ id: "boot-p1", name: "Boot Keeper" })],
-          },
-        }),
-      };
+  render(<MatchSimulation />);
 
-      mockedInvoke.mockRejectedValueOnce(new Error("No active live match"));
-      mockedInvoke.mockResolvedValueOnce(
-        makeSnapshot({
-          home_team: {
-            id: "home1",
-            name: "Restored FC",
-            formation: "4-4-2",
-            play_style: "Balanced",
-            players: [
-              makeEnginePlayer({ id: "restore-p1", name: "Restore Keeper" }),
-            ],
-          },
-        }),
-      );
-
-      render(<MatchSimulation />);
-
-      await waitFor(function (): void {
-        expect(mockedInvoke).toHaveBeenCalledWith("start_live_match", {
-          allowsExtraTime: false,
-          fixtureIndex: 4,
-          mode: "live",
-          homeTeamId: "home1",
-          awayTeamId: "away1",
-        });
-      });
-
-      expect(screen.getByTestId("prematch")).toHaveTextContent("Restored FC");
-    } finally {
-      consoleWarnSpy.mockRestore();
-    }
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
   });
 
-  it("moves spectators straight into the live match stage", async function (): Promise<void> {
-    locationState = {
-      mode: "spectator",
-      snapshot: makeSnapshot(),
-    };
+  fireEvent.click(screen.getByTestId("match-live"));
 
-    mockedInvoke.mockResolvedValueOnce(makeSnapshot());
-
-    render(<MatchSimulation />);
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
-    });
+  await waitFor(function (): void {
+   expect(mockedInvoke).toHaveBeenLastCalledWith("finish_live_match");
+   expect(screen.getByTestId("postmatch-finish")).toBeInTheDocument();
   });
 
-  it("navigates away from postmatch after the finalized game has been stored", async function (): Promise<void> {
-    locationState = {
-      mode: "spectator",
-      snapshot: makeSnapshot(),
-    };
+  expect(setGameStateMock).toHaveBeenCalledWith(finishedGame);
 
-    const finishedGame = makeGameState();
-    mockedInvoke.mockResolvedValueOnce(makeSnapshot()).mockResolvedValueOnce({
-      game: finishedGame,
-      round_summary: {
-        matchday: 1,
-        is_complete: true,
-        pending_fixture_count: 0,
-        completed_results: [],
-        standings_delta: [],
-        notable_upset: null,
-        top_scorer_delta: [],
-      },
-    });
+  fireEvent.click(screen.getByTestId("postmatch-finish"));
 
-    render(<MatchSimulation />);
+  await waitFor(function (): void {
+   expect(navigateMock).toHaveBeenCalledWith("/dashboard");
+  });
+ });
 
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
-    });
+ it("finalizes the match on full time and passes the round summary into the digest screen", async function (): Promise<void> {
+  locationState = {
+   mode: "live",
+   snapshot: makeSnapshot(),
+  };
 
-    fireEvent.click(screen.getByTestId("match-live"));
-
-    await waitFor(function (): void {
-      expect(mockedInvoke).toHaveBeenLastCalledWith("finish_live_match");
-      expect(screen.getByTestId("postmatch-finish")).toBeInTheDocument();
-    });
-
-    expect(setGameStateMock).toHaveBeenCalledWith(finishedGame);
-
-    fireEvent.click(screen.getByTestId("postmatch-finish"));
-
-    await waitFor(function (): void {
-      expect(navigateMock).toHaveBeenCalledWith("/dashboard");
-    });
+  const finishedGame = makeGameState();
+  const roundSummary = {
+   matchday: 1,
+   is_complete: true,
+   pending_fixture_count: 0,
+   completed_results: [],
+   standings_delta: [],
+   notable_upset: null,
+   top_scorer_delta: [],
+  };
+  mockedInvoke.mockResolvedValueOnce(makeSnapshot()).mockResolvedValueOnce({
+   game: finishedGame,
+   round_summary: roundSummary,
   });
 
-  it("finalizes the match on full time and passes the round summary into the digest screen", async function (): Promise<void> {
-    locationState = {
-      mode: "live",
-      snapshot: makeSnapshot(),
-    };
+  render(<MatchSimulation />);
 
-    const finishedGame = makeGameState();
-    const roundSummary = {
-      matchday: 1,
-      is_complete: true,
-      pending_fixture_count: 0,
-      completed_results: [],
-      standings_delta: [],
-      notable_upset: null,
-      top_scorer_delta: [],
-    };
-    mockedInvoke.mockResolvedValueOnce(makeSnapshot()).mockResolvedValueOnce({
-      game: finishedGame,
-      round_summary: roundSummary,
-    });
-
-    render(<MatchSimulation />);
-
-    // Manager sees prematch; advance to live match
-    await waitFor(function (): void {
-      expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("prematch-start"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
-    });
-
-    fireEvent.click(screen.getByTestId("match-live"));
-
-    await waitFor(function (): void {
-      expect(mockedInvoke).toHaveBeenLastCalledWith("finish_live_match");
-      expect(screen.getByTestId("postmatch-finish")).toBeInTheDocument();
-    });
-
-    expect(setGameStateMock).toHaveBeenCalledWith(finishedGame);
-
-    // Manager clicks Continue → goes to digest
-    fireEvent.click(screen.getByTestId("postmatch-continue"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("digest-round-summary")).toBeInTheDocument();
-    });
-
-    expect(screen.getByTestId("digest-round-summary")).toHaveTextContent(
-      '"matchday":1',
-    );
-
-    fireEvent.click(screen.getByTestId("digest-finish"));
-
-    await waitFor(function (): void {
-      expect(navigateMock).toHaveBeenCalledWith("/dashboard");
-    });
+  // Manager sees prematch; advance to live match
+  await waitFor(function (): void {
+   expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
   });
 
-  it("routes a manager's friendly through digest with isLeagueFixture=false", async function (): Promise<void> {
-    locationState = {
-      mode: "live",
-      fixtureIndex: 0,
-      snapshot: makeSnapshot(),
-    };
+  fireEvent.click(screen.getByTestId("prematch-start"));
 
-    gameStoreState = {
-      gameState: makeGameStateWithFriendly(),
-      setGameState: setGameStateMock,
-    };
-
-    mockedInvoke
-      .mockResolvedValueOnce(makeSnapshot())
-      .mockResolvedValueOnce({
-        game: makeGameState(),
-        round_summary: null,
-      });
-
-    render(<MatchSimulation />);
-
-    // Manager sees prematch; click Start to advance to first_half
-    await waitFor(function (): void {
-      expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("prematch-start"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("match-live"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("postmatch-continue")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("postmatch-continue"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("digest-is-league")).toHaveTextContent("false");
-    });
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live-container")).toHaveTextContent("Home FC");
   });
 
-  it("preserves user-selected match speed from first half into second half", async function (): Promise<void> {
-    const mockedInvoke = vi.mocked(invoke);
-    mockedInvoke.mockResolvedValueOnce(makeSnapshot());
+  fireEvent.click(screen.getByTestId("match-live"));
 
-    render(<MatchSimulation />);
-
-    // Advance to the first-half live match view.
-    await waitFor(function (): void {
-      expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByTestId("prematch-start"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live-container")).toBeInTheDocument();
-    });
-
-    // Initial preferred speed comes from settings ("normal").
-    expect(screen.getByTestId("match-live-container")).toHaveAttribute(
-      "data-preferred-speed",
-      "normal",
-    );
-
-    // User selects fast speed during first half.
-    fireEvent.click(screen.getByTestId("match-trigger-speed-fast"));
-
-    // Trigger half-time transition.
-    fireEvent.click(screen.getByTestId("match-trigger-halftime"));
-
-    await waitFor(function (): void {
-      expect(screen.getByTestId("halftime")).toBeInTheDocument();
-    });
-
-    // Resume from half-time — advances to second_half stage.
-    fireEvent.click(screen.getByTestId("halftime-resume"));
-
-    // The remounted MatchLive for second half must carry the user's preferred speed.
-    await waitFor(function (): void {
-      expect(screen.getByTestId("match-live-container")).toHaveAttribute(
-        "data-preferred-speed",
-        "fast",
-      );
-    });
+  await waitFor(function (): void {
+   expect(mockedInvoke).toHaveBeenLastCalledWith("finish_live_match");
+   expect(screen.getByTestId("postmatch-finish")).toBeInTheDocument();
   });
+
+  expect(setGameStateMock).toHaveBeenCalledWith(finishedGame);
+
+  // Manager clicks Continue → goes to digest
+  fireEvent.click(screen.getByTestId("postmatch-continue"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("digest-round-summary")).toBeInTheDocument();
+  });
+
+  expect(screen.getByTestId("digest-round-summary")).toHaveTextContent(
+   '"matchday":1',
+  );
+
+  fireEvent.click(screen.getByTestId("digest-finish"));
+
+  await waitFor(function (): void {
+   expect(navigateMock).toHaveBeenCalledWith("/dashboard");
+  });
+ });
+
+ it("routes a manager's friendly through digest with isLeagueFixture=false", async function (): Promise<void> {
+  locationState = {
+   mode: "live",
+   fixtureIndex: 0,
+   snapshot: makeSnapshot(),
+  };
+
+  gameStoreState = {
+   gameState: makeGameStateWithFriendly(),
+   setGameState: setGameStateMock,
+  };
+
+  mockedInvoke
+   .mockResolvedValueOnce(makeSnapshot())
+   .mockResolvedValueOnce({
+    game: makeGameState(),
+    round_summary: null,
+   });
+
+  render(<MatchSimulation />);
+
+  // Manager sees prematch; click Start to advance to first_half
+  await waitFor(function (): void {
+   expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByTestId("prematch-start"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live")).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByTestId("match-live"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("postmatch-continue")).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByTestId("postmatch-continue"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("digest-is-league")).toHaveTextContent("false");
+  });
+ });
+
+ it("preserves user-selected match speed from first half into second half", async function (): Promise<void> {
+  const mockedInvoke = vi.mocked(invoke);
+  mockedInvoke.mockResolvedValueOnce(makeSnapshot());
+
+  render(<MatchSimulation />);
+
+  // Advance to the first-half live match view.
+  await waitFor(function (): void {
+   expect(screen.getByTestId("prematch-start")).toBeInTheDocument();
+  });
+  fireEvent.click(screen.getByTestId("prematch-start"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live-container")).toBeInTheDocument();
+  });
+
+  // Initial preferred speed comes from settings ("normal").
+  expect(screen.getByTestId("match-live-container")).toHaveAttribute(
+   "data-preferred-speed",
+   "normal",
+  );
+
+  // User selects fast speed during first half.
+  fireEvent.click(screen.getByTestId("match-trigger-speed-fast"));
+
+  // Trigger half-time transition.
+  fireEvent.click(screen.getByTestId("match-trigger-halftime"));
+
+  await waitFor(function (): void {
+   expect(screen.getByTestId("halftime")).toBeInTheDocument();
+  });
+
+  // Resume from half-time — advances to second_half stage.
+  fireEvent.click(screen.getByTestId("halftime-resume"));
+
+  // The remounted MatchLive for second half must carry the user's preferred speed.
+  await waitFor(function (): void {
+   expect(screen.getByTestId("match-live-container")).toHaveAttribute(
+    "data-preferred-speed",
+    "fast",
+   );
+  });
+ });
 });

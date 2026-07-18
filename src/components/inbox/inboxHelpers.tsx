@@ -259,7 +259,7 @@ export function getActionButtonClassName(action: MessageAction): string {
  action.action_type === "Acknowledge" ||
  action.action_type === "Dismiss"
  ) {
- return `${baseClassName} bg-carbon-3 text-ink-dim hover:bg-carbon-3 dark:hover:bg-navy-500`;
+ return `${baseClassName} bg-carbon-3 text-ink-dim hover:bg-carbon-3 `;
  }
 
  return `${baseClassName} bg-primary-500 text-ink hover:bg-primary-600 shadow-sm hover: hover:shadow-primary-500/20`;
