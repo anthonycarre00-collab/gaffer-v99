@@ -53,5 +53,7 @@ pub fn all_migrations() -> Migrations<'static> {
         M::up(include_str!("sql/v044_gaffer_game_state.sql")),
         M::up(include_str!("sql/v045_v994_player_fields.sql")),
         M::up(include_str!("sql/v046_performance_indexes.sql")),
+        // V100 P0-5 (Issue #38): Persist GK saves per match.
+        M::up(include_str!("sql/v047_player_match_saves.sql")),
     ])
 }

@@ -1405,6 +1405,28 @@ pub(crate) fn expected_wage(player: &Player, team: &Team, current_date: NaiveDat
 
 fn reference_player_wage(player: &Player) -> u32 {
     if player.wage > 0 {
+        // V100 P0-3 (Issue #20): Wage sanity band. FIFA-imported wages in the
+        // DB are decoupled from Gaffer's OVR-based market_value — e.g. an
+        // OVR-67 Lukaku was earning £260k/week because that's his real-world
+        // wage, while his Gaffer market_value suggests ~£10k/week.
+        //
+        // We clamp the imported wage to [market_value/100, market_value/25]
+        // so expected_wage calculations produce realistic values regardless
+        // of DB corruption. The lower bound prevents youth players from being
+        // stuck on £500/week when their market_value is £5M (they should be
+        // on at least £50k/week); the upper bound prevents elite real-world
+        // players from commanding £300k/week when their Gaffer OVR doesn't
+        // justify it.
+        //
+        // Edge case: market_value == 0 (uncomputed). Skip the clamp and
+        // return the raw wage — `refresh_player_derived` will recompute
+        // market_value soon, and the next wage check will clamp correctly.
+        if player.market_value > 0 {
+            let lower = (player.market_value / 100).max(MINIMUM_DEFAULT_WAGE);
+            let upper = (player.market_value / 25).max(lower);
+            let clamped = (player.wage as u64).clamp(lower, upper);
+            return round_up_to_nearest_thousand(clamped.min(u32::MAX as u64) as u32);
+        }
         return player.wage;
     }
 

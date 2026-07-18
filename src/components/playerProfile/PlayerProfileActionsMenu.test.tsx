@@ -38,6 +38,7 @@ function buildPlayer(overrides: Partial<PlayerData> = {}): PlayerData {
     market_value: 1_000_000,
     transfer_listed: false,
     loan_listed: false,
+    not_for_sale: false,
     retired: false,
     squad_role: "Senior",
     injury: null,

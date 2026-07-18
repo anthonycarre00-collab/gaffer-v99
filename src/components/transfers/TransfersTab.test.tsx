@@ -316,6 +316,7 @@ function createPlayer(overrides: Partial<PlayerData> = {}): PlayerData {
   career: [],
   transfer_listed: false,
   loan_listed: false,
+  not_for_sale: false,
   transfer_offers: [
    {
     id: "offer-1",
@@ -914,6 +915,7 @@ describe("TransfersTab", function (): void {
     id: "player-market-1",
     team_id: "team-1",
     transfer_listed: false,
+    not_for_sale: false,
     transfer_offers: [],
     market_value: 1000000,
    }),

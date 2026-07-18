@@ -35,6 +35,8 @@ export interface PlayerSummary {
   ovr: number;
   transfer_listed: boolean;
   loan_listed: boolean;
+  /** V100 P0-8 (Issue #5): When true, AI clubs will not bid for this player. */
+  not_for_sale: boolean;
   injured: boolean;
   retired: boolean;
 }

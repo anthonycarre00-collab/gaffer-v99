@@ -1,5 +1,6 @@
 import {
  ArrowUp,
+ Ban,
  Building2,
  Gavel,
  GraduationCap,
@@ -8,6 +9,7 @@ import {
  ShoppingCart,
  User,
  UserPlus,
+ XCircle,
 } from "lucide-react";
 
 import type { ContextMenuItem } from "../ContextMenu";
@@ -78,6 +80,42 @@ export function buildToggleLoanListMenuItem(
  ? t("squad.removeFromLoanList")
  : t("squad.addToLoanList"),
  icon: <Repeat className="w-4 h-4" />,
+ onClick,
+ };
+}
+
+/**
+ * V100 P0-8 (Issue #5): Toggle "not for sale" status. When set, AI clubs will
+ * not bid for the player. Distinct from transfer-listed (which means the user
+ * WANTS to sell) — not-for-sale means the user refuses all bids.
+ */
+export function buildToggleNotForSaleMenuItem(
+ t: MenuTranslateFn,
+ notForSale: boolean,
+ onClick: () => void,
+): ContextMenuItem {
+ return {
+ label: notForSale
+ ? t("squad.removeFromNotForSale")
+ : t("squad.markAsNotForSale"),
+ icon: <Ban className="w-4 h-4" />,
+ onClick,
+ };
+}
+
+/**
+ * V100 P0-8 (Issue #5): Reject all pending transfer offers for this player
+ * in one batch. Only enabled when there are pending offers.
+ */
+export function buildRejectAllPendingOffersMenuItem(
+ t: MenuTranslateFn,
+ pendingOfferCount: number,
+ onClick: () => void,
+): ContextMenuItem {
+ return {
+ label: t("squad.rejectAllBids", { count: pendingOfferCount }),
+ icon: <XCircle className="w-4 h-4" />,
+ disabled: pendingOfferCount === 0,
  onClick,
  };
 }

@@ -82,12 +82,24 @@ pub fn simulate_with_rng<R: Rng>(
         .map(|player| player.id.clone())
         .collect();
 
+    // V100 P0-5 (Issue #38): Build a player_id -> (Side, Position) map so
+    // the report can credit saves to GKs and apply position-aware ratings.
+    let mut player_positions: std::collections::HashMap<String, (Side, Position)> =
+        std::collections::HashMap::new();
+    for player in &home.players {
+        player_positions.insert(player.id.clone(), (Side::Home, player.position));
+    }
+    for player in &away.players {
+        player_positions.insert(player.id.clone(), (Side::Away, player.position));
+    }
+
     MatchReport::from_events_with_players(
         ctx.events,
         ctx.home_possession_ticks,
         ctx.away_possession_ticks,
         total_minutes,
         tracked_player_ids,
+        player_positions,
     )
 }
 

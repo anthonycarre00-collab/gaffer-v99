@@ -471,7 +471,10 @@ impl LiveMatchState {
         }
 
         let def_line_mod = tactics_defensive_conversion_mod(&self.team_ref(def_side).tactics);
-        let conversion = (self.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 150.0)
+        // V100 P0-4 (Issue #31): Lowered divisor from 150.0 to 250.0 (matches
+        // the engine/resolution.rs change). Per-shot goal rate was ~15-19%
+        // before; now ~10-12%. Target league-wide average is ~2.4 goals/match.
+        let conversion = (self.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 250.0)
             .clamp(0.10, 0.70)
             * self.config.weather.goal_conversion;
 
@@ -494,8 +497,18 @@ impl LiveMatchState {
                 });
             self.events.push(evt.clone());
             events.push(evt);
-            // 40% of saves → corner (keeper parries wide), 60% → goal kick (keeper catches)
-            if rng.random_range(0.0..1.0f64) < 0.40 {
+            // V100 P0-4 (Issue #31): Shot cooldown. Same logic as
+            // engine/resolution.rs: 50% ball cleared to midfield (breaks
+            // cascading-shot loop), 20% corner (parried wide), 30% goal kick
+            // (keeper catches).
+            let roll: f64 = rng.random_range(0.0..1.0f64);
+            if roll < 0.50 {
+                let gk_evt = MatchEvent::new(minute, EventType::GoalKick, def_side, zone);
+                self.events.push(gk_evt.clone());
+                events.push(gk_evt);
+                self.ball_zone = Zone::Midfield;
+                self.possession = def_side;
+            } else if roll < 0.70 {
                 let corner_evt = MatchEvent::new(minute, EventType::Corner, att_side, zone);
                 self.events.push(corner_evt.clone());
                 events.push(corner_evt);

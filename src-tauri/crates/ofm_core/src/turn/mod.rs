@@ -321,6 +321,11 @@ fn prune_old_messages_and_news(game: &mut Game) {
             game.news.len(),
         );
     }
+
+    // V100 P0-8 (Issue #5): Prune rejected/withdrawn transfer offers older
+    // than 30 days. Prevents the player.transfer_offers Vec from growing
+    // unboundedly across multiple seasons of stale bids.
+    crate::transfers::prune_old_transfer_offers(game);
 }
 
 /// V99.3 VITAL-1 M1: Surface narrative memories for the user's team + squad.

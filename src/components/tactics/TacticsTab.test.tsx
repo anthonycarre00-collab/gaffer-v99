@@ -90,6 +90,7 @@ const makePlayer = (
  career: [],
  transfer_listed: false,
  loan_listed: false,
+ not_for_sale: false,
  transfer_offers: [],
  traits: [],
  ...overrides,

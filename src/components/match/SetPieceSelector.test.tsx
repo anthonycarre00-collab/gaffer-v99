@@ -52,6 +52,7 @@ const makePlayer = (overrides: Partial<PlayerData> = {}): PlayerData => ({
  career: [],
  transfer_listed: false,
  loan_listed: false,
+ not_for_sale: false,
  transfer_offers: [],
  traits: [],
  ...overrides,

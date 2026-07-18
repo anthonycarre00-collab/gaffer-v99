@@ -114,6 +114,54 @@ pub fn toggle_loan_list_internal(state: &StateManager, player_id: &str) -> Resul
     })
 }
 
+/// V100 P0-8 (Issue #5): Toggle the `not_for_sale` flag on a user-owned player.
+/// When set, AI clubs will not bid for the player. Also withdraws all pending
+/// offers on the player (since the user has signalled they refuse to sell).
+#[tauri::command]
+pub fn toggle_not_for_sale(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+) -> Result<Game, String> {
+    toggle_not_for_sale_internal(&state, &player_id)
+}
+
+pub fn toggle_not_for_sale_internal(
+    state: &StateManager,
+    player_id: &str,
+) -> Result<Game, String> {
+    info!("[cmd] toggle_not_for_sale: player_id={}", player_id);
+    mutate_active_game(state, |game| {
+        ofm_core::transfers::toggle_not_for_sale(game, player_id)?;
+        Ok(())
+    })
+}
+
+/// V100 P0-8 (Issue #5): Reject all pending transfer offers for a player in one
+/// batch. Returns the updated Game state. The count of rejected offers is
+/// logged but not returned (the frontend can re-derive from the offers list).
+#[tauri::command]
+pub fn reject_all_pending_offers(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+) -> Result<Game, String> {
+    reject_all_pending_offers_internal(&state, &player_id)
+}
+
+pub fn reject_all_pending_offers_internal(
+    state: &StateManager,
+    player_id: &str,
+) -> Result<Game, String> {
+    info!("[cmd] reject_all_pending_offers: player_id={}", player_id);
+    mutate_active_game(state, |game| {
+        let count = ofm_core::transfers::reject_all_pending_transfer_offers(game, player_id)?;
+        info!(
+            "[cmd] reject_all_pending_offers: rejected {} offer(s) for player {}",
+            count, player_id
+        );
+        Ok(())
+    })
+}
+
 #[tauri::command]
 pub fn make_transfer_bid(
     state: State<'_, Arc<StateManager>>,

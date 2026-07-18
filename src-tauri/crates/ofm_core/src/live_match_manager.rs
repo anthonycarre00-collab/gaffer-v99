@@ -244,6 +244,16 @@ pub fn create_live_match(
     config.weather = engine::weather_modifiers_for(&fixture.weather);
     config.fixture_pressure_multiplier = fixture.importance.pressure_multiplier();
 
+    // V100 P0-6 (Issue #8): Look up the competition's rules to derive the
+    // bench size (max_subs). Falls back to 5 if the competition isn't found
+    // or has no rules set (legacy saves).
+    let max_subs: u8 = game
+        .competitions
+        .iter()
+        .find(|c| c.id == fixture.competition_id)
+        .map(|c| c.rules.bench_size)
+        .unwrap_or(5);
+
     let mut match_state = LiveMatchState::new(
         home_xi,
         away_xi,
@@ -251,7 +261,8 @@ pub fn create_live_match(
         home_bench,
         away_bench,
         allows_extra_time,
-    );
+    )
+    .with_max_subs(max_subs);
     apply_saved_match_roles(
         &mut match_state,
         Side::Home,

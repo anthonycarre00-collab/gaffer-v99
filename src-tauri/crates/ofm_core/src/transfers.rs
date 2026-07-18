@@ -761,6 +761,98 @@ fn withdraw_pending_transfer_offers(player: &mut domain::player::Player) {
     }
 }
 
+/// V100 P0-8 (Issue #5): Reject all pending transfer offers for a player.
+/// Called when the user clicks "Reject all bids" on the player profile or
+/// transfer centre. Existing Rejected/Withdrawn/Accepted offers are untouched.
+/// Returns the count of offers flipped to Rejected so the caller can show
+/// a confirmation message.
+pub fn reject_all_pending_transfer_offers(
+    game: &mut Game,
+    player_id: &str,
+) -> Result<usize, String> {
+    let user_team_id = game
+        .manager
+        .team_id
+        .clone()
+        .ok_or_else(|| "be.error.noTeamAssigned".to_string())?;
+
+    let player = game
+        .players
+        .iter_mut()
+        .find(|p| p.id == player_id)
+        .ok_or_else(|| "be.error.playerNotFound".to_string())?;
+
+    if player.team_id.as_deref() != Some(user_team_id.as_str()) {
+        return Err("be.error.playerNotOwnedByUser".to_string());
+    }
+
+    let mut count = 0;
+    for offer in &mut player.transfer_offers {
+        if offer.status == TransferOfferStatus::Pending {
+            offer.status = TransferOfferStatus::Rejected;
+            offer.suggested_counter_fee = None;
+            count += 1;
+        }
+    }
+    Ok(count)
+}
+
+/// V100 P0-8 (Issue #5): Prune Rejected/Withdrawn transfer offers older than
+/// 30 days. Prevents the `transfer_offers` Vec from growing unboundedly across
+/// multiple seasons. Called daily from `prune_old_messages_and_news` (which
+/// already runs in the daily tick at `turn/mod.rs:267`).
+pub fn prune_old_transfer_offers(game: &mut Game) {
+    let current_date = game.clock.current_date.date_naive();
+    let cutoff = current_date - chrono::Duration::days(30);
+
+    for player in &mut game.players {
+        player.transfer_offers.retain(|offer| {
+            // Only prune terminal-state offers.
+            if offer.status != TransferOfferStatus::Rejected
+                && offer.status != TransferOfferStatus::Withdrawn
+            {
+                return true;
+            }
+            // Keep offers that don't have a date (defensive — shouldn't happen).
+            let Ok(date) = chrono::NaiveDate::parse_from_str(&offer.date, "%Y-%m-%d") else {
+                return true;
+            };
+            // Keep offers newer than the cutoff.
+            date >= cutoff
+        });
+    }
+}
+
+/// V100 P0-8 (Issue #5): Toggle the `not_for_sale` flag on a user-owned player.
+/// When set, AI clubs will not bid for the player (see `evaluate_transfer_market`).
+/// Returns the new flag value so the caller can update the UI.
+pub fn toggle_not_for_sale(game: &mut Game, player_id: &str) -> Result<bool, String> {
+    let user_team_id = game
+        .manager
+        .team_id
+        .clone()
+        .ok_or_else(|| "be.error.noTeamAssigned".to_string())?;
+
+    let player = game
+        .players
+        .iter_mut()
+        .find(|p| p.id == player_id)
+        .ok_or_else(|| "be.error.playerNotFound".to_string())?;
+
+    if player.team_id.as_deref() != Some(user_team_id.as_str()) {
+        return Err("be.error.playerNotOwnedByUser".to_string());
+    }
+
+    player.not_for_sale = !player.not_for_sale;
+    // If marking as not for sale, also withdraw all pending offers — the user
+    // has signalled they don't want to sell, so any open bids should be
+    // politely withdrawn rather than left dangling.
+    if player.not_for_sale {
+        withdraw_pending_transfer_offers(player);
+    }
+    Ok(player.not_for_sale)
+}
+
 fn finalize_successful_transfer_offer(
     game: &mut Game,
     player_id: &str,
@@ -1036,7 +1128,11 @@ pub fn evaluate_transfer_market(game: &mut Game) {
     // were blocked for the day. Now each club gets its own reputation-based cap.
     let mut completed_per_buyer: std::collections::HashMap<String, usize> =
         std::collections::HashMap::new();
-    let mut moved_player_ids: HashSet<String> = HashSet::new();
+    // V100 P0-1 (Issue #6): Per-window dedup. This used to be a local HashSet
+    // that reset every day, allowing a player bought on Day 1 to be sold on
+    // Day 5 and again on Day 12 — all in the same window. We now use the
+    // Game-level `moved_player_ids` set which is cleared when the window
+    // opens/closes (see `refresh_game_context`).
     // New incoming offers opened to user players today, tracked to throttle the
     // inbox: at most one new club per player and a hard squad-wide ceiling.
     let mut new_offers_per_player: std::collections::HashMap<String, usize> =
@@ -1064,6 +1160,12 @@ pub fn evaluate_transfer_market(game: &mut Game) {
             continue;
         };
         if player_has_pending_registration(player) {
+            continue;
+        }
+        // V100 P0-8 (Issue #5): Skip players the user has marked "not for sale".
+        // AI clubs will not bid on them. (User-owned players only — AI clubs
+        // can't mark their own players not-for-sale.)
+        if player.not_for_sale {
             continue;
         }
         let mut score = incoming_interest_score(current_date, player) + deadline_bonus;
@@ -1200,7 +1302,7 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         // first target clearing this club's filters is its highest-appeal
         // eligible signing.
         let chosen = philosophy_adjusted_shortlist.iter().find(|(_, target)| {
-            if target.owner_team_id == buyer_id || moved_player_ids.contains(&target.player_id) {
+            if target.owner_team_id == buyer_id || game.moved_player_ids.contains(&target.player_id) {
                 return false;
             }
             if loan_offer_player_id.as_deref() == Some(target.player_id.as_str()) {
@@ -1281,7 +1383,9 @@ pub fn evaluate_transfer_market(game: &mut Game) {
         )
         .is_ok()
         {
-            moved_player_ids.insert(candidate.player_id);
+            // V100 P0-1 (Issue #6): Insert into Game-level per-window set so
+            // this player cannot be re-sold by anyone else this window.
+            game.moved_player_ids.insert(candidate.player_id);
             completed_ai_transfers += 1;
             *completed_per_buyer.entry(buyer_id.clone()).or_insert(0) += 1;
         }
@@ -3912,6 +4016,30 @@ fn execute_transfer(
         .cloned()
         .ok_or("be.error.playerNotFound")?;
 
+    // V100 P0-1 (Issue #6): Ownership check. Without this, a stale offer
+    // (e.g. from a previous window, or one whose owner has since changed)
+    // could move a player from a team that no longer owns them. The
+    // `evaluate_transfer_market` path already filters by current owner,
+    // but the user-initiated paths (respond_to_offer, accept bid, etc.)
+    // could still pass a stale from_team_id.
+    if player_snapshot.team_id.as_deref() != Some(from_team_id) {
+        return Err(format!(
+            "be.error.transferOwnershipMismatch: player {} is owned by {:?}, not {}",
+            player_id, player_snapshot.team_id, from_team_id
+        ));
+    }
+
+    // V100 P0-1 (Issue #6): Per-window dedup. If this player has already
+    // moved in the current window, refuse the transfer. This catches the
+    // case where two clubs both bid for the same player on the same day
+    // and both offers are accepted.
+    if game.moved_player_ids.contains(player_id) {
+        return Err(format!(
+            "be.error.playerAlreadyMovedThisWindow: player {} has already been transferred in this window",
+            player_id
+        ));
+    }
+
     if player_has_active_or_pending_loan(&player_snapshot) {
         return Err(ERR_PLAYER_ALREADY_LOANED.into());
     }
@@ -4030,6 +4158,11 @@ fn execute_transfer(
             fee,
         });
     }
+
+    // V100 P0-1 (Issue #6): Record this player as moved in the current
+    // transfer window. They cannot be transferred again until the window
+    // resets (cleared by `refresh_game_context` when the window opens/closes).
+    game.moved_player_ids.insert(player_id.to_string());
 
     Ok(())
 }

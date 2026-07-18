@@ -250,6 +250,10 @@ pub fn run() {
             auto_select_set_pieces,
             toggle_transfer_list,
             toggle_loan_list,
+            // V100 P0-8 (Issue #5): Player influence — not-for-sale toggle +
+            // batch reject all pending offers.
+            toggle_not_for_sale,
+            reject_all_pending_offers,
             make_transfer_bid,
             make_loan_offer,
             exercise_loan_buy_option,

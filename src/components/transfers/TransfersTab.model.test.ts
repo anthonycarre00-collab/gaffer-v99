@@ -107,6 +107,7 @@ function createPlayer(overrides: Partial<PlayerData> = {}): PlayerData {
     career: [],
     transfer_listed: false,
     loan_listed: false,
+    not_for_sale: false,
     transfer_offers: [],
     traits: [],
     ...overrides,
@@ -349,6 +350,7 @@ describe("TransfersTab.model", () => {
       team_id: "team-2",
       loan_listed: true,
       transfer_listed: false,
+      not_for_sale: false,
       market_value: 50_000_000,
     });
     const freeAgent = createPlayer({

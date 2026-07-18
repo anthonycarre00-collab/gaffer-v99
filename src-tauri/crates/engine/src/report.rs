@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::event::{EventType, MatchEvent};
-use crate::types::{Side, Zone};
+use crate::types::{Position, Side, Zone};
 
 // ---------------------------------------------------------------------------
 // TeamStats — aggregate stats for one side
@@ -56,6 +56,11 @@ pub struct PlayerMatchStats {
     pub fouls_committed: u8,
     pub yellow_cards: u8,
     pub red_cards: u8,
+    /// V100 P0-5 (Issue #38): Saves credited to the GK. Previously saves
+    /// only incremented `team_stats.shots_on_target`, so a GK making 10
+    /// world-class saves got the same 6.0 rating as one who wasn't tested.
+    #[serde(default)]
+    pub saves: u8,
     /// Match rating 0.0–10.0, computed after the match.
     pub rating: f32,
 }
@@ -124,16 +129,26 @@ impl MatchReport {
             away_possession_ticks,
             total_minutes,
             Vec::new(),
+            // V100 P0-5 (Issue #38): Empty positions map — saves won't be
+            // credited to a GK, but the legacy `from_events` path is only
+            // used by tests/sparse paths that don't need GK-specific logic.
+            std::collections::HashMap::new(),
         )
     }
 
     /// Build the report while also assigning minutes played for tracked players.
+    ///
+    /// V100 P0-5 (Issue #38): Now accepts a `player_positions` map so saves
+    /// can be credited to the GK on the defending side (the ShotSaved event
+    /// only carries the shooter's ID, not the GK's). Also passes the map
+    /// to `compute_player_ratings` for proper position-aware rating logic.
     pub fn from_events_with_players(
         events: Vec<MatchEvent>,
         home_possession_ticks: u32,
         away_possession_ticks: u32,
         total_minutes: u8,
         tracked_player_ids: Vec<String>,
+        player_positions: HashMap<String, (Side, Position)>,
     ) -> Self {
         let mut home_stats = TeamStats::default();
         let mut away_stats = TeamStats::default();
@@ -142,6 +157,22 @@ impl MatchReport {
 
         home_stats.possession_ticks = home_possession_ticks;
         away_stats.possession_ticks = away_possession_ticks;
+
+        // V100 P0-5 (Issue #38): Pre-compute each side's GK id so we can
+        // credit saves during ShotSaved events. The ShotSaved event carries
+        // only the shooter's id; the GK is "whoever on the defending side
+        // has Position::Goalkeeper". If a side has no GK in the positions
+        // map (e.g. test fixtures), saves won't be credited to anyone.
+        let home_gk_id: Option<String> = player_positions
+            .iter()
+            .find(|(_, (_, pos))| *pos == Position::Goalkeeper)
+            .filter(|(_, (side, _))| *side == Side::Home)
+            .map(|(id, _)| id.clone());
+        let away_gk_id: Option<String> = player_positions
+            .iter()
+            .find(|(_, (_, pos))| *pos == Position::Goalkeeper)
+            .filter(|(_, (side, _))| *side == Side::Away)
+            .map(|(id, _)| id.clone());
 
         // State machine to determine goal source from preceding set-piece event.
         // Tracks (event_type, side) so a set piece earned by one team doesn't
@@ -247,6 +278,25 @@ impl MatchReport {
                         let ps = player_stats.entry(pid.to_string()).or_default();
                         ps.shots += 1;
                         ps.shots_on_target += 1;
+                    }
+                    // V100 P0-5 (Issue #38): Credit the save to the defending
+                    // side's GK. The ShotSaved event carries the SHOOTER's
+                    // pid, not the GK's, so we look up the defending side's
+                    // GK from the pre-computed `home_gk_id` / `away_gk_id`.
+                    // Only ShotSaved counts as a save (ShotOnTarget events
+                    // in this engine are the on-target variant that didn't
+                    // result in a save — they're a different event type).
+                    if matches!(event.event_type, EventType::ShotSaved) {
+                        let defending_gk_id = match event.side {
+                            // Attacker is Home → defender is Away → Away GK
+                            Side::Home => away_gk_id.as_deref(),
+                            // Attacker is Away → defender is Home → Home GK
+                            Side::Away => home_gk_id.as_deref(),
+                        };
+                        if let Some(gk_id) = defending_gk_id {
+                            let gk_ps = player_stats.entry(gk_id.to_string()).or_default();
+                            gk_ps.saves += 1;
+                        }
                     }
                 }
                 EventType::ShotOffTarget => {
@@ -380,11 +430,15 @@ impl MatchReport {
         // V99.1: Compute player ratings based on match performance.
         // Previously this field was never set (stayed at 0.0), causing
         // all player avg_ratings to be 0.0 in the DB.
+        // V100 P0-5 (Issue #38): Now passes the player_positions map so the
+        // rating function can apply position-specific bonuses (GK saves,
+        // DEF clean sheet, etc.) instead of relying on heuristics.
         compute_player_ratings(
             &mut player_stats,
             home_stats.goals,
             away_stats.goals,
             Side::Home,
+            &player_positions,
         );
 
         let total_poss = home_possession_ticks + away_possession_ticks;
@@ -485,27 +539,44 @@ fn populate_minutes_played(
 /// get passing volume bonus. FWDs get goal/shot bonuses. Previously every
 /// position got the same goal/assist/card structure, which was unrealistic
 /// (a GK getting the same goal bonus as a striker).
+///
+/// V100 P0-5 (Issue #38): Properly position-aware now. The function accepts
+/// a `player_positions` map (player_id -> (Side, Position)) so we can apply
+/// position-specific bonuses without guessing from stats:
+/// - GK: +0.05 per save (cap +1.5), clean sheet +1.5 (60+ min, 0 conceded),
+///        -0.2 per goal conceded (cap -1.5)
+/// - DEF: clean sheet +0.8 (60+ min), tackles/interceptions ×1.5 weight,
+///        -0.1 per goal conceded (cap -0.8)
+/// - MID: passing volume bonus (universal, kept as-is)
+/// - FWD: goal/shot bonuses (universal, kept as-is)
 fn compute_player_ratings(
     player_stats: &mut HashMap<String, PlayerMatchStats>,
     home_goals: u8,
     away_goals: u8,
     _home_side: Side,
+    player_positions: &HashMap<String, (Side, Position)>,
 ) {
-    for (_player_id, ps) in player_stats.iter_mut() {
+    for (player_id, ps) in player_stats.iter_mut() {
         let mut rating: f32 = 6.0; // Base rating
 
-        // V99.10 C1: Position-aware scoring. The PlayerMatchStats doesn't
-        // carry position info (the engine works with position-agnostic
-        // stats), so we use heuristics based on which stats are populated.
-        // A GK will have high minutes but low tackles/passes; a FWD will
-        // have high shots; a DEF will have high tackles/interceptions.
-        //
-        // This is an approximation — the proper fix would thread `side` +
-        // `position` into PlayerMatchStats (see C1 plan item 4). For now,
-        // the heuristics produce a more realistic distribution than the
-        // old position-blind formula.
+        // V100 P0-5 (Issue #38): Look up this player's side + position.
+        // Players not in the positions map (e.g. test fixtures, or players
+        // who came on as subs and weren't tracked) fall back to the old
+        // position-blind heuristics.
+        let pos_info = player_positions.get(player_id);
 
-        // Positive contributions (universal)
+        // Determine goals conceded by this player's team.
+        let goals_conceded: u8 = if let Some((side, _)) = pos_info {
+            match side {
+                Side::Home => away_goals, // Home team concedes Away's goals
+                Side::Away => home_goals,  // Away team concedes Home's goals
+            }
+        } else {
+            // Unknown side — use the average as a defensive fallback.
+            ((home_goals + away_goals) / 2).min(home_goals).min(away_goals)
+        };
+
+        // Positive contributions (universal — apply to all positions)
         rating += ps.goals as f32 * 1.0;
         rating += ps.assists as f32 * 0.5;
         rating += (ps.shots_on_target as f32 * 0.3).min(1.0);
@@ -513,22 +584,61 @@ fn compute_player_ratings(
         rating += (ps.interceptions as f32 * 0.1).min(0.5);
         rating += (ps.passes_completed as f32 * 0.02).min(0.5);
 
-        // V99.10 C1: Clean sheet bonus for defenders/GKs (60+ min, 0 conceded).
-        // Approximation: if BOTH teams scored 0 (0-0 draw), all players get
-        // a small bonus. If only one team conceded 0, we can't tell which
-        // players are on that team without `side` info, so we skip.
-        if ps.minutes_played >= 60 {
-            if home_goals == 0 && away_goals == 0 {
-                rating += 0.5; // 0-0 draw, both defences good
+        // V100 P0-5 (Issue #38): Position-specific scoring.
+        if let Some((_, position)) = pos_info {
+            match position {
+                Position::Goalkeeper => {
+                    // Saves: +0.05 per save, capped at +1.5 (30 saves)
+                    rating += (ps.saves as f32 * 0.05).min(1.5);
+                    // Clean sheet bonus: +1.5 (60+ min, 0 conceded)
+                    if ps.minutes_played >= 60 && goals_conceded == 0 {
+                        rating += 1.5;
+                    }
+                    // Goals conceded penalty: -0.2 per goal, cap -1.5
+                    rating -= (goals_conceded as f32 * 0.2).min(1.5);
+                }
+                Position::Defender => {
+                    // Clean sheet bonus: +0.8 (60+ min, 0 conceded)
+                    if ps.minutes_played >= 60 && goals_conceded == 0 {
+                        rating += 0.8;
+                    }
+                    // Tackles/interceptions weighted ×1.5 (extra credit for DEF)
+                    let defensive_bonus =
+                        ((ps.tackles_won as f32 + ps.interceptions as f32) * 0.05).min(1.0);
+                    rating += defensive_bonus * 0.5; // additional to the universal 0.1
+                    // Goals conceded penalty: -0.1 per goal, cap -0.8
+                    rating -= (goals_conceded as f32 * 0.1).min(0.8);
+                }
+                Position::Midfielder => {
+                    // Passing volume bonus already applied universally.
+                    // Small extra credit for high-work-rate MIDs (5+ tackles).
+                    if ps.tackles_won >= 5 {
+                        rating += 0.3;
+                    }
+                }
+                Position::Forward => {
+                    // Shot volume bonus: +0.02 per shot, cap +0.5
+                    rating += (ps.shots as f32 * 0.02).min(0.5);
+                    // Bonus for shots on target (already in universal but
+                    // give FWDs a small extra for being clinical).
+                    if ps.shots_on_target >= 2 && ps.goals >= 1 {
+                        rating += 0.3; // clinical finisher bonus
+                    }
+                }
             }
-        }
-
-        // V99.10 C1: Defender-lean bonus — players with high tackles +
-        // interceptions but low shots get a defensive bonus (proxy for
-        // DEF/GK who don't score goals but contribute defensively).
-        let defensive_actions = ps.tackles_won as f32 + ps.interceptions as f32;
-        if defensive_actions >= 5.0 && ps.shots == 0 {
-            rating += (defensive_actions * 0.05).min(1.0); // up to +1.0
+        } else {
+            // V100 P0-5 (Issue #38): Fallback for players without position
+            // info — use the old V99.10 C1 heuristics. This preserves
+            // backward compatibility for tests and the sparse-sim path.
+            if ps.minutes_played >= 60 {
+                if home_goals == 0 && away_goals == 0 {
+                    rating += 0.5; // 0-0 draw, both defences good
+                }
+            }
+            let defensive_actions = ps.tackles_won as f32 + ps.interceptions as f32;
+            if defensive_actions >= 5.0 && ps.shots == 0 {
+                rating += (defensive_actions * 0.05).min(1.0);
+            }
         }
 
         // Negative contributions

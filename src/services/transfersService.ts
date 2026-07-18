@@ -160,3 +160,28 @@ export async function toggleLoanList(
     playerId,
   });
 }
+
+/**
+ * V100 P0-8 (Issue #5): Toggle the `not_for_sale` flag on a user-owned player.
+ * When set, AI clubs will not bid for the player. Also withdraws all pending
+ * offers on the player.
+ */
+export async function toggleNotForSale(
+  playerId: string,
+): Promise<GameStateData> {
+  return invoke<GameStateData>("toggle_not_for_sale", {
+    playerId,
+  });
+}
+
+/**
+ * V100 P0-8 (Issue #5): Reject all pending transfer offers for a player in one
+ * batch. Returns the updated game state.
+ */
+export async function rejectAllPendingOffers(
+  playerId: string,
+): Promise<GameStateData> {
+  return invoke<GameStateData>("reject_all_pending_offers", {
+    playerId,
+  });
+}

@@ -22,8 +22,11 @@ export default function HallOfFameWorldTab({
  onSelectTeam,
 }: HallOfFameWorldTabProps) {
  const { t, i18n } = useTranslation();
- const legends = deriveHallOfFameLegends(gameState);
- const champions = derivePastChampions(gameState);
+ // V100 P0-10 (Issue #22): Pass user's team id so Hall of Fame defaults to
+ // showing their domestic league's champions and legends first.
+ const userTeamId = gameState.manager?.team_id ?? null;
+ const legends = deriveHallOfFameLegends(gameState, userTeamId);
+ const champions = derivePastChampions(gameState, userTeamId);
  const worldCupChampions = gameState.world_history?.world_cup_champions ?? [];
 
  return (

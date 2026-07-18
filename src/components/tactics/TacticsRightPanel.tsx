@@ -4,30 +4,28 @@ import { invoke } from "@tauri-apps/api/core";
 import { Award, ChevronDown, CircleDot, CornerDownRight, Crown, Footprints } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { GameStateData, PlayerData, TeamMatchRolesData } from "../../store/gameStore";
-import type { TacticsPhaseSettings } from "../../store/types";
 import SetPieceSelector from "../match/SetPieceSelector";
-import { PhaseBlueprintPanel } from "./PhaseBlueprintPanel";
 import {
  buildUpdatedMatchRolesForAssignment,
  resolveEffectiveMatchRoles,
 } from "./TacticsRoles.helpers";
 
+// V100 P0-9 (Issue #3): Phase Blueprint moved to Style tab only.
+// TacticsRightPanel now shows Roles + Set Pieces only.
+// The PhaseBlueprintPanel is rendered directly by TacticsTab on the style tab.
+
 interface TacticsRightPanelProps {
  allSquad: PlayerData[];
  matchRoles?: TeamMatchRolesData;
  onGameUpdate: (g: GameStateData) => void;
- onTacticsPhaseChange: (patch: Partial<TacticsPhaseSettings>) => void;
  startingPlayers: PlayerData[];
- tacticsPhase?: TacticsPhaseSettings;
 }
 
 export default function TacticsRightPanel({
  allSquad,
  matchRoles,
  onGameUpdate,
- onTacticsPhaseChange,
  startingPlayers,
- tacticsPhase,
 }: TacticsRightPanelProps): JSX.Element {
  const { t } = useTranslation();
 
@@ -76,38 +74,12 @@ export default function TacticsRightPanel({
  }
 
  const [rolesOpen, setRolesOpen] = useState(true);
- const [blueprintOpen, setBlueprintOpen] = useState(true);
 
  return (
   <div className="flex flex-col gap-4">
-   {/* V99.7-7: Phase Blueprint section — moved ABOVE set pieces to make it
-     more prominent. This is the key "tinkering" panel for tactical dials.
-     Highlighted with accent border + background to draw the eye. */}
-   <div className="rounded border border-accent-300 bg-carbon-1 dark:border-accent-500/40 bg-carbon-1 shadow-sm">
-    <div className="border-b border-accent-200 px-3 py-2 dark:border-accent-500/30 bg-accent-50 dark:bg-accent-500/10">
-     <button
-      type="button"
-      onClick={() => { setBlueprintOpen((o) => !o); }}
-      aria-expanded={blueprintOpen}
-      className="flex items-center gap-1.5 text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
-     >
-      <ChevronDown
-       className={`h-3 w-3 transition-transform duration-150 ${blueprintOpen ? "" : "-rotate-90"}`}
-      />
-      {t("tactics.phaseBlueprint")}
-     </button>
-    </div>
-    {blueprintOpen && (
-     <PhaseBlueprintPanel
-      tacticsPhase={tacticsPhase}
-      onTacticsPhaseChange={onTacticsPhaseChange}
-     />
-    )}
-   </div>
-
-   {/* V99.7-7: Roles + Set Pieces section — now below Phase Blueprint.
+   {/* V100 P0-9 (Issue #3): Roles + Set Pieces section.
      Captain, vice-captain, penalty, free kick, corner all in one panel.
-     Not repeated across tabs — only shown here. */}
+     Phase Blueprint has been moved to the Style tab — see TacticsTab.tsx. */}
    <div className="rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-1">
     <div className="border-b border-slate-line-soft px-3 py-2 border-slate-line">
      <button

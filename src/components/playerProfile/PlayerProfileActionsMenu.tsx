@@ -10,7 +10,9 @@ import {
  buildDividerMenuItem,
  buildMakeTransferBidMenuItem,
  buildOfferFreeAgentContractMenuItem,
+ buildRejectAllPendingOffersMenuItem,
  buildToggleLoanListMenuItem,
+ buildToggleNotForSaleMenuItem,
  buildToggleTransferListMenuItem,
 } from "../playerActions/playerContextMenuItems";
 import {
@@ -20,7 +22,12 @@ import {
 } from "../squad/SquadTab.helpers";
 import { canDelegateToYouthAcademy } from "../../lib/playerSquad";
 import { setPlayerSquadRole, setStartingXi } from "../../services/squadService";
-import { toggleLoanList, toggleTransferList } from "../../services/transfersService";
+import {
+ rejectAllPendingOffers,
+ toggleLoanList,
+ toggleNotForSale,
+ toggleTransferList,
+} from "../../services/transfersService";
 import { resolveTranslatedErrorMessage } from "../../utils/errorMessage";
 import { Button } from "../ui";
 
@@ -196,6 +203,23 @@ export default function PlayerProfileActionsMenu({
  ...buildToggleLoanListMenuItem(t, player.loan_listed, () => {
  void runMutation(() => toggleLoanList(player.id));
  }),
+ disabled: actionBusy,
+ },
+ // V100 P0-8 (Issue #5): Not-for-sale toggle + reject-all-bids batch action.
+ {
+ ...buildToggleNotForSaleMenuItem(t, player.not_for_sale, () => {
+ void runMutation(() => toggleNotForSale(player.id));
+ }),
+ disabled: actionBusy,
+ },
+ {
+ ...buildRejectAllPendingOffersMenuItem(
+ t,
+ player.transfer_offers?.filter((o) => o.status === "Pending").length ?? 0,
+ () => {
+ void runMutation(() => rejectAllPendingOffers(player.id));
+ },
+ ),
  disabled: actionBusy,
  },
  );

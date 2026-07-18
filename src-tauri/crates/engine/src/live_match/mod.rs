@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::event::MatchEvent;
 use crate::report::MatchReport;
-use crate::types::{MatchConfig, PlayStyle, PlayerData, PlayerRole, Side, TeamData, Zone};
+use crate::types::{MatchConfig, PlayStyle, PlayerData, PlayerRole, Position, Side, TeamData, Zone};
 
 // ---------------------------------------------------------------------------
 // MatchPhase — tracks where we are in the match lifecycle
@@ -296,6 +296,16 @@ impl LiveMatchState {
         }
     }
 
+    /// V100 P0-6 (Issue #8): Override the maximum number of substitutions
+    /// allowed. Default is 5 (set in `new`); this builder lets the caller
+    /// pass in the competition's `bench_size` (EPL=7, WC=15, etc.) so the
+    /// engine respects per-competition rules. Consumes and returns self for
+    /// chaining.
+    pub fn with_max_subs(mut self, max_subs: u8) -> Self {
+        self.max_subs = max_subs;
+        self
+    }
+
     /// Step one minute forward. Returns the events that occurred.
     pub fn step_minute<R: Rng>(&mut self, rng: &mut R) -> MinuteResult {
         match self.phase {
@@ -381,12 +391,24 @@ impl LiveMatchState {
             .map(|player| player.id.clone())
             .collect();
 
+        // V100 P0-5 (Issue #38): Build a player_id -> (Side, Position) map so
+        // the report can credit saves to GKs and apply position-aware ratings.
+        let mut player_positions: std::collections::HashMap<String, (Side, Position)> =
+            std::collections::HashMap::new();
+        for player in &self.home.players {
+            player_positions.insert(player.id.clone(), (Side::Home, player.position));
+        }
+        for player in &self.away.players {
+            player_positions.insert(player.id.clone(), (Side::Away, player.position));
+        }
+
         let mut report = MatchReport::from_events_with_players(
             self.events,
             self.home_possession_ticks,
             self.away_possession_ticks,
             self.current_minute,
             tracked_player_ids,
+            player_positions,
         );
         if self.penalty_state.home_taken > 0 || self.penalty_state.away_taken > 0 {
             report.home_penalties = Some(self.penalty_state.home_scored);

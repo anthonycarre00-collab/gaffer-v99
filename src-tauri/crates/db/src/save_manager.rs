@@ -984,6 +984,7 @@ mod tests {
                 fouls_committed: 1,
                 yellow_cards: 0,
                 red_cards: 0,
+                saves: 0,
                 rating: 7.8,
             }],
             team_matches: vec![TeamMatchStatsRecord {

@@ -40,6 +40,7 @@ import {
 import TacticsPitch from "./TacticsPitch";
 import TacticsPlayerList from "./TacticsPlayerList";
 import TacticsRightPanel from "./TacticsRightPanel";
+import { PhaseBlueprintPanel } from "./PhaseBlueprintPanel";
 import {
  buildCustomTacticsStorageKey,
  loadCustomTactics,
@@ -981,30 +982,43 @@ export default function TacticsTab({
  />
  )}
 
- {/* V99.7-7: Right panel — Phase Blueprint + Set Pieces + Roles.
-   Shown on pitch + style tabs (setPieces tab was removed). */}
+ {/* V100 P0-9 (Issue #3): Right panel — Roles + Set Pieces only.
+   Shown on pitch + style tabs (setPieces tab was removed).
+   Phase Blueprint is rendered ONLY on the style tab — see below. */}
  {(activeSubTab === "pitch" || activeSubTab === "style") && (
  <TacticsRightPanel
  allSquad={roster}
  matchRoles={team.match_roles}
  onGameUpdate={onGameUpdate}
- onTacticsPhaseChange={(patch) => {
- void handleTacticsPhaseChange(patch);
- }}
  startingPlayers={startingXI}
- tacticsPhase={team?.tactics_phase}
  />
  )}
 
- {/* Style tab — left column shows a Gaffer-voice style guidance panel so
-   the screen is no longer empty on the left when only the right panel
-   would otherwise be visible. */}
+ {/* Style tab — left column shows Gaffer-voice style guidance + Phase Blueprint.
+   V100 P0-9 (Issue #3): Phase Blueprint now lives on Style tab only. */}
  {activeSubTab === "style" && (
+ <div className="flex flex-col gap-4">
  <StyleGuidancePanel
  formation={formation}
  playStyle={activePlayStyle}
  tacticsPhase={team?.tactics_phase}
  />
+ <div className="rounded border border-accent-300 bg-carbon-1 dark:border-accent-500/40 shadow-sm">
+  <div className="border-b border-accent-200 px-3 py-2 dark:border-accent-500/30 bg-accent-50 dark:bg-accent-500/10">
+   <h3 className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-accent-600 dark:text-accent-400">
+    {t("tactics.phaseBlueprint")}
+   </h3>
+  </div>
+  <div className="p-3">
+   <PhaseBlueprintPanel
+   tacticsPhase={team?.tactics_phase}
+   onTacticsPhaseChange={(patch) => {
+   void handleTacticsPhaseChange(patch);
+   }}
+   />
+  </div>
+ </div>
+ </div>
  )}
  </div>
 

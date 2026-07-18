@@ -38,8 +38,8 @@ pub fn replace_stats_state(conn: &Connection, stats: &StatsState) -> Result<(), 
                 opponent_team_id, home_team_id, away_team_id, home_goals, away_goals,
                 minutes_played, goals, assists, shots, shots_on_target, passes_completed,
                 passes_attempted, tackles_won, interceptions, fouls_committed,
-                yellow_cards, red_cards, rating
-            ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)",
+                yellow_cards, red_cards, saves, rating
+            ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26)",
             params![
                 record.fixture_id,
                 record.season,
@@ -65,6 +65,8 @@ pub fn replace_stats_state(conn: &Connection, stats: &StatsState) -> Result<(), 
                 record.fouls_committed,
                 record.yellow_cards,
                 record.red_cards,
+                // V100 P0-5 (Issue #38): Persist GK saves.
+                record.saves,
                 record.rating,
             ],
         )
@@ -116,7 +118,7 @@ pub fn load_stats_state(conn: &Connection) -> Result<StatsState, String> {
                     opponent_team_id, home_team_id, away_team_id, home_goals, away_goals,
                     minutes_played, goals, assists, shots, shots_on_target, passes_completed,
                     passes_attempted, tackles_won, interceptions, fouls_committed,
-                    yellow_cards, red_cards, rating
+                    yellow_cards, red_cards, saves, rating
              FROM player_match_stats
              ORDER BY date, matchday, fixture_id, player_id",
         )
@@ -148,7 +150,9 @@ pub fn load_stats_state(conn: &Connection) -> Result<StatsState, String> {
                 fouls_committed: row.get(21)?,
                 yellow_cards: row.get(22)?,
                 red_cards: row.get(23)?,
-                rating: row.get(24)?,
+                // V100 P0-5 (Issue #38): Load saves (column added by v047 migration).
+                saves: row.get(24)?,
+                rating: row.get(25)?,
             })
         })
         .map_err(|_| GAME_PERSISTENCE_LOAD_ERROR.to_string())?;
@@ -244,6 +248,7 @@ mod tests {
                 fouls_committed: 1,
                 yellow_cards: 0,
                 red_cards: 0,
+                saves: 0,
                 rating: 7.4,
             }],
             team_matches: vec![TeamMatchStatsRecord {

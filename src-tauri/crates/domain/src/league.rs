@@ -49,9 +49,56 @@ pub struct CompetitionRules {
     /// like the World Cup where multiple matches happen on the same day.
     #[serde(default = "default_knockout_matches_per_day")]
     pub knockout_matches_per_day: u32,
+    /// V100 P0-6 (Issue #8): Bench size for this competition. Replaces the
+    /// hardcoded `max_subs: 5` in `live_match/mod.rs`. Default 7 (EPL/normal
+    /// leagues), WC 15, lower leagues may use 5. Note: this is the NUMBER OF
+    /// SUBSTITUTES, not the total matchday squad size.
+    #[serde(default = "default_bench_size")]
+    pub bench_size: u8,
+    /// V100 P0-6 (Issue #8): When to apply extra time. Knockout-only is the
+    /// most common — league matches never go to extra time. Default Never
+    /// for leagues, KnockoutOnly for cups.
+    #[serde(default)]
+    pub extra_time: ExtraTimeRule,
+    /// V100 P0-6 (Issue #8): Whether penalties apply, and if so when.
+    /// Default Never for leagues, AfterExtraTime for knockout cups.
+    #[serde(default)]
+    pub penalties: PenaltyRule,
+    /// V100 P0-6 (Issue #8): Competition prestige (0-1000). Affects news story
+    /// weighting, board expectations, prize money, reputation gains. Default
+    /// 500 (mid-tier); WC = 1000, UCL = 950, EPL = 850, FA Cup = 700,
+    /// lower-league cup = 400.
+    #[serde(default = "default_prestige")]
+    pub prestige: u32,
+}
+
+/// V100 P0-6 (Issue #8): When extra time applies in a competition.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum ExtraTimeRule {
+    /// Extra time never played (matches end at 90 min, draws stay draws).
+    #[default]
+    Never,
+    /// Extra time only in knockout rounds (most cups).
+    KnockoutOnly,
+    /// Extra time in every match (rare; some youth tournaments).
+    Always,
+}
+
+/// V100 P0-6 (Issue #8): When penalties apply in a competition.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub enum PenaltyRule {
+    /// Penalties never taken.
+    #[default]
+    Never,
+    /// Penalties after extra time if scores are level (knockout cups).
+    AfterExtraTime,
+    /// Penalties straight after 90 mins if level (some group-stage tiebreakers).
+    After90Minutes,
 }
 
 fn default_knockout_matches_per_day() -> u32 { 1 }
+fn default_bench_size() -> u8 { 7 }
+fn default_prestige() -> u32 { 500 }
 
 impl Default for CompetitionRules {
     fn default() -> Self {
@@ -64,6 +111,10 @@ impl Default for CompetitionRules {
             group_matchday_gap_days: 7,
             knockout_round_gap_days: 14,
             knockout_matches_per_day: 1,
+            bench_size: default_bench_size(),
+            extra_time: ExtraTimeRule::default(),
+            penalties: PenaltyRule::default(),
+            prestige: default_prestige(),
         }
     }
 }

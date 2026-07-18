@@ -491,8 +491,13 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
     }
 
     let def_line_mod = tactics_defensive_conversion_mod(&ctx.team(def_side).tactics);
+    // V100 P0-4 (Issue #31): Lowered the quality-driven inflation divisor from
+    // 150.0 to 250.0. Previously a 75-rated shooter vs 60-rated GK produced
+    // conversion 0.30 + 0.10 = 0.40 (per-shot goal rate ~40%, way too high).
+    // Now the same matchup yields 0.30 + 0.06 = 0.36, and an 80-vs-55 matchup
+    // yields 0.36 instead of 0.47. Target league-wide average is ~2.4 goals/match.
     let conversion =
-        (ctx.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 150.0)
+        (ctx.config.goal_conversion_base * def_line_mod + (shoot_rating - gk_rating) / 250.0)
             .clamp(0.10, 0.70)
             * ctx.config.weather.goal_conversion;
 
@@ -509,12 +514,26 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
         ctx.emit(
             MatchEvent::new(minute, EventType::ShotSaved, att_side, zone).with_player(&shooter.id),
         );
-        // 40% of saves → corner (keeper parries wide), 60% → goal kick (keeper catches)
-        if rng.random_range(0.0..1.0f64) < 0.40 {
+        // V100 P0-4 (Issue #31): Shot cooldown. Previously a save had a 40%
+        // chance of cascading into a corner (which then re-entered the box
+        // for another shot), producing 2-4 shots per attacking entry. Now
+        // 50% of saves clear the ball to midfield (breaking the cascade),
+        // 20% go to a corner (still allows some pressure), 30% are caught
+        // by the keeper (goal kick to defending side).
+        let roll: f64 = rng.random_range(0.0..1.0f64);
+        if roll < 0.50 {
+            // Ball cleared to midfield — breaks the cascading-shot loop.
+            ctx.emit(MatchEvent::new(minute, EventType::GoalKick, def_side, zone));
+            ctx.possession = def_side;
+            ctx.ball_zone = Zone::Midfield;
+        } else if roll < 0.70 {
+            // 20% chance: corner (parried wide). Attacker keeps pressure
+            // but the corner is a fresh entry, not a continuation.
             ctx.emit(MatchEvent::new(minute, EventType::Corner, att_side, zone));
             ctx.possession = att_side;
             ctx.ball_zone = Zone::attacking_box(att_side);
         } else {
+            // 30% chance: keeper catches, goal kick to defending side.
             ctx.emit(MatchEvent::new(minute, EventType::GoalKick, def_side, zone));
             ctx.possession = def_side;
             ctx.ball_zone = Zone::defensive_third(def_side);

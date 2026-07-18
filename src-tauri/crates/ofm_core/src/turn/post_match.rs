@@ -352,6 +352,8 @@ fn build_stats_state_capture(
                 fouls_committed: stats.fouls_committed,
                 yellow_cards: stats.yellow_cards,
                 red_cards: stats.red_cards,
+                // V100 P0-5 (Issue #38): Persist saves (mostly relevant for GKs).
+                saves: stats.saves,
                 rating: stats.rating,
             })
         })

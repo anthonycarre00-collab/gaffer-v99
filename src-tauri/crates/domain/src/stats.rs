@@ -41,6 +41,11 @@ pub struct PlayerMatchStatsRecord {
     pub fouls_committed: u8,
     pub yellow_cards: u8,
     pub red_cards: u8,
+    /// V100 P0-5 (Issue #38): Saves credited to the GK. Persisted so season
+    /// totals and awards can reflect GK performance. `#[serde(default)]` for
+    /// backward-compat with old saves.
+    #[serde(default)]
+    pub saves: u8,
     pub rating: f32,
 }
 

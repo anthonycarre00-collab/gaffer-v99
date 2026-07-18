@@ -305,6 +305,7 @@ function createProspect(overrides: Partial<GameStateData["players"][number]> = {
   retired: false,
   transfer_listed: false,
   loan_listed: false,
+  not_for_sale: false,
   transfer_offers: [],
   traits: [],
   ovr: 63,

@@ -10,7 +10,18 @@ const TRANSFER_WINDOW_POST_START_DAYS: i64 = 30;
 const JANUARY_WINDOW_DAYS: i64 = 31;
 
 pub fn refresh_game_context(game: &mut Game) {
-    game.season_context = derive_season_context(game);
+    // V100 P0-1 (Issue #6): Detect transfer window status transitions.
+    // When the window transitions (Closed↔Open/DeadlineDay), clear the
+    // per-window `moved_player_ids` set so players can move in the new
+    // window. Without this, a player bought in the summer window would
+    // be locked out of the January window too.
+    let previous_status = game.season_context.transfer_window.status;
+    let new_context = derive_season_context(game);
+    let new_status = new_context.transfer_window.status;
+    if previous_status != new_status {
+        game.moved_player_ids.clear();
+    }
+    game.season_context = new_context;
 }
 
 pub fn derive_season_context(game: &Game) -> SeasonContext {

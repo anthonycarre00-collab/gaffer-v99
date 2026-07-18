@@ -714,12 +714,13 @@ fn average_goals_realistic() {
         total_goals += (report.home_goals + report.away_goals) as u32;
     }
     let avg = total_goals as f64 / trials as f64;
-    // V99.10 Item 22: Tightened from 0.5-8.0 to 1.5-4.0. Real football
-    // averages ~2.5 goals/game. The old range was 16× wider than necessary
-    // and would pass even if the engine averaged 7 goals/game.
+    // V100 P0-4 (Issue #31): Tightened from 1.5-4.0 to 1.5-3.0. Real football
+    // averages ~2.4 goals/game. The previous 4.0 upper bound was too lenient
+    // and would pass even if the engine averaged 3.9 goals/game (which feels
+    // like basketball). The new 3.0 cap forces realistic scorelines.
     assert!(
-        avg > 1.5 && avg < 4.0,
-        "Average goals per game should be realistic (1.5-4.0): {avg:.2}"
+        avg > 1.5 && avg < 3.0,
+        "Average goals per game should be realistic (1.5-3.0): {avg:.2}"
     );
 }
 

@@ -117,6 +117,13 @@ pub struct Player {
     pub transfer_listed: bool,
     #[serde(default)]
     pub loan_listed: bool,
+    /// V100 P0-8 (Issue #5): When true, AI clubs will not bid for this player
+    /// and `evaluate_transfer_market` skips them entirely. Set by the user
+    /// via the `toggle_not_for_sale` command (typically from the player
+    /// profile screen). Distinct from `transfer_listed` (which means the
+    /// user WANTS to sell) — `not_for_sale` means the user refuses all bids.
+    #[serde(default)]
+    pub not_for_sale: bool,
     /// V99.4 T1.3: If the player has requested a transfer, this is the date
     /// the request was made. None = no active request.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -913,6 +920,7 @@ impl Player {
             training_focus: None,
             transfer_listed: false,
             loan_listed: false,
+            not_for_sale: false,
             transfer_offers: Vec::new(),
             loan_offers: Vec::new(),
             active_loan: None,
@@ -1004,6 +1012,7 @@ mod tests {
             "career": [],
             "transfer_listed": false,
             "loan_listed": false,
+            "not_for_sale": false,
             "transfer_offers": [],
             "morale_core": {}
         }))

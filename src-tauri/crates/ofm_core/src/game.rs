@@ -212,6 +212,13 @@ pub struct Game {
     /// and the fuzzed attribute cache from the last scout's reading.
     #[serde(default)]
     pub scouting_knowledge: HashMap<String, ScoutingKnowledge>,
+
+    /// V100 P0-1 (Issue #6): Per-transfer-window set of player ids that have
+    /// already moved. Prevents the same player being bought AND sold multiple
+    /// times in the same window. Cleared when the transfer window opens/closes
+    /// (see `refresh_game_context` in `season_context.rs`).
+    #[serde(default)]
+    pub moved_player_ids: HashSet<String>,
 }
 
 fn default_game_seed() -> u64 {
@@ -260,6 +267,7 @@ impl Game {
             memory_store: crate::narrative::MemoryStore::new(),
             media_engine: crate::media::MediaEngine::new(),
             scouting_knowledge: HashMap::new(),
+            moved_player_ids: HashSet::new(),
         };
         game.promote_legacy_league();
         crate::football_identity::upgrade_game_football_identities(&mut game);
