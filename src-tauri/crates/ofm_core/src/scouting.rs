@@ -47,10 +47,23 @@ fn params(pairs: &[(&str, &str)]) -> HashMap<String, String> {
         .collect()
 }
 
-/// Scouts can only handle one assignment at a time across player and youth scouting.
+/// V100 P0-15 (Issue #18): Scouts can handle multiple assignments based on
+/// their judging_ability attribute. Previously this function ignored its
+/// parameter and always returned 1, meaning a 90-judging-ability scout was
+/// as limited as a 30-judging-ability one.
+///
+/// Tiered scaling:
+///   - judging_ability < 60: 1 assignment (novice)
+///   - 60-79:                 2 assignments (competent)
+///   - 80+:                   3 assignments (elite)
 pub fn scout_max_assignments(judging_ability: u8) -> usize {
-    let _ = judging_ability;
-    1
+    if judging_ability >= 80 {
+        3
+    } else if judging_ability >= 60 {
+        2
+    } else {
+        1
+    }
 }
 
 fn scout_assignment_count(game: &Game, scout_id: &str) -> usize {

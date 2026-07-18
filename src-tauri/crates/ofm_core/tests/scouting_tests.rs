@@ -121,16 +121,20 @@ fn make_game() -> Game {
 
 #[test]
 fn max_assignments_is_one_for_all_scouts() {
-    assert_eq!(scout_max_assignments(90), 1);
-    assert_eq!(scout_max_assignments(80), 1);
-    assert_eq!(scout_max_assignments(79), 1);
-    assert_eq!(scout_max_assignments(60), 1);
-    assert_eq!(scout_max_assignments(59), 1);
-    assert_eq!(scout_max_assignments(40), 1);
-    assert_eq!(scout_max_assignments(39), 1);
-    assert_eq!(scout_max_assignments(20), 1);
-    assert_eq!(scout_max_assignments(19), 1);
-    assert_eq!(scout_max_assignments(0), 1);
+    // V100 P0-15 (Issue #18): Updated to tiered scaling.
+    //   - judging_ability < 60: 1 assignment
+    //   - 60-79:                 2 assignments
+    //   - 80+:                   3 assignments
+    assert_eq!(scout_max_assignments(90), 3); // elite
+    assert_eq!(scout_max_assignments(80), 3); // elite (boundary)
+    assert_eq!(scout_max_assignments(79), 2); // competent (just below elite)
+    assert_eq!(scout_max_assignments(60), 2); // competent (boundary)
+    assert_eq!(scout_max_assignments(59), 1); // novice (just below competent)
+    assert_eq!(scout_max_assignments(40), 1); // novice
+    assert_eq!(scout_max_assignments(39), 1); // novice
+    assert_eq!(scout_max_assignments(20), 1); // novice
+    assert_eq!(scout_max_assignments(19), 1); // novice
+    assert_eq!(scout_max_assignments(0), 1);  // novice
 }
 
 // ---------------------------------------------------------------------------

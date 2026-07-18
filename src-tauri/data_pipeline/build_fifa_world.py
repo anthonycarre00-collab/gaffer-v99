@@ -661,6 +661,84 @@ def build_world(max_leagues=15):
     
     teams_list = list(teams_by_name.values())
     
+    # V100 P0-2 (Issue #7): Per-club reputation + budget variation.
+    # Previously every club in the same league got the SAME reputation
+    # (from LEAGUE_META), and ALL 184 teams had identical hardcoded
+    # finance=£50M, wage_budget=£500K, transfer_budget=£5M. This meant
+    # Burnley had the same buying power as Man City.
+    #
+    # Now we compute squad-avg OVR per team and derive per-club reputation
+    # + finances from it. The Rust refresh_player_derived re-computes OVR
+    # at game-start, but the reputation/budget values set here persist
+    # (they're not in refresh_player_derived's recompute list).
+    print("  Computing per-club reputation + budgets from squad-avg OVR...")
+    team_ovrs = defaultdict(list)
+    for p in players:
+        tid = p.get('team_id')
+        if tid:
+            team_ovrs[tid].append(p.get('ovr', 50))
+    
+    for team in teams_list:
+        tid = team['id']
+        ovrs = team_ovrs.get(tid, [])
+        if not ovrs:
+            # No players (e.g. international sides) — keep LEAGUE_META reputation
+            continue
+        squad_avg = sum(ovrs) / len(ovrs)
+        
+        # Per-club reputation from squad-avg OVR.
+        # Elite (avg 78+): rep 900 (Man City, Bayern, Real Madrid)
+        # Upper-mid (75-77): rep 800 (Arsenal, Chelsea, Atlético)
+        # Mid-table (72-74): rep 700 (mid-table EPL, top-half La Liga)
+        # Lower-mid (68-71): rep 600 (lower-half EPL, top Championship)
+        # Relegation (65-67): rep 550 (strugglers, Championship mid)
+        # Lower-league (<65): rep 450 (League One, League Two)
+        if squad_avg >= 78:
+            team['reputation'] = 900
+        elif squad_avg >= 75:
+            team['reputation'] = 800
+        elif squad_avg >= 72:
+            team['reputation'] = 700
+        elif squad_avg >= 68:
+            team['reputation'] = 600
+        elif squad_avg >= 65:
+            team['reputation'] = 550
+        else:
+            team['reputation'] = 450
+        
+        # Per-club finances from reputation tier.
+        # Elite (rep >=800): finance £200M, transfer £80M, wage £5M/wk
+        # Mid-table (rep 600-799): finance £80M, transfer £25M, wage £2M/wk
+        # Lower (rep <600): finance £40M, transfer £10M, wage £800K/wk
+        rep = team['reputation']
+        if rep >= 800:
+            team['finance'] = 200_000_000
+            team['transfer_budget'] = 80_000_000
+            team['wage_budget'] = 5_000_000
+        elif rep >= 600:
+            team['finance'] = 80_000_000
+            team['transfer_budget'] = 25_000_000
+            team['wage_budget'] = 2_000_000
+        else:
+            team['finance'] = 40_000_000
+            team['transfer_budget'] = 10_000_000
+            team['wage_budget'] = 800_000
+    
+    # V100 P0-3 (Issue #20): Re-compute player wages from market_value / 50
+    # instead of importing FIFA wages directly. FIFA wages are realistic for
+    # real-world players but DECOUPLED from Gaffer's OVR-based economy (e.g.
+    # an OVR-67 Lukaku earning £260k/week because that's his real-world wage).
+    # This aligns wages with Gaffer's market_value, which is derived from OVR.
+    # The Rust `reference_player_wage` also has a sanity band clamp as a
+    # second line of defence, but getting the DB right first is cleaner.
+    print("  Re-computing player wages from market_value / 50...")
+    for p in players:
+        mv = p.get('market_value', 0) or 0
+        if mv > 0:
+            # Gaffer wage = market_value / 50, with a £500 minimum.
+            new_wage = max(mv // 50, 500)
+            p['wage'] = new_wage
+
     # Build staff
     staff = []
     for team in teams_list:

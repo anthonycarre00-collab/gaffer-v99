@@ -712,6 +712,127 @@ pub fn append_fixtures(league: &mut League, mut additional_fixtures: Vec<Fixture
     });
 }
 
+/// V100 P0-7 (Issue #28/#34): Post-scheduling collision pass.
+///
+/// After all competitions have generated their fixtures independently, scan
+/// for cross-competition collisions: any case where the same team has two
+/// competitive fixtures on the same day. When found, shift the LOWER-priority
+/// fixture forward to the next free day for both involved teams.
+///
+/// Priority order (highest first):
+/// 1. InternationalNation competitions (World Cup, continental national team)
+/// 2. ContinentalClub / InternationalClub (UCL, AFC CL, etc.)
+/// 3. Domestic Cup (FA Cup, League Cup)
+/// 4. Domestic League
+/// 5. FriendlyCup (preseason friendlies — lowest priority)
+///
+/// This must be called AFTER all competitions are scheduled for the new
+/// season (see `regenerate_competitions_for_new_season` in end_of_season.rs).
+pub fn cross_competition_collision_pass(competitions: &mut [League]) {
+    use crate::domain::league::CompetitionType::*;
+    use std::collections::HashSet;
+
+    // Helper: priority of a competition type (lower number = higher priority).
+    fn priority(kind: &crate::domain::league::CompetitionType) -> u8 {
+        match kind {
+            InternationalNation => 0,
+            ContinentalClub | InternationalClub => 1,
+            Cup => 2,
+            League => 3,
+            FriendlyCup => 4,
+        }
+    }
+
+    // Build the global occupied set: (team_id, date) -> (comp_index, fixture_index, priority)
+    // We process fixtures in priority order; when a clash is found, the
+    // lower-priority fixture (higher number) is shifted forward.
+    let mut occupied: HashSet<(String, String)> = HashSet::new();
+    let mut team_dates: std::collections::HashMap<(String, String), (usize, usize, u8)> =
+        std::collections::HashMap::new();
+
+    // First pass: insert all fixtures, detecting clashes as we go.
+    // We use a Vec of (comp_idx, fixture_idx, priority) sorted by priority
+    // so the highest-priority fixtures claim their dates first.
+    let mut all_fixtures: Vec<(usize, usize, u8)> = Vec::new();
+    for (comp_idx, comp) in competitions.iter().enumerate() {
+        for (fix_idx, fixture) in comp.fixtures.iter().enumerate() {
+            // Skip friendlies for collision purposes — they're meant to be
+            // flexible and are appended last anyway.
+            if fixture.competition == crate::domain::league::FixtureCompetition::Friendly {
+                continue;
+            }
+            let prio = priority(&comp.kind);
+            all_fixtures.push((comp_idx, fix_idx, prio));
+        }
+    }
+    // Sort by priority (ascending — highest priority first), then by date
+    // (earlier first), so the most important fixtures claim their dates first.
+    all_fixtures.sort_by(|a, b| {
+        a.2.cmp(&b.2)
+            .then_with(|| {
+                competitions[a.0].fixtures[a.1]
+                    .date
+                    .cmp(&competitions[b.0].fixtures[b.1].date)
+            })
+            .then_with(|| a.0.cmp(&b.0))
+    });
+
+    for (comp_idx, fix_idx, _prio) in all_fixtures {
+        let fixture = &competitions[comp_idx].fixtures[fix_idx];
+        let date = fixture.date.clone();
+        let home = fixture.home_team_id.clone();
+        let away = fixture.away_team_id.clone();
+
+        // Check if either team already has a fixture on this date.
+        let home_clash = team_dates.contains_key(&(home.clone(), date.clone()));
+        let away_clash = team_dates.contains_key(&(away.clone(), date.clone()));
+
+        if !home_clash && !away_clash {
+            // No clash — claim the date.
+            team_dates.insert((home.clone(), date.clone()), (comp_idx, fix_idx, _prio));
+            team_dates.insert((away.clone(), date.clone()), (comp_idx, fix_idx, _prio));
+            occupied.insert((home, date));
+            occupied.insert((away, date));
+        } else {
+            // Clash — shift this fixture forward to the next free day for both teams.
+            let mut new_date = match chrono::NaiveDate::parse_from_str(&date, "%Y-%m-%d") {
+                Ok(d) => d,
+                Err(_) => continue, // Can't parse date — skip (defensive)
+            };
+            // Iterate forward until we find a date free for BOTH teams.
+            // Cap at 14 days to avoid infinite loops in pathological schedules.
+            for _ in 0..14 {
+                if let Some(next) = new_date.succ_opt() {
+                    new_date = next;
+                } else {
+                    break;
+                }
+                let new_date_str = new_date.format("%Y-%m-%d").to_string();
+                if !occupied.contains(&(home.clone(), new_date_str.clone()))
+                    && !occupied.contains(&(away.clone(), new_date_str.clone()))
+                {
+                    // Found a free day — claim it.
+                    let new_date_str_final = new_date.format("%Y-%m-%d").to_string();
+                    competitions[comp_idx].fixtures[fix_idx].date = new_date_str_final.clone();
+                    team_dates.insert(
+                        (home.clone(), new_date_str_final.clone()),
+                        (comp_idx, fix_idx, _prio),
+                    );
+                    team_dates.insert(
+                        (away.clone(), new_date_str_final.clone()),
+                        (comp_idx, fix_idx, _prio),
+                    );
+                    occupied.insert((home, new_date_str_final));
+                    occupied.insert((away, new_date_str_final));
+                    break;
+                }
+            }
+            // If we didn't find a free day in 14 tries, leave the fixture
+            // where it is — better to have a clash than no fixture.
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

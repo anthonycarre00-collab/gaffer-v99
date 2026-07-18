@@ -782,7 +782,8 @@ export default function PlayerProfile({
  ) : null}
 
  {isOwnClub && onGameUpdate && (
- <div className="mb-4 flex items-center gap-3 rounded border border-slate-line bg-carbon-1 px-4 py-3 border-slate-line bg-carbon-1">
+ <div className="mb-4 rounded border border-slate-line bg-carbon-1 px-4 py-3 border-slate-line bg-carbon-1">
+ <div className="flex items-center gap-3">
  <span className="shrink-0 text-sm font-medium text-ink-dim">
  {t("tactics.playerRoleLabel")}
  </span>
@@ -798,6 +799,16 @@ export default function PlayerProfile({
  </option>
  ))}
  </Select>
+ </div>
+ {/* V100 P0-11 (Issue #3): Gaffer-voice role description explaining what
+     the role does. Helps users understand engine effects without showing
+     raw percentages. */}
+ <p className="mt-2 text-xs text-ink-faint italic">
+ {t(
+ `tactics.playerRoleDescriptions.${currentTacticalRole}`,
+ "Pick a role to see what it does.",
+ )}
+ </p>
  </div>
  )}
 

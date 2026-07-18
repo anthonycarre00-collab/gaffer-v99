@@ -692,6 +692,14 @@ fn regenerate_competitions_for_new_season(
         world_cup_due,
         qualified_field,
     );
+
+    // V100 P0-7 (Issue #28/#34): Post-scheduling collision pass.
+    // After ALL competitions (including the international calendar) have
+    // generated their fixtures, scan for cross-competition clashes where
+    // the same team has two fixtures on the same day. Shift the lower-
+    // priority fixture forward to the next free day.
+    crate::schedule::cross_competition_collision_pass(&mut game.competitions);
+
     game.sync_legacy_league();
 }
 

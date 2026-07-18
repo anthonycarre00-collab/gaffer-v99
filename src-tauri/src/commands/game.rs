@@ -497,10 +497,20 @@ fn build_game_from_world_data(
 
             log::info!("[world] NE-1: Re-deriving traits for {} players", game.players.len());
             let world_start_year = game.clock.start_date.format("%Y").to_string().parse::<u32>().unwrap_or(2024);
-            for player in game.players.iter_mut() {
+            let total_players = game.players.len();
+            // V100 P0-13 (Issue #9): Emit periodic progress logs so the user
+            // can see the loading bar is making progress (instead of a blank
+            // screen for 15-20 minutes while 5,324 players are re-derived).
+            // The logs appear in the Tauri dev console and any log file.
+            // Future improvement: emit Tauri events for a proper progress bar.
+            for (i, player) in game.players.iter_mut().enumerate() {
                 ofm_core::player_rating::refresh_player_derived(player, world_start_year);
+                if i > 0 && i % 500 == 0 {
+                    let pct = (i * 100) / total_players.max(1);
+                    log::info!("[world] NE-1 progress: {}/{} players ({}%)", i, total_players, pct);
+                }
             }
-            log::info!("[world] NE-1 done");
+            log::info!("[world] NE-1 done — {} players re-derived", total_players);
 
             // V99.7-1: Extend contracts that expired before the game start date.
             //

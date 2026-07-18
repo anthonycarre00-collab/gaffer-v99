@@ -19,6 +19,11 @@ pub struct TeamCoachingBonus {
     pub coaching_mult: f64, // Overall coaching quality multiplier (1.0 = no staff)
     pub specialization_mult: f64, // Extra bonus if a coach specializes in the current focus
     pub physio_mult: f64,   // Recovery bonus from physio staff
+    /// V100 P0-16 (Issue #19): Extra multiplier applied to players under 21
+    /// when a Youth-specialist coach is on staff. 1.0 when no youth
+    /// specialist is present (no bonus). 1.25 when at least one youth
+    /// specialist is on the coaching staff.
+    pub youth_development_mult: f64,
 }
 
 /// Compute coaching bonuses from a team's staff.
@@ -84,10 +89,20 @@ fn compute_coaching_bonus(game: &Game, team_id: &str, focus: &TrainingFocus) -> 
         1.0 + (avg_physio / 100.0) * 0.4
     };
 
+    // V100 P0-16 (Issue #19): Youth specialist detection. If any coach or
+    // assistant manager has CoachingSpecialization::Youth, players under 21
+    // get an extra +25% training development bonus. This wires in the
+    // `Youth` specialization that existed on the enum but had no effect.
+    let has_youth_specialist = coaching_staff
+        .iter()
+        .any(|s| s.specialization.as_ref() == Some(&CoachingSpecialization::Youth));
+    let youth_development_mult = if has_youth_specialist { 1.25 } else { 1.0 };
+
     TeamCoachingBonus {
         coaching_mult,
         specialization_mult,
         physio_mult,
+        youth_development_mult,
     }
 }
 
@@ -296,12 +311,22 @@ fn train_player(
     // Position focus: training focus matching position = bonus growth
     let position_bonus = position_focus_bonus(player, &player_focus);
 
+    // V100 P0-16 (Issue #19): Youth specialist multiplier. If the team has a
+    // Youth-specialist coach on staff, players under 21 get an extra +25%
+    // training development bonus. Older players are unaffected.
+    let youth_specialist_mult = if age <= 21 {
+        plan.bonus.youth_development_mult
+    } else {
+        1.0
+    };
+
     // Base gain per attribute per session, boosted by coaching staff + Phase 6 mechanics
     let gain = 0.15
         * intensity_mult
         * age_factor
         * plan.bonus.coaching_mult
         * plan.bonus.specialization_mult
+        * youth_specialist_mult
         * plateau_factor
         * personality_mod
         * position_bonus;

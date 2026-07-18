@@ -21,6 +21,15 @@ pub fn hire_staff_internal(state: &StateManager, staff_id: &str) -> Result<Game,
             .clone()
             .ok_or("be.error.noTeamAssigned".to_string())?;
 
+        // V100 P0-14 (Issue #17): Staff count cap per role. Prevents the
+        // user from hoarding unlimited coaches/scouts/physios. Caps:
+        //   - Manager: 1 (the user's own role — can't hire another)
+        //   - AssistantManager: 1
+        //   - Coach: 5 (configurable by facilities — see future P1)
+        //   - Scout: 5
+        //   - Physio: 2
+        // Caps apply to the user's club only. AI clubs aren't restricted
+        // (their hiring is automated by process_available_staff_market).
         let staff_wage = {
             let staff = game
                 .staff
@@ -30,6 +39,29 @@ pub fn hire_staff_internal(state: &StateManager, staff_id: &str) -> Result<Game,
 
             if staff.team_id.is_some() {
                 return Err("be.error.staffMemberAlreadyEmployed".to_string());
+            }
+
+            // Count current staff of the same role at this club.
+            let current_count = game
+                .staff
+                .iter()
+                .filter(|s| s.team_id.as_deref() == Some(team_id.as_str()))
+                .filter(|s| s.role == staff.role)
+                .count();
+            let cap = match staff.role {
+                domain::staff::StaffRole::Manager => 1,
+                domain::staff::StaffRole::AssistantManager => 1,
+                domain::staff::StaffRole::Coach => 5,
+                domain::staff::StaffRole::Scout => 5,
+                domain::staff::StaffRole::Physio => 2,
+            };
+            if current_count >= cap {
+                return Err(format!(
+                    "be.error.staffRoleCapReached: {} {} already employed (cap {})",
+                    current_count,
+                    format!("{:?}", staff.role),
+                    cap
+                ));
             }
 
             staff.team_id = Some(team_id.clone());

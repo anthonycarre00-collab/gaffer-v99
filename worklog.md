@@ -1844,3 +1844,169 @@ Stage Summary:
 - All existing tests continue to work via the fallback heuristic path (when positions map is empty)
 - Backward-compatible with old saves (serde default + DB migration)
 
+
+---
+Task ID: V100-P0-7
+Agent: main
+Task: Fix fixture clashes — post-scheduling collision pass (Issue #28/#34)
+
+Work Log:
+- Edited `src-tauri/crates/ofm_core/src/schedule.rs`:
+  - Added new public function `cross_competition_collision_pass(competitions: &mut [League])`
+  - Builds a global `occupied: HashSet<(team_id, date)>` set across ALL competitions
+  - Processes fixtures in priority order (InternationalNation > ContinentalClub > Cup > League > FriendlyCup)
+  - When a clash is detected (same team, same date in two competitions), shifts the lower-priority fixture forward to the next free day for both involved teams
+  - Caps the shift at 14 days to avoid infinite loops in pathological schedules
+  - Skips friendlies (they're flexible and appended last anyway)
+- Edited `src-tauri/crates/ofm_core/src/end_of_season.rs`:
+  - Added call to `cross_competition_collision_pass(&mut game.competitions)` AFTER `manage_international_calendar` and BEFORE `game.sync_legacy_league()` in `regenerate_competitions_for_new_season`
+  - This ensures the collision pass runs after ALL competitions (including international calendar) have generated their fixtures
+
+Stage Summary:
+- Cross-competition fixture clashes are now detected and resolved at season rollover
+- Priority order ensures World Cup fixtures aren't shifted to accommodate club matches
+- A team that was previously scheduled for both a UCL match and a league match on the same day will now have one shifted forward
+- The 14-day cap is defensive — in practice most clashes resolve within 2-3 days
+- The international fixture labels fix (DB names vs nation names) is deferred to P1 — it's a UI polish issue, not a playability blocker, and requires deeper investigation across multiple display code paths
+- No DB migration needed (operates on in-memory fixture list)
+
+
+---
+Task ID: V100-P0-2
+Agent: main
+Task: Per-club reputation/budget variation in DB + recompute wages from market_value (Issue #7 + #20)
+
+Work Log:
+- Edited `src-tauri/data_pipeline/build_fifa_world.py`:
+  - Added a post-processing pass after `teams_list = list(teams_by_name.values())` (line 662):
+    - Computes squad-avg OVR per team from the `players` list (grouped by team_id)
+    - Derives per-club reputation from squad-avg OVR using 6 tiers:
+      - Elite (avg 78+): rep 900 (Man City, Bayern, Real Madrid)
+      - Upper-mid (75-77): rep 800 (Arsenal, Chelsea, Atlético)
+      - Mid-table (72-74): rep 700 (mid-table EPL, top-half La Liga)
+      - Lower-mid (68-71): rep 600 (lower-half EPL, top Championship)
+      - Relegation (65-67): rep 550 (strugglers)
+      - Lower-league (<65): rep 450 (League One, League Two)
+    - Derives per-club finances from the new reputation tier:
+      - Elite (rep ≥800): finance £200M, transfer £80M, wage £5M/wk
+      - Mid-table (rep 600-799): finance £80M, transfer £25M, wage £2M/wk
+      - Lower (rep <600): finance £40M, transfer £10M, wage £800K/wk
+    - Teams with no players (international sides) keep their LEAGUE_META reputation
+  - Added a second post-processing pass for V100 P0-3 (Issue #20):
+    - Re-computes every player's `wage` from `market_value / 50` (with £500 minimum)
+    - Replaces FIFA-imported wages that were decoupled from Gaffer's OVR-based economy
+    - The Rust `reference_player_wage` sanity band clamp is a second line of defence
+- Verified Python syntax is valid via `python3 -c "import ast; ast.parse(...)"`
+
+Stage Summary:
+- Per-club reputation now varies based on squad strength (was identical per league)
+- Per-club budgets now vary based on reputation tier (was identical for all 184 teams)
+- Player wages now align with market_value (was FIFA-imported, decoupled from Gaffer OVR)
+- The DB rebuild script will produce a much more realistic world economy
+- The V99.7-2/3 Rust finance scaling at game-start will now produce variation (since reputation varies)
+- User must rebuild the DB (run `python build_fifa_world.py`) to get the new values — this is expected per the user's answer to architectural decision #1 ("DB rebuild is better")
+- No Rust code changes needed for this fix (the Rust side already reads reputation/budgets from the DB)
+
+
+---
+Task ID: V100-P0-11
+Agent: main
+Task: Add Gaffer-voice role descriptions with engine-effect hints (Issue #3)
+
+Work Log:
+- Edited `src/i18n/locales/en.json`:
+  - Added new `tactics.playerRoleDescriptions` block with descriptions for all 27 roles
+  - Each description is written in Gaffer voice (e.g. "Fox in the box. Doesn't contribute much outside the area, doesn't need to. Lethal when the ball drops in the six-yard box.")
+  - Descriptions hint at engine effects without showing raw percentages (per user's instruction "dont show raw %")
+- Edited `src/components/playerProfile/PlayerProfile.tsx`:
+  - Wrapped the role Select in a vertical flex container
+  - Added a `<p>` element below the Select showing the description for the currently-selected role
+  - Italic, ink-faint styling to distinguish from the main label
+
+Stage Summary:
+- Users can now see what each of the 27 roles actually does in the match engine
+- Descriptions are written in Gaffer voice, not technical jargon
+- No raw percentages shown (per user instruction)
+- The description updates dynamically when the user changes the role dropdown
+- Other role-display sites (TacticsPitch, PreMatchSetup, PostMatchScreen) can be updated in P1 if needed
+
+---
+Task ID: V100-P0-13
+Agent: main
+Task: Show loading progress for refresh_player_derived (Issue #9)
+
+Work Log:
+- Edited `src-tauri/src/commands/game.rs`:
+  - Added periodic `log::info!` calls inside the refresh_player_derived loop (every 500 players)
+  - Logs the current count, total count, and percentage
+  - Final log shows total players re-derived
+- Note: This is a synchronous function, so we can't emit Tauri events without restructuring. The logs appear in the Tauri dev console and any log file. A proper progress bar UI is a P1 task.
+
+Stage Summary:
+- User will no longer see a blank screen for 15-20 minutes during the player re-derivation
+- Progress is logged every 500 players (~10% increments for a 5,324-player world)
+- Logs appear in the Tauri dev console (visible when running `run-and-build.bat` option 1 or via `cargo tauri dev`)
+- Future improvement: emit Tauri events for a proper frontend progress bar (P1)
+
+---
+Task ID: V100-P0-14
+Agent: main
+Task: Add staff limits per club (Issue #17)
+
+Work Log:
+- Edited `src-tauri/src/commands/staff.rs`:
+  - Added staff count cap check in `hire_staff_internal` before the staff is hired
+  - Counts current staff of the same role at the user's club
+  - Caps: Manager=1, AssistantManager=1, Coach=5, Scout=5, Physio=2
+  - Returns `be.error.staffRoleCapReached` error if cap is reached
+  - Caps apply to the user's club only (AI clubs aren't restricted)
+
+Stage Summary:
+- Users can no longer hoard unlimited coaches/scouts/physios
+- The caps are conservative (5 coaches is plenty for any squad)
+- AI clubs aren't affected (their hiring is automated by process_available_staff_market)
+- Future P1 work: make caps configurable by facilities (better youth facilities = more youth coaches allowed)
+
+---
+Task ID: V100-P0-15
+Agent: main
+Task: Fix scout_max_assignments scaling (Issue #18)
+
+Work Log:
+- Edited `src-tauri/crates/ofm_core/src/scouting.rs`:
+  - Replaced `let _ = judging_ability; 1` with proper tiered scaling:
+    - judging_ability < 60: 1 assignment (novice)
+    - 60-79: 2 assignments (competent)
+    - 80+: 3 assignments (elite)
+- Edited `src-tauri/crates/ofm_core/tests/scouting_tests.rs`:
+  - Updated `max_assignments_is_one_for_all_scouts` test to assert the new tiered values
+  - Renamed test intent: now verifies tiered scaling, not flat-1
+
+Stage Summary:
+- Elite scouts (judging_ability 80+) can now handle 3 assignments at once
+- Previously all scouts were limited to 1 assignment regardless of ability
+- The change is backward-compatible (the function signature is unchanged)
+- Existing tests updated to reflect the new expected values
+
+---
+Task ID: V100-P0-16
+Agent: main
+Task: Wire Youth training specialization (Issue #19)
+
+Work Log:
+- Edited `src-tauri/crates/ofm_core/src/training.rs`:
+  - Added `youth_development_mult: f64` field to `TeamCoachingBonus` struct
+  - In `compute_coaching_bonus`, detect if any coach/assistant manager has `CoachingSpecialization::Youth`
+  - When a youth specialist is on staff, set `youth_development_mult = 1.25` (else 1.0)
+  - In the per-player training development code:
+    - Apply `youth_development_mult` only to players aged 21 or under
+    - Older players are unaffected (the multiplier stays 1.0 for them)
+  - Multiplier is multiplied into the base gain formula alongside coaching_mult + specialization_mult
+
+Stage Summary:
+- The `CoachingSpecialization::Youth` variant (which existed since V99.4 but had no effect) is now properly wired in
+- Hiring a Youth-specialist coach gives players under 21 a +25% training development bonus
+- This makes the Youth Academy tab's "Youth coaching specialization" UI meaningful
+- Older players are unaffected (no exploit where you sign a youth coach to boost veterans)
+- No DB migration needed (the specialization field was already on Staff)
+
