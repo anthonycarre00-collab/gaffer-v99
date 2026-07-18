@@ -1653,7 +1653,9 @@ fn progress_staff_attributes(game: &mut Game) {
 
         // Secondary attributes have a smaller chance (20%) to progress.
         if rng.random_range(0.0..1.0f64) < 0.20 {
-            // Progress a random secondary attribute.
+            // V100 P2 (Issue #17): Copy attribute values out to avoid borrow
+            // conflict — we can't borrow staff.attributes immutably (for the
+            // array) AND mutably (for the assignment) at the same time.
             let all_attrs = [
                 ("coaching", staff.attributes.coaching),
                 ("judging_ability", staff.attributes.judging_ability),

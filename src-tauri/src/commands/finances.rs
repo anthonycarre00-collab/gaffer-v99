@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use log::info;
+use rand::RngExt;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 
@@ -145,12 +146,14 @@ pub async fn talk_to_board(
             let transfer_budget = team.transfer_budget;
             let stadium_capacity = team.stadium_capacity;
 
-            // Determine approval based on request type + club context.
+            // V100 P2 (Issue #36): Determine approval based on request type + club context.
+            // Uses a single rng to avoid creating multiple RNG instances.
+            let mut rng = rand::rng();
             let (approved, board_reply, amount_granted) = match request {
                 TalkToBoardRequest::RequestMoreTime => {
                     // 20% chance of approval, higher if reputation is high.
                     let chance = if reputation >= 800 { 0.35 } else { 0.20 };
-                    let roll = rand::RngExt::random_range(&mut rand::rng(), 0.0..1.0f64);
+                    let roll: f64 = rng.random_range(0.0..1.0);
                     if roll < chance {
                         (true, "The board have agreed to give you more time. Results must improve.".to_string(), 0u64)
                     } else {
@@ -161,7 +164,7 @@ pub async fn talk_to_board(
                     // 10% chance, higher if club has a sugar daddy (high finance + high reputation).
                     let sugar_daddy = finance > 100_000_000 && reputation >= 800;
                     let chance = if sugar_daddy { 0.30 } else { 0.10 };
-                    let roll = rand::RngExt::random_range(&mut rand::rng(), 0.0..1.0f64);
+                    let roll: f64 = rng.random_range(0.0..1.0);
                     if roll < chance {
                         // Grant 10-20% of current transfer budget (min £1M, max £20M).
                         let base = (transfer_budget as u64 / 10).max(1_000_000).min(20_000_000);

@@ -4,7 +4,7 @@ import { MatchSnapshot, MatchEvent, EnginePlayerData } from "./types";
 import { getEventDisplay, getEventTypeLabel, getPlayerName } from "./helpers";
 import { getCommentary } from "./commentary";
 import { getPunditLine, withSpeaker } from "./punditry";
-import { getPunditNameForFixture, clearPunditCache } from "../../services/punditService";
+import { getPunditNameForFixture } from "../../services/punditService";
 import { Badge } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { interpretCondition } from "../../lib/gafferEngine";

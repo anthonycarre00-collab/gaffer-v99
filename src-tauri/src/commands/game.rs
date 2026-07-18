@@ -563,6 +563,86 @@ fn build_game_from_world_data(
             }
             log::info!("[world] V99.7-1: Extended {} player contracts to {}", extended_count, min_contract_end);
 
+            // V100 P0-2 (Issue #7): Per-club reputation from squad-avg OVR.
+            // The bundled DB gives every club in a league the SAME reputation
+            // (from LEAGUE_META in build_fifa_world.py). This means Burnley
+            // has the same reputation as Man City, so the V99.7-2/3 finance
+            // scaling produces identical budgets for all clubs.
+            //
+            // Now that refresh_player_derived has run (NE-1 above), every
+            // player has a proper OVR. We compute squad-avg OVR per team and
+            // derive per-club reputation from it. The V99.7-2/3 finance
+            // scaling below then produces varied budgets.
+            //
+            // Tiers (matching the DB build script):
+            //   Elite (avg 78+): rep 900
+            //   Upper-mid (75-77): rep 800
+            //   Mid-table (72-74): rep 700
+            //   Lower-mid (68-71): rep 600
+            //   Relegation (65-67): rep 550
+            //   Lower-league (<65): rep 450
+            log::info!("[world] V100 P0-2: Recomputing per-club reputation from squad-avg OVR");
+            let mut team_ovr_sums: std::collections::HashMap<String, (u64, u64)> = std::collections::HashMap::new();
+            for player in &game.players {
+                if let Some(ref team_id) = player.team_id {
+                    let entry = team_ovr_sums.entry(team_id.clone()).or_insert((0, 0));
+                    entry.0 += player.ovr as u64; // sum
+                    entry.1 += 1; // count
+                }
+            }
+            let mut rep_changes = 0usize;
+            for team in game.teams.iter_mut() {
+                if let Some((sum, count)) = team_ovr_sums.get(&team.id).copied() {
+                    if count == 0 {
+                        continue;
+                    }
+                    let squad_avg = (sum as f64 / count as f64) as u32;
+                    let new_rep = if squad_avg >= 78 {
+                        900
+                    } else if squad_avg >= 75 {
+                        800
+                    } else if squad_avg >= 72 {
+                        700
+                    } else if squad_avg >= 68 {
+                        600
+                    } else if squad_avg >= 65 {
+                        550
+                    } else {
+                        450
+                    };
+                    if new_rep != team.reputation {
+                        rep_changes += 1;
+                        team.reputation = new_rep;
+                    }
+                }
+            }
+            log::info!("[world] V100 P0-2 done: {} teams had reputation updated", rep_changes);
+
+            // V100 P0-3 (Issue #20): Recompute player wages from market_value.
+            // The bundled DB imports FIFA wages directly, which are decoupled
+            // from Gaffer's OVR-based economy (e.g. OVR-67 Lukaku on £260k/week
+            // because that's his real-world wage, while his Gaffer market_value
+            // suggests ~£10k/week). The runtime sanity band in
+            // `reference_player_wage` clamps wages when read, but rewriting
+            // them here at game start means the wage_budget calculation below
+            // uses sane values too (otherwise the budget is inflated by the
+            // corrupt wages).
+            //
+            // Formula: wage = max(market_value / 50, 500).
+            // This matches the MARKET_VALUE_TO_WAGE_RATIO constant in contracts.rs.
+            log::info!("[world] V100 P0-3: Recomputing player wages from market_value");
+            let mut wage_changes = 0usize;
+            for player in game.players.iter_mut() {
+                if player.market_value > 0 {
+                    let new_wage = ((player.market_value / 50) as u32).max(500);
+                    if new_wage != player.wage {
+                        wage_changes += 1;
+                        player.wage = new_wage;
+                    }
+                }
+            }
+            log::info!("[world] V100 P0-3 done: {} players had wage updated", wage_changes);
+
             log::info!("[world] NE-2/4/7: Fixing finances for {} teams", game.teams.len());
             let mut team_wage_totals: std::collections::HashMap<String, i64> = std::collections::HashMap::new();
             for player in &game.players {

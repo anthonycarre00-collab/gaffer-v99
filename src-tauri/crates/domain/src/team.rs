@@ -144,13 +144,16 @@ pub struct Team {
     /// punishment. They remain members of the club (team_id unchanged) but
     /// are "loaned" to the reserve squad for match purposes.
     /// Lightweight: no separate Team entity, just a player ID list.
+    /// Written/read by move_to_reserve + promote_from_reserve commands.
     #[serde(default)]
     pub reserve_squad_ids: Vec<String>,
 
     /// V100 P2 (Issue #39): Reserve team's recent results (scorelines only).
     /// Sparse-simulated — no full match engine. Each entry is "H-A" (e.g.
     /// "2-1"). Used to show reserve results on the Squad tab.
+    /// allow(dead_code) until the reserve sparse sim writes to it.
     #[serde(default)]
+    #[allow(dead_code)]
     pub reserve_results: Vec<String>,
 
     #[serde(default)]

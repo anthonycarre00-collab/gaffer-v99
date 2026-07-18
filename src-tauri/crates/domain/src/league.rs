@@ -58,17 +58,24 @@ pub struct CompetitionRules {
     /// V100 P0-6 (Issue #8): When to apply extra time. Knockout-only is the
     /// most common — league matches never go to extra time. Default Never
     /// for leagues, KnockoutOnly for cups.
+    /// allow(dead_code) until the live match engine reads it (currently the
+    /// engine uses the `allows_extra_time: bool` parameter passed by caller).
     #[serde(default)]
+    #[allow(dead_code)]
     pub extra_time: ExtraTimeRule,
     /// V100 P0-6 (Issue #8): Whether penalties apply, and if so when.
     /// Default Never for leagues, AfterExtraTime for knockout cups.
+    /// allow(dead_code) until the live match engine reads it.
     #[serde(default)]
+    #[allow(dead_code)]
     pub penalties: PenaltyRule,
     /// V100 P0-6 (Issue #8): Competition prestige (0-1000). Affects news story
     /// weighting, board expectations, prize money, reputation gains. Default
     /// 500 (mid-tier); WC = 1000, UCL = 950, EPL = 850, FA Cup = 700,
     /// lower-league cup = 400.
+    /// allow(dead_code) until news/board/prize logic reads it.
     #[serde(default = "default_prestige")]
+    #[allow(dead_code)]
     pub prestige: u32,
 }
 

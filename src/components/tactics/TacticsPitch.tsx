@@ -599,8 +599,6 @@ export default function TacticsPitch({
  {/* V100 P2 (Issue #3): Close the perspective-transformed div. */}
  </div>
  </div>
-
- </div>
  </Card>
  );
 }

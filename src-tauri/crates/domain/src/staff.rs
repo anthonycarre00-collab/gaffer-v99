@@ -26,7 +26,9 @@ pub struct Staff {
     /// bias (overrates certain attributes), physio approach (cautious vs
     /// aggressive recovery). Reuses the existing PersonalityProfile struct
     /// from the player module so we don't duplicate the Big Five model.
+    /// allow(dead_code) until coaching/morale/physio logic reads it.
     #[serde(default)]
+    #[allow(dead_code)]
     pub personality: Option<crate::player::PersonalityProfile>,
 
     /// V100 P1 (Issue #18): Scout bias profile. Only meaningful for staff

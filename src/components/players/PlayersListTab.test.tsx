@@ -289,6 +289,8 @@ function summaryFrom(player: PlayerData, teams: TeamData[]): PlayerSummary {
   ovr: (player as { ovr?: number }).ovr ?? 0,
   transfer_listed: player.transfer_listed,
   loan_listed: player.loan_listed,
+  // V100 P0-8 (Issue #5): not_for_sale field added to PlayerSummary.
+  not_for_sale: (player as { not_for_sale?: boolean }).not_for_sale ?? false,
   injured: player.injury != null,
   retired: player.retired ?? false,
  };

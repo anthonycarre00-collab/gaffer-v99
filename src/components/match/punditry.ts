@@ -99,7 +99,10 @@ function computePunditLine(
  minute: number,
  isLate: boolean,
  hash: number,
- userIsHome: boolean,
+ // V100: userIsHome is passed but not currently used in the pundit line
+ // computation — kept for future context-aware lines. Prefixed with _
+ // to silence the unused-variable warning.
+ _userIsHome: boolean,
  userScore: number,
  oppScore: number,
 ): PunditLine | null {

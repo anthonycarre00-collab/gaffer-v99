@@ -14,6 +14,8 @@ struct ObjectiveTargets {
     /// team to reach in their primary domestic cup. 0 = no cup expectation
     /// (lower-league teams with no cup entry). Encoded as round index:
     /// 1 = 3rd round, 2 = 4th round, 3 = QF, 4 = SF, 5 = Final, 6 = Win.
+    /// allow(dead_code) until the cup-objective UI + progress tracking is wired.
+    #[allow(dead_code)]
     cup_target_round: u32,
 }
 

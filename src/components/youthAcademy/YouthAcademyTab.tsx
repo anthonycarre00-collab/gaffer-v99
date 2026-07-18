@@ -433,13 +433,15 @@ export default function YouthAcademyTab({
  key={player.id}
  className="flex items-center gap-3 rounded border border-slate-line bg-carbon-2 px-3 py-2"
  >
- <PlayerAvatar player={player} size="sm" />
+ {/* V100 P2 (Issue #19): PlayerAvatar doesn't take a `size` prop — use className instead. */}
+ <PlayerAvatar player={player} className="w-8 h-8" />
  <div className="flex-1 min-w-0">
  <p className="text-sm text-ink font-medium truncate">
  {player.match_name ?? player.full_name}
  </p>
  <p className="text-[10px] text-ink-faint">
- {age}y • {translatePositionAbbreviation(player.position, t)}
+ {/* V100 P2: translatePositionAbbreviation takes (t, position) — order matters. */}
+ {age}y • {translatePositionAbbreviation(t, player.position)}
  </p>
  </div>
  <div className="text-right">

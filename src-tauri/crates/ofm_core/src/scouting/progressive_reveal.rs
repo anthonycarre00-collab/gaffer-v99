@@ -76,6 +76,13 @@ pub fn fuzz_attribute(value: u8, judging_ability: u8, rng: &mut impl Rng) -> u8 
 /// bias multipliers shift the readings (e.g. a pace-biased scout overrates
 /// pace by their pace_bias multiplier), and their noise_level adds extra
 /// uncertainty on top of the judging_ability-based noise.
+///
+/// NOTE: This function is currently unused — the bias logic was inlined
+/// directly into `build_scout_report` in scouting.rs (which has its own
+/// `fuzz` closure that applies per-attribute bias). Kept here as a public
+/// utility for future use when progressive_reveal's fuzz_attribute calls
+/// are updated to accept scout bias. allow(dead_code) silences the warning.
+#[allow(dead_code)]
 pub fn fuzz_attribute_with_bias(
     value: u8,
     judging_ability: u8,
