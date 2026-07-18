@@ -96,7 +96,7 @@ Issues are grouped into 8 workstreams. Each workstream has a priority (P0 = bloc
 
 **IMPLEMENTATION PLAN:**
 1. **P0: Move Phase Blueprint to Style tab** — Remove from `TacticsRightPanel` when on Pitch tab; show only on Style tab.
-2. **P0: Add role descriptions** — For each of 27 roles, add a Gaffer-voice description explaining the engine effect (e.g. "Poacher: Gets on the end of things. Lethal in the box, but don't expect him back defending. Attack +12%, Defense -15%"). Add as tooltips on role selector.
+2. **P0: Add role descriptions** — For each of 27 roles, add a Gaffer-voice description explaining the engine effect (e.g. "Poacher: Gets on the end of things. Lethal in the box, but don't expect him back defending".  - Attack +12%, Defense -15% - dont show raw %). Add as tooltips on role selector.
 3. **P1: Add perspective to pitch** — Replace flat SVG with a perspective-transformed pitch (CSS `transform: perspective(1000px) rotateX(15deg)` or a 3D model). Keep drag-and-drop logic untouched.
 4. **P1: Redesign Style Guidance** — Replace checklist-style presets with Gaffer-voice advisory text. Instead of "Use 4-3-3 Attacking", say "You're asking them to get forward at every opportunity. With your current personnel, the midfield might get overrun — {player} isn't the quickest to track back." Show hints about style effects, not prescriptions.
 5. **P1: Add out-of-position penalty to match engine** — When a player's deployed position doesn't match their natural position (and isn't in `alternate_positions`), apply a -5% skill penalty in the engine's zone resolution.
@@ -206,7 +206,7 @@ Issues are grouped into 8 workstreams. Each workstream has a priority (P0 = bloc
 
 **IMPLEMENTATION PLAN:**
 1. **P1: Pre-compute derived values in DB** — Run `refresh_player_derived` once during DB build and store the results (OVR, potential, traits, fame, market_value) in `gaffer_world.json`. Then `start_new_game` can skip the re-derivation entirely.
-2. **P0: Show loading progress** — If re-derivation must run, show a progress bar instead of a blank screen.
+2. **P0: Show loading progress** — If re-derivation must run, show a progress bar with Gaffer voice descriptions instead of a blank screen.
 
 ### Issue #25: Are we saving enough data points?
 **ROOT CAUSE:**
@@ -434,15 +434,21 @@ Priority screens: Squad (#15, #32), Manager/Gaffer (#33), Other Gaffers (#24), C
 ## KEY ARCHITECTURAL DECISIONS NEEDED
 
 1. **DB rebuild vs migration** — Per-club reputation/budget variation requires either rebuilding `gaffer_world.json` or adding a post-load scaling pass. Rebuilding is cleaner but breaks existing saves.
+A - DB rebuild is better. we do not need existing saves whilst still in development.
 
 2. **Pundit system** — Define pundits as a static list in code, or as a data file? Static is simpler; data file allows modding.
+A. Data file or new db fields is cleaner but must be fully wired in. 
 
 3. **Reserve teams** — Separate `Team` entities (doubling team count) or a lightweight `ReserveSquad` struct on `Team`? Lightweight is simpler but limits features.
+A. lightweight, but keep it realistic with options to 'move' players between squads for fitness or as punsihment or for youngster experience. wire in properly but keep it all lightweight.
 
 4. **Position retraining** — New `training_position_focus` field + XP accumulation, or reuse the existing `alternate_positions` field with a "learning" flag? New field is cleaner.
+5. New field is cleaner, ensure new trained positions are not lost on continue game and that success of retraining is never 100%.
 
 5. **Competition rules** — Extend `CompetitionRules` struct (breaking change for saves) or add a separate `CompetitionRulesExtended` struct? Extending is cleaner; save migration needed.
-
+A. Extend its cleanr. cautious and integrate fully/wire in. 
 ---
 
 This document is the single source of truth for V100 development. Every issue has been traced to its root cause in the code, interconnected systems identified, and specific implementation steps defined.
+
+Previous build/crate errors should be analysed during this process to ensure we dont get more. Test everythng, create new tests where relevant. All newchanges, features and expansions need serious deep analysis and planning as we have many systems that all need to talk to each other and sub sytems that might need tweaking also such as "relationships" - we may need additonal player profile/manager fields to store/update/decay relationshiips for fture use/resurfacing? 
