@@ -69,10 +69,19 @@ pub fn query_schedule(game: &Game, query: &ScheduleQuery) -> Option<ScheduleSlic
     let today = game.clock.current_date.format("%Y-%m-%d").to_string();
     let user_team_id = game.manager.team_id.as_deref().unwrap_or("");
 
+    // V100 P1 (Issue #34): Include national teams in the name lookup so
+    // international fixtures display nation names instead of DB ids.
+    // Previously only `game.teams` (clubs) were in the map, so national
+    // team fixtures showed raw ids like "nt-bra" instead of "Brazil".
     let team_name: BTreeMap<&str, &str> = game
         .teams
         .iter()
         .map(|t| (t.id.as_str(), t.name.as_str()))
+        .chain(
+            game.national_teams
+                .iter()
+                .map(|nt| (nt.id.as_str(), nt.name.as_str())),
+        )
         .collect();
 
     // Build ordered groups: key → Vec<FixtureSummary>.

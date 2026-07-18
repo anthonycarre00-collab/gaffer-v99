@@ -2550,3 +2550,64 @@ Stage Summary:
 - Game load time should be dramatically reduced when the DB has pre-computed OVR/market_value (most players will be skipped)
 - All changes backward-compatible (serde defaults)
 
+
+---
+Task ID: V100-P1-INTL-FIXTURE-LABELS
+Agent: main
+Task: Fix international fixture labels (Issue #34)
+
+Work Log:
+- Edited `src-tauri/crates/ofm_core/src/slices/schedule.rs`:
+  - Updated the `team_name` BTreeMap in `query_schedule` to chain national teams
+  - Now includes both `game.teams` (clubs) AND `game.national_teams` (nations)
+  - Previously only clubs were in the map, so national team fixtures fell back to raw ids like "nt-bra"
+  - Now they display proper nation names like "Brazil"
+
+Stage Summary:
+- International fixtures now display nation names in the schedule
+- The fix is minimal (one `.chain()` call) and doesn't affect club fixtures
+- The `name_key` field on NationalTeam (i18n key for nation name) is already used by the frontend's `nationalTeamDisplayName` helper, so the display is properly localized
+
+---
+Task ID: V100-P1-SUMMARY
+Agent: main
+Task: V100 P1 batch summary
+
+P1 Items Completed:
+1. ✅ Tagline (Issue #10) — "Every Result Tells a Story"
+2. ✅ Pre-game screen restyle (Issue #10) — carbon gradient + brass glow
+3. ✅ Varied board expectations (Issue #37) — 5 tiers + cup target
+4. ✅ Morale difficulty tuning (Issue #30) — crisis state at 5+ losses
+5. ✅ Round summary fix (Issue #11 from P0-17 audit) — scans game.competitions
+6. ✅ Player height/weight (Issue #1) — generated + displayed
+7. ✅ Position retraining (Issue #3) — XP system, 80% success, persists across saves
+8. ✅ Hyperlinking infrastructure (Issue #35) — EntityLink/PlayerLink/TeamLink components
+9. ✅ Manager head-to-head records (Issue #24/#33) — tracked automatically
+10. ✅ Rotating pundit cast (Issue #12) — 6 pundits with personalities + data file
+11. ✅ Staff personality (Issue #17) — PersonalityProfile + ScoutBias
+12. ✅ Scout bias (Issue #18) — fuzz_attribute_with_bias function
+13. ✅ Youth tab differentiation (Issue #19) — Development Tracker card
+14. ✅ Pre-compute DB skip (Issue #9) — skips refresh when DB has values
+15. ✅ International fixture labels (Issue #34) — national teams in name lookup
+
+P1 Items Deferred to P2:
+- Wire narrative into live commentary (Issue #12) — infrastructure ready, full wiring is complex
+- Scout report flavour by personality (Issue #18) — bias function ready, needs report text generation
+- Staff interaction (Issue #17) — weekly assistant manager meetings
+- Reserve teams (Issue #39) — lightweight struct + sparse sim
+- Stadiums + Talk to Board (Issue #36) — needs DB data
+- Perspective pitch (Issue #3) — CSS 3D transform
+- Staff career progression (Issue #17) — attributes improve over time
+- Attribute category icons (Issue #1) — SVG generation
+- Generate icon/button cache (Issue #2) — comprehensive icon set
+- Prune unread messages (Issue #25) — cap at 500 unread
+
+Stage Summary:
+- All 18 P0 items complete
+- 15 P1 items complete
+- 10 P1 items deferred to P2 (infrastructure ready, full UI wiring needed)
+- Total commits: 7 (V100-SETUP + 3 P0 batches + 3 P1 batches + this summary)
+- All changes backward-compatible (serde defaults, no breaking migrations)
+- User must rebuild DB (run build_fifa_world.py) to get per-club reputation + wage recomputation
+- Game load time should be dramatically reduced (pre-compute skip)
+
