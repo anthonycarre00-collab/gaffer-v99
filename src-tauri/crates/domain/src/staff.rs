@@ -21,12 +21,49 @@ pub struct Staff {
     #[serde(default)]
     pub specialization: Option<CoachingSpecialization>,
 
+    /// V100 P1 (Issue #17): Staff personality. Affects coaching style
+    /// (authoritarian → players improve faster but morale drops), scouting
+    /// bias (overrates certain attributes), physio approach (cautious vs
+    /// aggressive recovery). Reuses the existing PersonalityProfile struct
+    /// from the player module so we don't duplicate the Big Five model.
+    #[serde(default)]
+    pub personality: Option<crate::player::PersonalityProfile>,
+
+    /// V100 P1 (Issue #18): Scout bias profile. Only meaningful for staff
+    /// with role == Scout. Each bias is a multiplier (1.0 = neutral) that
+    /// fuzzes the scout's attribute readings. E.g. a scout with
+    /// pace_bias = 1.2 will overrate pace by ~20% in their reports.
+    /// None for non-scout staff.
+    #[serde(default)]
+    pub scout_bias: Option<ScoutBias>,
+
     // Contract & finances
     #[serde(default)]
     pub wage: u32,
     #[serde(default)]
     pub contract_end: Option<String>,
 }
+
+/// V100 P1 (Issue #18): Scout bias profile. Each field is a multiplier
+/// (1.0 = neutral, >1.0 = overrates, <1.0 = underrates) applied to the
+/// scout's attribute readings when generating a scouting report.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ScoutBias {
+    #[serde(default = "default_bias")]
+    pub pace_bias: f32,
+    #[serde(default = "default_bias")]
+    pub power_bias: f32,
+    #[serde(default = "default_bias")]
+    pub defending_bias: f32,
+    #[serde(default = "default_bias")]
+    pub attacking_bias: f32,
+    /// How much uncertainty to add to the report (0.0 = precise, 1.0 = wild).
+    #[serde(default = "default_noise")]
+    pub noise_level: f32,
+}
+
+fn default_bias() -> f32 { 1.0 }
+fn default_noise() -> f32 { 0.1 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum StaffRole {

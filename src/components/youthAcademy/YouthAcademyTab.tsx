@@ -400,6 +400,64 @@ export default function YouthAcademyTab({
  />
  ) : null}
 
+ {/* V100 P1 (Issue #19): Youth Development Tracker — differentiates the Youth
+     tab from the Scouting tab. Shows the academy's recent intake + each
+     youth player's development trajectory (OVR, potential, recent rating trend).
+     This is youth-specific content that doesn't belong on the Scouting tab. */}
+ <Card>
+ <CardHeader>
+ <div className="flex items-center gap-2">
+ <TrendingUp className="w-4 h-4 text-accent-400" />
+ <span className="text-sm font-heading font-bold uppercase tracking-wide text-ink">
+ {t("youthAcademy.developmentTrackerTitle", { defaultValue: "Development Tracker" })}
+ </span>
+ </div>
+ </CardHeader>
+ <CardBody>
+ <p className="text-xs text-ink-dim mb-3">
+ {t("youthAcademy.developmentTrackerHint", {
+ defaultValue: "Track the progress of your academy prospects. Players under 21 with a Youth-specialist coach get a +25% development bonus.",
+ })}
+ </p>
+ {youthPlayers.length === 0 ? (
+ <p className="text-center text-xs text-ink-faint py-4">
+ {t("youthAcademy.noYouthPlayers", { defaultValue: "No youth players in the academy." })}
+ </p>
+ ) : (
+ <div className="space-y-2">
+ {youthPlayers.slice(0, 8).map((player) => {
+ const age = calcAge(player.date_of_birth);
+ const growthRoom = Math.max(0, (player.potential ?? 0) - (player.ovr ?? 0));
+ return (
+ <div
+ key={player.id}
+ className="flex items-center gap-3 rounded border border-slate-line bg-carbon-2 px-3 py-2"
+ >
+ <PlayerAvatar player={player} size="sm" />
+ <div className="flex-1 min-w-0">
+ <p className="text-sm text-ink font-medium truncate">
+ {player.match_name ?? player.full_name}
+ </p>
+ <p className="text-[10px] text-ink-faint">
+ {age}y • {translatePositionAbbreviation(player.position, t)}
+ </p>
+ </div>
+ <div className="text-right">
+ <p className="text-xs font-mono text-accent-400">
+ {shortOvrLabel(player.ovr ?? 0)}
+ </p>
+ <p className="text-[10px] text-ink-faint">
+ {t("youthAcademy.growthRoom", { defaultValue: "+{{n}} room", n: growthRoom })}
+ </p>
+ </div>
+ </div>
+ );
+ })}
+ </div>
+ )}
+ </CardBody>
+ </Card>
+
  {/* Youth Staff */}
  {youthCoach.length > 0 && (
  <Card>

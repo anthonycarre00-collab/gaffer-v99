@@ -2512,3 +2512,41 @@ Stage Summary:
 - Same fixture+event always gets same catchphrase (deterministic via combined hash)
 - The frontend UI integration (displaying pundit name + using catchphrases) is a follow-up P2 task — the infrastructure is ready
 
+
+---
+Task ID: V100-P1-BATCH-3
+Agent: main
+Task: Scout personality + Staff personality + Youth tab differentiation + Pre-compute DB skip
+
+Work Log:
+- P1 (Issue #17) Staff personality:
+  - Added `personality: Option<PersonalityProfile>` field to Staff struct (reuses player's Big Five model)
+  - Added `scout_bias: Option<ScoutBias>` field for scout-specific attribute bias
+  - Both fields have #[serde(default)] for backward-compat
+- P1 (Issue #18) Scout bias:
+  - Added new `ScoutBias` struct with 5 fields: pace_bias, power_bias, defending_bias, attacking_bias, noise_level
+  - Each bias is a multiplier (1.0 = neutral, >1.0 = overrates, <1.0 = underrates)
+  - Added `fuzz_attribute_with_bias` function in progressive_reveal.rs that applies bias + extra noise
+  - The existing `fuzz_attribute` is unchanged (backward-compat); the new function is available for scout reports
+- P1 (Issue #19) Youth tab differentiation:
+  - Added "Development Tracker" card to YouthAcademyTab (below the recruitment card)
+  - Shows youth players with: avatar, name, age, position, OVR, growth room (potential - OVR)
+  - Includes a hint explaining the +25% Youth specialist bonus
+  - This is youth-specific content that doesn't belong on the Scouting tab
+  - Note: The recruitment card is kept (user can still start youth searches from here) but the new tracker makes the tab feel distinct
+- P1 (Issue #9) Pre-compute DB skip:
+  - Updated the player re-derivation loop in commands/game.rs:
+    - Skips `refresh_player_derived` when the player already has OVR > 0 AND market_value > 0 (DB pre-computed)
+    - Still runs the V100 P1 height/weight generation if missing (height_cm == 0 or weight_kg == 0)
+    - Logs show "refreshed" vs "skipped" counts
+  - This should cut the 15-20 minute load time dramatically when the DB has pre-computed values
+  - Falls back to full recompute for players without DB values (defensive)
+
+Stage Summary:
+- Staff now have personality profiles (reuses player's Big Five model)
+- Scouts have bias multipliers that can fuzz their attribute readings
+- The fuzz_attribute_with_bias function is ready to be used in scout report generation (wiring into the existing report flow is a follow-up P2 task)
+- Youth Academy tab now has a Development Tracker card that differentiates it from the Scouting tab
+- Game load time should be dramatically reduced when the DB has pre-computed OVR/market_value (most players will be skipped)
+- All changes backward-compatible (serde defaults)
+

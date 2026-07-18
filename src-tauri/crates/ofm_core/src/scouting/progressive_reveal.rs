@@ -72,6 +72,29 @@ pub fn fuzz_attribute(value: u8, judging_ability: u8, rng: &mut impl Rng) -> u8 
     ((value as i16) + delta).clamp(1, 99) as u8
 }
 
+/// V100 P1 (Issue #18): Apply fuzz noise with scout bias. The scout's
+/// bias multipliers shift the readings (e.g. a pace-biased scout overrates
+/// pace by their pace_bias multiplier), and their noise_level adds extra
+/// uncertainty on top of the judging_ability-based noise.
+pub fn fuzz_attribute_with_bias(
+    value: u8,
+    judging_ability: u8,
+    bias_multiplier: f32,
+    extra_noise: f32,
+    rng: &mut impl Rng,
+) -> u8 {
+    use rand::RngExt;
+    // Apply bias: shift the value by (multiplier - 1.0) * value.
+    // E.g. multiplier=1.2 → +20% of value; multiplier=0.8 → -20%.
+    let biased = (value as f32 * bias_multiplier).round() as i16;
+    // Base noise from judging_ability + extra noise from scout's noise_level.
+    let base_noise = fuzz_noise_range(judging_ability);
+    let extra = (extra_noise * 10.0) as i16; // 0.0-1.0 → 0-10
+    let total_noise = base_noise + extra;
+    let delta: i16 = rng.random_range(-total_noise..=total_noise);
+    (biased + delta).clamp(1, 99) as u8
+}
+
 /// Get an attribute value by name from PlayerAttributes.
 pub fn get_attribute(attrs: &PlayerAttributes, name: &str) -> u8 {
     match name {

@@ -503,14 +503,40 @@ fn build_game_from_world_data(
             // screen for 15-20 minutes while 5,324 players are re-derived).
             // The logs appear in the Tauri dev console and any log file.
             // Future improvement: emit Tauri events for a proper progress bar.
+            //
+            // V100 P1 (Issue #9): Skip re-derivation for players that already
+            // have OVR + market_value set (from the DB build script). This
+            // cuts the 15-20 minute load time dramatically when the DB has
+            // pre-computed values. Only players with ovr == 0 (unset) get
+            // the full refresh_player_derived treatment.
+            let mut skipped = 0usize;
+            let mut refreshed = 0usize;
             for (i, player) in game.players.iter_mut().enumerate() {
-                ofm_core::player_rating::refresh_player_derived(player, world_start_year);
+                if player.ovr > 0 && player.market_value > 0 {
+                    // DB already has derived values — skip the expensive recompute.
+                    // Still run the V100 P1 height/weight generation if missing.
+                    if player.height_cm == 0 || player.weight_kg == 0 {
+                        ofm_core::player_rating::refresh_player_derived(player, world_start_year);
+                        refreshed += 1;
+                    } else {
+                        skipped += 1;
+                    }
+                } else {
+                    ofm_core::player_rating::refresh_player_derived(player, world_start_year);
+                    refreshed += 1;
+                }
                 if i > 0 && i % 500 == 0 {
                     let pct = (i * 100) / total_players.max(1);
-                    log::info!("[world] NE-1 progress: {}/{} players ({}%)", i, total_players, pct);
+                    log::info!(
+                        "[world] NE-1 progress: {}/{} players ({}%) — {} refreshed, {} skipped",
+                        i, total_players, pct, refreshed, skipped
+                    );
                 }
             }
-            log::info!("[world] NE-1 done — {} players re-derived", total_players);
+            log::info!(
+                "[world] NE-1 done — {} players: {} refreshed, {} skipped (DB had pre-computed values)",
+                total_players, refreshed, skipped
+            );
 
             // V99.7-1: Extend contracts that expired before the game start date.
             //
