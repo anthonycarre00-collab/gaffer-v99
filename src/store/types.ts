@@ -145,6 +145,10 @@ export interface TeamData {
   facilities?: FacilitiesData;
   sponsorship?: SponsorshipData | null;
   starting_xi_ids: string[];
+  /** V100 P2 (Issue #39): Players in the reserve squad (lightweight). */
+  reserve_squad_ids?: string[];
+  /** V100 P2 (Issue #39): Reserve team recent results (scorelines like "2-1"). */
+  reserve_results?: string[];
   match_roles?: TeamMatchRolesData;
   player_roles?: Record<string, PlayerRole>;
   tactics_phase?: TacticsPhaseSettings;

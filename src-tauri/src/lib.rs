@@ -236,6 +236,9 @@ pub fn run() {
             // V100 P1 (Issue #3): Position retraining command.
             set_player_training_position,
             set_player_squad_role,
+            // V100 P2 (Issue #39): Reserve squad movement commands.
+            move_to_reserve,
+            promote_from_reserve,
             set_player_role,
             set_tactics_phase,
             assign_jersey_number,

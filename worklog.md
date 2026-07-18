@@ -2611,3 +2611,32 @@ Stage Summary:
 - User must rebuild DB (run build_fifa_world.py) to get per-club reputation + wage recomputation
 - Game load time should be dramatically reduced (pre-compute skip)
 
+
+---
+Task ID: V100-P2-RESERVE-TEAMS
+Agent: main
+Task: Reserve teams — lightweight squad movement (Issue #39)
+
+Work Log:
+- Edited `src-tauri/crates/domain/src/team.rs`:
+  - Added `reserve_squad_ids: Vec<String>` field to Team struct (with #[serde(default)])
+  - Added `reserve_results: Vec<String>` field for sparse-simulated scorelines
+  - Both fields are lightweight (no separate Team entity, just ID lists)
+- Added 2 new Tauri commands in `src-tauri/src/commands/squad.rs`:
+  - `move_to_reserve(player_id)` — adds player to reserve_squad_ids, removes from starting XI
+  - `promote_from_reserve(player_id)` — removes from reserve_squad_ids
+  - Both validate player is owned by user
+- Registered both commands in lib.rs invoke_handler
+- Added frontend service functions in squadService.ts:
+  - `moveToReserve(playerId)`
+  - `promoteFromReserve(playerId)`
+- Added `reserve_squad_ids` and `reserve_results` fields to frontend TeamData type
+
+Stage Summary:
+- Users can now move players to/from the reserve squad
+- The reserve squad is lightweight (just a player ID list on Team) per user's architectural decision #3
+- Players in the reserve squad remain members of the club (team_id unchanged)
+- The reserve_results field is ready for sparse-simulated scorelines (actual sparse sim is a follow-up P2 task)
+- UI for the reserve squad panel (on Squad tab) is a follow-up P2 task — the backend infrastructure is ready
+- Backward-compatible with existing saves (serde defaults)
+

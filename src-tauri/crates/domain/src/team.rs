@@ -139,6 +139,20 @@ pub struct Team {
     #[serde(default)]
     pub starting_xi_ids: Vec<String>,
 
+    /// V100 P2 (Issue #39): Reserve squad player IDs. Players in this list
+    /// get reserve-team minutes (sparse-simulated) for fitness/development/
+    /// punishment. They remain members of the club (team_id unchanged) but
+    /// are "loaned" to the reserve squad for match purposes.
+    /// Lightweight: no separate Team entity, just a player ID list.
+    #[serde(default)]
+    pub reserve_squad_ids: Vec<String>,
+
+    /// V100 P2 (Issue #39): Reserve team's recent results (scorelines only).
+    /// Sparse-simulated — no full match engine. Each entry is "H-A" (e.g.
+    /// "2-1"). Used to show reserve results on the Squad tab.
+    #[serde(default)]
+    pub reserve_results: Vec<String>,
+
     #[serde(default)]
     pub match_roles: MatchRoles,
 

@@ -324,6 +324,101 @@ pub fn set_player_squad_role(
     set_player_squad_role_internal(&state, &player_id, &squad_role)
 }
 
+/// V100 P2 (Issue #39): Move a player to the reserve squad. The player
+/// remains a member of the club (team_id unchanged) but is added to the
+/// team's `reserve_squad_ids` list. They get reserve-team minutes for
+/// fitness/development/punishment. Use `promote_from_reserve` to bring
+/// them back to the senior squad.
+#[tauri::command]
+pub fn move_to_reserve(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+) -> Result<Game, String> {
+    move_to_reserve_internal(&state, &player_id)
+}
+
+pub fn move_to_reserve_internal(
+    state: &StateManager,
+    player_id: &str,
+) -> Result<Game, String> {
+    info!("[cmd] move_to_reserve: player={}", player_id);
+    mutate_active_game(state, |game| {
+        let team_id = game
+            .manager
+            .team_id
+            .clone()
+            .ok_or("be.error.noTeamAssigned".to_string())?;
+
+        let player = game
+            .players
+            .iter()
+            .find(|p| p.id == player_id)
+            .ok_or("be.error.playerNotFound".to_string())?;
+
+        if player.team_id.as_deref() != Some(team_id.as_str()) {
+            return Err("be.error.playerNotOwnedByUser".to_string());
+        }
+
+        let team = game
+            .teams
+            .iter_mut()
+            .find(|t| t.id == team_id)
+            .ok_or("be.error.teamNotFound".to_string())?;
+
+        // Don't add twice.
+        if !team.reserve_squad_ids.iter().any(|id| id == player_id) {
+            team.reserve_squad_ids.push(player_id.to_string());
+        }
+        // Remove from starting XI if present (can't be in both).
+        if let Some(pos) = team.starting_xi_ids.iter().position(|id| id == player_id) {
+            team.starting_xi_ids.remove(pos);
+        }
+        Ok(())
+    })
+}
+
+/// V100 P2 (Issue #39): Promote a player from the reserve squad back to the
+/// senior squad. Removes them from `reserve_squad_ids`.
+#[tauri::command]
+pub fn promote_from_reserve(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+) -> Result<Game, String> {
+    promote_from_reserve_internal(&state, &player_id)
+}
+
+pub fn promote_from_reserve_internal(
+    state: &StateManager,
+    player_id: &str,
+) -> Result<Game, String> {
+    info!("[cmd] promote_from_reserve: player={}", player_id);
+    mutate_active_game(state, |game| {
+        let team_id = game
+            .manager
+            .team_id
+            .clone()
+            .ok_or("be.error.noTeamAssigned".to_string())?;
+
+        let team = game
+            .teams
+            .iter_mut()
+            .find(|t| t.id == team_id)
+            .ok_or("be.error.teamNotFound".to_string())?;
+
+        // Remove from reserve squad.
+        let was_in_reserve = team
+            .reserve_squad_ids
+            .iter()
+            .position(|id| id == player_id);
+        if let Some(pos) = was_in_reserve {
+            team.reserve_squad_ids.remove(pos);
+            Ok(())
+        } else {
+            Err("be.error.playerNotInReserve".to_string())
+        }
+    })
+}
+
 pub fn set_player_squad_role_internal(
     state: &StateManager,
     player_id: &str,

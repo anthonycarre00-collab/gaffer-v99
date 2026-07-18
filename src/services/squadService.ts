@@ -48,6 +48,27 @@ export async function setPlayerTrainingPosition(
     });
 }
 
+/**
+ * V100 P2 (Issue #39): Move a player to the reserve squad. The player
+ * remains a member of the club but gets reserve-team minutes for
+ * fitness/development/punishment.
+ */
+export async function moveToReserve(
+    playerId: string,
+): Promise<GameStateData> {
+    return invoke<GameStateData>("move_to_reserve", { playerId });
+}
+
+/**
+ * V100 P2 (Issue #39): Promote a player from the reserve squad back to
+ * the senior squad.
+ */
+export async function promoteFromReserve(
+    playerId: string,
+): Promise<GameStateData> {
+    return invoke<GameStateData>("promote_from_reserve", { playerId });
+}
+
 export async function assignJerseyNumber(
     playerId: string,
     jerseyNumber: number | null,
