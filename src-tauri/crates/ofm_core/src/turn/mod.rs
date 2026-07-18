@@ -308,6 +308,38 @@ fn prune_old_messages_and_news(game: &mut Game) {
         }
     });
 
+    // V100 P2 (Issue #25): Cap unread messages at 500 to prevent unbounded
+    // growth. If unread count exceeds 500, mark the oldest ones as read
+    // (which makes them eligible for the age-based prune above on the next
+    // tick). This prevents inbox spam from breaking long-running saves.
+    let unread_count = game.messages.iter().filter(|m| !m.read).count();
+    if unread_count > 500 {
+        let to_mark = unread_count - 500;
+        let mut marked = 0;
+        // Sort unread by date ascending (oldest first), mark oldest as read.
+        let mut unread_indices: Vec<usize> = game
+            .messages
+            .iter()
+            .enumerate()
+            .filter(|(_, m)| !m.read)
+            .map(|(i, _)| i)
+            .collect();
+        // Sort by date (oldest first) — stable sort preserves insertion order for ties.
+        unread_indices.sort_by(|&a, &b| {
+            game.messages[a].date.cmp(&game.messages[b].date)
+        });
+        for &idx in unread_indices.iter().take(to_mark) {
+            game.messages[idx].read = true;
+            marked += 1;
+        }
+        if marked > 0 {
+            debug!(
+                "[turn] Capped unread messages: marked {} oldest as read (was {}, now {})",
+                marked, unread_count, unread_count - marked
+            );
+        }
+    }
+
     let pruned_msgs = before_msgs - game.messages.len();
     let pruned_news = before_news - game.news.len();
     if pruned_msgs > 0 || pruned_news > 0 {

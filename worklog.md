@@ -2640,3 +2640,24 @@ Stage Summary:
 - UI for the reserve squad panel (on Squad tab) is a follow-up P2 task — the backend infrastructure is ready
 - Backward-compatible with existing saves (serde defaults)
 
+
+---
+Task ID: V100-P2-PRUNE-UNREAD
+Agent: main
+Task: Prune unread messages — cap at 500 (Issue #25)
+
+Work Log:
+- Edited `src-tauri/crates/ofm_core/src/turn/mod.rs`:
+  - Added unread message cap (500) to `prune_old_messages_and_news`
+  - When unread count exceeds 500, marks the oldest unread messages as read
+  - Marked messages become eligible for the age-based prune (365 days) on the next tick
+  - This prevents inbox spam from breaking long-running saves (10+ seasons)
+  - Logs the count of marked messages for debugging
+
+Stage Summary:
+- Unread messages are now capped at 500 (was unbounded)
+- The cap is applied after the age-based prune, so read messages are pruned first
+- Oldest unread messages are marked as read (not deleted) so the user doesn't lose information
+- The cap is defensive — most users will never hit 500 unread messages
+- Backward-compatible (no schema changes)
+
