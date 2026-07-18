@@ -72,7 +72,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  <div className="flex items-center gap-2 mb-2">
  <button
  onClick={onBack}
- className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
+ className="text-ink-faint hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
@@ -110,7 +110,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  <label className={labelClass}>{t("worldEditor.teamLogo")}</label>
  <div className="flex items-center gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-12 h-12 rounded border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
  <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
@@ -120,7 +120,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  <button
  type="button"
  onClick={() => { void handlePickLogo(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>
@@ -172,7 +172,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  onChange={(e) =>
  updateField("colors", { ...editingTeam.colors, primary: e.target.value })
  }
- className="w-9 h-9 rounded border border-slate-line cursor-pointer p-0.5 bg-white bg-carbon-2 flex-shrink-0"
+ className="w-9 h-9 rounded border border-slate-line cursor-pointer p-0.5 bg-carbon-2 flex-shrink-0"
  />
  <input
  type="text"
@@ -180,7 +180,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  onChange={(e) =>
  updateField("colors", { ...editingTeam.colors, primary: e.target.value })
  }
- className="flex-1 rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
+ className="flex-1 rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
  placeholder="#cc0000"
  />
  </div>
@@ -196,7 +196,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  onChange={(e) =>
  updateField("colors", { ...editingTeam.colors, secondary: e.target.value })
  }
- className="w-9 h-9 rounded border border-slate-line cursor-pointer p-0.5 bg-white bg-carbon-2 flex-shrink-0"
+ className="w-9 h-9 rounded border border-slate-line cursor-pointer p-0.5 bg-carbon-2 flex-shrink-0"
  />
  <input
  type="text"
@@ -204,7 +204,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  onChange={(e) =>
  updateField("colors", { ...editingTeam.colors, secondary: e.target.value })
  }
- className="flex-1 rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
+ className="flex-1 rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition font-mono"
  placeholder="#ffffff"
  />
  </div>
@@ -293,7 +293,7 @@ export function TeamForm({ editingTeam, editingTeamIndex, isBusy, projectDir, on
  <button
  onClick={onSave}
  disabled={isBusy || !editingTeam.id || !editingTeam.name || !editingTeam.city || !editingTeam.country}
- className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-white rounded font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+ className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-ink rounded font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
  >
  {isBusy ? (
  <Loader2 className="w-4 h-4 animate-spin" />

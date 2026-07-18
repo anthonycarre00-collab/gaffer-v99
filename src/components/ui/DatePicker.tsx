@@ -212,7 +212,7 @@ export function DatePicker({ value, onChange, error }: DatePickerProps) {
  </button>
 
  {monthOpen && (
- <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-white bg-carbon-2 rounded border border-slate-line overflow-hidden">
+ <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-carbon-2 rounded border border-slate-line overflow-hidden">
  <div className="max-h-48 overflow-y-auto">
  {months.map(m => (
  <button

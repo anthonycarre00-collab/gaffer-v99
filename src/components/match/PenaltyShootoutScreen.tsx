@@ -124,7 +124,7 @@ export default function PenaltyShootoutScreen({
  </div>
 
  {/* Score card */}
- <div className="w-full max-w-lg bg-white bg-carbon-1 rounded p-6 mb-4">
+ <div className="w-full max-w-lg bg-carbon-1 rounded p-6 mb-4">
  <div className="flex items-center justify-between gap-4">
  {/* Home */}
  <div className="flex flex-col items-center gap-2 flex-1">
@@ -175,7 +175,7 @@ export default function PenaltyShootoutScreen({
 
  {/* Event feed */}
  {shootoutEvents.length > 0 && (
- <div className="w-full max-w-lg bg-white bg-carbon-1 rounded p-4 mb-4 space-y-1">
+ <div className="w-full max-w-lg bg-carbon-1 rounded p-4 mb-4 space-y-1">
  {shootoutEvents.slice(-8).map((evt, i) => (
  <div
  key={i}
@@ -212,7 +212,7 @@ export default function PenaltyShootoutScreen({
  if (!isRunning) setSpeed("normal");
  else setSpeed("paused");
  }}
- className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
+ className="p-2 rounded-full bg-carbon-2 shadow hover: transition-all"
  aria-label={isRunning ? t("match.pause") : t("match.live")}
  >
  {isRunning ? (
@@ -224,7 +224,7 @@ export default function PenaltyShootoutScreen({
  <button
  type="button"
  onClick={() => { setSpeed("fast"); setIsRunning(true); }}
- className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
+ className="p-2 rounded-full bg-carbon-2 shadow hover: transition-all"
  aria-label={t("match.fast")}
  >
  <FastForward className="w-5 h-5 text-ink" />
@@ -235,7 +235,7 @@ export default function PenaltyShootoutScreen({
  setIsRunning(false);
  await stepMatch();
  }}
- className="p-2 rounded-full bg-white bg-carbon-2 shadow hover: transition-all"
+ className="p-2 rounded-full bg-carbon-2 shadow hover: transition-all"
  aria-label={t("match.step1Min")}
  >
  <SkipForward className="w-5 h-5 text-ink" />
@@ -269,7 +269,7 @@ export function KickRow({
  return (
  <span
  key={i}
- className="w-6 h-6 rounded-full border-2 border-slate-line border-slate-line flex items-center justify-center text-xs text-ink-faint"
+ className="w-6 h-6 rounded-full border-2 border-slate-line flex items-center justify-center text-xs text-ink-faint"
  >
  ?
  </span>

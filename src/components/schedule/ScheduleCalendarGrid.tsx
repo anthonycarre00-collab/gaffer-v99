@@ -174,13 +174,13 @@ export default function ScheduleCalendarGrid({
  ];
 
  return (
- <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1 overflow-hidden">
+ <div className="rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-1 overflow-hidden">
  {/* Header */}
  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-line-soft">
  <button
  onClick={prevMonth}
  aria-label={t("schedule.calendar.prevMonth", "Previous month")}
- className="p-1 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
+ className="p-1 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
@@ -190,7 +190,7 @@ export default function ScheduleCalendarGrid({
  <button
  onClick={nextMonth}
  aria-label={t("schedule.calendar.nextMonth", "Next month")}
- className="p-1 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
+ className="p-1 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
@@ -243,7 +243,7 @@ export default function ScheduleCalendarGrid({
  <span
  className={
  day.isToday
- ? "w-6 h-6 flex items-center justify-center rounded-full bg-primary-500 text-white text-xs"
+ ? "w-6 h-6 flex items-center justify-center rounded-full bg-primary-500 text-ink text-xs"
  : ""
  }
  >

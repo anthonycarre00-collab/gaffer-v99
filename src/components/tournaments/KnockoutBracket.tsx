@@ -152,7 +152,7 @@ export default function KnockoutBracket({
  const maxSlots = Math.max(...rounds.map((r) => r.fixture_ids.length + (r.bye_team_ids?.length ?? 0)));
 
  return (
- <div className="overflow-x-auto rounded border border-slate-line bg-white bg-carbon-1">
+ <div className="overflow-x-auto rounded border border-slate-line bg-carbon-1">
  <div className="flex gap-0 min-w-max">
  {rounds.map((round, roundIdx) => {
  const roundFixtures = round.fixture_ids.map((id) => fixtureById.get(id));

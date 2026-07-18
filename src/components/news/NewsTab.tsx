@@ -219,7 +219,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  setPage(0);
  }}
  className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-colors ${!filterCategory
- ? "bg-primary-500 text-white shadow-sm"
+ ? "bg-primary-500 text-ink shadow-sm"
  : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >
@@ -233,7 +233,7 @@ export default function NewsTab({ gameState, onSelectTeam }: NewsTabProps) {
  setPage(0);
  }}
  className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-colors ${filterCategory === cat
- ? "bg-primary-500 text-white shadow-sm"
+ ? "bg-primary-500 text-ink shadow-sm"
  : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >
@@ -348,7 +348,7 @@ function HeroArticle({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group"
+ className="w-full text-left bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group"
  >
  <div className="p-6">
  <div className="flex items-center gap-2 mb-3">
@@ -445,7 +445,7 @@ function ArticleCard({
  <button
  data-testid={`news-article-${article.id}`}
  onClick={onSelect}
- className="w-full text-left bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group flex flex-col"
+ className="w-full text-left bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden hover:border-accent-400 dark:hover:border-accent-500/50 transition-all group flex flex-col"
  >
  <div className="p-4 flex-1 flex flex-col">
  <div className="flex items-center gap-2 mb-2">
@@ -530,7 +530,7 @@ function ArticleDetail({
  {t("news.backToNews")}
  </button>
 
- <article className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
+ <article className="bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
  <div className="p-8">
  {/* Category + date */}
  <div className="flex items-center gap-3 mb-4">

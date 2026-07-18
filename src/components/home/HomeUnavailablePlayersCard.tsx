@@ -49,7 +49,7 @@ export default function HomeUnavailablePlayersCard({
  <PlayerAvatar player={player} />
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <span className="truncate text-sm font-heading font-bold text-ink text-ink">
+ <span className="truncate text-sm font-heading font-bold text-ink">
  {player.full_name}
  </span>
  <Badge variant="danger" size="sm">

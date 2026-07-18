@@ -232,7 +232,7 @@ function CompareAttributes({
  {left}
  </span>
  </div>
- <div className="h-2 rounded-full bg-white bg-carbon-2 overflow-hidden">
+ <div className="h-2 rounded-full bg-carbon-2 overflow-hidden">
  <div
  className={`h-full rounded-full ${valueBarTone(left)}`}
  style={{ width: `${left}%` }}
@@ -252,7 +252,7 @@ function CompareAttributes({
  {right}
  </span>
  </div>
- <div className="h-2 rounded-full bg-white bg-carbon-2 overflow-hidden">
+ <div className="h-2 rounded-full bg-carbon-2 overflow-hidden">
  <div
  className={`h-full rounded-full ${valueBarTone(right)}`}
  style={{ width: `${right}%` }}
@@ -282,7 +282,7 @@ export default function TacticsPlayerFocusPanel({
  <Card>
  <div className="p-4 border-b border-slate-line-soft bg-linear-to-r rounded-t-xl">
  <div className="flex items-center justify-between">
- <h3 className="text-sm font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
+ <h3 className="text-sm font-heading font-bold text-ink uppercase tracking-wide flex items-center gap-2">
  <Eye className="w-4 h-4 text-accent-400" />
  {t("tactics.inspector")}
  </h3>
@@ -290,7 +290,7 @@ export default function TacticsPlayerFocusPanel({
  <button
  type="button"
  onClick={onClose}
- className="rounded p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+ className="rounded p-1 text-ink/60 transition-colors hover:bg-ink/10 hover:text-ink"
  >
  <X className="h-4 w-4" />
  </button>

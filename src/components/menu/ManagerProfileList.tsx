@@ -27,7 +27,7 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  key={profile.id}
  className={`group relative flex items-center w-full rounded border transition-all duration-200 ${isSelected
  ? "bg-primary-50 dark:bg-primary-500/10 border-primary-400 dark:border-primary-500 ring-1 ring-primary-400/30"
- : "bg-white bg-carbon-2 border-slate-line hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50 hover:bg-carbon-3"
+ : "bg-carbon-2 border-slate-line hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50 hover:bg-carbon-3"
  }`}
  >
  <button
@@ -44,7 +44,7 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  </span>
  </div>
  <div className={`w-4 h-4 rounded-full bg-primary-500 flex items-center justify-center shrink-0 ${isSelected ? "visible" : "invisible"}`}>
- <div className="w-1.5 h-1.5 rounded-full bg-white" />
+ <div className="w-1.5 h-1.5 rounded-full bg-carbon-1" />
  </div>
  </button>
 
@@ -58,11 +58,11 @@ export default function ManagerProfileList({ profiles, selectedProfileId, onSele
  </button>
 
  {confirmDeleteId === profile.id && (
- <div className={`absolute inset-0 flex items-center justify-end gap-1.5 px-3 rounded ${isSelected ? "bg-primary-50 dark:bg-primary-500/10" : "bg-white bg-carbon-2"}`}>
+ <div className={`absolute inset-0 flex items-center justify-end gap-1.5 px-3 rounded ${isSelected ? "bg-primary-50 dark:bg-primary-500/10" : "bg-carbon-2"}`}>
  <button
  type="button"
  onClick={() => { onDelete(profile.id); setConfirmDeleteId(null); }}
- className="px-2.5 py-1 bg-danger-500 hover:bg-danger-600 text-white text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="px-2.5 py-1 bg-danger-500 hover:bg-danger-600 text-ink text-xs font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t("menu.delete")}
  </button>

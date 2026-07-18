@@ -66,7 +66,7 @@ function MatchCard({ match, idx }: { match: RecapMatch; idx: number }): JSX.Elem
  <Swords className="h-3.5 w-3.5" />
  </div>
  <div className="min-w-0 flex-1">
- <p className="text-xs font-medium text-ink text-ink truncate">
+ <p className="text-xs font-medium text-ink truncate">
  {match.home_team} {match.home_goals}–{match.away_goals} {match.away_team}
  </p>
  <p className="text-[11px] text-ink-dim truncate">{match.competition}</p>
@@ -94,7 +94,7 @@ function TransferCard({ player, from, to, fee, involvesUser, idx }: {
  <ArrowRightLeft className="h-3.5 w-3.5" />
  </div>
  <div className="min-w-0 flex-1">
- <p className={`text-xs truncate ${involvesUser ? "font-bold text-primary-600 dark:text-primary-400" : "font-medium text-ink text-ink"}`}>
+ <p className={`text-xs truncate ${involvesUser ? "font-bold text-primary-600 dark:text-primary-400" : "font-medium text-ink"}`}>
  {player}
  </p>
  <p className="text-[11px] text-ink-dim truncate">{from} → {to}</p>
@@ -375,7 +375,7 @@ export default function DashboardSimulatingModal({
  <button
  type="button"
  onClick={onDismiss}
- className="w-full rounded bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+ className="w-full rounded bg-primary-600 px-4 py-2.5 text-sm font-semibold text-ink hover:bg-primary-700"
  >
  {t("dashboard.digestReturnHome")}
  </button>
@@ -416,7 +416,7 @@ export default function DashboardSimulatingModal({
  <button
  type="button"
  onClick={onContinueAfterBlocker}
- className="w-full rounded bg-accent-600 px-3 py-2 text-xs font-semibold text-white hover:bg-accent-700"
+ className="w-full rounded bg-accent-600 px-3 py-2 text-xs font-semibold text-ink hover:bg-accent-700"
  >
  {t("dashboard.digestContinueAnyway")}
  </button>

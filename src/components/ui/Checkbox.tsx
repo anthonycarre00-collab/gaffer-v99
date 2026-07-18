@@ -42,10 +42,10 @@ export function Checkbox({
  className="peer sr-only"
  />
  <div
- className="h-4 w-4 rounded border-2 flex items-center justify-center transition-colors border-slate-line border-slate-line bg-white bg-carbon-2 peer-checked:bg-primary-500 peer-checked:border-primary-500 peer-focus:ring-2 peer-focus:ring-primary-500/30 peer-focus:outline-none"
+ className="h-4 w-4 rounded border-2 flex items-center justify-center transition-colors border-slate-line bg-carbon-2 peer-checked:bg-primary-500 peer-checked:border-primary-500 peer-focus:ring-2 peer-focus:ring-primary-500/30 peer-focus:outline-none"
  aria-hidden="true"
  >
- {checked ? <Check className="h-3 w-3 text-white" strokeWidth={3} /> : null}
+ {checked ? <Check className="h-3 w-3 text-ink" strokeWidth={3} /> : null}
  </div>
  </label>
  );

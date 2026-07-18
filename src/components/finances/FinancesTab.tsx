@@ -692,12 +692,12 @@ export default function FinancesTab({
  {
  label: t("finances.wageBudget"),
  value: myTeam.wage_budget,
- color: "text-ink text-ink",
+ color: "text-ink",
  },
  {
  label: t("finances.transferBudget"),
  value: myTeam.transfer_budget,
- color: "text-ink text-ink",
+ color: "text-ink",
  },
  {
  label: t("finances.seasonIncome"),
@@ -735,7 +735,7 @@ export default function FinancesTab({
  <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-faint mb-1">
  {t("finances.squadValue")}
  </p>
- <p className="font-heading font-bold text-xl text-ink text-ink">
+ <p className="font-heading font-bold text-xl text-ink">
  {formatVal(totalValue)}
  </p>
  </div>
@@ -948,7 +948,7 @@ export default function FinancesTab({
  {contractRiskPlayers.map(({ player, riskLevel }) => (
  <div
  key={player.id}
- className="rounded border border-slate-line bg-white bg-carbon-2 p-3 flex items-start justify-between gap-3"
+ className="rounded border border-slate-line bg-carbon-2 p-3 flex items-start justify-between gap-3"
  >
  <div className="flex items-start gap-3">
  <Checkbox
@@ -1054,7 +1054,7 @@ export default function FinancesTab({
  <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("finances.pendingSponsorOffers")}
  </p>
- <div className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
  <div className="space-y-1">
  <h3 className="font-semibold text-sm text-ink">
@@ -1097,7 +1097,7 @@ export default function FinancesTab({
  </p>
  ) : null}
  </div>
- <div className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3">
+ <div className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3">
  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
  <div className="space-y-1">
  <h3 className="font-semibold text-sm text-ink">
@@ -1158,7 +1158,7 @@ export default function FinancesTab({
  return (
  <div
  key={message.id}
- className="rounded border border-slate-line bg-white bg-carbon-2 p-4 space-y-3"
+ className="rounded border border-slate-line bg-carbon-2 p-4 space-y-3"
  >
  <div className="space-y-1">
  <h3 className="font-semibold text-sm text-ink">
@@ -1314,7 +1314,7 @@ export default function FinancesTab({
  onClick={() => onSelectPlayer?.(p.id)}
  className={`hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors ${onSelectPlayer ? "cursor-pointer group" : ""}`}
  >
- <td className="py-3 px-5 font-semibold text-sm text-ink text-ink">
+ <td className="py-3 px-5 font-semibold text-sm text-ink">
  <span className="group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {p.full_name}
  </span>

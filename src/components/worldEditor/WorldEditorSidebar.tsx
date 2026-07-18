@@ -87,7 +87,7 @@ export function WorldEditorSidebar({
  `flex items-center gap-2 w-full px-3 py-2 rounded text-sm transition-colors text-left ${
  active
  ? "bg-primary-100 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 font-semibold"
- : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink"
+ : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink"
  }`;
 
  return (

@@ -94,7 +94,7 @@ export default function DashboardOverlays({
      instead of a full-screen modal that interrupts the player.
      Auto-dismisses after 7s. Can also be dismissed by clicking. */}
  {!isAdvancing && recapResults ? (
- <div className="fixed bottom-6 right-6 z-50 max-w-md max-h-[60vh] overflow-y-auto rounded-lg bg-white bg-carbon-1 border border-slate-line shadow-xl animate-in slide-in-from-bottom-2 duration-200">
+ <div className="fixed bottom-6 right-6 z-50 max-w-md max-h-[60vh] overflow-y-auto rounded-lg bg-carbon-1 border border-slate-line shadow-xl animate-in slide-in-from-bottom-2 duration-200">
  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-line-soft">
  <h3 className="text-sm font-heading font-bold uppercase tracking-wide text-ink">
  {recapResults.advancedTo

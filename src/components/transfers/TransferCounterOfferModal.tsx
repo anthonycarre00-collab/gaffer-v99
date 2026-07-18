@@ -70,7 +70,7 @@ export default function TransferCounterOfferModal({
  onClick={onClose}
  >
  <div
- className="bg-white bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
+ className="bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
  onClick={(event) => event.stopPropagation()}
  >
  <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-ink-dim mb-3">
@@ -84,7 +84,7 @@ export default function TransferCounterOfferModal({
  {translatePositionAbbreviation(t, counterTarget.player.position)}
  </Badge>
  <div>
- <p className="font-semibold text-sm text-ink text-ink">
+ <p className="font-semibold text-sm text-ink">
  {counterTarget.player.full_name}
  </p>
  <p className="text-xs text-ink-faint">
@@ -127,7 +127,7 @@ export default function TransferCounterOfferModal({
  pattern="[0-9]*"
  value={counterAmount}
  onChange={(event) => onCounterAmountChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  {parsedCounterAmount !== null ? (
  <p className="text-xs text-ink-dim mb-3">
@@ -165,7 +165,7 @@ export default function TransferCounterOfferModal({
  disabled={
  submitDisabled || counterLoading || counterResult === "accepted"
  }
- className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+ className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-ink rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
  >
  {counterLoading
  ? t("transfers.submitting")

@@ -61,7 +61,7 @@ export default function TeamProfileHistoryCard({
  <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {history.map((record, index) => (
  <tr key={index}>
- <td className="py-3 px-5 font-semibold text-sm text-ink text-ink">
+ <td className="py-3 px-5 font-semibold text-sm text-ink">
  {record.season}/{record.season + 1}
  </td>
  <td className="py-3 px-5 text-center font-heading font-bold text-sm text-primary-500">

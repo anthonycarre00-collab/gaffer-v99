@@ -130,7 +130,7 @@ export default function TeamProfileAdvancedStatsCard({
  type="button"
  aria-pressed={view === "stats"}
  onClick={() => setView("stats")}
- className={`px-3 py-1 transition-colors ${view === "stats" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
+ className={`px-3 py-1 transition-colors ${view === "stats" ? "bg-primary-500 text-ink" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {t("common.statsView")}
  </button>
@@ -138,7 +138,7 @@ export default function TeamProfileAdvancedStatsCard({
  type="button"
  aria-pressed={view === "radar"}
  onClick={() => setView("radar")}
- className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
+ className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-ink" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {t("teamProfile.teamStyle")}
  </button>

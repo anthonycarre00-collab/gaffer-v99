@@ -50,7 +50,7 @@ export default function KitEditorCard({
  }
 
  return (
- <div className="flex flex-col gap-3 p-4 rounded bg-white bg-carbon-1 border border-slate-line-soft">
+ <div className="flex flex-col gap-3 p-4 rounded bg-carbon-1 border border-slate-line-soft">
  <div className="flex items-center gap-2">
  <p className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("squad.teamKit")}

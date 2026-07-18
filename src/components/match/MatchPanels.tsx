@@ -70,7 +70,7 @@ export function EventFeed({
  return (
  <div
  key={i}
- className={`flex items-start gap-3 px-3 py-2 rounded transition-colors ${display.important ? "bg-white bg-carbon-1/80 border border-slate-line shadow-sm" : "opacity-60"}`}
+ className={`flex items-start gap-3 px-3 py-2 rounded transition-colors ${display.important ? "bg-carbon-1/80 border border-slate-line shadow-sm" : "opacity-60"}`}
  >
  <span className="text-ink-dim text-ink-faint tabular-nums font-heading text-sm w-8 text-right flex-shrink-0 pt-0.5">
  {evt.minute}'

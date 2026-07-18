@@ -52,7 +52,7 @@ export default function HomeLeagueDigestCard({
  {formatDateShort(article.date, lang)} - {article.source}
  </span>
  </div>
- <p className="text-sm font-heading font-bold text-ink text-ink leading-snug">
+ <p className="text-sm font-heading font-bold text-ink leading-snug">
  {article.headline}
  </p>
  </button>

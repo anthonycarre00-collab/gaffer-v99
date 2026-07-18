@@ -481,7 +481,7 @@ export default function YouthAcademyTab({
  <div className="flex items-center gap-3 min-w-0">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
- <p className="text-sm font-medium text-ink text-ink truncate">
+ <p className="text-sm font-medium text-ink truncate">
  {player.full_name}
  </p>
  <div className="text-[10px] text-ink-faint flex items-center gap-1 mt-0.5">

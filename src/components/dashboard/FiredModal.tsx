@@ -19,11 +19,11 @@ export default function FiredModal(): JSX.Element | null {
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
- <div className="mx-4 w-full max-w-lg rounded bg-white shadow-2xl bg-carbon-1 dark:border border-slate-line">
+ <div className="mx-4 w-full max-w-lg rounded bg-carbon-1 shadow-2xl bg-carbon-1 dark:border border-slate-line">
  {/* Header */}
  <div className="flex flex-col items-center pt-8 pb-4 px-6">
  <div className="w-16 h-16 rounded from-red-600 to-red-800 flex items-center justify-center mb-4 shadow-red-600/30">
- <ShieldX className="w-8 h-8 text-white" />
+ <ShieldX className="w-8 h-8 text-ink" />
  </div>
  <h2 className="text-2xl font-heading font-bold text-ink uppercase tracking-wide text-center">
  {t("sacked.title")}
@@ -48,7 +48,7 @@ export default function FiredModal(): JSX.Element | null {
  <div className="px-8 pb-8">
  <button
  onClick={() => setShowFiredModal(false)}
- className="w-full rounded bg-carbon-3 bg-carbon-2 px-6 py-3 font-heading font-bold text-sm uppercase tracking-wider text-white transition-all hover:bg-carbon-2 hover:bg-carbon-3 "
+ className="w-full rounded bg-carbon-3 bg-carbon-2 px-6 py-3 font-heading font-bold text-sm uppercase tracking-wider text-ink transition-all hover:bg-carbon-2 hover:bg-carbon-3 "
  >
  {t("dashboard.continue")}
  </button>

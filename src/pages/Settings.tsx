@@ -132,12 +132,12 @@ export default function Settings() {
  return (
  <div className="min-h-screen bg-carbon-2 bg-carbon-0 transition-colors duration-300">
  {/* Header */}
- <header className="bg-white bg-carbon-1 border-b border-slate-line shadow-sm">
+ <header className="bg-carbon-1 border-b border-slate-line shadow-sm">
  <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <button
  onClick={() => navigate(returnTo)}
- className="p-2 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
+ className="p-2 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
@@ -401,7 +401,7 @@ export default function Settings() {
  <div className="flex items-center gap-2">
  <button
  onClick={handleClearSaves}
- className="px-4 py-2 rounded bg-danger-500 text-white text-sm font-heading font-bold uppercase tracking-wider hover:bg-danger-600 transition-colors"
+ className="px-4 py-2 rounded bg-danger-500 text-ink text-sm font-heading font-bold uppercase tracking-wider hover:bg-danger-600 transition-colors"
  >
  {t("common.confirm")}
  </button>
@@ -449,7 +449,7 @@ export default function Settings() {
  <Section title={t("settings.about")} icon={<Zap className="w-5 h-5" />}>
  <div className="flex justify-between items-center">
  <div>
- <p className="text-sm font-medium text-ink text-ink">
+ <p className="text-sm font-medium text-ink">
  {t("app.name")}
  </p>
  <p className="text-xs text-ink-dim mt-0.5">
@@ -478,10 +478,10 @@ function Section({
  children: React.ReactNode;
 }) {
  return (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm overflow-hidden">
  <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-line-soft">
  <span className="text-primary-500">{icon}</span>
- <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-ink text-ink">
+ <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-ink">
  {title}
  </h2>
  </div>
@@ -505,7 +505,7 @@ function SettingRow({
  <div className="flex items-center justify-between gap-4">
  <div className="flex-1 min-w-0">
  <p
- className={`text-sm font-medium ${danger ? "text-danger-500" : "text-ink text-ink"}`}
+ className={`text-sm font-medium ${danger ? "text-danger-500" : "text-ink"}`}
  >
  {label}
  </p>
@@ -532,7 +532,7 @@ function Toggle({
  }`}
  >
  <div
- className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${checked ? "translate-x-[22px]" : "translate-x-0.5"
+ className={`absolute top-0.5 w-5 h-5 bg-carbon-1 rounded-full shadow-sm transition-transform duration-200 ${checked ? "translate-x-[22px]" : "translate-x-0.5"
  }`}
  />
  </button>
@@ -555,8 +555,8 @@ function SegmentedControl({
  key={opt.value}
  onClick={() => onChange(opt.value)}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${value === opt.value
- ? "bg-white bg-carbon-3 text-primary-600 dark:text-primary-400 shadow-sm"
- : "text-ink-dim hover:text-ink hover:text-ink-dim"
+ ? "bg-carbon-1 bg-carbon-3 text-primary-600 dark:text-primary-400 shadow-sm"
+ : "text-ink-dim hover:text-ink-dim"
  }`}
  >
  {opt.icon}

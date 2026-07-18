@@ -103,7 +103,7 @@ export default function TeamProfileRosterCard({
  <td className="py-3 px-5">
  <div className="flex items-center gap-3 min-w-0">
  <PlayerAvatar player={player} />
- <span className="block truncate font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="block truncate font-semibold text-sm text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {player.full_name}
  </span>
  </div>

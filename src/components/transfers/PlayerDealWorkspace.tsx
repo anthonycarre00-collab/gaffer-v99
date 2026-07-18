@@ -61,7 +61,7 @@ function routeButtonClass(isSelected: boolean, isDisabled: boolean): string {
  }
 
  return [
- "min-h-[88px] w-full rounded bg-white px-3 py-3 text-left",
+ "min-h-[88px] w-full rounded bg-carbon-1 px-3 py-3 text-left",
  "text-ink shadow-[0_0_0_1px_rgba(0,0,0,0.06)]",
  "transition-[box-shadow,background-color,color] duration-150 hover:bg-carbon-2 hover:text-ink",
  "hover:shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.05)]",
@@ -150,12 +150,12 @@ export default function PlayerDealWorkspace({
  className="fixed inset-0 z-50 bg-carbon-2 text-ink bg-carbon-0 text-ink"
  >
  <div className="flex h-full min-h-0 flex-col">
- <header className="shrink-0 border-b border-slate-line bg-white px-4 py-3 shadow-sm border-slate-line bg-carbon-1">
+ <header className="shrink-0 border-b border-slate-line bg-carbon-1 px-4 py-3 shadow-sm border-slate-line bg-carbon-1">
  <div className="flex items-center gap-4">
  <button
  type="button"
  onClick={onClose}
- className="-ml-2 flex shrink-0 items-center gap-2 rounded px-2 py-2 text-sm text-ink-faint transition-colors duration-150 hover:bg-carbon-2 hover:text-ink text-ink-dim hover:bg-carbon-3 hover:text-ink"
+ className="-ml-2 flex shrink-0 items-center gap-2 rounded px-2 py-2 text-sm text-ink-faint transition-colors duration-150 hover:bg-carbon-2 hover:text-ink-dim hover:bg-carbon-3 hover:text-ink"
  aria-label={t("common.back")}
  >
  <ArrowLeft className="h-5 w-5" />
@@ -232,7 +232,7 @@ export default function PlayerDealWorkspace({
  disabled
  ? "bg-carbon-3 text-ink-faint bg-carbon-2 text-ink-dim"
  : selected
- ? "bg-primary-700 text-white"
+ ? "bg-primary-700 text-ink"
  : "bg-carbon-2 text-ink-dim bg-carbon-2 text-ink-dim"
  }`}
  >
@@ -252,7 +252,7 @@ export default function PlayerDealWorkspace({
  })}
  </nav>
 
- <section className="min-h-0 overflow-y-auto rounded bg-white p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <section className="min-h-0 overflow-y-auto rounded bg-carbon-1 p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  {selectedOption.disabledReason ? (
  <div className="flex min-h-[280px] flex-col justify-center rounded bg-carbon-2 p-6 text-center bg-carbon-0/50">
  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded bg-carbon-3 text-ink-faint bg-carbon-2 text-ink-dim">
@@ -274,7 +274,7 @@ export default function PlayerDealWorkspace({
  </section>
 
  <aside className="min-h-0 space-y-4 lg:overflow-y-auto">
- <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <div className="rounded bg-carbon-1 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>{t("common.ovr")}</p>
  <p
  className={`mt-1 font-heading text-2xl font-bold ${interpretOvr(ovr, player.natural_position || player.position).colorClass}`}
@@ -302,7 +302,7 @@ export default function PlayerDealWorkspace({
  </div>
 
  {myTeam ? (
- <div className="rounded bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
+ <div className="rounded bg-carbon-1 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] bg-carbon-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
  <p className={factLabelClass()}>
  {t("finances.transferBudget")}
  </p>

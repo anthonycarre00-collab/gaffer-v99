@@ -169,7 +169,7 @@ export default function HalfTimeBreak({
  <div className="absolute right-0 top-0 flex items-center gap-3">
  <button
  onClick={onResume}
- className="flex items-center gap-2 px-6 py-2.5 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-white shadow-primary-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+ className="flex items-center gap-2 px-6 py-2.5 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-ink shadow-primary-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
  >
  <Play className="w-4 h-4" />
  {t("match.resumeMatch")}
@@ -188,7 +188,7 @@ export default function HalfTimeBreak({
  borderWidth: 2,
  }}
  />
- <p className="font-heading font-bold text-ink text-ink">
+ <p className="font-heading font-bold text-ink">
  {snapshot.home_team.name}
  </p>
  </div>
@@ -213,7 +213,7 @@ export default function HalfTimeBreak({
  </div>
 
  <div className="flex items-center gap-3">
- <p className="font-heading font-bold text-ink text-ink">
+ <p className="font-heading font-bold text-ink">
  {snapshot.away_team.name}
  </p>
  <TeamLogo
@@ -258,7 +258,7 @@ export default function HalfTimeBreak({
  <div className="px-6 py-6 grid grid-cols-3 gap-6">
  {/* Left: First Half Summary */}
  <div className="flex flex-col gap-4">
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.firstHalfEvents")}
  </h3>
@@ -300,7 +300,7 @@ export default function HalfTimeBreak({
  {/* Center: Team Talk (user only) */}
  <div className="flex flex-col gap-4">
  {!isSpectator ? (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-4">
  <MessageCircle className="w-4 h-4 text-accent-400" />
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
@@ -332,7 +332,7 @@ export default function HalfTimeBreak({
  className={`text-sm font-heading font-bold ${
  selectedTalk === opt.id
  ? "text-primary-400"
- : "text-ink text-ink"
+ : "text-ink"
  }`}
  >
  {opt.label}
@@ -399,7 +399,7 @@ export default function HalfTimeBreak({
  )}
  </div>
  ) : (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 flex flex-col items-center justify-center py-8 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 flex flex-col items-center justify-center py-8 transition-colors duration-300">
  <p className="text-xs font-heading uppercase tracking-widest text-ink-dim text-ink-faint mb-1">
  {t("match.spectatorMode")}
  </p>
@@ -415,7 +415,7 @@ export default function HalfTimeBreak({
  {!isSpectator && (
  <>
  {/* Formation */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.formation")}
  </h3>
@@ -437,7 +437,7 @@ export default function HalfTimeBreak({
  </div>
 
  {/* Play Style */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("match.playStyle")}
  </h3>
@@ -460,7 +460,7 @@ export default function HalfTimeBreak({
  </div>
 
  {/* Substitutions */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center justify-between mb-3">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.substitutions")}

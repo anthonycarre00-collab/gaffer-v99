@@ -443,7 +443,7 @@ export default function SquadRosterView({
  value={playerSearch}
  onChange={(event) => setPlayerSearch(event.target.value)}
  placeholder={t("squad.filterPlayers")}
- className="w-full rounded border border-slate-line bg-white bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+ className="w-full rounded border border-slate-line bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30"
  />
  </div>
  <div>
@@ -544,7 +544,7 @@ export default function SquadRosterView({
 
  <Card>
  <div className="p-4 border-b border-slate-line-soft bg-linear-to-r rounded-t-xl">
- <h3 className="text-sm font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
+ <h3 className="text-sm font-heading font-bold text-ink uppercase tracking-wide flex items-center gap-2">
  <Users className="w-4 h-4 text-accent-400" />
  {t("squad.title", { team: team.name })}
  </h3>
@@ -796,7 +796,7 @@ export default function SquadRosterView({
  >
  <tr
  onClick={() => onSelectPlayer(player.id)}
- className={`${rowIndex % 2 === 0 ? "bg-white bg-carbon-1" : "bg-carbon-2/30"} hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors group cursor-pointer ${finalBorderClass}`}
+ className={`${rowIndex % 2 === 0 ? "bg-carbon-1" : "bg-carbon-2/30"} hover:bg-carbon-2 hover:bg-carbon-3/50 transition-colors group cursor-pointer ${finalBorderClass}`}
  >
  <td className="py-2.5 px-4 tabular-nums text-sm font-medium text-ink-dim">
  {player.jersey_number ?? "—"}
@@ -927,7 +927,7 @@ export default function SquadRosterView({
  const rect = e.currentTarget.getBoundingClientRect();
  menuRefs.current.get(player.id)?.open(rect.left, rect.bottom + 4);
  }}
- className="relative rounded-md p-1.5 text-ink-faint hover:text-ink hover:text-ink transition-colors"
+ className="relative rounded-md p-1.5 text-ink-faint hover:text-ink transition-colors"
  >
  <MoreVertical className="h-4 w-4" />
  {hasUrgentItems && (

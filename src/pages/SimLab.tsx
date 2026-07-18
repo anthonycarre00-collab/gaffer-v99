@@ -697,13 +697,13 @@ function TimelineTab({ r }: { r: SimBatchResults }) {
  <div className="mb-2 text-xs text-slate-500">Average possession split across {r.games.toLocaleString()} games</div>
  <div className="flex h-7 rounded overflow-hidden gap-px">
  <div
- className="flex items-center justify-center text-xs font-bold text-white"
+ className="flex items-center justify-center text-xs font-bold text-ink"
  style={{ width: `${r.home_possession_avg}%`, background: "#4f8ef7" }}
  >
  {r.home_possession_avg.toFixed(1)}%
  </div>
  <div
- className="flex items-center justify-center text-xs font-bold text-white"
+ className="flex items-center justify-center text-xs font-bold text-ink"
  style={{ width: `${r.away_possession_avg}%`, background: "#f472b6" }}
  >
  {r.away_possession_avg.toFixed(1)}%

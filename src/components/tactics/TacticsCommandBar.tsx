@@ -178,7 +178,7 @@ export default function TacticsCommandBar({
  </div>
 
  <div className="grid gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)_minmax(0,1.2fr)]">
- <div className="relative rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-white/8 bg-carbon-0/35">
+ <div className="relative rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-ink/8 bg-carbon-0/35">
  <div className="mb-2 flex items-center justify-between gap-3">
  <div className="text-[11px] font-heading font-bold uppercase tracking-[0.24em] text-ink-dim">
  {t("tactics.chooseTactic")}
@@ -196,7 +196,7 @@ export default function TacticsCommandBar({
  aria-expanded={isOpen}
  aria-haspopup="listbox"
  onClick={() => setIsOpen((open) => !open)}
- className="flex w-full items-center justify-between rounded border border-slate-line bg-white px-3 py-3 text-left transition-colors hover:border-primary-300 dark:border-white/10 bg-carbon-1/90 dark:hover:border-primary-400"
+ className="flex w-full items-center justify-between rounded border border-slate-line bg-carbon-1 px-3 py-3 text-left transition-colors hover:border-primary-300 dark:border-ink/10 bg-carbon-1/90 dark:hover:border-primary-400"
  >
  <div className="min-w-0">
  <div className="truncate text-base font-heading font-bold text-ink">
@@ -214,7 +214,7 @@ export default function TacticsCommandBar({
  </button>
 
  {isOpen ? (
- <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded border border-slate-line bg-white p-2 shadow-2xl border-slate-line bg-carbon-1">
+ <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded border border-slate-line bg-carbon-1 p-2 shadow-2xl border-slate-line bg-carbon-1">
  <div className="mb-2 flex items-center gap-2 rounded border border-slate-line bg-carbon-2 px-3 py-2 border-slate-line bg-carbon-2">
  <Search className="h-4 w-4 text-ink-faint" />
  <input
@@ -252,7 +252,7 @@ export default function TacticsCommandBar({
  className={`w-full rounded border px-3 py-3 text-left transition-colors ${
  entry.id === activeTactic.id
  ? "border-primary-300 bg-primary-50 dark:border-primary-400 dark:bg-primary-500/10"
- : "border-transparent bg-carbon-2 hover:border-slate-line hover:bg-white bg-carbon-2/70 dark:hover:border-navy-500 hover:bg-carbon-3"
+ : "border-transparent bg-carbon-2 hover:border-slate-line hover:bg-carbon-2/70 dark:hover:border-navy-500 hover:bg-carbon-3"
  }`}
  >
  <div className="flex items-start justify-between gap-3">
@@ -293,7 +293,7 @@ export default function TacticsCommandBar({
  className={`w-full rounded border px-3 py-3 text-left transition-colors ${
  entry.id === activeTactic.id
  ? "border-primary-300 bg-primary-50 dark:border-primary-400 dark:bg-primary-500/10"
- : "border-transparent bg-carbon-2 hover:border-slate-line hover:bg-white bg-carbon-2/70 dark:hover:border-navy-500 hover:bg-carbon-3"
+ : "border-transparent bg-carbon-2 hover:border-slate-line hover:bg-carbon-2/70 dark:hover:border-navy-500 hover:bg-carbon-3"
  }`}
  >
  <div className="flex items-start justify-between gap-3">
@@ -318,7 +318,7 @@ export default function TacticsCommandBar({
  ) : null}
  </div>
 
- <div className="rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-white/8 bg-carbon-0/35">
+ <div className="rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-ink/8 bg-carbon-0/35">
  <div className="mb-2 text-[11px] font-heading font-bold uppercase tracking-[0.24em] text-ink-dim">
  {t("tactics.formation")}
  </div>
@@ -334,7 +334,7 @@ export default function TacticsCommandBar({
  </Select>
  </div>
 
- <div className="rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-white/8 bg-carbon-0/35">
+ <div className="rounded border border-slate-line/70 bg-carbon-2/80 p-3 dark:border-ink/8 bg-carbon-0/35">
  <div className="mb-2 text-[11px] font-heading font-bold uppercase tracking-[0.24em] text-ink-dim">
  {t("tactics.playStyle")}
  </div>

@@ -186,7 +186,7 @@ export default function JobOpportunitiesCard({
  className="flex items-center justify-between rounded border border-slate-line-soft bg-carbon-2 px-4 py-3 border-slate-line bg-carbon-2/50"
  >
  <div className="min-w-0 flex-1">
- <p className="text-sm font-semibold text-ink text-ink">
+ <p className="text-sm font-semibold text-ink">
  {job.team_name}
  </p>
  <div className="flex items-center gap-3 mt-0.5">
@@ -220,7 +220,7 @@ export default function JobOpportunitiesCard({
  <button
  onClick={() => handleApply(job)}
  disabled={applyingTo !== null}
- className="ml-3 shrink-0 rounded bg-primary-500 px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wider text-white transition-all hover:bg-primary-600 disabled:opacity-50"
+ className="ml-3 shrink-0 rounded bg-primary-500 px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wider text-ink transition-all hover:bg-primary-600 disabled:opacity-50"
  >
  {applyingTo === job.team_id
  ? t("jobs.applicationSent")

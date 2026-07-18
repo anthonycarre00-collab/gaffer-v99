@@ -65,7 +65,7 @@ export default function TrainingSettingsPanel({
  <div className={`mb-1.5 ${scheduleColors[scheduleId]}`}>
  {scheduleIcons[scheduleId]}
  </div>
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink">
  {t(`training.schedules.${scheduleId}.label`)}
  </p>
  <p className="text-[11px] text-ink-dim mt-1">
@@ -106,7 +106,7 @@ export default function TrainingSettingsPanel({
  <div className="mb-2 text-ink-dim">
  {trainingFocusIcons[focusId]}
  </div>
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink">
  {t(`training.focuses.${focusId}.label`)}
  </p>
  <p className="text-xs text-ink-dim mt-1">

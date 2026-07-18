@@ -37,7 +37,7 @@ export function TeamPreviewCard({ team, logoDataUrl }: TeamPreviewCardProps) {
  }
 
  return (
- <div className="rounded border border-slate-line overflow-hidden bg-white bg-carbon-2 shadow-sm select-none">
+ <div className="rounded border border-slate-line overflow-hidden bg-carbon-2 shadow-sm select-none">
  {/* Colour banner */}
  <div
  className="h-20 flex items-center justify-center"

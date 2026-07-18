@@ -199,7 +199,7 @@ function InfoRow({
  <span className="text-sm text-ink-dim flex-1">
  {label}
  </span>
- <span className="text-sm font-semibold text-ink text-ink">
+ <span className="text-sm font-semibold text-ink">
  {value}
  </span>
  </div>

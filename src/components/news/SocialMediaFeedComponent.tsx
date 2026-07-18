@@ -27,14 +27,14 @@ export function SocialMediaFeedComponent({ posts }: SocialMediaFeedProps) {
       {posts.map((post) => (
         <div
           key={post.id}
-          className="rounded border border-slate-line bg-white bg-carbon-1 p-3 transition-colors"
+          className="rounded border border-slate-line bg-carbon-1 p-3 transition-colors"
         >
           {/* Header */}
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{post.avatar}</span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-bold text-ink text-ink truncate">
+                <span className="text-sm font-bold text-ink truncate">
                   {post.author}
                 </span>
                 <span className="text-xs text-ink-faint truncate">

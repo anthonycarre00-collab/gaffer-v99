@@ -64,7 +64,7 @@ export function FreeAgentContractForm({
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
  <div>
- <p className="font-semibold text-sm text-ink text-ink">
+ <p className="font-semibold text-sm text-ink">
  {player.full_name}
  </p>
  <p className="text-xs text-ink-faint">
@@ -93,7 +93,7 @@ export function FreeAgentContractForm({
  step="1000"
  value={wage}
  onChange={(event) => onWageChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
 
  <label
@@ -110,7 +110,7 @@ export function FreeAgentContractForm({
  step="1"
  value={contractLength}
  onChange={(event) => onContractLengthChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
 
  {projection ? (
@@ -173,7 +173,7 @@ export function FreeAgentContractForm({
  <button
  onClick={onSubmit}
  disabled={submitDisabled}
- className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+ className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-ink rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
  >
  {submitting
  ? t("transfers.submitting")
@@ -201,7 +201,7 @@ export default function FreeAgentContractModal(
  onClick={props.onClose}
  >
  <div
- className="bg-white bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
+ className="bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-sm"
  role="dialog"
  aria-modal="true"
  aria-labelledby={titleId}

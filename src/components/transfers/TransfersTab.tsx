@@ -1059,7 +1059,7 @@ export default function TransfersTab({
  <div className="bg-navy-700 p-5 rounded-t-xl flex items-center gap-6">
  <div className="flex-1">
  <div className="flex flex-wrap items-center gap-2">
- <h2 className="text-lg font-heading font-bold text-white uppercase tracking-wide flex items-center gap-2">
+ <h2 className="text-lg font-heading font-bold text-ink uppercase tracking-wide flex items-center gap-2">
  <TrendingUp className="w-5 h-5 text-accent-400" />
  {t("transfers.centre")}
  </h2>
@@ -1075,7 +1075,7 @@ export default function TransfersTab({
  </p>
  </div>
  <div className="hidden md:flex gap-4">
- <div className="bg-white/5 rounded px-4 py-2 text-center">
+ <div className="bg-ink/5 rounded px-4 py-2 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("finances.transferBudget")}
  </p>
@@ -1085,23 +1085,23 @@ export default function TransfersTab({
  </div>
  <div
  data-testid="wage-budget-card"
- className="bg-white/5 rounded px-4 py-2 text-center"
+ className="bg-ink/5 rounded px-4 py-2 text-center"
  >
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("finances.wageBudget")}
  </p>
- <p className="font-heading font-bold text-lg text-white">
+ <p className="font-heading font-bold text-lg text-ink">
  {formatAnnualAmount(
  formatVal(annualWageBudget),
  annualSuffix,
  )}
  </p>
  </div>
- <div className="bg-white/5 rounded px-4 py-2 text-center">
+ <div className="bg-ink/5 rounded px-4 py-2 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("transfers.listed")}
  </p>
- <p className="font-heading font-bold text-lg text-white">
+ <p className="font-heading font-bold text-lg text-ink">
  {myListedPlayers.length}
  </p>
  </div>
@@ -1125,8 +1125,8 @@ export default function TransfersTab({
  }}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  view === tab.id
- ? "bg-primary-700 text-white shadow-primary-700/20"
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line hover:text-ink hover:text-ink"
+ ? "bg-primary-700 text-ink shadow-primary-700/20"
+ : "bg-carbon-1 text-ink-dim border border-slate-line hover:text-ink"
  }`}
  >
  {tab.icon} {tab.label} ({tab.count})
@@ -1146,7 +1146,7 @@ export default function TransfersTab({
  setSearch(e.target.value);
  setMarketPage(1);
  }}
- className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-carbon-1 border border-slate-line text-sm text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
  <div ref={positionFilterRef} className="flex gap-1.5">
@@ -1155,7 +1155,7 @@ export default function TransfersTab({
  onClick={() => handleSelectPositionGroup(null)}
  aria-pressed={specificPositions.length === 0}
  aria-label={t("transfers.allPositions")}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${specificPositions.length === 0 ? "bg-primary-700 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("common.all")}
  </button>
@@ -1191,13 +1191,13 @@ export default function TransfersTab({
  })
  : groupLabel
  }
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all inline-flex items-center gap-1 ${isActive ? "bg-primary-700 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t(`common.posAbbr.${pos}`)}
  {isPartial && (
  <span
  aria-hidden="true"
- className="bg-white/20 text-[0.65rem] px-1.5 py-0.5 rounded-full leading-none"
+ className="bg-ink/20 text-[0.65rem] px-1.5 py-0.5 rounded-full leading-none"
  >
  {selectedInGroup}/{groupSpecifics.length}
  </span>
@@ -1209,7 +1209,7 @@ export default function TransfersTab({
  aria-label={t("transfers.refinePositionGroup", {
  group: groupLabel,
  })}
- className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded bg-white bg-carbon-1 border border-slate-line "
+ className="absolute left-0 top-full mt-1 z-20 min-w-[180px] p-2 rounded bg-carbon-1 border border-slate-line "
  >
  <div className="flex flex-wrap gap-1.5">
  {groupSpecifics.map((position) => {
@@ -1228,7 +1228,7 @@ export default function TransfersTab({
  aria-pressed={selected}
  aria-label={positionLabel}
  title={positionLabel}
- className={`px-2.5 py-1 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${selected ? "bg-primary-700 text-white shadow-sm" : "bg-carbon-2 text-ink-dim border border-slate-line hover:text-ink hover:text-ink"}`}
+ className={`px-2.5 py-1 rounded-md text-xs font-heading font-bold uppercase tracking-wider transition-all ${selected ? "bg-primary-700 text-ink shadow-sm" : "bg-carbon-2 text-ink-dim border border-slate-line hover:text-ink"}`}
  >
  {t(`common.posAbbr.${position}`)}
  </button>
@@ -1251,7 +1251,7 @@ export default function TransfersTab({
  setAvailabilityFilter(filter.id);
  setMarketPage(1);
  }}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${availabilityFilter === filter.id ? "bg-accent-500 text-navy-900 shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {filter.label} ({filter.count})
  </button>
@@ -1265,7 +1265,7 @@ export default function TransfersTab({
  }}
  aria-pressed={affordableOnly}
  title={t("transfers.affordableOnlyHint")}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${affordableOnly ? "bg-primary-700 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.affordableOnly")}
  </button>
@@ -1446,7 +1446,7 @@ export default function TransfersTab({
  <div className="flex items-center gap-3">
  <PlayerAvatar player={player} />
  <div className="min-w-0">
- <span className="block truncate font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="block truncate font-semibold text-sm text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {player.full_name}
  </span>
  <div className="text-xs text-ink-faint mt-0.5 flex items-center gap-1">

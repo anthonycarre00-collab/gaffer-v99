@@ -21,7 +21,7 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  null;
 
  return (
- <div className="rounded border border-slate-line overflow-hidden bg-white bg-carbon-2 shadow-sm select-none">
+ <div className="rounded border border-slate-line overflow-hidden bg-carbon-2 shadow-sm select-none">
  {/* Header banner */}
  <div className="h-20 to-primary-800 flex items-center justify-center">
  {logoDataUrl ? (
@@ -31,8 +31,8 @@ export function CompetitionPreviewCard({ competition, logoDataUrl }: Competition
  className="w-14 h-14 object-contain drop-"
  />
  ) : (
- <div className="w-14 h-14 rounded bg-white/10 border border-white/20 flex items-center justify-center">
- <Trophy className="w-7 h-7 text-white/70" />
+ <div className="w-14 h-14 rounded bg-ink/10 border border-ink/20 flex items-center justify-center">
+ <Trophy className="w-7 h-7 text-ink/70" />
  </div>
  )}
  </div>

@@ -94,7 +94,7 @@ export function LoanOfferForm({
  {translatePositionAbbreviation(t, loanTarget.position)}
  </Badge>
  <div>
- <p className="font-semibold text-sm text-ink text-ink">
+ <p className="font-semibold text-sm text-ink">
  {loanTarget.full_name}
  </p>
  <p className="text-xs text-ink-faint">
@@ -135,7 +135,7 @@ export function LoanOfferForm({
  onChange={(event) =>
  onPeriodChange(event.target.value as LoanPeriodOptionId)
  }
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  >
  {periodId ? null : (
  <option value="" disabled>
@@ -259,7 +259,7 @@ export function LoanOfferForm({
  value={buyOptionFee}
  disabled={!buyOptionEnabled}
  onChange={(event) => onBuyOptionFeeChange(event.target.value)}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50 disabled:opacity-50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink mb-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50 disabled:opacity-50"
  />
 
  {buyOptionEnabled && Number(buyOptionFee) > 0 ? (
@@ -313,7 +313,7 @@ export function LoanOfferForm({
  type="button"
  onClick={onSubmit}
  disabled={submitDisabled}
- className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+ className="flex-1 py-2 bg-primary-700 hover:bg-primary-800 text-ink rounded font-heading font-bold text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
  >
  {loading ? t("transfers.submitting") : t(submitLabelKey)}
  </button>
@@ -340,7 +340,7 @@ export default function LoanOfferModal(props: LoanOfferModalProps) {
  role="dialog"
  aria-modal="true"
  aria-labelledby="loan-offer-modal-title"
- className="bg-white bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-md"
+ className="bg-carbon-1 rounded shadow-2xl border border-slate-line p-6 w-full max-w-md"
  onClick={(event) => event.stopPropagation()}
  >
  <LoanOfferForm {...props} />

@@ -55,7 +55,7 @@ export default function HomeRecentResultsCard({
  className="flex items-center px-4 py-2.5 gap-3"
  >
  <span
- className={`w-5 h-5 rounded flex items-center justify-center text-[9px] font-heading font-bold text-white flex-shrink-0 ${
+ className={`w-5 h-5 rounded flex items-center justify-center text-[9px] font-heading font-bold text-ink flex-shrink-0 ${
  result.resultCode === "W"
  ? "bg-success-500"
  : result.resultCode === "L"
@@ -75,7 +75,7 @@ export default function HomeRecentResultsCard({
  imageClassName="h-5 w-5 object-contain drop-shadow"
  />
  ) : null}
- <span className="text-sm font-medium text-ink text-ink flex-1 truncate">
+ <span className="text-sm font-medium text-ink flex-1 truncate">
  {opponent?.name ?? t("common.unknown")}
  </span>
  <span className="text-sm font-heading font-bold text-ink-dim tabular-nums">

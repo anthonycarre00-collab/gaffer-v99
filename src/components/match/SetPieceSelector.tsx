@@ -144,7 +144,7 @@ export default function SetPieceSelector({
  <p className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {label}
  </p>
- <p className="text-sm text-ink text-ink font-medium">
+ <p className="text-sm text-ink font-medium">
  {currentPlayer ? currentPlayer.name : t("match.notAssigned")}
  </p>
  </div>
@@ -159,7 +159,7 @@ export default function SetPieceSelector({
  <span
  key={s.label}
  title={getTranslatedStatLabel(s.label)}
- className="inline-flex items-center gap-1 rounded-md border border-slate-line dark:border-white/10 bg-white bg-carbon-1 px-2 py-1 text-xs font-heading font-bold text-ink"
+ className="inline-flex items-center gap-1 rounded-md border border-slate-line dark:border-ink/10 bg-carbon-1 px-2 py-1 text-xs font-heading font-bold text-ink"
  >
  <span className="text-ink-dim">
  {getTranslatedStatLabel(s.label)}
@@ -176,7 +176,7 @@ export default function SetPieceSelector({
  </button>
 
  {expanded && (
- <div className="mt-1 bg-white bg-carbon-2 rounded border border-slate-line p-2 flex flex-col gap-0.5 max-h-56 overflow-auto">
+ <div className="mt-1 bg-carbon-2 rounded border border-slate-line p-2 flex flex-col gap-0.5 max-h-56 overflow-auto">
  {sortedPlayers.map((p) => {
  const isCurrent = p.id === currentId;
  return (

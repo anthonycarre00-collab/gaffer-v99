@@ -84,7 +84,7 @@ export default function ScoutingPlayerSearchCard({
  key={position}
  onClick={() => onPositionFilterChange(position)}
  className={`px-2.5 py-1 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors ${posFilter === position
- ? "bg-primary-500 text-white"
+ ? "bg-primary-500 text-ink"
  : "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  }`}
  >

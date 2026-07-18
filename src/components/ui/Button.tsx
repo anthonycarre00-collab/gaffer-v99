@@ -23,9 +23,9 @@ export function Button({
 
  const variants = {
  primary:
- "bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white focus:ring-primary-500 dark:focus:ring-offset-navy-800",
+ "bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-ink focus:ring-primary-500 dark:focus:ring-offset-navy-800",
  accent:
- "bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-white focus:ring-accent-500 dark:focus:ring-offset-navy-800",
+ "bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-ink focus:ring-accent-500 dark:focus:ring-offset-navy-800",
  ghost:
  "bg-transparent hover:bg-carbon-2 hover:bg-carbon-3 text-ink-dim focus:ring-gray-300 dark:focus:ring-offset-navy-800",
  outline:

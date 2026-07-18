@@ -27,7 +27,7 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
  {mgr.first_name.charAt(0)}{mgr.last_name.charAt(0)}
  </div>
  <div>
- <h2 className="text-2xl font-heading font-bold text-white uppercase tracking-wide">{mgr.first_name} {mgr.last_name}</h2>
+ <h2 className="text-2xl font-heading font-bold text-ink uppercase tracking-wide">{mgr.first_name} {mgr.last_name}</h2>
  <p className="text-ink-faint text-sm mt-1">
  <CountryFlag code={mgr.nationality} locale={i18n.language} className="mr-1 text-sm leading-none" />
  {countryName(mgr.nationality, i18n.language)} • {t('manager.born')} {formatDate(mgr.date_of_birth, i18n.language)}
@@ -152,7 +152,7 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
  tabIndex={canSelectTeam ? 0 : undefined}
  className={canSelectTeam ? "cursor-pointer hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors" : undefined}
  >
- <td className="py-3 px-5 font-semibold text-sm text-ink text-ink">{entry.team_name}</td>
+ <td className="py-3 px-5 font-semibold text-sm text-ink">{entry.team_name}</td>
  <td className="py-3 px-5 text-sm text-ink-dim">{entry.start_date.substring(0, 4)} — {entry.end_date?.substring(0, 4) || t('common.present')}</td>
  <td className="py-3 px-5 text-center text-sm text-ink-dim tabular-nums">{entry.matches}</td>
  <td className="py-3 px-5 text-center text-sm text-ink-dim tabular-nums">{entry.wins}</td>

@@ -217,7 +217,7 @@ export default function MatchLive({
  <div className="flex items-center gap-6">
  <div className="flex items-center gap-3">
  <div className="text-right">
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink">
  {snapshot.home_team.name}
  </p>
  <p className="text-xs text-ink-dim">{snapshot.home_team.formation}</p>
@@ -249,7 +249,7 @@ export default function MatchLive({
  style={{ backgroundColor: awayTeamColor + "30", borderColor: awayTeamColor, borderWidth: 1 }}
  />
  <div className="text-left">
- <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink text-ink">
+ <p className="font-heading font-bold text-sm uppercase tracking-wider text-ink">
  {snapshot.away_team.name}
  </p>
  <p className="text-xs text-ink-dim">{snapshot.away_team.formation}</p>
@@ -306,7 +306,7 @@ export default function MatchLive({
  <div className="pitch-grass-bg flex-1 flex overflow-hidden">
  {/* Left Panel: Event Feed + Stats */}
  <div className="flex-1 flex flex-col">
- <div className="flex bg-white bg-carbon-1 border-b border-slate-line transition-colors duration-300">
+ <div className="flex bg-carbon-1 border-b border-slate-line transition-colors duration-300">
  {([
  { id: "events" as ActivePanel, label: t('match.events'), icon: <MessageSquare className="w-4 h-4" /> },
  { id: "stats" as ActivePanel, label: t('match.stats'), icon: <BarChart3 className="w-4 h-4" /> },
@@ -317,7 +317,7 @@ export default function MatchLive({
  onClick={() => setActivePanel(tab.id)}
  className={`flex items-center gap-2 px-5 py-3 font-heading font-bold text-xs uppercase tracking-wider transition-colors border-b-2 ${activePanel === tab.id
  ? "text-primary-500 dark:text-primary-400 border-primary-500 bg-primary-50 bg-carbon-2/50"
- : "text-ink-dim border-transparent hover:text-ink hover:text-ink-dim"
+ : "text-ink-dim border-transparent hover:text-ink-dim"
  }`}
  >
  {tab.icon}
@@ -334,7 +334,7 @@ export default function MatchLive({
  </div>
 
  {/* Right Panel: Controls */}
- <aside className="w-72 bg-white bg-carbon-1 border-l border-slate-line flex flex-col transition-colors duration-300">
+ <aside className="w-72 bg-carbon-1 border-l border-slate-line flex flex-col transition-colors duration-300">
  {/* Speed Controls */}
  <div className="p-4 border-b border-slate-line">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">{t('match.simSpeed')}</h3>
@@ -355,7 +355,7 @@ export default function MatchLive({
  onPreferredSpeedChange?.(s.id);
  }
  }}
- className={`flex-1 flex flex-col items-center gap-1 py-2 rounded text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-ink-dim hover:text-ink hover:text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"
+ className={`flex-1 flex flex-col items-center gap-1 py-2 rounded text-xs font-heading uppercase tracking-wider transition-all ${speed === s.id ? "bg-primary-500/20 text-primary-500 dark:text-primary-400 ring-1 ring-primary-500/50" : "text-ink-dim hover:text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"
  }`}
  >
  {s.icon}

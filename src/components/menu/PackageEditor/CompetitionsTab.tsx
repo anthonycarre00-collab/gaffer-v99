@@ -21,7 +21,7 @@ function CompetitionBadge({ comp, projectDir }: { comp: CompetitionDef; projectD
  <img
  src={logoUrl}
  alt=""
- className="w-8 h-8 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0"
+ className="w-8 h-8 rounded object-contain border border-slate-line bg-carbon-2 flex-shrink-0"
  />
  );
  }

@@ -194,8 +194,8 @@ export default function PreMatchLineup({
  <div className="flex flex-col gap-4">
  {/* Formation setup: formation/play-style controls, slot-fit counts, and
  auto-select — stacked so nothing clips in the narrow sidebar. */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
- <span className="text-[10px] font-heading uppercase tracking-widest text-ink text-ink-faint">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-3 flex flex-col gap-2.5 transition-colors duration-300">
+ <span className="text-[10px] font-heading uppercase tracking-widest text-ink-faint">
  {t("match.formationFit")}
  </span>
  {formationControls}
@@ -241,7 +241,7 @@ export default function PreMatchLineup({
 
  {/* Starting XI */}
  {showStartingList && (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center justify-between mb-3">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.startingXI")}
@@ -250,7 +250,7 @@ export default function PreMatchLineup({
  {selectedStarterId && (
  <button
  onClick={() => onSelectStarter(null)}
- className="text-[10px] text-ink-faint hover:text-ink hover:text-ink-dim font-heading uppercase tracking-wider"
+ className="text-[10px] text-ink-faint hover:text-ink-dim font-heading uppercase tracking-wider"
  >
  {t("match.cancel")}
  </button>
@@ -327,7 +327,7 @@ export default function PreMatchLineup({
  {shortOvrLabel(posOvr, p.position)}
  </div>
  {jerseyChip(p.id)}
- <span className="text-sm text-ink text-ink font-medium flex-1 truncate">
+ <span className="text-sm text-ink font-medium flex-1 truncate">
  {p.name}
  </span>
  {isSelected && (
@@ -380,7 +380,7 @@ export default function PreMatchLineup({
  )}
 
  {/* Bench */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center justify-between mb-3">
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.substitutes")}
@@ -448,7 +448,7 @@ export default function PreMatchLineup({
  <span
  className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-heading font-bold ${
  posOvr >= 80
- ? "bg-primary-500 text-white"
+ ? "bg-primary-500 text-ink"
  : posOvr >= 60
  ? "bg-accent-500/20 text-accent-600 dark:text-accent-400"
  : "bg-carbon-2 text-ink-faint bg-carbon-2 text-ink-faint"

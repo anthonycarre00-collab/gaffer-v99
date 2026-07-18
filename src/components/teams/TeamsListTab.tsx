@@ -124,7 +124,7 @@ export default function TeamsListTab({ gameState, onSelectTeam }: TeamsListTabPr
  value={search}
  onChange={(event) => setSearch(event.target.value)}
  placeholder={t("teams.searchPlaceholder")}
- className="w-full rounded border border-slate-line bg-white bg-carbon-1 py-2.5 pl-10 pr-4 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+ className="w-full rounded border border-slate-line bg-carbon-1 py-2.5 pl-10 pr-4 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/40"
  />
  </div>
 
@@ -246,12 +246,12 @@ function TeamCardView({
  >
  <TeamLogo
  team={team}
- className="w-14 h-14 rounded flex items-center justify-center font-heading font-bold text-xl text-white border-2 border-white/30 bg-white/15 overflow-hidden"
+ className="w-14 h-14 rounded flex items-center justify-center font-heading font-bold text-xl text-ink border-2 border-ink/30 bg-white/15 overflow-hidden"
  imageClassName="h-12 w-12 object-contain drop-shadow"
  style={{ backgroundColor: team.colors.primary }}
  />
  <div className="flex-1 min-w-0">
- <h3 className="font-heading font-bold text-lg text-white uppercase tracking-wide truncate drop-shadow">
+ <h3 className="font-heading font-bold text-lg text-ink uppercase tracking-wide truncate drop-shadow">
  {team.name}
  {isUser && (
  <Badge variant="accent" size="sm" className="ml-2 align-middle">
@@ -263,17 +263,17 @@ function TeamCardView({
  city={team.city}
  countryCode={team.country}
  locale={language}
- className="mt-0.5 text-white/70 text-xs"
+ className="mt-0.5 text-ink/70 text-xs"
  iconClassName="w-3 h-3"
  flagClassName="text-xs leading-none"
  />
  </div>
  {leaguePos > 0 && (
  <div className="bg-black/20 backdrop-blur rounded px-3 py-1.5 text-center">
- <p className="text-xs text-white/60 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink/60 font-heading uppercase tracking-wider">
  {t("common.position")}
  </p>
- <p className="font-heading font-bold text-xl text-white">#{leaguePos}</p>
+ <p className="font-heading font-bold text-xl text-ink">#{leaguePos}</p>
  </div>
  )}
  </div>
@@ -310,7 +310,7 @@ function TeamCardView({
 
 function StatCell({ label, value }: { label: string; value: string }) {
  return (
- <div className="bg-white bg-carbon-1 px-2 py-2.5 text-center">
+ <div className="bg-carbon-1 px-2 py-2.5 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>

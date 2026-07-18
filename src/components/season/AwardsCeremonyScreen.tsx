@@ -150,7 +150,7 @@ export default function AwardsCeremonyScreen({
  <button
  type="button"
  onClick={onContinue}
- className="rounded bg-primary-500 px-4 py-2 font-heading font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-600"
+ className="rounded bg-primary-500 px-4 py-2 font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:bg-primary-600"
  >
  {t("awardsCeremony.continue")}
  </button>

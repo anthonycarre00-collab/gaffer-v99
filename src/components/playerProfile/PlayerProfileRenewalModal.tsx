@@ -91,7 +91,7 @@ export default function PlayerProfileRenewalModal({
  value={renewalWage}
  onChange={(event) => onWageChange(event.target.value)}
  disabled={renewalIsTerminal}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
 
@@ -111,7 +111,7 @@ export default function PlayerProfileRenewalModal({
  value={renewalLength}
  onChange={(event) => onLengthChange(event.target.value)}
  disabled={renewalIsTerminal}
- className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full px-3 py-2 rounded bg-carbon-2 border border-slate-line text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
  </div>

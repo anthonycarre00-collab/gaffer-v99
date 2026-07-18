@@ -91,7 +91,7 @@ export default function JerseyNumberInput({
  onKeyDown={handleKeyDown}
  className="w-12 px-1.5 py-0.5 rounded text-sm font-mono font-mono font-bold tabular-nums text-center
  bg-carbon-2
- border border-slate-line border-slate-line
+ border border-slate-line
  text-ink
  focus:outline-none focus:ring-2 focus:ring-primary-500/30
  [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"

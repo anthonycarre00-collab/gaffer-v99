@@ -187,7 +187,7 @@ export function SubPanel({
  onClick={onClose}
  >
  <div
- className="bg-white bg-carbon-1 rounded border border-slate-line shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden transition-colors duration-300"
+ className="bg-carbon-1 rounded border border-slate-line shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden transition-colors duration-300"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
@@ -206,7 +206,7 @@ export function SubPanel({
  </div>
  <button
  onClick={onClose}
- className="rounded p-1.5 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink text-ink-faint hover:bg-carbon-3 hover:text-ink"
+ className="rounded p-1.5 text-ink-faint transition-colors hover:bg-carbon-2 hover:text-ink-faint hover:bg-carbon-3 hover:text-ink"
  >
  <span className="font-heading text-sm">✕</span>
  </button>
@@ -228,7 +228,7 @@ export function SubPanel({
  {/* Scenario + apply play style */}
  <div className="flex items-center gap-1.5">
  {getScenarioIcon(scenario.id)}
- <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-ink text-ink">
+ <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-ink">
  {t(`match.subScenario.${scenario.id}.title`)}
  </span>
  <button
@@ -256,7 +256,7 @@ export function SubPanel({
  onClick={() =>
  handleApplyRecommendation(rec.offId, rec.onId)
  }
- className="flex items-center gap-1 rounded-full border border-slate-line bg-white px-2 py-0.5 font-heading text-[10px] font-bold transition-colors hover:border-primary-400 hover:bg-primary-50 border-slate-line bg-carbon-1 hover:bg-carbon-3"
+ className="flex items-center gap-1 rounded-full border border-slate-line bg-carbon-1 px-2 py-0.5 font-heading text-[10px] font-bold transition-colors hover:border-primary-400 hover:bg-primary-50 border-slate-line bg-carbon-1 hover:bg-carbon-3"
  >
  <span className="text-danger-400">
  {offPlayer.name.split(" ").pop()}
@@ -666,7 +666,7 @@ export function SubPanel({
  <button
  type="button"
  onClick={handleConfirmSubstitution}
- className="rounded bg-success-500 px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-success-400"
+ className="rounded bg-success-500 px-3 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-ink transition-colors hover:bg-success-400"
  >
  {t("match.confirmSubstitution")}
  </button>

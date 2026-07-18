@@ -82,7 +82,7 @@ export function renderScorers(
  {g.minute}'
  </span>
  <Circle className="w-3 h-3 fill-current text-accent-400" />
- <span className="text-ink text-ink font-medium">
+ <span className="text-ink font-medium">
  {getPlayerName(snapshot, g.player_id)}
  </span>
  {g.event_type === "PenaltyGoal" && (
@@ -166,7 +166,7 @@ export function PlayerRatingsPanel({
  const motm = sorted[0];
 
  return (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <div className="flex items-center gap-2 mb-3">
  <Star className="w-4 h-4 text-accent-700 dark:text-accent-400" />
  <h3 className="text-xs font-heading font-bold uppercase tracking-widest text-ink-dim">
@@ -188,7 +188,7 @@ export function PlayerRatingsPanel({
  <p className="text-xs font-heading font-bold text-accent-700 dark:text-accent-400 uppercase tracking-wider">
  {t("match.motm")}
  </p>
- <p className="text-sm text-ink text-ink font-medium">{motm.name}</p>
+ <p className="text-sm text-ink font-medium">{motm.name}</p>
  </div>
  </div>
  )}

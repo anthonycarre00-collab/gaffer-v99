@@ -72,7 +72,7 @@ function historyDepthOptionLabel(
 // ---------------------------------------------------------------------------
 
 function StepIndicator({ current }: { current: 2 | 3 }) {
- const active = "flex items-center justify-center w-6 h-6 rounded-full bg-primary-500 text-white text-xs font-bold";
+ const active = "flex items-center justify-center w-6 h-6 rounded-full bg-primary-500 text-ink text-xs font-bold";
  const done = "flex items-center justify-center w-6 h-6 rounded-full bg-primary-500/30 text-primary-400 text-xs font-bold";
  const future = "flex items-center justify-center w-6 h-6 rounded-full bg-carbon-3 text-ink-faint text-xs font-bold";
  const filledLine = "h-0.5 flex-1 bg-primary-500";
@@ -137,7 +137,7 @@ export default function GenerationStep({
  <div className="flex items-center gap-2">
  <button
  onClick={onBack}
- className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
+ className="text-ink-faint hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
@@ -148,7 +148,7 @@ export default function GenerationStep({
  <button
  type="button"
  onClick={onClose}
- className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
+ className="text-ink-faint hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <X className="w-5 h-5" />
  </button>
@@ -183,7 +183,7 @@ export default function GenerationStep({
  <button
  type="button"
  onClick={() => setShowAdvanced(!showAdvanced)}
- className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink text-ink-faint hover:text-ink"
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink-faint hover:text-ink"
  >
  {t("createManager.advancedOptions")}
  <ChevronDown

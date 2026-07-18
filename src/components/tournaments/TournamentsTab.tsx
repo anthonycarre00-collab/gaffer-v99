@@ -383,7 +383,7 @@ export default function TournamentsTab({
  {idx + 1}
  </td>
  <td
- className={`py-1.5 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
+ className={`py-1.5 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
@@ -418,7 +418,7 @@ export default function TournamentsTab({
  ? () => onSelectTeam(f.home_team_id)
  : undefined
  }
- className={`flex-1 text-right font-semibold text-sm ${isClubTeam(f.home_team_id) ? "cursor-pointer hover:underline" : ""} ${f.home_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
+ className={`flex-1 text-right font-semibold text-sm ${isClubTeam(f.home_team_id) ? "cursor-pointer hover:underline" : ""} ${f.home_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink"}`}
  >
  {resolveTeamName(f.home_team_id)}
  </span>
@@ -439,7 +439,7 @@ export default function TournamentsTab({
  ? () => onSelectTeam(f.away_team_id)
  : undefined
  }
- className={`flex-1 text-left font-semibold text-sm ${isClubTeam(f.away_team_id) ? "cursor-pointer hover:underline" : ""} ${f.away_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
+ className={`flex-1 text-left font-semibold text-sm ${isClubTeam(f.away_team_id) ? "cursor-pointer hover:underline" : ""} ${f.away_team_id === userTeamId ? "text-primary-600 dark:text-primary-400" : "text-ink"}`}
  >
  {resolveTeamName(f.away_team_id)}
  </span>
@@ -482,7 +482,7 @@ export default function TournamentsTab({
  <Trophy className="w-7 h-7 text-accent-400" />
  </div>
  <div className="flex-1">
- <h2 className="text-2xl font-heading font-bold text-white uppercase tracking-wide">
+ <h2 className="text-2xl font-heading font-bold text-ink uppercase tracking-wide">
  {competitionDisplayName(league, t)}
  </h2>
  <p className="text-ink-faint text-sm mt-0.5">
@@ -508,23 +508,23 @@ export default function TournamentsTab({
  </Select>
  )}
  <div className="hidden md:flex gap-4">
- <div className="bg-white/5 rounded px-4 py-2 text-center">
+ <div className="bg-ink/5 rounded px-4 py-2 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.progress")}
  </p>
- <p className="font-heading font-bold text-lg text-white">
+ <p className="font-heading font-bold text-lg text-ink">
  {completedMatchdays}/{totalMatchdays}
  </p>
  </div>
- <div className="bg-white/5 rounded px-4 py-2 text-center">
+ <div className="bg-ink/5 rounded px-4 py-2 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.matches")}
  </p>
- <p className="font-heading font-bold text-lg text-white">
+ <p className="font-heading font-bold text-lg text-ink">
  {completedMatches}
  </p>
  </div>
- <div className="bg-white/5 rounded px-4 py-2 text-center">
+ <div className="bg-ink/5 rounded px-4 py-2 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {t("tournaments.goals")}
  </p>
@@ -541,7 +541,7 @@ export default function TournamentsTab({
  <span className="text-sm font-heading font-bold uppercase tracking-wider text-accent-300">
  {t("tournaments.worldCupChampion")}:
  </span>
- <span className="text-sm font-semibold text-white">
+ <span className="text-sm font-semibold text-ink">
  {worldCupChampion.nation_name}
  </span>
  </div>
@@ -555,8 +555,8 @@ export default function TournamentsTab({
  key={v}
  onClick={() => setView(v)}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all ${view === v
- ? "bg-primary-500 text-white "
- : "bg-white bg-carbon-1 text-ink-dim hover:text-ink hover:text-ink border border-slate-line"
+ ? "bg-primary-500 text-ink "
+ : "bg-carbon-1 text-ink-dim hover:text-ink border border-slate-line"
  }`}
  >
  {v === "overview" ? (
@@ -613,7 +613,7 @@ export default function TournamentsTab({
  className="flex items-center justify-between px-4 py-2.5"
  data-testid={`tournaments-round-summary-${round.id}`}
  >
- <span className="text-sm font-semibold text-ink text-ink">
+ <span className="text-sm font-semibold text-ink">
  {localizedRoundName(t, round.name)}
  </span>
  <Badge variant={round.completed ? "accent" : "neutral"} size="sm">
@@ -687,7 +687,7 @@ export default function TournamentsTab({
  {idx + 1}
  </td>
  <td
- className={`py-2 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
+ className={`py-2 px-3 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
@@ -747,7 +747,7 @@ export default function TournamentsTab({
  {i + 1}
  </span>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-ink text-ink truncate">
+ <p className="text-sm font-semibold text-ink truncate">
  {entry.playerName!.full_name}
  </p>
  <p className="text-xs text-ink-faint">
@@ -835,7 +835,7 @@ export default function TournamentsTab({
  ) : (
  <Card>
  <div className="p-5 border-b border-slate-line-soft bg-navy-700 rounded-t-xl">
- <h3 className="text-lg font-heading font-bold text-white flex items-center gap-2 uppercase tracking-wide">
+ <h3 className="text-lg font-heading font-bold text-ink flex items-center gap-2 uppercase tracking-wide">
  <Trophy className="text-accent-400 w-5 h-5" />
  {competitionDisplayName(league, t)} —{" "}
  {t("schedule.season", { number: league.season })}
@@ -898,7 +898,7 @@ export default function TournamentsTab({
  {idx + 1}
  </td>
  <td
- className={`py-3 px-4 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink text-ink"}`}
+ className={`py-3 px-4 font-semibold text-sm ${isUser ? "text-primary-600 dark:text-primary-400" : "text-ink"}`}
  >
  {resolveTeamName(entry.team_id)}
  </td>
@@ -1067,7 +1067,7 @@ export default function TournamentsTab({
  </p>
  <button
  onClick={() => setAwardsRetryCount((count) => count + 1)}
- className="px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider bg-primary-500 text-white hover:bg-primary-600 transition-colors"
+ className="px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider bg-primary-500 text-ink hover:bg-primary-600 transition-colors"
  >
  {t("common.retry")}
  </button>

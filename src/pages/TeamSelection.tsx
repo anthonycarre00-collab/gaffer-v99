@@ -547,7 +547,7 @@ export default function TeamSelection() {
 
  return (
  <div className="min-h-screen bg-carbon-2 transition-colors duration-300 bg-carbon-0">
- <header className="flex items-center justify-between border-b border-slate-line bg-white px-6 py-4 shadow-sm border-slate-line bg-carbon-1">
+ <header className="flex items-center justify-between border-b border-slate-line bg-carbon-1 px-6 py-4 shadow-sm border-slate-line bg-carbon-1">
  <div className="flex items-center gap-4">
  <button
  onClick={() => navigate("/")}
@@ -570,7 +570,7 @@ export default function TeamSelection() {
  <button
  onClick={handleConfirm}
  disabled={isConfirming}
- className={`flex items-center gap-2 rounded bgc-primary-500 px-6 py-2.5 font-heading text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-600 ${
+ className={`flex items-center gap-2 rounded bgc-primary-500 px-6 py-2.5 font-heading text-sm font-bold uppercase tracking-wider text-ink transition-colors hover:bg-primary-600 ${
  isConfirming ? "cursor-wait opacity-70" : ""
  }`}
  >
@@ -819,7 +819,7 @@ export default function TeamSelection() {
  value={clubSearch}
  onChange={(event) => setClubSearch(event.target.value)}
  placeholder={t("teamSelect.searchClubs")}
- className="min-w-0 flex-1 rounded border border-slate-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint border-slate-line bg-carbon-1 text-ink"
+ className="min-w-0 flex-1 rounded border border-slate-line bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint border-slate-line bg-carbon-1 text-ink"
  />
  <span className="shrink-0 text-xs font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("teamSelect.clubCount", { n: filteredTeams.length })}
@@ -866,11 +866,11 @@ export default function TeamSelection() {
  <TeamLogo
  team={team}
  className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded font-heading text-lg font-bold ${
- isSelected ? "bg-white/20 text-white" : "bg-white/10 text-ink-faint"
+ isSelected ? "bg-ink/20 text-ink" : "bg-ink/10 text-ink-faint"
  }`}
  />
  <div>
- <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-white">
+ <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-ink">
  {team.name}
  </h3>
  <TeamLocation
@@ -902,7 +902,7 @@ export default function TeamSelection() {
  icon={<Users className="h-3.5 w-3.5" />}
  label={t("teamSelect.squad")}
  value={
- <span className="font-heading font-bold text-ink text-ink">
+ <span className="font-heading font-bold text-ink">
  {playerCount}
  </span>
  }
@@ -911,7 +911,7 @@ export default function TeamSelection() {
  icon={<Landmark className="h-3.5 w-3.5" />}
  label={t("teamSelect.finances")}
  value={
- <span className="font-heading font-bold text-ink text-ink">
+ <span className="font-heading font-bold text-ink">
  {formatVal(team.finance)}
  </span>
  }

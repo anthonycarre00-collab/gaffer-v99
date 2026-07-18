@@ -318,7 +318,7 @@ export default function TrainingTab({
  ? "text-danger-600 dark:text-danger-400"
  : player.condition < 40
  ? "text-accent-600 dark:text-accent-400"
- : "text-ink text-ink"
+ : "text-ink"
  }`}
  >
  {player.match_name}{player.jersey_number != null ? ` (#${player.jersey_number})` : ""}

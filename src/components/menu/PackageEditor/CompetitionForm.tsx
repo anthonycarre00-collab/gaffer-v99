@@ -322,8 +322,8 @@ export function CompetitionForm({
  onClick={() => switchMode(mode)}
  className={`flex-1 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all border ${
  participantMode === mode
- ? "bg-primary-500 text-white border-primary-500"
- : "bg-white bg-carbon-2 text-ink-dim border-slate-line"
+ ? "bg-primary-500 text-ink border-primary-500"
+ : "bg-carbon-2 text-ink-dim border-slate-line"
  }`}
  >
  {mode === "explicit"
@@ -387,14 +387,14 @@ export function CompetitionForm({
  setTeamSearch("");
  setTeamPickerOpen((o) => !o);
  }}
- className="flex items-center gap-1.5 px-3 py-2 rounded border border-dashed border-slate-line border-slate-line text-sm text-ink-dim hover:border-primary-400 hover:text-primary-500 dark:hover:border-primary-500 dark:hover:text-primary-400 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+ className="flex items-center gap-1.5 px-3 py-2 rounded border border-dashed border-slate-line text-sm text-ink-dim hover:border-primary-400 hover:text-primary-500 dark:hover:border-primary-500 dark:hover:text-primary-400 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
  >
  <Plus className="w-4 h-4" />
  {t("worldEditor.addTeam")}
  </button>
 
  {teamPickerOpen && (
- <div className="absolute top-full left-0 z-50 mt-1 min-w-56 rounded border border-slate-line bg-white bg-carbon-2 ">
+ <div className="absolute top-full left-0 z-50 mt-1 min-w-56 rounded border border-slate-line bg-carbon-2 ">
  <div className="p-2 border-b border-slate-line-soft">
  <input
  type="text"
@@ -530,7 +530,7 @@ export function CompetitionForm({
  <label className={labelClass}>{t("worldEditor.competitionLogo")}</label>
  <div className="flex items-center gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-12 h-12 rounded border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
  <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
@@ -540,7 +540,7 @@ export function CompetitionForm({
  <button
  type="button"
  onClick={() => { void handlePickLogo(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>

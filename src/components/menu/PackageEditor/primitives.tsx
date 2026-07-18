@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useId } from "react";
 import { Select } from "../../../components/ui/Select";
 
 export const inputClass =
- "w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
+ "w-full rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
 export const labelClass =
  "text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-ink-dim";
 
@@ -112,7 +112,7 @@ export function InlineHelp({ text }: InlineHelpProps) {
  <HelpCircle className="w-3.5 h-3.5" />
  </button>
  {open && (
- <div className="absolute left-0 top-full mt-1 z-50 w-64 rounded border border-slate-line bg-white bg-carbon-1 p-3 text-xs text-ink-dim leading-relaxed">
+ <div className="absolute left-0 top-full mt-1 z-50 w-64 rounded border border-slate-line bg-carbon-1 p-3 text-xs text-ink-dim leading-relaxed">
  {text}
  </div>
  )}

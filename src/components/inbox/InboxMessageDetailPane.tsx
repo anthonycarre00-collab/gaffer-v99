@@ -118,7 +118,7 @@ export default function InboxMessageDetailPane({
  <div className="shrink-0 border-b border-slate-line-soft p-5 border-slate-line">
  <button
  onClick={onCloseSelectedMessage}
- className="md:hidden flex items-center gap-1.5 text-xs text-ink-dim hover:text-ink hover:text-ink mb-3"
+ className="md:hidden flex items-center gap-1.5 text-xs text-ink-dim hover:text-ink mb-3"
  >
  <ArrowLeft className="w-3.5 h-3.5" /> {t("inbox.backToInbox")}
  </button>
@@ -490,7 +490,7 @@ export default function InboxMessageDetailPane({
  }
  className="w-full text-left p-4 rounded border border-slate-line hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-500/5 transition-all group"
  >
- <p className="text-sm font-heading font-bold text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <p className="text-sm font-heading font-bold text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {option.label}
  </p>
  <p className="text-xs text-ink-dim mt-1">

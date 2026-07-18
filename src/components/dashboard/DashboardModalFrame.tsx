@@ -12,7 +12,7 @@ export default function DashboardModalFrame({
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
  <div
- className={`mx-4 w-full rounded border border-slate-line bg-white p-6 shadow-2xl border-slate-line bg-carbon-1 ${maxWidthClassName}`}
+ className={`mx-4 w-full rounded border border-slate-line bg-carbon-1 p-6 shadow-2xl border-slate-line bg-carbon-1 ${maxWidthClassName}`}
  >
  {children}
  </div>

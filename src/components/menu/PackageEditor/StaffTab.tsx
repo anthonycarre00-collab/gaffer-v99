@@ -62,7 +62,7 @@ export function StaffTab({ staff, teams, onAdd, onEdit, onDelete, selectedIndex,
  onChange={(e) => setQuery(e.target.value)}
  aria-label={t("worldEditor.searchStaff")}
  placeholder={t("worldEditor.searchStaff")}
- className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-line bg-white bg-carbon-2 text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
+ className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-line bg-carbon-2 text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
  />
  </div>
  )
@@ -82,7 +82,7 @@ export function StaffTab({ staff, teams, onAdd, onEdit, onDelete, selectedIndex,
  clubName,
  ].filter(Boolean).join(" · ")}
  badge={
- <div className={`flex items-center justify-center w-9 h-9 rounded-full text-white text-[10px] font-bold flex-shrink-0 ${roleColor}`}>
+ <div className={`flex items-center justify-center w-9 h-9 rounded-full text-ink text-[10px] font-bold flex-shrink-0 ${roleColor}`}>
  {roleAbbr}
  </div>
  }

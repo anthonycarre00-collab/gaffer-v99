@@ -53,7 +53,7 @@ export default function HomeLatestNewsCard({
  <p className="text-xs text-ink-faint mb-0.5">
  {formatDateShort(article.date, lang)} - {article.source}
  </p>
- <p className="text-sm font-heading font-bold text-ink text-ink leading-snug line-clamp-2">
+ <p className="text-sm font-heading font-bold text-ink leading-snug line-clamp-2">
  {article.headline}
  </p>
  {article.match_score && (

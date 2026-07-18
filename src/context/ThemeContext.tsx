@@ -1,6 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
 
-type Theme = "light" | "dark";
+// V99.11: Dark-first per UI spec §0.5. Theme is permanently "dark".
+// The ThemeToggle is hidden in the UI. The toggleTheme function is kept
+// as a no-op for backward compat with components that reference it.
+
+type Theme = "dark";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -10,30 +14,19 @@ interface ThemeContextValue {
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function getInitialTheme(): Theme {
-  const stored = localStorage.getItem("ofm-theme");
-  if (stored === "light" || stored === "dark") return stored;
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
-  return "dark"; // Default to dark for the Matchday aesthetic
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
   useEffect(() => {
+    // V99.11: Always add .dark class — dark-first per UI spec.
     const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("ofm-theme", theme);
-  }, [theme]);
+    root.classList.add("dark");
+    localStorage.setItem("ofm-theme", "dark");
+  }, []);
 
-  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  // V99.11: toggleTheme is a no-op — dark is the only theme.
+  const toggleTheme = () => {};
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isDark: theme === "dark" }}>
+    <ThemeContext.Provider value={{ theme: "dark", toggleTheme, isDark: true }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -49,12 +49,12 @@ export function WorldEditorTopBar({
  const navigate = useNavigate();
 
  return (
- <div className="flex-shrink-0 h-18 flex items-center justify-between px-4 gap-2 border-b border-slate-line bg-white bg-carbon-1">
+ <div className="flex-shrink-0 h-18 flex items-center justify-between px-4 gap-2 border-b border-slate-line bg-carbon-1">
  {/* Left: back + identity */}
  <div className="flex items-center gap-3 min-w-0">
  <button
  onClick={() => navigate("/")}
- className="flex items-center gap-1.5 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors flex-shrink-0"
+ className="flex items-center gap-1.5 text-sm text-ink-dim hover:text-ink transition-colors flex-shrink-0"
  >
  <ArrowLeft className="w-4 h-4" />
  {t("menu.mainMenu")}
@@ -83,7 +83,7 @@ export function WorldEditorTopBar({
  onClick={onUndo}
  disabled={!canUndo || isBusy}
  title={t("worldEditor.undo")}
- className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+ className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
  >
  <Undo2 className="w-4 h-4" />
  </button>
@@ -91,7 +91,7 @@ export function WorldEditorTopBar({
  onClick={onRedo}
  disabled={!canRedo || isBusy}
  title={t("worldEditor.redo")}
- className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+ className="p-1.5 rounded text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
  >
  <Redo2 className="w-4 h-4" />
  </button>
@@ -103,7 +103,7 @@ export function WorldEditorTopBar({
  <button
  onClick={onToggleAutoSave}
  title={autoSave ? t("worldEditor.autoSaveOn") : t("worldEditor.autoSaveOff")}
- className="flex items-center gap-1 text-xs text-ink-dim hover:text-ink hover:text-ink transition-colors"
+ className="flex items-center gap-1 text-xs text-ink-dim hover:text-ink transition-colors"
  >
  {autoSave ? (
  <ToggleRight className="w-4 h-4 text-primary-500" />
@@ -118,7 +118,7 @@ export function WorldEditorTopBar({
  onClick={onSave}
  disabled={isBusy}
  title={t("worldEditor.save")}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-white bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-40"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-40"
  >
  {saveState === "saving" ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -145,7 +145,7 @@ export function WorldEditorTopBar({
  <button
  onClick={onValidate}
  disabled={isBusy}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-white bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-50"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-line bg-carbon-2 text-xs font-heading font-bold uppercase tracking-wider text-ink hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all disabled:opacity-50"
  >
  {isBusy ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -156,7 +156,7 @@ export function WorldEditorTopBar({
  )}
  {t("worldEditor.validate")}
  {issueCount > 0 && (
- <span className="ml-0.5 bg-danger-500 text-white text-[10px] rounded-full px-1.5 py-0.5 leading-none">
+ <span className="ml-0.5 bg-danger-500 text-ink text-[10px] rounded-full px-1.5 py-0.5 leading-none">
  {issueCount}
  </span>
  )}
@@ -165,7 +165,7 @@ export function WorldEditorTopBar({
  <button
  onClick={onBuild}
  disabled={isBusy}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bgc-accent-500 hover:from-accent-600 hover:to-accent-700 text-white text-xs font-heading font-bold uppercase tracking-wider transition-all disabled:opacity-50"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bgc-accent-500 hover:from-accent-600 hover:to-accent-700 text-ink text-xs font-heading font-bold uppercase tracking-wider transition-all disabled:opacity-50"
  >
  {isBusy ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin" />

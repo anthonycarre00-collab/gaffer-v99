@@ -111,10 +111,10 @@ export function WorldEditorHome({
  // Top bar (shared across views)
  // ──────────────────────────────────────────────────────────────────────────
  const topBar = (
- <div className="flex-shrink-0 h-12 flex items-center px-4 border-b border-slate-line bg-white bg-carbon-1">
+ <div className="flex-shrink-0 h-12 flex items-center px-4 border-b border-slate-line bg-carbon-1">
  <button
  onClick={() => (view === "new-form" ? setView("home") : navigate("/"))}
- className="flex items-center gap-1.5 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors"
+ className="flex items-center gap-1.5 text-sm text-ink-dim hover:text-ink transition-colors"
  >
  <ArrowLeft className="w-4 h-4" />
  {view === "new-form" ? t("common.back") : t("menu.mainMenu")}
@@ -152,7 +152,7 @@ export function WorldEditorHome({
  onChange={(e) => setFormName(e.target.value)}
  placeholder={t("worldEditor.worldNamePlaceholder")}
  autoFocus
- className="w-full px-3 py-2 rounded border border-slate-line bg-white bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+ className="w-full px-3 py-2 rounded border border-slate-line bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
  />
  </div>
 
@@ -178,7 +178,7 @@ export function WorldEditorHome({
  type="text"
  value={formAuthor}
  onChange={(e) => setFormAuthor(e.target.value)}
- className="w-full px-3 py-2 rounded border border-slate-line bg-white bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+ className="w-full px-3 py-2 rounded border border-slate-line bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
  />
  </div>
 
@@ -190,7 +190,7 @@ export function WorldEditorHome({
  value={formDesc}
  onChange={(e) => setFormDesc(e.target.value)}
  rows={3}
- className="w-full px-3 py-2 rounded border border-slate-line bg-white bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+ className="w-full px-3 py-2 rounded border border-slate-line bg-carbon-2 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
  />
  </div>
  </div>
@@ -199,14 +199,14 @@ export function WorldEditorHome({
  <button
  onClick={() => setView("home")}
  disabled={isBusy}
- className="px-4 py-2 text-sm font-heading font-bold uppercase tracking-wide text-ink-dim hover:text-ink hover:text-ink transition-colors disabled:opacity-60"
+ className="px-4 py-2 text-sm font-heading font-bold uppercase tracking-wide text-ink-dim hover:text-ink transition-colors disabled:opacity-60"
  >
  {t("common.back")}
  </button>
  <button
  onClick={handleCreate}
  disabled={isBusy || !derivedSlug}
- className="flex items-center gap-2 px-5 py-2.5 bgc-primary-500 hover:bg-primary-600 text-white rounded font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+ className="flex items-center gap-2 px-5 py-2.5 bgc-primary-500 hover:bg-primary-600 text-ink rounded font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
  >
  {isBusy ? (
  <Loader2 className="w-4 h-4 animate-spin" />
@@ -253,7 +253,7 @@ export function WorldEditorHome({
  <button
  onClick={() => openNewForm()}
  disabled={isBusy}
- className="flex items-center gap-4 w-full p-5 bgc-primary-500 hover:bg-primary-600 text-white rounded transition-all duration-200 hover: disabled:opacity-60 disabled:cursor-not-allowed"
+ className="flex items-center gap-4 w-full p-5 bgc-primary-500 hover:bg-primary-600 text-ink rounded transition-all duration-200 hover: disabled:opacity-60 disabled:cursor-not-allowed"
  >
  <Package className="w-7 h-7 flex-shrink-0" />
  <div className="text-left">
@@ -269,7 +269,7 @@ export function WorldEditorHome({
  <button
  onClick={onOpenPackage}
  disabled={isBusy}
- className="flex items-center gap-4 w-full p-5 bg-white bg-carbon-1 hover:bg-carbon-2 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-200 border border-slate-line hover:border-accent-400 dark:hover:border-accent-400 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+ className="flex items-center gap-4 w-full p-5 bg-carbon-1 hover:bg-carbon-2 hover:bg-carbon-3 text-ink rounded transition-all duration-200 border border-slate-line hover:border-accent-400 dark:hover:border-accent-400 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
  >
  <FolderOpen className="w-7 h-7 text-accent-500 dark:text-accent-400 flex-shrink-0" />
  <div className="text-left">
@@ -293,7 +293,7 @@ export function WorldEditorHome({
  key={sample.meta.id}
  onClick={() => openNewForm(sample)}
  disabled={isBusy}
- className="flex items-start gap-3 w-full px-4 py-3 bg-white bg-carbon-1 hover:bg-accent-50 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-200 border border-slate-line hover:border-accent-400 dark:hover:border-accent-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
+ className="flex items-start gap-3 w-full px-4 py-3 bg-carbon-1 hover:bg-accent-50 hover:bg-carbon-3 text-ink rounded transition-all duration-200 border border-slate-line hover:border-accent-400 dark:hover:border-accent-500 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed text-left"
  >
  <div className="flex-1 min-w-0">
  <p className="font-heading font-bold uppercase tracking-wide text-sm truncate">
@@ -322,11 +322,11 @@ export function WorldEditorHome({
  key={proj.path}
  onClick={() => onOpenRecent(proj.path)}
  disabled={isBusy}
- className="flex items-center gap-3 w-full px-4 py-3 bg-white bg-carbon-1 hover:bg-carbon-2 hover:bg-carbon-3 rounded border border-slate-line-soft transition-colors text-left disabled:opacity-60"
+ className="flex items-center gap-3 w-full px-4 py-3 bg-carbon-1 hover:bg-carbon-2 hover:bg-carbon-3 rounded border border-slate-line-soft transition-colors text-left disabled:opacity-60"
  >
  <Package2 className="w-4 h-4 text-ink-faint flex-shrink-0" />
  <div className="flex-1 min-w-0">
- <p className="text-sm font-medium text-ink text-ink truncate">
+ <p className="text-sm font-medium text-ink truncate">
  {proj.name}
  </p>
  <p className="text-xs text-ink-faint truncate font-mono">
@@ -351,11 +351,11 @@ export function WorldEditorHome({
  {installedPackages.map((pkg) => (
  <div
  key={pkg.id}
- className="flex items-center gap-3 px-4 py-3 bg-white bg-carbon-1 rounded border border-slate-line-soft"
+ className="flex items-center gap-3 px-4 py-3 bg-carbon-1 rounded border border-slate-line-soft"
  >
  <Package2 className="w-4 h-4 text-ink-faint flex-shrink-0" />
  <div className="flex-1 min-w-0">
- <p className="text-sm font-medium text-ink text-ink truncate">
+ <p className="text-sm font-medium text-ink truncate">
  {pkg.name}
  </p>
  <p className="text-xs text-ink-faint">

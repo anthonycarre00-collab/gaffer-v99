@@ -696,7 +696,7 @@ export default function PlayerProfile({
  <div className="mb-4 flex items-center justify-between gap-3">
  <button
  onClick={onClose}
- className="flex items-center gap-2 text-sm text-ink-dim hover:text-ink hover:text-ink transition-colors"
+ className="flex items-center gap-2 text-sm text-ink-dim hover:text-ink transition-colors"
  >
  <ArrowLeft className="w-4 h-4" />
  <span className="font-heading font-bold uppercase tracking-wider">
@@ -782,7 +782,7 @@ export default function PlayerProfile({
  ) : null}
 
  {isOwnClub && onGameUpdate && (
- <div className="mb-4 flex items-center gap-3 rounded border border-slate-line bg-white px-4 py-3 border-slate-line bg-carbon-1">
+ <div className="mb-4 flex items-center gap-3 rounded border border-slate-line bg-carbon-1 px-4 py-3 border-slate-line bg-carbon-1">
  <span className="shrink-0 text-sm font-medium text-ink-dim">
  {t("tactics.playerRoleLabel")}
  </span>
@@ -851,7 +851,7 @@ export default function PlayerProfile({
  </div>
 
  {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}
- <div className="mt-5 rounded border border-slate-line bg-white bg-carbon-2 p-5 gaffer-card-texture gaffer-framed">
+ <div className="mt-5 rounded border border-slate-line bg-carbon-2 p-5 gaffer-card-texture gaffer-framed">
  <HexAttributeCluster
  position={primaryPosition ?? undefined}
  attributes={{

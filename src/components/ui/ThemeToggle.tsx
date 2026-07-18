@@ -16,7 +16,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
  return (
  <button
  onClick={toggleTheme}
- className={`p-2 rounded text-ink-faint hover:text-ink text-ink-faint hover:text-ink hover:bg-carbon-3 hover:bg-carbon-3 hover:cursor-pointer transition-all duration-200 ${className}`}
+ className={`p-2 rounded text-ink-faint hover:text-ink hover:bg-carbon-3 hover:bg-carbon-3 hover:cursor-pointer transition-all duration-200 ${className}`}
  title={toggleThemeLabel}
  aria-label={toggleThemeLabel}
  >

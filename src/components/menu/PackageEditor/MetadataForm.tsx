@@ -179,7 +179,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  <label className={labelClass}>{t("worldEditor.packageLogo")}</label>
  <div className="flex items-center gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-12 h-12 rounded object-contain border border-slate-line bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-12 h-12 rounded border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
  <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
@@ -189,7 +189,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  <button
  type="button"
  onClick={() => { void handlePickLogo(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>
@@ -249,17 +249,17 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
  {/* Package preview card */}
  <div className="flex flex-col gap-1.5">
  <p className={labelClass}>{t("worldEditor.licensePreview")}</p>
- <div className="rounded border border-slate-line bg-white bg-carbon-1 p-4 flex items-start gap-3">
+ <div className="rounded border border-slate-line bg-carbon-1 p-4 flex items-start gap-3">
  {logoDataUrl ? (
- <img src={logoDataUrl} alt="" className="w-9 h-9 rounded object-contain border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
+ <img src={logoDataUrl} alt="" className="w-9 h-9 rounded object-contain border border-slate-line bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-9 h-9 rounded from-primary-400 flex items-center justify-center flex-shrink-0">
- <Globe className="w-5 h-5 text-white" />
+ <Globe className="w-5 h-5 text-ink" />
  </div>
  )}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5 flex-wrap">
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink text-ink truncate">
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink truncate">
  {meta.name || meta.id || "—"}
  </p>
  {meta.packageType && meta.packageType !== "database" && (
@@ -307,7 +307,7 @@ export function MetadataForm({ meta, onChange, counts, projectDir }: MetadataFor
 
  {/* License permissions card */}
  {licenseDetails && !useCustom && (
- <div className="flex flex-col gap-2 rounded border border-slate-line bg-white bg-carbon-1 p-4">
+ <div className="flex flex-col gap-2 rounded border border-slate-line bg-carbon-1 p-4">
  <p className="text-[10px] font-heading font-bold uppercase tracking-[0.15em] text-ink-faint">
  {SPDX_LICENSES.find((l) => l.id === meta.license)?.name}
  </p>

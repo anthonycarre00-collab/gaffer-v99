@@ -192,7 +192,7 @@ export default function CreateManagerNationalityField({
  </button>
 
  {isOpen ? (
- <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded border border-slate-line bg-white border-slate-line bg-carbon-2">
+ <div className="absolute bottom-full left-0 right-0 z-50 mb-1 overflow-hidden rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-2">
  {resources ? (
  <>
  <div className="border-b border-slate-line-soft p-2 border-slate-line">

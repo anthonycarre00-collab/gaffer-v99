@@ -482,7 +482,7 @@ export default function PressConference({
  </div>
  <div>
  <div className="flex items-center gap-2 mb-1">
- <span className="font-heading font-bold text-sm text-ink text-ink">
+ <span className="font-heading font-bold text-sm text-ink">
  {currentQ.journalist}
  </span>
  <Badge variant="neutral" size="sm">
@@ -509,7 +509,7 @@ export default function PressConference({
  ? "bg-primary-500/20 ring-2 ring-primary-500/50"
  : hasAnswered
  ? "bg-carbon-3/50 opacity-40"
- : "bg-white hover:bg-carbon-2 border border-slate-line bg-carbon-1 hover:bg-carbon-3 border-slate-line"
+ : "bg-carbon-1 hover:bg-carbon-2 border border-slate-line bg-carbon-1 hover:bg-carbon-3 border-slate-line"
  }`}
  >
  <div className="flex items-center gap-2 mb-1">
@@ -521,7 +521,7 @@ export default function PressConference({
  </Badge>
  </div>
  <p
- className={`text-sm ${isSelected ? "text-ink text-ink" : "text-ink-dim"}`}
+ className={`text-sm ${isSelected ? "text-ink" : "text-ink-dim"}`}
  >
  "{r.text}"
  </p>
@@ -535,7 +535,7 @@ export default function PressConference({
  <div className="flex justify-end mt-6 ml-16">
  <button
  onClick={handleNext}
- className="flex items-center gap-2 px-6 py-3 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-white shadow-primary-500/20 transition-all"
+ className="flex items-center gap-2 px-6 py-3 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-ink shadow-primary-500/20 transition-all"
  >
  {submitting
  ? t("match.submitting")
@@ -551,7 +551,7 @@ export default function PressConference({
  </div>
 
  {/* Footer — delegate to assistant, or skip without answering */}
- <footer className="bg-white bg-carbon-1 border-t border-slate-line px-6 py-3 transition-colors duration-300">
+ <footer className="bg-carbon-1 border-t border-slate-line px-6 py-3 transition-colors duration-300">
  <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 flex-wrap">
  <div className="flex items-center gap-4 flex-wrap">
  <button
@@ -588,7 +588,7 @@ export default function PressConference({
  }
  }}
  disabled={submitting}
- className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-ink-faint hover:text-ink text-ink-faint hover:text-ink transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 text-xs font-heading uppercase tracking-wider text-ink-faint hover:text-ink transition-colors disabled:opacity-50"
  title={t("match.permanentDelegateHint")}
  >
  <UserCheck className="w-4 h-4" />
@@ -598,7 +598,7 @@ export default function PressConference({
  <button
  onClick={onFinish}
  disabled={submitting}
- className="text-xs font-heading uppercase tracking-wider text-ink-dim hover:text-ink text-ink-faint hover:text-ink-dim transition-colors disabled:opacity-50"
+ className="text-xs font-heading uppercase tracking-wider text-ink-dim hover:text-ink-faint hover:text-ink-dim transition-colors disabled:opacity-50"
  >
  {t("match.skipConference")}
  </button>

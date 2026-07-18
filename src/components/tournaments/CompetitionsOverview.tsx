@@ -94,7 +94,7 @@ export default function CompetitionsOverview({
  >
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-sm font-semibold text-ink text-ink truncate">
+ <span className="text-sm font-semibold text-ink truncate">
  {competitionDisplayName(comp, t)}
  </span>
  <Badge variant="neutral" size="sm">

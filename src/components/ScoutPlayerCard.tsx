@@ -55,7 +55,7 @@ export default function ScoutPlayerCard({ report, onPlayerClick }: ScoutPlayerCa
  <User className="w-5 h-5 text-ink-faint" />
  </div>
  <div className="flex-1 min-w-0">
- <h4 className="font-heading font-bold text-white text-sm truncate">{report.player_name}</h4>
+ <h4 className="font-heading font-bold text-ink text-sm truncate">{report.player_name}</h4>
  <div className="flex items-center gap-2 text-xs text-ink-faint">
  <span className="flex items-center gap-1">
  <Shield className="w-3 h-3" /> {t(`common.positions.${report.position}`, report.position)}

@@ -158,7 +158,7 @@ export default function TrainingGroupsCard({
  onChange={(event) =>
  updateGroupName(group.id, event.target.value)
  }
- className="bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-ink text-ink border-none outline-none w-20"
+ className="bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-ink border-none outline-none w-20"
  />
  <Select
  value={group.focus}
@@ -230,7 +230,7 @@ export default function TrainingGroupsCard({
  key={player.id}
  className="hover:bg-carbon-2 hover:bg-carbon-3/30 transition-colors"
  >
- <td className="py-1.5 px-3 text-sm font-medium text-ink text-ink truncate max-w-[160px]">
+ <td className="py-1.5 px-3 text-sm font-medium text-ink truncate max-w-[160px]">
  {player.match_name}{player.jersey_number != null ? ` (#${player.jersey_number})` : ""}
  </td>
  <td className="py-1.5 px-3 text-xs text-ink-dim">

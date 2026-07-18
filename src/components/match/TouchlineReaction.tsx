@@ -98,7 +98,7 @@ export function TouchlineReaction({ trigger, onSelect, onDismiss }: TouchlineRea
 
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom duration-300">
-      <div className="bg-white bg-carbon-1 rounded-lg border border-slate-line shadow-lg p-4 max-w-md gaffer-card-texture">
+      <div className="bg-carbon-1 rounded-lg border border-slate-line shadow-lg p-4 max-w-md gaffer-card-texture">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-accent-600 dark:text-accent-400">
             {triggerLabel}
@@ -108,7 +108,7 @@ export function TouchlineReaction({ trigger, onSelect, onDismiss }: TouchlineRea
               setVisible(false);
               onDismiss();
             }}
-            className="text-ink-faint hover:text-ink hover:text-ink transition-colors text-xs"
+            className="text-ink-faint hover:text-ink transition-colors text-xs"
           >
             Skip
           </button>

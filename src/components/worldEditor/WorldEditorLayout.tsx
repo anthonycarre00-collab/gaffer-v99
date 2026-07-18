@@ -18,13 +18,13 @@ export function WorldEditorLayout({
 
  <div className="flex flex-1 overflow-hidden">
  {/* Col 1: sidebar nav */}
- <div className="w-52 flex-shrink-0 border-r border-slate-line bg-white bg-carbon-1 overflow-hidden flex flex-col">
+ <div className="w-52 flex-shrink-0 border-r border-slate-line bg-carbon-1 overflow-hidden flex flex-col">
  {sidebar}
  </div>
 
  {/* Col 2: entity list (hidden for Metadata) */}
  {listPanel !== null && (
- <div className="w-72 flex-shrink-0 border-r border-slate-line bg-white bg-carbon-1 overflow-hidden flex flex-col">
+ <div className="w-72 flex-shrink-0 border-r border-slate-line bg-carbon-1 overflow-hidden flex flex-col">
  {listPanel}
  </div>
  )}

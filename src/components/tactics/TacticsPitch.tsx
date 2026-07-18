@@ -97,7 +97,7 @@ function getRoleMarkers(
  markers.push({
  key: "captain",
  shortLabel: "C",
- toneClassName: "border-accent-500 bg-accent-500 text-white",
+ toneClassName: "border-accent-500 bg-accent-500 text-ink",
  });
  }
 
@@ -105,7 +105,7 @@ function getRoleMarkers(
  markers.push({
  key: "vice_captain",
  shortLabel: "VC",
- toneClassName: "border-white/60 bg-carbon-2/85 text-white",
+ toneClassName: "border-ink/60 bg-carbon-2/85 text-ink",
  });
  }
 
@@ -113,7 +113,7 @@ function getRoleMarkers(
  markers.push({
  key: "penalty_taker",
  shortLabel: "PK",
- toneClassName: "border-primary-500 bg-primary-500 text-white",
+ toneClassName: "border-primary-500 bg-primary-500 text-ink",
  });
  }
 
@@ -121,7 +121,7 @@ function getRoleMarkers(
  markers.push({
  key: "free_kick_taker",
  shortLabel: "FK",
- toneClassName: "border-success-600 bg-success-600 text-white",
+ toneClassName: "border-success-600 bg-success-600 text-ink",
  });
  }
 
@@ -129,7 +129,7 @@ function getRoleMarkers(
  markers.push({
  key: "corner_taker",
  shortLabel: "CK",
- toneClassName: "border-danger-500 bg-danger-500 text-white",
+ toneClassName: "border-danger-500 bg-danger-500 text-ink",
  });
  }
 
@@ -186,10 +186,10 @@ function getSlotTargetClassName(isHovered: boolean, hasPlayer: boolean): string 
  }
 
  if (hasPlayer) {
- return "absolute z-10 h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-transparent";
+ return "absolute z-10 h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/10 bg-transparent";
  }
 
- return "absolute z-10 h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/25 bg-black/10";
+ return "absolute z-10 h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-ink/25 bg-black/10";
 }
 
 function getPitchDisplayName(player: PlayerData): string {
@@ -295,7 +295,7 @@ export default function TacticsPitch({
  <Card className="overflow-hidden">
  <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-xl border-b border-slate-line-soft bg-linear-to-r px-5 py-4 border-slate-line">
  <div>
- <h3 className="flex items-center gap-2 text-sm font-heading font-bold uppercase tracking-wide text-white">
+ <h3 className="flex items-center gap-2 text-sm font-heading font-bold uppercase tracking-wide text-ink">
  <Star className="h-4 w-4 fill-current text-accent-400" />
  {t("preMatch.startingXI")} - {formation}
  </h3>
@@ -319,7 +319,7 @@ export default function TacticsPitch({
  <span className="rounded-full bg-danger-500/15 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-danger-300">
  {t("squad.outOfPosition")}
  </span>
- <span className="rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-white/70">
+ <span className="rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-heading font-bold uppercase tracking-widest text-ink/70">
  {t("tactics.tableInteractionHint")}
  </span>
  {selectedPlayer ? (
@@ -572,10 +572,10 @@ export default function TacticsPitch({
  })()
  ) : (
  <div className="absolute z-20 flex w-[4.5rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
- <div className="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-white/28 bg-black/12 text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-white/70">
+ <div className="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-ink/28 bg-black/12 text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-ink/70">
  {translatePositionAbbreviation(t, slot.position)}
  </div>
- <div className="mt-1 max-w-full text-[9px] font-heading font-bold uppercase tracking-[0.16em] text-white/45">
+ <div className="mt-1 max-w-full text-[9px] font-heading font-bold uppercase tracking-[0.16em] text-ink/45">
  {t("squad.dropPlayerHere")}
  </div>
  </div>

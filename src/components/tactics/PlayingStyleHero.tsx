@@ -110,7 +110,7 @@ export function PlayingStyleHero({
 
  return (
  <div
- className={`relative overflow-hidden rounded-lg border border-slate-line bg-gradient-to-r ${descriptor.bgClass} bg-white bg-carbon-1`}
+ className={`relative overflow-hidden rounded-lg border border-slate-line bg-gradient-to-r ${descriptor.bgClass} bg-carbon-1`}
  >
  {/* Subtle texture overlay */}
  <div
@@ -126,7 +126,7 @@ export function PlayingStyleHero({
  {/* Formation badge — large, prominent */}
  <div className="flex items-center gap-3 shrink-0">
  <div
- className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 border-current ${descriptor.accentClass} bg-white bg-carbon-0`}
+ className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 border-current ${descriptor.accentClass} bg-carbon-1 bg-carbon-0`}
  >
  <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("tactics.formation", "Formation")}

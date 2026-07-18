@@ -27,7 +27,7 @@ export function EntityListShell({
  <div className="flex flex-col gap-2">
  <button
  onClick={onAdd}
- className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-slate-line border-slate-line rounded text-sm text-ink-dim hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+ className="flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-slate-line rounded text-sm text-ink-dim hover:text-primary-500 dark:hover:text-primary-400 hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
  >
  <Plus className="w-4 h-4" />
  <span className="font-heading font-bold uppercase tracking-wider">{addLabel}</span>
@@ -95,13 +95,13 @@ export function EntityRow({
  className={`flex items-center gap-3 p-3 rounded border transition-colors ${
  isSelected
  ? "border-primary-400 dark:border-primary-500 bg-primary-50 dark:bg-primary-500/10"
- : "border-slate-line bg-white bg-carbon-2 hover:border-slate-line dark:hover:border-navy-500"
+ : "border-slate-line bg-carbon-2 hover:border-slate-line dark:hover:border-navy-500"
  } ${onClick ? "cursor-pointer" : ""}`}
  onClick={confirming ? undefined : onClick}
  >
  {badge}
  <div className="flex-1 min-w-0">
- <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink text-ink truncate">
+ <p className="font-heading font-bold text-sm uppercase tracking-wide text-ink truncate">
  {title}
  </p>
  {subtitle && (
@@ -112,7 +112,7 @@ export function EntityRow({
  <div className="flex items-center gap-1 flex-shrink-0">
  <button
  onClick={handleConfirmDelete}
- className="p-1 rounded-md bg-danger-500 text-white hover:bg-danger-600 transition-colors"
+ className="p-1 rounded-md bg-danger-500 text-ink hover:bg-danger-600 transition-colors"
  title={t("common.confirmDelete")}
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -175,7 +175,7 @@ export function EntityFormShell({
  <div className="flex items-center gap-2 mb-2">
  <button
  onClick={onBack}
- className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
+ className="text-ink-faint hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <ArrowLeft className="w-5 h-5" />
  </button>
@@ -189,7 +189,7 @@ export function EntityFormShell({
  <button
  onClick={onSave}
  disabled={isBusy || saveDisabled}
- className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-white rounded font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+ className="w-full py-3 bgc-primary-500 hover:bg-primary-600 text-ink rounded font-heading font-bold uppercase tracking-wide transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
  >
  {isBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
  {saveLabel}

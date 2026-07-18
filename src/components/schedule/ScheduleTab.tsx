@@ -284,8 +284,8 @@ function ViewButton({
  onClick={onClick}
  className={`rounded px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider transition-all ${
  active
- ? "bg-primary-500 text-white "
- : "border border-slate-line bg-white text-ink-faint hover:text-ink border-slate-line bg-carbon-1 text-ink-faint hover:text-ink"
+ ? "bg-primary-500 text-ink "
+ : "border border-slate-line bg-carbon-1 text-ink-faint hover:text-ink border-slate-line bg-carbon-1 text-ink-faint hover:text-ink"
  }`}
  >
  {children}
@@ -379,7 +379,7 @@ function CalendarView({
  {slice.past_groups.length > visiblePastCount && (
  <button
  onClick={onShowMorePast}
- className="mx-auto mt-1 rounded border border-slate-line bg-white px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider text-ink-faint transition-all hover:text-ink border-slate-line bg-carbon-1 text-ink-faint hover:text-ink"
+ className="mx-auto mt-1 rounded border border-slate-line bg-carbon-1 px-4 py-2 font-heading text-sm font-bold uppercase tracking-wider text-ink-faint transition-all hover:text-ink border-slate-line bg-carbon-1 text-ink-faint hover:text-ink"
  >
  {t("schedule.loadMore")}
  </button>
@@ -522,7 +522,7 @@ function MatchdayGroupCard({
  className={`flex-1 cursor-pointer text-right text-sm font-semibold hover:underline ${
  fixture.home_team_id === userTeamId
  ? "text-primary-600 dark:text-primary-400"
- : "text-ink text-ink"
+ : "text-ink"
  }`}
  >
  {fixture.home_team_name}
@@ -543,7 +543,7 @@ function MatchdayGroupCard({
  className={`flex-1 cursor-pointer text-left text-sm font-semibold hover:underline ${
  fixture.away_team_id === userTeamId
  ? "text-primary-600 dark:text-primary-400"
- : "text-ink text-ink"
+ : "text-ink"
  }`}
  >
  {fixture.away_team_name}
@@ -600,7 +600,7 @@ function InternationalView({
  className="flex items-center justify-between px-5 py-2.5"
  data-testid={`schedule-callup-${player.id}`}
  >
- <span className="text-sm font-semibold text-ink text-ink">
+ <span className="text-sm font-semibold text-ink">
  {player.match_name}
  </span>
  <Badge variant="neutral" size="sm">
@@ -632,7 +632,7 @@ function InternationalView({
  className="flex items-center px-5 py-3"
  data-testid={`schedule-international-${fixture.id}`}
  >
- <span className="flex-1 text-right text-sm font-semibold text-ink text-ink">
+ <span className="flex-1 text-right text-sm font-semibold text-ink">
  {getNationalTeamName(gameState, fixture.home_team_id, t)}
  </span>
  <div className="mx-3 w-24 text-center">
@@ -646,7 +646,7 @@ function InternationalView({
  </Badge>
  )}
  </div>
- <span className="flex-1 text-left text-sm font-semibold text-ink text-ink">
+ <span className="flex-1 text-left text-sm font-semibold text-ink">
  {getNationalTeamName(gameState, fixture.away_team_id, t)}
  </span>
  </div>
@@ -707,7 +707,7 @@ function StandingsView({
  return (
  <Card>
  <div className="rounded-t-xl border-b border-slate-line-soft bg-navy-700 p-5 border-slate-line">
- <h3 className="flex items-center gap-2 font-heading text-lg font-bold uppercase tracking-wide text-white">
+ <h3 className="flex items-center gap-2 font-heading text-lg font-bold uppercase tracking-wide text-ink">
  <Trophy className="h-5 w-5 text-accent-400" />
  {(competition && competitionDisplayName(competition, t)) ||
  t("schedule.fixtures")} –{" "}
@@ -780,7 +780,7 @@ function StandingsView({
  className={`cursor-pointer px-4 py-3 text-sm font-semibold hover:underline ${
  isUser
  ? "text-primary-600 dark:text-primary-400"
- : "text-ink text-ink"
+ : "text-ink"
  }`}
  >
  {getTeamName(gameState.teams, entry.team_id)}

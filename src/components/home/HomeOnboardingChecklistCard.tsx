@@ -76,7 +76,7 @@ export default function HomeOnboardingChecklistCard({
  </div>
  <div className="min-w-0 flex-1">
  <p
- className={`text-sm font-heading font-bold ${step.done ? "text-ink-faint line-through" : "text-ink text-ink"}`}
+ className={`text-sm font-heading font-bold ${step.done ? "text-ink-faint line-through" : "text-ink"}`}
  >
  {step.label}
  </p>

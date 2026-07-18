@@ -227,7 +227,7 @@ export default function TacticsPlayerList({
  positionFilter={positionFilter}
  />
 
- <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1">
+ <div className="rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-1">
  <div className="border-b border-slate-line-soft px-3 py-2 border-slate-line">
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-ink-dim">
  {t("preMatch.startingXI")} · {starters.length}
@@ -257,7 +257,7 @@ export default function TacticsPlayerList({
  </div>
  </div>
 
- <div className="rounded border border-slate-line bg-white border-slate-line bg-carbon-1">
+ <div className="rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-1">
  <div className="border-b border-slate-line-soft px-3 py-2 border-slate-line">
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-ink-dim">
  {t("preMatch.substitutes")} · {bench.length}

@@ -78,7 +78,7 @@ export default function PlayerProfileAttributesCard({
  type="button"
  aria-pressed={view === "list"}
  onClick={() => setView("list")}
- className={`px-3 py-1 transition-colors ${view === "list" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
+ className={`px-3 py-1 transition-colors ${view === "list" ? "bg-primary-500 text-ink" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {listLabel}
  </button>
@@ -86,7 +86,7 @@ export default function PlayerProfileAttributesCard({
  type="button"
  aria-pressed={view === "radar"}
  onClick={() => setView("radar")}
- className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-white" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
+ className={`px-3 py-1 transition-colors ${view === "radar" ? "bg-primary-500 text-ink" : "text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3"}`}
  >
  {radarLabel}
  </button>

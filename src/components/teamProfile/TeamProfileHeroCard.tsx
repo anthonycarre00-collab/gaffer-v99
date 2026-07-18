@@ -31,27 +31,27 @@ export default function TeamProfileHeroCard({
  <div className="flex items-start gap-6">
  <TeamLogo
  team={team}
- className="w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-3xl text-white border-2 border-white/30 overflow-hidden"
+ className="w-24 h-24 rounded flex items-center justify-center font-heading font-bold text-3xl text-ink border-2 border-ink/30 overflow-hidden"
  imageClassName="h-20 w-20 object-contain drop-shadow"
  style={{ backgroundColor: team.colors.primary }}
  />
  <div className="flex-1">
- <h2 className="text-3xl font-heading font-bold text-white uppercase tracking-wide drop-shadow">
+ <h2 className="text-3xl font-heading font-bold text-ink uppercase tracking-wide drop-shadow">
  {team.name}
  </h2>
- <div className="flex items-center gap-4 mt-2 text-white/80 text-sm">
+ <div className="flex items-center gap-4 mt-2 text-ink/80 text-sm">
  <TeamLocation
  city={team.city}
  countryCode={team.country}
  locale={locale}
- className="text-white/80"
+ className="text-ink/80"
  />
  <span className="flex items-center gap-1.5">
  <Calendar className="w-4 h-4" /> {t("teams.est")} {team.founded_year}
  </span>
  </div>
  {viewModel.manager && (
- <p className="text-white/70 text-sm mt-1 flex items-center gap-1.5">
+ <p className="text-ink/70 text-sm mt-1 flex items-center gap-1.5">
  <Users className="w-4 h-4" /> {t("teamProfile.managerLabel")} {viewModel.manager.first_name} {viewModel.manager.last_name}
  </p>
  )}
@@ -105,7 +105,7 @@ export default function TeamProfileHeroCard({
 function QuickHeroStat({
  label,
  value,
- valueClassName = "text-white",
+ valueClassName = "text-ink",
 }: {
  label: string;
  value: string;
@@ -113,7 +113,7 @@ function QuickHeroStat({
 }) {
  return (
  <div className="bg-black/20 backdrop-blur rounded px-5 py-3 text-center min-w-[100px]">
- <p className="text-xs text-white/60 font-heading uppercase tracking-wider">
+ <p className="text-xs text-ink/60 font-heading uppercase tracking-wider">
  {label}
  </p>
  <p className={`font-heading font-bold text-2xl mt-0.5 ${valueClassName}`}>

@@ -654,7 +654,7 @@ export default function MainMenu() {
  {/* Top accent bar */}
  <div className="h-1.5 bgc-primary-500 rounded-t-lg" />
 
- <div className="bg-white bg-carbon-1 p-8 rounded-b-lg border border-slate-line border-t-0 transition-all duration-500">
+ <div className="bg-carbon-1 p-8 rounded-b-lg border border-slate-line border-t-0 transition-all duration-500">
  {/* Gaffer Crest — professional football association-style badge */}
  <GafferCrest size={96} className="mx-auto" withTagline />
  <div className="mb-2" />
@@ -666,7 +666,7 @@ export default function MainMenu() {
  <div className="flex flex-col gap-3">
  <button
  onClick={() => setMenuState("create")}
- className="group flex items-center justify-between w-full p-4 bgc-primary-500 hover:bg-primary-600 text-white rounded transition-all duration-300 "
+ className="group flex items-center justify-between w-full p-4 bgc-primary-500 hover:bg-primary-600 text-ink rounded transition-all duration-300 "
  >
  <div className="flex items-center gap-3">
  <PlusCircle className="w-6 h-6" />
@@ -679,7 +679,7 @@ export default function MainMenu() {
 
  <button
  onClick={handleOpenLoadMenu}
- className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink rounded transition-all duration-300 border border-slate-line hover:border-accent-400 dark:hover:border-accent-400 shadow-sm"
  >
  <div className="flex items-center gap-3">
  <FolderOpen className="w-6 h-6 text-accent-500 dark:text-accent-400" />
@@ -692,7 +692,7 @@ export default function MainMenu() {
 
  <button
  onClick={() => navigate("/settings", { state: { from: "/" } })}
- className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-slate-line dark:hover:border-navy-600 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-carbon-2 hover:bg-carbon-2 hover:bg-carbon-3 text-ink rounded transition-all duration-300 border border-slate-line hover:border-slate-line dark:hover:border-navy-600 shadow-sm"
  >
  <div className="flex items-center gap-3">
  <Settings className="w-6 h-6 text-ink-faint" />
@@ -707,7 +707,7 @@ export default function MainMenu() {
  onClick={() => {
  void handleExitApp();
  }}
- className="group flex items-center justify-between w-full p-4 bg-white bg-carbon-2 hover:bg-danger-50 dark:hover:bg-danger-500/10 text-ink text-ink rounded transition-all duration-300 border border-slate-line hover:border-danger-200 dark:hover:border-danger-500/30 shadow-sm"
+ className="group flex items-center justify-between w-full p-4 bg-carbon-2 hover:bg-danger-50 dark:hover:bg-danger-500/10 text-ink rounded transition-all duration-300 border border-slate-line hover:border-danger-200 dark:hover:border-danger-500/30 shadow-sm"
  >
  <div className="flex items-center gap-3">
  <Power className="w-6 h-6 text-danger-500 dark:text-danger-400" />
@@ -809,7 +809,7 @@ export default function MainMenu() {
  aria-label={t("menu.openGithub")}
  title={t("menu.openGithub")}
  onClick={() => { void openUrl(GITHUB_REPO_URL); }}
- className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 transition-colors"
  >
  <GithubIcon className="w-5 h-5" />
  </button>

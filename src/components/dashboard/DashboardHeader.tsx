@@ -16,7 +16,7 @@ import {
  buildViewProfileMenuItem,
  buildViewTeamMenuItem,
 } from "../playerActions/playerContextMenuItems";
-import { Badge, PlayerAvatar, TeamLogo, ThemeToggle } from "../ui";
+import { Badge, PlayerAvatar, TeamLogo } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { getPlayerBadgeVariant } from "./dashboardHelpers";
 
@@ -66,7 +66,7 @@ function getSaveButtonClassName(saveFlash: boolean, isSaving: boolean): string {
  "flex items-center gap-1.5 rounded px-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider transition-all hover:cursor-pointer";
 
  if (saveFlash) {
- className = `${className} bg-success-500 text-white`;
+ className = `${className} bg-success-500 text-ink`;
  } else {
  className = `${className} bg-carbon-3 text-ink-dim hover:bg-carbon-3 bg-carbon-2 text-ink-dim hover:bg-carbon-3`;
  }
@@ -107,7 +107,7 @@ function getContinueButtonClassName(
  isAdvancing: boolean,
  seasonComplete: boolean,
 ): string {
- let className = `${modeMeta.buttonColorClass} flex items-center gap-2 rounded-l-lg pl-4 pr-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110`;
+ let className = `${modeMeta.buttonColorClass} flex items-center gap-2 rounded-l-lg pl-4 pr-3 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:cursor-pointer hover:brightness-110`;
 
  if (isAdvancing || seasonComplete) {
  className = `${className} cursor-wait opacity-70`;
@@ -119,7 +119,7 @@ function getContinueButtonClassName(
 function getContinueDropdownButtonClassName(
  modeMeta: DashboardMatchModeMeta,
 ): string {
- return `${modeMeta.dropdownColorClass} rounded-r-lg border-l border-white/20 px-2 py-2.5 text-white transition-colors hover:brightness-110`;
+ return `${modeMeta.dropdownColorClass} rounded-r-lg border-l border-ink/20 px-2 py-2.5 text-ink transition-colors hover:brightness-110`;
 }
 
 function getModeOptionClassName(isActive: boolean): string {
@@ -212,12 +212,12 @@ function renderSearchResults(props: {
  >
  <TeamLogo
  team={team}
- className="flex h-6 w-6 items-center justify-center overflow-hidden rounded text-xs font-bold text-white"
+ className="flex h-6 w-6 items-center justify-center overflow-hidden rounded text-xs font-bold text-ink"
  imageClassName="h-5 w-5 object-contain"
  fallback={<span>{team.short_name.charAt(0)}</span>}
  style={{ backgroundColor: team.colors.primary }}
  />
- <span className="text-sm font-medium text-ink text-ink">
+ <span className="text-sm font-medium text-ink">
  {team.name}
  </span>
  <span className="ml-auto text-xs text-ink-faint">{team.city}</span>
@@ -257,7 +257,7 @@ function renderSearchResults(props: {
  <Badge variant={getPlayerBadgeVariant(player.position)} size="sm">
  {translatePositionAbbreviation(t, player.position)}
  </Badge>
- <span className="text-sm font-medium text-ink text-ink">
+ <span className="text-sm font-medium text-ink">
  {player.full_name}
  </span>
  <span className="ml-auto text-xs text-ink-faint">
@@ -377,7 +377,7 @@ export default function DashboardHeader({
  className="w-full rounded border border-slate-line bg-carbon-2 py-2 pl-9 pr-3 text-sm text-ink transition-all placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50 border-slate-line bg-carbon-2 text-ink placeholder-ink-faint"
  />
  {showSearchResults && (
- <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-slate-line bg-white border-slate-line bg-carbon-2">
+ <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-2">
  {renderSearchResults({
  matchedPlayers,
  matchedTeams,
@@ -391,7 +391,8 @@ export default function DashboardHeader({
  </div>
 
  <div className="flex items-center gap-3">
- <ThemeToggle />
+ {/* V99.11: ThemeToggle hidden — dark-first per UI spec §0.5 */}
+ {/* <ThemeToggle /> */}
  <button
  onClick={onSave}
  disabled={isSaving}
@@ -405,7 +406,7 @@ export default function DashboardHeader({
  <button
  onClick={onSaveAs}
  disabled={isSaving}
- className="inline-flex items-center gap-1.5 rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:border-accent-400 hover:text-accent-600 dark:hover:border-accent-500 dark:hover:text-accent-300 disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 rounded border border-slate-line bg-carbon-2 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:border-accent-400 hover:text-accent-600 dark:hover:border-accent-500 dark:hover:text-accent-300 disabled:opacity-50"
  title={t("dashboard.saveAsHint", { defaultValue: "Save a copy under a new name — keeps the original save intact." })}
  >
  {t("dashboard.saveAs", { defaultValue: "Save As" })}
@@ -415,7 +416,7 @@ export default function DashboardHeader({
  <button
  onClick={handleContinueClick}
  disabled={isAdvancing}
- className="bg-carbon-3 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-white transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
+ className="bg-carbon-3 flex items-center gap-2 rounded px-4 py-2.5 text-sm font-heading font-bold uppercase tracking-wider text-ink transition-colors hover:cursor-pointer hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
  >
  <span>{isAdvancing ? t("dashboard.simulating") : t("dashboard.continue")}</span>
  <ChevronRightIcon className={`h-4 w-4 ${isAdvancing ? "animate-pulse" : ""}`} />
@@ -452,7 +453,7 @@ export default function DashboardHeader({
  </div>
 
  {showContinueMenu && (
- <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-slate-line bg-white py-1 border-slate-line bg-carbon-2">
+ <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded border border-slate-line bg-carbon-1 py-1 border-slate-line bg-carbon-2">
  {(["live", "spectator", "delegate"] as const).map((mode) => {
  const isActive = matchMode === mode;
  const optionMeta = modeMeta[mode];

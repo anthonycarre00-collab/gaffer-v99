@@ -308,7 +308,7 @@ interface StatTileProps {
 
 function StatTile({ icon, label, value }: StatTileProps) {
  return (
- <div className="rounded bg-white p-3 bg-carbon-2/70">
+ <div className="rounded bg-carbon-1 p-3 bg-carbon-2/70">
  <div className="mb-2 flex items-center gap-2 text-ink-faint">
  {icon}
  <span className="text-[11px] font-heading font-bold uppercase tracking-[0.18em]">

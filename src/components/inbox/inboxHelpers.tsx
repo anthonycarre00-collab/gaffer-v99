@@ -46,9 +46,9 @@ export const UNREAD_FILTER = "__unread";
 
 const FILTER_BUTTON_BASE_CLASS =
  "px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all";
-const FILTER_BUTTON_ACTIVE_CLASS = "bg-primary-500 text-white shadow-sm";
+const FILTER_BUTTON_ACTIVE_CLASS = "bg-primary-500 text-ink shadow-sm";
 const FILTER_BUTTON_INACTIVE_CLASS =
- "bg-white bg-carbon-1 text-ink-dim border border-slate-line hover:text-ink hover:text-ink";
+ "bg-carbon-1 text-ink-dim border border-slate-line hover:text-ink";
 
 const ROUTE_TAB_MAP: Record<string, string> = {
  squad: "Squad",
@@ -214,7 +214,7 @@ export function getMessageRowClassName(
  }
 
  if (!isRead) {
- return `${baseClassName} bg-white bg-carbon-1 border-l-2 border-l-accent-500 hover:bg-carbon-2 hover:bg-carbon-3/50`;
+ return `${baseClassName} bg-carbon-1 border-l-2 border-l-accent-500 hover:bg-carbon-2 hover:bg-carbon-3/50`;
  }
 
  return `${baseClassName} border-l-2 border-l-transparent hover:bg-carbon-2 hover:bg-carbon-3/30`;
@@ -262,7 +262,7 @@ export function getActionButtonClassName(action: MessageAction): string {
  return `${baseClassName} bg-carbon-3 text-ink-dim hover:bg-carbon-3 dark:hover:bg-navy-500`;
  }
 
- return `${baseClassName} bg-primary-500 text-white hover:bg-primary-600 shadow-sm hover: hover:shadow-primary-500/20`;
+ return `${baseClassName} bg-primary-500 text-ink hover:bg-primary-600 shadow-sm hover: hover:shadow-primary-500/20`;
 }
 
 export function renderMessageBodyLine(line: string, index: number): JSX.Element {

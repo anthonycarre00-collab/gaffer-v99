@@ -107,7 +107,7 @@ export default function CreateManagerForm({
  </div>
 
  <div className="mb-1 flex items-center gap-2">
- <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white">
+ <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-ink">
  1
  </div>
  <div className="h-0.5 flex-1 bg-carbon-3" />
@@ -200,7 +200,7 @@ export default function CreateManagerForm({
  <button
  type="button"
  onClick={() => setShowAdvanced(!showAdvanced)}
- className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink text-ink-faint hover:text-ink"
+ className="flex w-full items-center justify-between p-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-ink-faint transition-colors hover:text-ink-faint hover:text-ink"
  >
  {t("createManager.advancedOptions")}
  <ChevronDown

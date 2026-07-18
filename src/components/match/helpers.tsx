@@ -76,22 +76,22 @@ export const EVENT_ICONS: Record<
  },
  KickOff: {
  icon: <Play className="w-3.5 h-3.5 fill-current" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: true,
  },
  HalfTime: {
  icon: <Pause className="w-3.5 h-3.5" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: true,
  },
  SecondHalfStart: {
  icon: <Play className="w-3.5 h-3.5 fill-current" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: true,
  },
  FullTime: {
  icon: <Flag className="w-4 h-4" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: true,
  },
  ShotSaved: {
@@ -101,22 +101,22 @@ export const EVENT_ICONS: Record<
  },
  ShotOffTarget: {
  icon: <ArrowUpRight className="w-4 h-4" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: false,
  },
  ShotBlocked: {
  icon: <Shield className="w-4 h-4" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: false,
  },
  Corner: {
  icon: <CornerDownRight className="w-4 h-4" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: false,
  },
  FreeKick: {
  icon: <Ruler className="w-4 h-4" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: false,
  },
  Foul: {
@@ -133,7 +133,7 @@ export const EVENT_ICONS: Record<
 
 const DEFAULT_DISPLAY = {
  icon: <Circle className="w-3 h-3" />,
- color: "text-ink text-ink-faint",
+ color: "text-ink-faint",
  important: false,
 };
 

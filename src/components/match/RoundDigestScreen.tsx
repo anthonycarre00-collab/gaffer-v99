@@ -200,7 +200,7 @@ export default function RoundDigestScreen({
  return (
  <div className="min-h-screen bg-carbon-2 text-ink bg-carbon-0 text-ink flex flex-col transition-colors duration-300">
  {/* Header */}
- <header className="bg-white bg-carbon-1 border-b border-slate-line px-6 py-4 transition-colors duration-300">
+ <header className="bg-carbon-1 border-b border-slate-line px-6 py-4 transition-colors duration-300">
  <div className="flex items-center justify-between">
  <div>
  {headingParts && (
@@ -225,7 +225,7 @@ export default function RoundDigestScreen({
  <button
  type="button"
  onClick={onPressConference}
- className="flex items-center gap-2 px-5 py-2 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-white transition-all"
+ className="flex items-center gap-2 px-5 py-2 bgc-primary-500 hover:bg-primary-600 rounded font-heading font-bold uppercase tracking-wider text-sm text-ink transition-all"
  >
  {t("match.pressConferenceButton", { defaultValue: "Face the Press" })}
  <ChevronRight className="w-4 h-4" />
@@ -244,7 +244,7 @@ export default function RoundDigestScreen({
  ? "bg-linear-to-r from-primary-50 to-white dark:from-primary-900/30 dark: border-primary-200 dark:border-primary-700/50"
  : resultType === "loss"
  ? "bg-linear-to-r from-red-50 to-white dark:from-red-900/20 dark: border-danger-200 dark:border-danger-700/50"
- : "bg-white bg-carbon-1 border-slate-line"
+ : "bg-carbon-1 border-slate-line"
  }`}
  >
  <div className="flex items-center justify-between mb-4">
@@ -293,7 +293,7 @@ export default function RoundDigestScreen({
  borderWidth: 2,
  }}
  />
- <p className="font-heading font-bold text-ink text-ink">
+ <p className="font-heading font-bold text-ink">
  {snapshot.home_team.name}
  </p>
  </div>
@@ -307,7 +307,7 @@ export default function RoundDigestScreen({
  </span>
  </div>
  <div className="flex items-center gap-3">
- <p className="font-heading font-bold text-ink text-ink">
+ <p className="font-heading font-bold text-ink">
  {snapshot.away_team.name}
  </p>
  <TeamLogo
@@ -362,10 +362,10 @@ export default function RoundDigestScreen({
  return (
  <div
  key={entry.fixture.id}
- className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm px-4 py-3 transition-colors duration-300"
+ className="bg-carbon-1 rounded border border-slate-line shadow-sm px-4 py-3 transition-colors duration-300"
  >
  <div className="flex items-center justify-between gap-2 mb-1">
- <span className="font-heading font-bold text-sm text-ink text-ink truncate">
+ <span className="font-heading font-bold text-sm text-ink truncate">
  {entry.homeTeamName}{" "}
  {entry.fixture.result?.home_goals} –{" "}
  {entry.fixture.result?.away_goals}{" "}
@@ -410,7 +410,7 @@ export default function RoundDigestScreen({
  {isLeagueFixture && roundSummary && (
  <div className="flex flex-col gap-4">
  {/* Standings */}
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("tournaments.leagueTable")}
  </h3>
@@ -454,7 +454,7 @@ export default function RoundDigestScreen({
 
  {/* Top Scorers */}
  {roundSummary.top_scorer_delta.length > 0 && (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 transition-colors duration-300">
  <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim mb-3">
  {t("tournaments.topScorers")}
  </h3>
@@ -489,7 +489,7 @@ export default function RoundDigestScreen({
 
  {/* Notable Upset */}
  {isLeagueFixture && roundSummary?.notable_upset && (
- <div className="bg-white bg-carbon-1 rounded border border-slate-line shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
+ <div className="bg-carbon-1 rounded border border-slate-line shadow-sm p-4 flex items-center gap-4 transition-colors duration-300">
  <div className="w-8 h-8 rounded bg-danger-100 dark:bg-danger-500/20 flex items-center justify-center shrink-0">
  <Flame className="w-4 h-4 text-danger-500 dark:text-danger-400" />
  </div>
@@ -497,7 +497,7 @@ export default function RoundDigestScreen({
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-danger-500 dark:text-danger-400 mb-0.5">
  {t("match.notableUpset")}
  </p>
- <p className="text-sm font-heading font-bold text-ink text-ink">
+ <p className="text-sm font-heading font-bold text-ink">
  {roundSummary.notable_upset.underdog_team_name}{" "}
  {roundSummary.notable_upset.home_goals} –{" "}
  {roundSummary.notable_upset.away_goals}{" "}
@@ -519,7 +519,7 @@ export default function RoundDigestScreen({
  onClick={() => setSelectedOtherFixtureId(null)}
  >
  <div
- className="w-full max-w-3xl rounded border border-slate-line bg-white bg-carbon-0 shadow-2xl transition-colors duration-300"
+ className="w-full max-w-3xl rounded border border-slate-line bg-carbon-1 bg-carbon-0 shadow-2xl transition-colors duration-300"
  onClick={(e) => e.stopPropagation()}
  >
  <div className="flex items-center justify-between border-b border-slate-line px-5 py-4">
@@ -538,7 +538,7 @@ export default function RoundDigestScreen({
  ref={modalCloseRef}
  type="button"
  onClick={() => setSelectedOtherFixtureId(null)}
- className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-ink-faint hover:bg-carbon-2 hover:text-ink text-ink-faint dark:hover:bg-navy-800 hover:text-ink transition-colors"
+ className="rounded px-3 py-2 text-sm font-heading font-bold uppercase tracking-wider text-ink-faint hover:bg-carbon-2 hover:text-ink-faint dark:hover:bg-navy-800 hover:text-ink transition-colors"
  >
  {t("common.close")}
  </button>

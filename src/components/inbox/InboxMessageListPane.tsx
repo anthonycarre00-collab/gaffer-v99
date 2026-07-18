@@ -100,7 +100,7 @@ export default function InboxMessageListPane({
  return (
  <div className={getListPaneClassName(hasSelectedMessage)}>
  <div className="bg-linear-to-r shrink-0 border-b border-slate-line-soft p-4 border-slate-line">
- <h3 className="text-sm font-heading font-bold text-white flex items-center gap-2 uppercase tracking-wide">
+ <h3 className="text-sm font-heading font-bold text-ink flex items-center gap-2 uppercase tracking-wide">
  <Mail className="w-4 h-4 text-accent-400" />
  {t("inbox.title")}
  </h3>
@@ -172,7 +172,7 @@ export default function InboxMessageListPane({
  />
  {/* Category dot in the corner of the avatar */}
  <span
- className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-carbon-0 ${categoryColor} flex items-center justify-center text-[8px] text-white`}
+ className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-carbon-0 ${categoryColor} flex items-center justify-center text-[8px] text-ink`}
  title={message.category}
  >
  {/* Tiny category glyph — replaced by full icon below in the detail pane */}

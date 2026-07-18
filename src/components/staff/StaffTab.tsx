@@ -148,8 +148,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <button
  onClick={() => setView("mystaff")}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${view === "mystaff"
- ? "bg-primary-500 text-white "
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink "
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  <UserCog className="w-4 h-4" />{" "}
@@ -158,8 +158,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <button
  onClick={() => setView("available")}
  className={`px-4 py-2 rounded font-heading font-bold text-sm uppercase tracking-wider transition-all flex items-center gap-1.5 ${view === "available"
- ? "bg-primary-500 text-white "
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink "
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  <UserPlus className="w-4 h-4" />{" "}
@@ -174,7 +174,7 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  placeholder={t("staff.searchStaff")}
  value={search}
  onChange={(e) => setSearch(e.target.value)}
- className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-carbon-1 border border-slate-line text-sm text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
 
@@ -182,8 +182,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  <button
  onClick={() => setRoleFilter(null)}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${!roleFilter
- ? "bg-primary-500 text-white shadow-sm"
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink shadow-sm"
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t("common.all")}
@@ -193,8 +193,8 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  key={r}
  onClick={() => setRoleFilter(roleFilter === r ? null : r)}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all flex items-center gap-1 ${roleFilter === r
- ? "bg-primary-500 text-white shadow-sm"
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink shadow-sm"
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {ROLE_ICONS[r]} {t(`staff.roles.${r}`)}

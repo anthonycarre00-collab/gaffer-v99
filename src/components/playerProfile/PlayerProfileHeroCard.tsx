@@ -84,7 +84,7 @@ export default function PlayerProfileHeroCard({
  />
  )}
  <div className="flex-1">
- <h2 className="text-3xl font-heading font-bold text-white uppercase tracking-wide">
+ <h2 className="text-3xl font-heading font-bold text-ink uppercase tracking-wide">
  {player.full_name}
  </h2>
  <div className="flex items-center gap-3 mt-2">
@@ -167,12 +167,12 @@ export default function PlayerProfileHeroCard({
  <QuickStat
  label={t("common.value")}
  value={formatPlayerMarketValue(player.market_value)}
- color="text-white"
+ color="text-ink"
  />
  <QuickStat
  label={t("common.wage")}
  value={formatPlayerAnnualWage(player.wage, annualSuffix)}
- color="text-white"
+ color="text-ink"
  />
  </div>
  </div>
@@ -214,7 +214,7 @@ function QuickStat({
  color: string;
 }) {
  return (
- <div className="bg-white/5 rounded px-5 py-3 text-center min-w-25">
+ <div className="bg-ink/5 rounded px-5 py-3 text-center min-w-25">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>
@@ -235,7 +235,7 @@ function MobileQuickStat({
  color: string;
 }) {
  return (
- <div className="bg-white bg-carbon-1 p-3 text-center">
+ <div className="bg-carbon-1 p-3 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>

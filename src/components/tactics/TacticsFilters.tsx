@@ -41,7 +41,7 @@ export default function TacticsFilters({
  value={playerSearch}
  onChange={(event) => onPlayerSearchChange(event.target.value)}
  placeholder={t("squad.filterPlayers")}
- className="w-full rounded border border-slate-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30 border-slate-line bg-carbon-1 text-ink"
+ className="w-full rounded border border-slate-line bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30 border-slate-line bg-carbon-1 text-ink"
  />
  <div className="flex gap-2">
  <Select

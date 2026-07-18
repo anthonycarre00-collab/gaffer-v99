@@ -67,7 +67,7 @@ function NavItem({
  // faint brass-tinted bg gradient. Inactive: ink-dim text, hover brightens.
  const activeClass = active
  ? "border-l-2 border-accent-500 text-ink bg-accent-500/5"
- : "border-l-2 border-transparent text-ink-dim hover:bg-white/5 hover:text-ink";
+ : "border-l-2 border-transparent text-ink-dim hover:bg-ink/5 hover:text-ink";
  const buttonClassName = collapsed
  ? `relative flex w-full items-center justify-center p-3 transition-colors duration-150 ${activeClass}`
  : `relative flex w-full items-center justify-between p-3 transition-colors duration-150 ${activeClass}`;
@@ -97,8 +97,8 @@ function NavItem({
  <span
  className={
  collapsed
- ? "absolute right-1.5 top-1.5 min-w-[1.1rem] rounded-full bg-danger-500 px-1.5 py-0.5 text-center text-[10px] font-bold text-white"
- : "min-w-5 rounded-full bg-danger-500 px-2 py-0.5 text-center text-xs font-bold text-white"
+ ? "absolute right-1.5 top-1.5 min-w-[1.1rem] rounded-full bg-danger-500 px-1.5 py-0.5 text-center text-[10px] font-bold text-ink"
+ : "min-w-5 rounded-full bg-danger-500 px-2 py-0.5 text-center text-xs font-bold text-ink"
  }
  >
  {badge}
@@ -180,20 +180,21 @@ export default function DashboardSidebar({
  <div
  className={`flex items-center ${collapsed ? "justify-center" : "gap-2"}`}
  >
- {/* V99.1: Mini crest SVG instead of plain "G" letter */}
- <svg width="28" height="32" viewBox="0 0 120 138" className="shrink-0">
- <path d="M60 4 L108 20 L108 58 Q108 96 60 134 Q12 96 12 58 L12 20 Z" fill="#c9972e" stroke="#5a3d12" strokeWidth="2" />
- <path d="M60 10 L102 24 L102 56 Q102 88 60 126 Q18 88 18 56 L18 24 Z" fill="#0d3b25" />
- <text x="60" y="48" textAnchor="middle" fontFamily="Georgia, serif" fontSize="32" fontWeight="bold" fill="#e8c25a">G</text>
- <circle cx="48" cy="90" r="2" fill="#e8c25a" />
- <circle cx="60" cy="92" r="2.5" fill="#e8c25a" />
- <circle cx="72" cy="90" r="2" fill="#e8c25a" />
- </svg>
+ {/* V99.11: New Gaffer logo (webp) replaces old inline SVG crest */}
+ <img
+ src="/src/assets/gaffer-logo-pro.webp"
+ alt="Gaffer"
+ className={collapsed ? "w-8 h-8" : "w-10 h-10"}
+ />
  {collapsed ? null : (
  <div>
  <h1 className="text-sm font-heading font-bold text-accent-400 uppercase tracking-wider">
  Gaffer
  </h1>
+ {/* V99.11: Gaffer-voice tagline */}
+ <p className="text-[9px] text-ink-faint font-heading uppercase tracking-widest">
+ The Beautiful Game, Ugly Truths
+ </p>
  </div>
  )}
  </div>
@@ -202,7 +203,7 @@ export default function DashboardSidebar({
  onClick={onToggleCollapse}
  title={toggleSidebarLabel}
  aria-label={toggleSidebarLabel}
- className="rounded p-2 text-ink-dim transition-colors hover:bg-white/5 hover:text-white"
+ className="rounded p-2 text-ink-dim transition-colors hover:bg-ink/5 hover:text-ink"
  >
  {collapsed ? (
  <PanelLeftOpen className="h-5 w-5" />
@@ -215,7 +216,7 @@ export default function DashboardSidebar({
  onClick={() => onNavClick("Manager")}
  title={collapsed ? t("dashboard.manager") : undefined}
  aria-label={t("dashboard.manager")}
- className={`hover:bg-white/5 mt-3 w-full rounded transition-colors hover:cursor-pointer ${collapsed
+ className={`hover:bg-ink/5 mt-3 w-full rounded transition-colors hover:cursor-pointer ${collapsed
  ? "flex justify-center px-0 py-2 text-ink"
  : "-mx-1 border-t border-slate-line px-1 py-1 pt-3 text-left"
  }`}
@@ -227,7 +228,7 @@ export default function DashboardSidebar({
  <p className="text-xs text-ink-dim uppercase tracking-wider">
  {t("dashboard.manager")}
  </p>
- <p className="text-sm font-semibold text-white mt-0.5">
+ <p className="text-sm font-semibold text-ink mt-0.5">
  {managerName}
  </p>
  {teamName && (
@@ -323,7 +324,7 @@ export default function DashboardSidebar({
  onClick={onNavigateSettings}
  title={collapsed ? t("dashboard.settings") : undefined}
  aria-label={t("dashboard.settings")}
- className={`w-full rounded p-3 text-ink-faint transition-colors hover:bg-white/5 hover:text-ink ${collapsed
+ className={`w-full rounded p-3 text-ink-faint transition-colors hover:bg-ink/5 hover:text-ink ${collapsed
  ? "flex items-center justify-center"
  : "flex items-center gap-3"
  }`}

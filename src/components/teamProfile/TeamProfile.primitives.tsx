@@ -10,7 +10,7 @@ export function QuickStat({
  color: string;
 }) {
  return (
- <div className="bg-white bg-carbon-1 p-3 text-center">
+ <div className="bg-carbon-1 p-3 text-center">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">
  {label}
  </p>
@@ -36,7 +36,7 @@ export function InfoRow({
  <span className="text-sm text-ink-dim flex-1">
  {label}
  </span>
- <span className="text-sm font-semibold text-ink text-ink">
+ <span className="text-sm font-semibold text-ink">
  {value}
  </span>
  </div>

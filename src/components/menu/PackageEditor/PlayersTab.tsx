@@ -34,7 +34,7 @@ function PlayerAvatarCell({ player, posAbbr, projectDir }: PlayerAvatarCellProps
  className="w-9 h-9"
  />
  )}
- <span className={`absolute -bottom-0.5 -right-0.5 text-[7px] font-bold text-white px-0.5 rounded leading-tight ${posColor}`}>
+ <span className={`absolute -bottom-0.5 -right-0.5 text-[7px] font-bold text-ink px-0.5 rounded leading-tight ${posColor}`}>
  {posAbbr}
  </span>
  </div>
@@ -90,7 +90,7 @@ export function PlayersTab({ players, teams, onAdd, onEdit, onDelete, selectedIn
  onChange={(e) => setQuery(e.target.value)}
  aria-label={t("worldEditor.searchPlayers")}
  placeholder={t("worldEditor.searchPlayers")}
- className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-line bg-white bg-carbon-2 text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
+ className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-line bg-carbon-2 text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
  />
  </div>
  )

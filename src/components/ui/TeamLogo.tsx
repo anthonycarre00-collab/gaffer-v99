@@ -26,7 +26,7 @@ interface TeamLogoProps {
 
 export function TeamLogo({
  team,
- className = "h-12 w-12 shrink-0 overflow-hidden rounded bg-white/10 flex items-center justify-center font-heading font-bold text-lg text-white",
+ className = "h-12 w-12 shrink-0 overflow-hidden rounded bg-ink/10 flex items-center justify-center font-heading font-bold text-lg text-ink",
  imageClassName = "h-10 w-10 object-contain drop-shadow",
  fallback,
  style,

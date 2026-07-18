@@ -388,7 +388,7 @@ export default function PreMatchSetup({
  );
 
  const renderSetPieces = () => (
- <div className="rounded border border-slate-line bg-white bg-carbon-1 p-4 shadow-sm transition-colors duration-300">
+ <div className="rounded border border-slate-line bg-carbon-1 p-4 shadow-sm transition-colors duration-300">
  <div className="flex items-center justify-between mb-2.5">
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("match.setPiecesCaptain")}
@@ -501,7 +501,7 @@ export default function PreMatchSetup({
  {/* Right: set pieces + phase blueprint */}
  <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
  {renderSetPieces()}
- <div className="rounded border border-slate-line bg-white bg-carbon-1 shadow-sm transition-colors duration-300">
+ <div className="rounded border border-slate-line bg-carbon-1 shadow-sm transition-colors duration-300">
  <div className="border-b border-slate-line-soft px-3 py-2.5">
  <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-dim">
  {t("tactics.phaseBlueprint")}
@@ -690,7 +690,7 @@ export default function PreMatchSetup({
  </div>
  <button
  onClick={onStart}
- className="flex items-center gap-2 rounded bgc-primary-500 px-8 py-3 font-heading font-bold uppercase tracking-wider text-sm text-white shadow-primary-500/20 transition-all hover:bg-primary-600 hover:scale-[1.02] active:scale-[0.98]"
+ className="flex items-center gap-2 rounded bgc-primary-500 px-8 py-3 font-heading font-bold uppercase tracking-wider text-sm text-ink shadow-primary-500/20 transition-all hover:bg-primary-600 hover:scale-[1.02] active:scale-[0.98]"
  >
  {t("match.startMatch")}
  <ChevronRight className="h-4 w-4" />
@@ -739,7 +739,7 @@ export default function PreMatchSetup({
  className={`-mb-px border-b-2 px-4 py-2.5 text-[11px] font-heading font-bold uppercase tracking-widest transition-colors ${
  activeTab === tab.id
  ? "border-primary-500 text-primary-600 dark:text-primary-400"
- : "border-transparent text-ink-faint hover:text-ink text-ink-faint hover:text-ink"
+ : "border-transparent text-ink-faint hover:text-ink"
  }`}
  >
  {tab.label}

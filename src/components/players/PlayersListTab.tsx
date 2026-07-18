@@ -217,7 +217,7 @@ export default function PlayersListTab({
  placeholder={t("players.searchPlaceholder")}
  value={query.search ?? ""}
  onChange={(e) => patchQuery({ search: e.target.value || null })}
- className="w-full pl-9 pr-3 py-2 rounded bg-white bg-carbon-1 border border-slate-line text-sm text-ink text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+ className="w-full pl-9 pr-3 py-2 rounded bg-carbon-1 border border-slate-line text-sm text-ink placeholder-ink-faint placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/50"
  />
  </div>
 
@@ -225,8 +225,8 @@ export default function PlayersListTab({
  <button
  onClick={() => patchQuery({ position: null })}
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${!query.position
- ? "bg-primary-500 text-white shadow-sm"
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink shadow-sm"
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t("players.allPos")}
@@ -238,8 +238,8 @@ export default function PlayersListTab({
  patchQuery({ position: query.position === pos ? null : pos })
  }
  className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.position === pos
- ? "bg-primary-500 text-white shadow-sm"
- : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"
+ ? "bg-primary-500 text-ink shadow-sm"
+ : "bg-carbon-1 text-ink-dim border border-slate-line"
  }`}
  >
  {t(`common.posAbbr.${pos}`)}
@@ -250,19 +250,19 @@ export default function PlayersListTab({
  <div className="flex gap-1.5">
  <button
  onClick={() => patchQuery({ status: "all" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "all" ? "bg-primary-500 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("common.all")}
  </button>
  <button
  onClick={() => patchQuery({ status: "transfer" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "transfer" ? "bg-accent-500 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.transfer")}
  </button>
  <button
  onClick={() => patchQuery({ status: "loan" })}
- className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-primary-500 text-white shadow-sm" : "bg-white bg-carbon-1 text-ink-dim border border-slate-line"}`}
+ className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${query.status === "loan" ? "bg-primary-500 text-ink shadow-sm" : "bg-carbon-1 text-ink-dim border border-slate-line"}`}
  >
  {t("transfers.loan")}
  </button>
@@ -462,7 +462,7 @@ export default function PlayersListTab({
  <td className="py-2.5 px-4">
  <div className="flex items-center gap-3">
  <PlayerAvatar player={summary} />
- <span className="font-semibold text-sm text-ink text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+ <span className="font-semibold text-sm text-ink group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
  {summary.full_name}
  </span>
  </div>
@@ -554,14 +554,14 @@ export default function PlayersListTab({
  <button
  onClick={() => patchQuery({ page: 1 })}
  disabled={page === 1}
- className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronsLeft className="w-4 h-4" />
  </button>
  <button
  onClick={() => patchQuery({ page: Math.max(1, page - 1) })}
  disabled={page === 1}
- className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
@@ -571,14 +571,14 @@ export default function PlayersListTab({
  <button
  onClick={() => patchQuery({ page: Math.min(totalPages, page + 1) })}
  disabled={page === totalPages}
- className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
  <button
  onClick={() => patchQuery({ page: totalPages })}
  disabled={page === totalPages}
- className="p-1.5 rounded text-ink-faint hover:text-ink hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+ className="p-1.5 rounded text-ink-faint hover:text-ink hover:bg-carbon-2 hover:bg-carbon-3 disabled:opacity-30 disabled:pointer-events-none transition-colors"
  >
  <ChevronsRight className="w-4 h-4" />
  </button>
@@ -644,7 +644,7 @@ function SortHeader({
  return (
  <th
  onClick={() => onClick(sortKey)}
- className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim cursor-pointer hover:text-ink hover:text-ink transition-colors select-none"
+ className="py-3 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim cursor-pointer hover:text-ink transition-colors select-none"
  >
  <span className="flex items-center gap-1">
  {label}

@@ -53,7 +53,7 @@ function fitRingClass(fitTone: PitchFitTone): string {
  case "out":
  return "ring-2 ring-danger-400";
  default:
- return "ring-1 ring-white/25";
+ return "ring-1 ring-ink/25";
  }
 }
 
@@ -110,7 +110,7 @@ export function PitchToken({
  </div>
  )}
  <div className="absolute -right-1.5 -top-1.5 z-10">
- <span className={`rounded-full ${position ? getPositionColor(position) : "bg-carbon-0"} px-2 py-0.5 text-xs font-heading font-bold uppercase leading-4 text-white ring-1 ring-white/40`}>
+ <span className={`rounded-full ${position ? getPositionColor(position) : "bg-carbon-0"} px-2 py-0.5 text-xs font-heading font-bold uppercase leading-4 text-ink ring-1 ring-ink/40`}>
  {positionAbbr}
  </span>
  </div>
@@ -120,7 +120,7 @@ export function PitchToken({
  />
  <div className="absolute -bottom-1 -right-1.5 z-10">
  <span
- className={`rounded-full bg-carbon-0 px-2 py-0.5 text-[10px] font-heading font-bold leading-4 text-white ring-1 ring-white/30 max-w-[4.5rem] truncate`}
+ className={`rounded-full bg-carbon-0 px-2 py-0.5 text-[10px] font-heading font-bold leading-4 text-ink ring-1 ring-ink/30 max-w-[4.5rem] truncate`}
  title={interpretOvr(ovr, position).description}
  >
  {shortOvrLabel(ovr, position)}
@@ -137,19 +137,19 @@ export function PitchToken({
  number={jersey.number}
  />
  ) : jerseyNumber != null ? (
- <span className="text-[10px] font-heading font-bold text-white/80">
+ <span className="text-[10px] font-heading font-bold text-ink/80">
  #{jerseyNumber}
  </span>
  ) : null}
 
- <div className="max-w-full truncate text-[11px] sm:text-xs font-heading font-bold uppercase tracking-[0.12em] text-white drop-shadow-sm">
+ <div className="max-w-full truncate text-[11px] sm:text-xs font-heading font-bold uppercase tracking-[0.12em] text-ink drop-shadow-sm">
  {name}
  </div>
 
  {children}
 
  <div className="w-full">
- <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+ <div className="h-1.5 overflow-hidden rounded-full bg-ink/10">
  <div
  className={`h-full rounded-full ${conditionFillClass(condition, fitTone)}`}
  style={{ width: `${Math.max(20, condition)}%` }}

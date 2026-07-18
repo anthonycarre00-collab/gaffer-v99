@@ -36,7 +36,7 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  <button 
  type="button" 
  onClick={onClose}
- className="text-ink-faint hover:text-ink hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
+ className="text-ink-faint hover:text-ink transition-colors p-1 rounded hover:bg-carbon-2 hover:bg-carbon-3"
  >
  <X className="w-5 h-5" />
  </button>
@@ -49,14 +49,14 @@ export default function SavesList({ saves, isLoading, loadingSaveId, confirmDele
  <div className="text-ink-dim text-center py-8">{t('menu.noSaves')}</div>
  ) : (
  saves.map(save => (
- <div key={save.id} className="group relative flex flex-col gap-2 w-full p-4 bg-white bg-carbon-2 hover:bg-primary-50 hover:bg-carbon-3 text-left rounded transition-all duration-200 border border-slate-line hover:border-primary-400 dark:hover:border-primary-500 shadow-sm">
+ <div key={save.id} className="group relative flex flex-col gap-2 w-full p-4 bg-carbon-2 hover:bg-primary-50 hover:bg-carbon-3 text-left rounded transition-all duration-200 border border-slate-line hover:border-primary-400 dark:hover:border-primary-500 shadow-sm">
  {confirmDeleteId === save.id ? (
  <div className="flex flex-col gap-2">
  <p className="text-sm text-ink-dim">{t('menu.deleteConfirm', { name: save.name })}</p>
  <div className="flex gap-2">
  <button
  onClick={() => onDelete(save.id)}
- className="flex-1 py-2 bg-danger-500 hover:bg-danger-600 text-white text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
+ className="flex-1 py-2 bg-danger-500 hover:bg-danger-600 text-ink text-sm font-heading font-bold uppercase tracking-wider rounded transition-colors"
  >
  {t('menu.delete')}
  </button>

@@ -300,7 +300,7 @@ export function Select({
 
  const variants = {
  default:
- "bg-white bg-carbon-1 border-slate-line text-ink",
+ "bg-carbon-1 border-slate-line text-ink",
  subtle:
  "bg-carbon-2 border-slate-line text-ink-dim",
  muted:
@@ -310,7 +310,7 @@ export function Select({
  placeholder:
  "bg-carbon-2 border-slate-line text-ink-faint",
  ghost:
- "bg-white/10 border-white/10 text-white hover:bg-white/20",
+ "bg-ink/10 border-ink/10 text-ink hover:bg-ink/20",
  };
 
  const sizes = {
@@ -393,7 +393,7 @@ export function Select({
  {isOpen ? createPortal(
  <div
  ref={menuRef}
- className="fixed z-50 w-max overflow-hidden rounded border border-slate-line bg-white border-slate-line bg-carbon-1"
+ className="fixed z-50 w-max overflow-hidden rounded border border-slate-line bg-carbon-1 border-slate-line bg-carbon-1"
  >
  <div
  id={listboxId}

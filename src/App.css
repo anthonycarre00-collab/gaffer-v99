@@ -211,51 +211,56 @@
     box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 6px 16px rgba(0,0,0,0.35);
   }
 
-  /* Gaffer button — matte, no gradient, 4px corners */
+  /* V99.11: Gaffer button — per UI spec §3.3. 3px radius, no uppercase. */
   .gaffer-btn {
-    border-radius: 4px;
-    font-family: var(--font-heading);
+    border-radius: 3px;
+    font-family: var(--font-sans);
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
     transition: background-color 150ms ease, color 150ms ease;
   }
 
+  /* Primary: brass gradient fill (spec §3.3) */
   .gaffer-btn-primary {
-    background-color: var(--color-primary-500);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--color-accent-400), var(--color-accent-500));
+    color: var(--color-carbon-0);
+    border: 1px solid var(--color-accent-600);
   }
 
   .gaffer-btn-primary:hover {
-    background-color: var(--color-primary-600);
+    background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-400));
   }
 
+  /* Secondary/ghost: transparent, slate border, ink-dim text */
   .gaffer-btn-secondary {
     background-color: transparent;
-    border: 1px solid var(--color-concrete);
-    color: #1a1a1a;
+    border: 1px solid var(--color-slate-line);
+    color: var(--color-ink-dim);
   }
 
-  .dark .gaffer-btn-secondary {
-    color: #e8e4dc;
+  .gaffer-btn-secondary:hover {
+    border-color: var(--color-accent-600);
+    color: var(--color-ink);
+  }
+
+  /* Default: carbon-2 fill, slate border, ink text */
+  .gaffer-btn-default {
+    background-color: var(--color-carbon-2);
+    border: 1px solid var(--color-slate-line);
+    color: var(--color-ink);
   }
 
   .gaffer-btn-danger {
     background-color: var(--color-danger-500);
-    color: #ffffff;
+    color: var(--color-ink);
   }
 
   /* Position badge colors — V99.10 UI-9: replaced Facebook blue #3b5998
      with the Gaffer primary-400 (lighter pitch green) for midfielders. */
-  .pos-gk { background-color: var(--color-accent-500); color: #fff; }
-  .pos-def { background-color: var(--color-primary-500); color: #fff; }
-  .pos-mid { background-color: var(--color-primary-400); color: #fff; }
-  .pos-fwd { background-color: var(--color-danger-500); color: #fff; }
-}
-
-/* ===== Dark mode fixes ===== */
-.dark select {
-  color-scheme: dark;
+  .pos-gk { background-color: var(--color-accent-500); color: var(--color-ink); }
+  .pos-def { background-color: var(--color-primary-500); color: var(--color-ink); }
+  .pos-mid { background-color: var(--color-primary-400); color: var(--color-ink); }
+  .pos-fwd { background-color: var(--color-danger-500); color: var(--color-ink); }
 }
 
 .dark select option {
@@ -275,21 +280,8 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* Dark mode readability — V99.10 UI-13: Replaced cold blue-slate
-   (#8d99ae / #a0aec0) with warm Gaffer neutrals (concrete / chalk)
-   so dark mode doesn't have a "cold blue tinge" that fights the
-   pitch-green/mahogany palette. */
-.dark .text-gray-500 {
-  color: var(--color-concrete);
-}
-
 .dark .text-gray-400 {
   color: #9a958f; /* slightly lighter than concrete for secondary text */
-}
-
-/* High-contrast mode */
-.high-contrast.dark .text-gray-500 {
-  color: #b0bec5;
 }
 
 .high-contrast.dark .text-gray-400 {
@@ -542,125 +534,6 @@ input[type="number"] {
 }
 
 /* Dark-mode tweaks so textures don't fight the dark background.
-   V99.9: Previously used `opacity: 0.x` on the container, which is the
-   EXACT bug fixed in commit 71e2f63 — opacity on a parent makes ALL
-   children transparent, causing the entire screen to grey out.
-   Now we use a `::before` pseudo-element with the texture, apply opacity
-   to THAT only, and let the content sit on top at full opacity.
-   `position: relative` + `isolation: isolate` on the container establishes
-   a stacking context so the ::before stays behind the content.
-   We also clear the element's own background-image in dark mode so the
-   texture only renders on the ::before (avoiding double-rendering). */
-.dark .stadium-bg,
-.dark .tactics-board-bg,
-.dark .pitch-grass-bg,
-.dark .inbox-paper-bg,
-.dark .transfer-market-bg,
-.dark .scouting-dossier-bg,
-.dark .dashboard-stripes-bg,
-.dark .player-hero-bg,
-.dark .postmatch-hero-bg,
-.dark .awards-bg {
-  position: relative;
-  isolation: isolate;
-  /* Clear the element's own texture in dark mode — the texture is
-     re-declared on the ::before pseudo-element below so we can
-     opacity-control it without affecting children. */
-  background-image: none !important;
-  background-color: transparent;
-}
-
-/* The ::before carries the texture in dark mode. We can't use `inherit`
-   because the parent's background-image was cleared above. Instead we
-   re-declare each texture on its ::before. This is more verbose but
-   correct — each ::before gets its own texture at controlled opacity. */
-.dark .stadium-bg::before,
-.dark .tactics-board-bg::before,
-.dark .pitch-grass-bg::before,
-.dark .inbox-paper-bg::before,
-.dark .transfer-market-bg::before,
-.dark .scouting-dossier-bg::before,
-.dark .dashboard-stripes-bg::before,
-.dark .player-hero-bg::before,
-.dark .postmatch-hero-bg::before,
-.dark .awards-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Per-texture background declarations for dark-mode ::before pseudo-elements.
-   These mirror the light-mode textures but at controlled opacity. */
-.dark .stadium-bg::before {
-  background-image: url('/src/assets/stadium-night-bg.png');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.35;
-}
-.dark .tactics-board-bg::before {
-  background-image:
-    repeating-linear-gradient(60deg, rgba(212, 166, 74, 0.04) 0, rgba(212, 166, 74, 0.04) 1px, transparent 1px, transparent 24px),
-    repeating-linear-gradient(-60deg, rgba(212, 166, 74, 0.04) 0, rgba(212, 166, 74, 0.04) 1px, transparent 1px, transparent 24px),
-    url('/src/assets/texture-tactics-board.png');
-  background-size: 48px 48px, 48px 48px, 512px;
-  background-repeat: repeat, repeat, repeat;
-  background-blend-mode: soft-light, soft-light, soft-light;
-  opacity: 0.5;
-}
-.dark .pitch-grass-bg::before {
-  background-image:
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 24px, rgba(0, 0, 0, 0.05) 24px, rgba(0, 0, 0, 0.05) 48px),
-    url('/src/assets/texture-pitch-grass.png');
-  background-size: 48px 48px, 512px;
-  background-repeat: repeat, repeat;
-  background-blend-mode: soft-light, soft-light;
-  opacity: 0.4;
-}
-.dark .inbox-paper-bg::before {
-  background-image: url('/src/assets/gaffer-ui/inbox-paper-texture.svg');
-  background-size: 200px;
-  background-repeat: repeat;
-  opacity: 0.3;
-}
-.dark .transfer-market-bg::before {
-  background-image: url('/src/assets/gaffer-ui/transfer-market-bg.svg');
-  background-size: 300px;
-  background-repeat: repeat;
-  opacity: 0.35;
-}
-.dark .scouting-dossier-bg::before {
-  background-image: url('/src/assets/gaffer-ui/scouting-dossier-texture.svg');
-  background-size: 200px;
-  background-repeat: repeat;
-  opacity: 0.35;
-}
-.dark .dashboard-stripes-bg::before {
-  background-image: url('/src/assets/gaffer-ui/dashboard-stripes-bg.svg');
-  background-size: 400px;
-  background-repeat: repeat;
-  opacity: 0.35;
-}
-.dark .player-hero-bg::before {
-  background-image: url('/src/assets/gaffer-ui/player-hero-bg.svg');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.45;
-}
-.dark .postmatch-hero-bg::before {
-  background-image: url('/src/assets/gaffer-ui/postmatch-hero-bg.svg');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.4;
-}
-.dark .awards-bg::before {
-  background-image: url('/src/assets/awards-bg.png');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.35;
-}
-
 /* V99.7-10: Additional texture classes for UI makeover.
    These use the SVG textures in src/assets/gaffer-ui/ that were
    created but never wired into CSS. */

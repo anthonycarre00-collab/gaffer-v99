@@ -74,7 +74,7 @@ export function PlayerPreviewCard({ editing, photoDataUrl, teams }: PlayerPrevie
  const isEstimated = !editing.attributes && editing.overall !== null;
 
  return (
- <div className="rounded border border-slate-line overflow-hidden bg-white bg-carbon-2 shadow-sm select-none">
+ <div className="rounded border border-slate-line overflow-hidden bg-carbon-2 shadow-sm select-none">
  {/* Header */}
  <div className="bg-navy-800 px-4 pt-4 pb-3 flex flex-col items-center gap-2">
  {/* Photo or avatar */}
@@ -82,7 +82,7 @@ export function PlayerPreviewCard({ editing, photoDataUrl, teams }: PlayerPrevie
  <img
  src={photoDataUrl}
  alt=""
- className="w-16 h-16 rounded-full object-cover border-2 border-white/20"
+ className="w-16 h-16 rounded-full object-cover border-2 border-ink/20"
  />
  ) : displayName ? (
  <GeneratedAvatar
@@ -97,11 +97,11 @@ export function PlayerPreviewCard({ editing, photoDataUrl, teams }: PlayerPrevie
  )}
 
  <div className="text-center">
- <p className="font-heading font-bold text-white text-sm leading-tight">
+ <p className="font-heading font-bold text-ink text-sm leading-tight">
  {displayName ?? <span className="italic text-ink-faint">New Player</span>}
  </p>
  <span
- className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase text-white ${posColor}`}
+ className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase text-ink ${posColor}`}
  >
  {abbr}
  </span>

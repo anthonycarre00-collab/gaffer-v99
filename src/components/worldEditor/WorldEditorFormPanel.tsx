@@ -126,7 +126,7 @@ export function WorldEditorFormPanel({
  type="button"
  onClick={onSaveMetadata}
  disabled={isBusy}
- className="mt-6 px-5 py-2.5 bgc-primary-500 hover:bg-primary-600 text-white rounded font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60"
+ className="mt-6 px-5 py-2.5 bgc-primary-500 hover:bg-primary-600 text-ink rounded font-heading font-bold uppercase tracking-wide text-sm transition-all disabled:opacity-60"
  >
  {t("common.save")}
  </button>

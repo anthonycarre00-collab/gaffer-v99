@@ -154,7 +154,7 @@ export function StyleGuidancePanel({
  );
 
  return (
- <div className="rounded-lg border border-slate-line bg-white bg-carbon-1 overflow-hidden">
+ <div className="rounded-lg border border-slate-line bg-carbon-1 overflow-hidden">
  {/* Header */}
  <div className="px-4 py-3 border-b border-slate-line-soft bg-carbon-2/60 bg-carbon-0/30">
  <div className="flex items-center gap-2">

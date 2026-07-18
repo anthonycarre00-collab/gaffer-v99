@@ -201,7 +201,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  {/* Expanded attribute bars — uses short tier label (e.g. "EXC", "STL")
  instead of the raw number. Bar colour still reflects the underlying value. */}
  {expandedGroup && (
- <div className="tab-enter rounded border border-slate-line p-4 bg-white bg-carbon-2">
+ <div className="tab-enter rounded border border-slate-line p-4 bg-carbon-2">
  <div className="flex items-center justify-between mb-3">
  <h4
  className="font-heading font-bold uppercase tracking-wide text-sm"

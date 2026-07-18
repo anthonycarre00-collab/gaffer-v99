@@ -65,7 +65,7 @@ export function PlayerForm({
  }
 
  const inputClass =
- "w-full rounded border border-slate-line bg-white bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
+ "w-full rounded border border-slate-line bg-carbon-2 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-400 transition";
 
  function toggleAttributes(checked: boolean) {
  setUseAttributes(checked);
@@ -135,7 +135,7 @@ export function PlayerForm({
  <label className={labelClass}>{t("worldEditor.playerPhoto")}</label>
  <div className="flex items-center gap-3">
  {photoDataUrl ? (
- <img src={photoDataUrl} alt="" className="w-12 h-12 rounded-full object-cover border border-slate-line bg-white bg-carbon-2 flex-shrink-0" />
+ <img src={photoDataUrl} alt="" className="w-12 h-12 rounded-full object-cover border border-slate-line bg-carbon-2 flex-shrink-0" />
  ) : (
  <div className="w-12 h-12 rounded-full border border-dashed border-slate-line bg-carbon-2 flex items-center justify-center flex-shrink-0">
  <ImagePlus className="w-5 h-5 text-ink-faint dark:text-navy-500" />
@@ -145,7 +145,7 @@ export function PlayerForm({
  <button
  type="button"
  onClick={() => { void handlePickPhoto(); }}
- className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-white bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
+ className="px-3 py-1.5 text-xs font-heading font-bold uppercase tracking-wide rounded border border-slate-line bg-carbon-2 text-ink-dim hover:bg-carbon-2 hover:bg-carbon-3 transition"
  >
  {t("worldEditor.chooseLogo")}
  </button>

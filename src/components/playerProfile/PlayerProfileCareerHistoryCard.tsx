@@ -22,7 +22,7 @@ export default function PlayerProfileCareerHistoryCard({
  {career.length > 0 ? (
  <table className="w-full table-fixed text-xs">
  <thead>
- <tr className="border-b border-slate-line border-slate-line text-ink-faint font-heading font-bold uppercase tracking-wider">
+ <tr className="border-b border-slate-line text-ink-faint font-heading font-bold uppercase tracking-wider">
  <th className="pb-2 pr-4 text-left font-bold">{t("common.team")}</th>
  <th className="pb-2 w-[14%] text-right font-bold">{t("playerProfile.season")}</th>
  <th className="pb-2 w-[14%] text-right font-bold">{t("playerProfile.apps")}</th>
@@ -34,7 +34,7 @@ export default function PlayerProfileCareerHistoryCard({
  {career.map((entry, index) => (
  <tr key={`${entry.team_id}-${entry.season}-${index}`}>
  <td
- className="py-2 pr-4 font-semibold text-ink text-ink truncate"
+ className="py-2 pr-4 font-semibold text-ink truncate"
  title={entry.team_name}
  >
  {entry.team_name}
