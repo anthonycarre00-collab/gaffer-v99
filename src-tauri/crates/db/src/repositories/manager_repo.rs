@@ -115,6 +115,9 @@ pub fn load_manager(conn: &Connection, id: &str) -> Result<Option<Manager>, Stri
                 personality: personality_json
                     .and_then(|s| serde_json::from_str(&s).ok())
                     .unwrap_or_default(),
+                // V100 P1 (Issue #24/#33): head_to_head loaded via separate path
+                // (not persisted to DB yet — defaults to empty map).
+                head_to_head: std::collections::HashMap::new(),
             }))
         }
         Some(Err(_)) => Err(GAME_PERSISTENCE_LOAD_ERROR.to_string()),
@@ -195,6 +198,8 @@ pub fn load_all_managers(conn: &Connection) -> Result<Vec<Manager>, String> {
             personality: personality_json
                 .and_then(|s| serde_json::from_str(&s).ok())
                 .unwrap_or_default(),
+            // V100 P1 (Issue #24/#33): head_to_head not persisted to DB yet.
+            head_to_head: std::collections::HashMap::new(),
         });
     }
     Ok(managers)

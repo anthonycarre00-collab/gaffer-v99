@@ -111,6 +111,9 @@ fn row_to_staff(row: &rusqlite::Row) -> rusqlite::Result<Staff> {
         }),
         team_id: row.get(9)?,
         specialization: spec_str.and_then(|s| parse_specialization(&s)),
+        // V100 P1 (Issue #17/#18): personality + scout_bias not persisted to DB yet.
+        personality: None,
+        scout_bias: None,
         wage: row.get(11)?,
         contract_end: row.get(12)?,
     })

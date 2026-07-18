@@ -363,6 +363,8 @@ fn report_with_scorer(home_goals: u8, away_goals: u8, scorer_id: &str, side: Sid
             fouls_committed: 1,
             yellow_cards: 0,
             red_cards: 0,
+            // V100 P0-5 (Issue #38): saves field added to PlayerMatchStats.
+            saves: 0,
             rating: 7.5,
         },
     );

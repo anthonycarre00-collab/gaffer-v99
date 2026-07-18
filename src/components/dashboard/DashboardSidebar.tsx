@@ -180,9 +180,9 @@ export default function DashboardSidebar({
  <div
  className={`flex items-center ${collapsed ? "justify-center" : "gap-2"}`}
  >
- {/* V99.11: New Gaffer logo (webp) replaces old inline SVG crest */}
+ {/* V100: New Gaffer logo (V100 version) */}
  <img
- src="/src/assets/gaffer-logo-pro.webp"
+ src="/src/assets/gaffer-logo-v100.webp"
  alt="Gaffer"
  className={collapsed ? "w-8 h-8" : "w-10 h-10"}
  />

@@ -358,6 +358,9 @@ impl GamePersistenceReader {
             scouting_knowledge: meta.scouting_knowledge_json.as_deref()
                 .and_then(|s| serde_json::from_str(s).ok())
                 .unwrap_or_default(),
+            // V100 P0-1 (Issue #6): moved_player_ids — not persisted to DB yet,
+            // defaults to empty set. Will be repopulated as transfers happen.
+            moved_player_ids: std::collections::HashSet::new(),
         };
         game.promote_legacy_league();
         ofm_core::season_context::refresh_game_context(&mut game);

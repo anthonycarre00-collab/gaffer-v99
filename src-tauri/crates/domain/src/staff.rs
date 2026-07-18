@@ -123,6 +123,9 @@ impl Staff {
             attributes,
             team_id: None,
             specialization: None,
+            // V100 P1 (Issue #17/#18): Initialize personality + scout_bias.
+            personality: None,
+            scout_bias: None,
             wage: 0,
             contract_end: None,
         }

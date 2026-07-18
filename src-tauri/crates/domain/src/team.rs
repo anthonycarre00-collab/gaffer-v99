@@ -595,6 +595,9 @@ impl Team {
             kit_pattern: KitPattern::default(),
             media: TeamMedia::default(),
             starting_xi_ids: Vec::new(),
+            // V100 P2 (Issue #39): Initialize reserve squad fields.
+            reserve_squad_ids: Vec::new(),
+            reserve_results: Vec::new(),
             match_roles: MatchRoles::default(),
             form: Vec::new(),
             history: Vec::new(),

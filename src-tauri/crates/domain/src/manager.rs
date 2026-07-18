@@ -248,6 +248,8 @@ impl Manager {
             career_stats: ManagerCareerStats::default(),
             career_history: Vec::new(),
             personality: ManagerPersonality::default(),
+            // V100 P1 (Issue #24/#33): Initialize head_to_head map.
+            head_to_head: std::collections::HashMap::new(),
         }
     }
 

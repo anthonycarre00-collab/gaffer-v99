@@ -273,6 +273,8 @@ mod tests {
                 fouls_committed: 10,
                 yellow_cards: 1,
                 red_cards: 0,
+                // V100 P0-5 (Issue #38): saves field.
+                saves: 0,
             }],
         }
     }
