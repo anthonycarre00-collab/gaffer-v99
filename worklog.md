@@ -2661,3 +2661,58 @@ Stage Summary:
 - The cap is defensive — most users will never hit 500 unread messages
 - Backward-compatible (no schema changes)
 
+
+---
+Task ID: V100-P2-BATCH-2
+Agent: main
+Task: Pundit UI wiring + Staff career progression + Talk to Board + Perspective pitch
+
+Work Log:
+- P2-1 (Issue #12): Wire pundit system into live commentary UI
+  - Updated `src/components/match/MatchPanels.tsx`:
+    - Added useState + useEffect to fetch pundit name via `getPunditNameForFixture`
+    - Uses pseudo-fixture-id from `${home_team.id}_vs_${away_team.id}` (stable per matchup)
+    - Passes pundit name to `withSpeaker(getPunditLine(...), punditName)`
+    - Updated pundit line rendering: shows `pundit.speaker` (e.g. "Roy Keano-type:") instead of generic "Pundit:"
+  - The pundit name is fetched once per match and cached (no per-event fetches)
+
+- P2-2 (Issue #17): Staff career progression
+  - Added `progress_staff_attributes` function in `src-tauri/crates/ofm_core/src/end_of_season.rs`
+  - Called at end-of-season (after prune_retired_players, before ai_manager_poaching)
+  - Each employed staff member has a chance to gain +1 to their primary attribute:
+    - Age < 45: 60% chance per season (young staff improve fast)
+    - Age 45-55: 30% chance (mid-career)
+    - Age 55+: 10% chance (veteran plateau)
+  - Harder to improve above 80 (-10% per point above 80, floor 5%)
+  - Secondary attributes have 20% chance to progress (random pick)
+  - Only employed staff progress (unemployed don't gain experience)
+  - Primary attribute depends on role: Manager/AsstMgr/Coach → coaching, Scout → judging_ability, Physio → physiotherapy
+
+- P2-3 (Issue #36): Talk to Board
+  - Added `TalkToBoardRequest` enum (RequestMoreTime, RequestTransferFunds, RequestStadiumExpansion)
+  - Added `TalkToBoardResponse` struct (approved, board_reply, amount_granted)
+  - Added `talk_to_board` Tauri command in `src-tauri/src/commands/finances.rs`:
+    - RequestMoreTime: 20% chance (35% if reputation >= 800)
+    - RequestTransferFunds: 10% chance (30% if sugar daddy — finance > £100M + rep >= 800)
+      - Grants 10-20% of current transfer budget (min £1M, max £20M, doubled for sugar daddy)
+    - RequestStadiumExpansion: approved if finance > £50M AND stadium < 60,000
+      - Cost: £20M for +5,000 seats
+    - All denials use Gaffer-voice responses ("You concentrate on winning matches")
+  - Registered command in lib.rs
+  - Added `talkToBoard` service function in `src/services/financeService.ts`
+  - Added i18n keys: talkToBoard, talkToBoardDescription, talkToBoardRequestMoreTime, etc.
+
+- P2-6 (Issue #3): Perspective pitch
+  - Updated `src/components/tactics/TacticsPitch.tsx`:
+    - Added `perspective: 1200px` to the pitch container
+    - Added `transform: rotateX(8deg)` + `transformOrigin: center bottom` to the pitch div
+    - Subtle 3D effect without changing drag-and-drop logic
+    - The transform is small (8 degrees) so it doesn't distort player positions
+
+Stage Summary:
+- Pundit names now appear in live commentary (e.g. "Roy Keano-type: That's a shocking miss.")
+- Staff attributes slowly improve over long careers (younger staff faster)
+- Users can now "Talk to Board" with 3 request types (most get denied — that's football)
+- Tactics pitch has a subtle 3D perspective effect
+- All changes backward-compatible
+

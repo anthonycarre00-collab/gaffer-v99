@@ -59,6 +59,51 @@ export function getPunditLine(
  const userScore = userIsHome ? snapshot.home_score : snapshot.away_score;
  const oppScore = userIsHome ? snapshot.away_score : snapshot.home_score;
 
+ const result = computePunditLine(
+  evt,
+  snapshot,
+  isUserEvent,
+  player,
+  minute,
+  isLate,
+  hash,
+  userIsHome,
+  userScore,
+  oppScore,
+ );
+ return result;
+}
+
+/**
+ * V100 P2 (Issue #12): Attach a pundit's display name to a PunditLine as the
+ * `speaker` field. The UI can then display "{name}:" before the line to
+ * attribute it to a named co-commentator. Pass null to clear the speaker.
+ */
+export function withSpeaker(
+ line: PunditLine | null,
+ speaker: string | null,
+): PunditLine | null {
+ if (!line) return null;
+ if (!speaker) return line;
+ return { ...line, speaker };
+}
+
+// Internal: the actual pundit line computation, extracted so getPunditLine
+// stays a thin wrapper. This keeps the function signature stable for callers
+// that don't pass a pundit name.
+function computePunditLine(
+ evt: MatchEvent,
+ snapshot: MatchSnapshot,
+ isUserEvent: boolean,
+ player: string,
+ minute: number,
+ isLate: boolean,
+ hash: number,
+ userIsHome: boolean,
+ userScore: number,
+ oppScore: number,
+): PunditLine | null {
+
  switch (evt.event_type) {
  case "Goal":
  case "PenaltyGoal": {

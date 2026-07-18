@@ -1214,6 +1214,12 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
     // and CPU slowdown. Also cleans up dangling relationship_graph edges.
     crate::regen::prune_retired_players(game);
 
+    // V100 P2 (Issue #17): Staff career progression. Staff attributes
+    // improve over time based on experience (years employed). Younger
+    // staff improve faster; older staff plateau. Only employed staff
+    // progress (unemployed staff don't gain experience).
+    progress_staff_attributes(game);
+
     // V99.4 T1.4: AI manager poaching — elite clubs can poach managers from
     // smaller clubs at end-of-season. Creates dynamic managerial movement.
     crate::ai_hiring::process_ai_manager_poaching(game);
@@ -1569,4 +1575,103 @@ pub struct EndOfSeasonSummary {
     pub poty_rating: f64,
     pub total_teams: u32,
     pub season_awards: crate::season_awards::SeasonAwards,
+}
+
+/// V100 P2 (Issue #17): Progress staff attributes based on experience.
+///
+/// Each employed staff member has a chance to gain +1 to their primary
+/// attribute at end-of-season. The chance depends on:
+/// - Age: younger staff (under 45) have 60% chance; 45-55 have 30%; 55+ have 10%
+/// - Current attribute level: harder to improve above 80 (10% chance per point above 80)
+///
+/// Only employed staff (team_id.is_some()) progress — unemployed staff
+/// don't gain experience. This gives the user's hired staff a slow but
+/// steady improvement curve over long careers.
+fn progress_staff_attributes(game: &mut Game) {
+    use rand::RngExt;
+
+    let current_year = game.clock.current_date.year();
+    let mut rng = rand::rng();
+
+    for staff in game.staff.iter_mut() {
+        // Only employed staff progress.
+        if staff.team_id.is_none() {
+            continue;
+        }
+
+        // Parse birth year to determine age.
+        let birth_year: i32 = staff
+            .date_of_birth
+            .get(..4)
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(1980);
+        let age = current_year - birth_year;
+
+        // Age-based improvement chance.
+        let base_chance: f64 = if age < 45 {
+            0.60 // Young staff: 60% chance per season
+        } else if age < 55 {
+            0.30 // Mid-career: 30%
+        } else {
+            0.10 // Veteran: 10% (plateau)
+        };
+
+        // Determine which attribute to progress based on role.
+        let (primary_attr, current_val): (&str, u8) = match staff.role {
+            domain::staff::StaffRole::Manager | domain::staff::StaffRole::AssistantManager => {
+                ("coaching", staff.attributes.coaching)
+            }
+            domain::staff::StaffRole::Coach => {
+                ("coaching", staff.attributes.coaching)
+            }
+            domain::staff::StaffRole::Scout => {
+                ("judging_ability", staff.attributes.judging_ability)
+            }
+            domain::staff::StaffRole::Physio => {
+                ("physiotherapy", staff.attributes.physiotherapy)
+            }
+        };
+
+        // Harder to improve above 80.
+        let level_penalty = if current_val > 80 {
+            0.10 * (current_val - 80) as f64 // -10% per point above 80
+        } else {
+            0.0
+        };
+        let final_chance = (base_chance - level_penalty).max(0.05); // Floor at 5%
+
+        if rng.random_range(0.0..1.0f64) < final_chance {
+            // Progress the primary attribute by +1 (cap at 99).
+            let new_val = current_val.saturating_add(1).min(99);
+            match primary_attr {
+                "coaching" => staff.attributes.coaching = new_val,
+                "judging_ability" => staff.attributes.judging_ability = new_val,
+                "physiotherapy" => staff.attributes.physiotherapy = new_val,
+                _ => {}
+            }
+        }
+
+        // Secondary attributes have a smaller chance (20%) to progress.
+        if rng.random_range(0.0..1.0f64) < 0.20 {
+            // Progress a random secondary attribute.
+            let all_attrs = [
+                ("coaching", staff.attributes.coaching),
+                ("judging_ability", staff.attributes.judging_ability),
+                ("judging_potential", staff.attributes.judging_potential),
+                ("physiotherapy", staff.attributes.physiotherapy),
+            ];
+            let pick = rng.random_range(0..all_attrs.len());
+            let (attr_name, val) = all_attrs[pick];
+            if val < 99 {
+                let new_val = val.saturating_add(1);
+                match attr_name {
+                    "coaching" => staff.attributes.coaching = new_val,
+                    "judging_ability" => staff.attributes.judging_ability = new_val,
+                    "judging_potential" => staff.attributes.judging_potential = new_val,
+                    "physiotherapy" => staff.attributes.physiotherapy = new_val,
+                    _ => {}
+                }
+            }
+        }
+    }
 }

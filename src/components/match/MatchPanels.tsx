@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MatchSnapshot, MatchEvent, EnginePlayerData } from "./types";
 import { getEventDisplay, getEventTypeLabel, getPlayerName } from "./helpers";
 import { getCommentary } from "./commentary";
-import { getPunditLine } from "./punditry";
+import { getPunditLine, withSpeaker } from "./punditry";
+import { getPunditNameForFixture, clearPunditCache } from "../../services/punditService";
 import { Badge } from "../ui";
 import { translatePositionAbbreviation } from "../squad/SquadTab.helpers";
 import { interpretCondition } from "../../lib/gafferEngine";
@@ -50,6 +52,24 @@ export function EventFeed({
  isHome
  ? "text-primary-600 dark:text-primary-300"
  : "text-accent-600 dark:text-accent-300";
+
+ // V100 P2 (Issue #12): Fetch the active pundit's name for this match.
+ // Uses a pseudo-fixture-id derived from team ids so the same matchup
+ // always gets the same pundit (deterministic, stable across re-renders).
+ const [punditName, setPunditName] = useState<string | null>(null);
+ useEffect(() => {
+ const homeId = snapshot.home_team?.id ?? "";
+ const awayId = snapshot.away_team?.id ?? "";
+ if (!homeId || !awayId) return;
+ const pseudoFixtureId = `${homeId}_vs_${awayId}`;
+ let cancelled = false;
+ void (async () => {
+ const name = await getPunditNameForFixture(pseudoFixtureId);
+ if (!cancelled) setPunditName(name);
+ })();
+ return () => { cancelled = true; };
+ }, [snapshot.home_team?.id, snapshot.away_team?.id]);
+
  return (
  <div ref={feedRef} className="flex flex-col gap-1">
  {events.length === 0 ? (
@@ -66,7 +86,7 @@ export function EventFeed({
  // Pundit reaction — driven by whether the event is for/against
  // the user's team.
  const isUserEvent = userSide ? evt.side === userSide : false;
- const pundit = getPunditLine(evt, snapshot, isUserEvent);
+ const pundit = withSpeaker(getPunditLine(evt, snapshot, isUserEvent), punditName);
  return (
  <div
  key={i}
@@ -105,7 +125,8 @@ export function EventFeed({
  className={`mt-1 text-[11px] italic border-l-2 pl-2 py-0.5 rounded-sm ${punditToneClass(pundit.tone)}`}
  >
  <span className="font-heading not-italic uppercase tracking-wider opacity-70 mr-1">
- {t("match.punditLabel", { defaultValue: "Pundit:" })}
+ {pundit.speaker ?? t("match.punditLabel", { defaultValue: "Pundit:" })}
+ {pundit.speaker ? ":" : ""}
  </span>
  {pundit.line}
  </p>

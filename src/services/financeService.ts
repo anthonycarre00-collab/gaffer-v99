@@ -168,3 +168,23 @@ export async function getFinanceSnapshot(
         previews: mapPreviews(response.previews),
     };
 }
+/**
+ * V100 P2 (Issue #36): Talk to Board request types + service function.
+ */
+export type TalkToBoardRequestType =
+    | "requestMoreTime"
+    | "requestTransferFunds"
+    | "requestStadiumExpansion";
+
+export interface TalkToBoardResponseData {
+    game: unknown;
+    approved: boolean;
+    board_reply: string;
+    amount_granted: number;
+}
+
+export async function talkToBoard(
+    request: TalkToBoardRequestType,
+): Promise<TalkToBoardResponseData> {
+    return invoke<TalkToBoardResponseData>("talk_to_board", { request });
+}

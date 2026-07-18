@@ -335,8 +335,20 @@ export default function TacticsPitch({
  </div>
 
  <div className="p-5 sm:p-6 lg:p-7">
- <div className="relative mx-auto w-full max-w-[44rem] overflow-hidden rounded-[1.5rem] border border-primary-500/20 bg-linear-to-b shadow-inner">
- <div className="aspect-[8/10] min-h-[42rem] w-full">
+ {/* V100 P2 (Issue #3): Perspective pitch — CSS 3D transform gives the
+     pitch a subtle 3D feel without changing the drag-and-drop logic. */}
+ <div
+ className="relative mx-auto w-full max-w-[44rem] overflow-hidden rounded-[1.5rem] border border-primary-500/20 bg-linear-to-b shadow-inner"
+ style={{ perspective: "1200px" }}
+ >
+ <div
+ className="aspect-[8/10] min-h-[42rem] w-full"
+ style={{
+ transform: "rotateX(8deg)",
+ transformOrigin: "center bottom",
+ transition: "transform 0.2s ease-out",
+ }}
+ >
  <svg
  viewBox="0 0 100 140"
  preserveAspectRatio="none"
@@ -583,6 +595,8 @@ export default function TacticsPitch({
  </div>
  );
  })}
+ </div>
+ {/* V100 P2 (Issue #3): Close the perspective-transformed div. */}
  </div>
  </div>
 

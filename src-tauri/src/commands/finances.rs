@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use log::info;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tauri::State;
 
 use ofm_core::finances::{
@@ -9,6 +9,31 @@ use ofm_core::finances::{
 };
 use ofm_core::game::Game;
 use ofm_core::state::StateManager;
+
+/// V100 P2 (Issue #36): Talk to Board request type.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum TalkToBoardRequest {
+    /// Request more time before the board fires you (small chance of success).
+    RequestMoreTime,
+    /// Request additional transfer funds (very small chance, bigger if sugar daddy owner).
+    RequestTransferFunds,
+    /// Request stadium expansion (only if club can afford it + it's relevant to club size).
+    RequestStadiumExpansion,
+}
+
+/// V100 P2 (Issue #36): Talk to Board response.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TalkToBoardResponse {
+    pub game: Game,
+    /// Whether the board agreed to the request.
+    pub approved: bool,
+    /// Gaffer-voice response from the board.
+    pub board_reply: String,
+    /// Amount granted (for fund requests), 0 if denied.
+    pub amount_granted: u64,
+}
 
 #[derive(Debug, Clone, Serialize)]
 pub struct FinanceSnapshotCommandResponse {
@@ -88,6 +113,99 @@ pub async fn request_marketing_campaign(
     state: State<'_, Arc<StateManager>>,
 ) -> Result<MarketingCampaignCommandResponse, String> {
     request_marketing_campaign_internal(&state)
+}
+
+/// V100 P2 (Issue #36): Talk to Board — Gaffer-voice interaction where the
+/// user can request more time, more transfer funds, or stadium expansion.
+/// The board's response depends on the club's reputation, finance, and the
+/// user's recent performance. Most requests are denied with a "You
+/// concentrate on winning matches" sideways dig.
+#[tauri::command]
+pub async fn talk_to_board(
+    state: State<'_, Arc<StateManager>>,
+    request: TalkToBoardRequest,
+) -> Result<TalkToBoardResponse, String> {
+    info!("[cmd] talk_to_board: request={:?}", request);
+    state
+        .update_game(|game| {
+            let team_id = game
+                .manager
+                .team_id
+                .clone()
+                .ok_or("be.error.noTeamAssigned".to_string())?;
+
+            let team = game
+                .teams
+                .iter()
+                .find(|t| t.id == team_id)
+                .ok_or("be.error.teamNotFound".to_string())?;
+
+            let reputation = team.reputation;
+            let finance = team.finance;
+            let transfer_budget = team.transfer_budget;
+            let stadium_capacity = team.stadium_capacity;
+
+            // Determine approval based on request type + club context.
+            let (approved, board_reply, amount_granted) = match request {
+                TalkToBoardRequest::RequestMoreTime => {
+                    // 20% chance of approval, higher if reputation is high.
+                    let chance = if reputation >= 800 { 0.35 } else { 0.20 };
+                    let roll = rand::RngExt::random_range(&mut rand::rng(), 0.0..1.0f64);
+                    if roll < chance {
+                        (true, "The board have agreed to give you more time. Results must improve.".to_string(), 0u64)
+                    } else {
+                        (false, "You concentrate on winning matches. We'll review the situation at the end of the season.".to_string(), 0u64)
+                    }
+                }
+                TalkToBoardRequest::RequestTransferFunds => {
+                    // 10% chance, higher if club has a sugar daddy (high finance + high reputation).
+                    let sugar_daddy = finance > 100_000_000 && reputation >= 800;
+                    let chance = if sugar_daddy { 0.30 } else { 0.10 };
+                    let roll = rand::RngExt::random_range(&mut rand::rng(), 0.0..1.0f64);
+                    if roll < chance {
+                        // Grant 10-20% of current transfer budget (min £1M, max £20M).
+                        let base = (transfer_budget as u64 / 10).max(1_000_000).min(20_000_000);
+                        let grant = if sugar_daddy { base * 2 } else { base };
+                        // Apply the grant.
+                        if let Some(t) = game.teams.iter_mut().find(|t| t.id == team_id) {
+                            t.transfer_budget += grant as i64;
+                            t.finance += grant as i64;
+                        }
+                        (true, format!("The board have released an additional £{:,.0} for transfers. Spend it wisely.", grant), grant)
+                    } else {
+                        (false, "The money's not there. You'll have to work with what you've got.".to_string(), 0u64)
+                    }
+                }
+                TalkToBoardRequest::RequestStadiumExpansion => {
+                    // Only approve if club can afford it (finance > £50M) and
+                    // stadium is small enough to warrant expansion (< 60,000).
+                    let can_afford = finance > 50_000_000;
+                    let needs_expansion = stadium_capacity < 60_000;
+                    if can_afford && needs_expansion {
+                        // Cost: £20M for +5,000 seats.
+                        let cost = 20_000_000i64;
+                        let added_seats = 5_000u32;
+                        if let Some(t) = game.teams.iter_mut().find(|t| t.id == team_id) {
+                            t.finance -= cost;
+                            t.stadium_capacity += added_seats;
+                        }
+                        (true, format!("The board have approved a £{:,.0} expansion. {} seats will be added.", cost, added_seats), 0u64)
+                    } else if !can_afford {
+                        (false, "We can't justify that kind of spending right now. Get the club on a sound financial footing first.".to_string(), 0u64)
+                    } else {
+                        (false, "The ground's big enough as it is. Fill it regularly and we'll talk.".to_string(), 0u64)
+                    }
+                }
+            };
+
+            Ok(TalkToBoardResponse {
+                game: game.clone(),
+                approved,
+                board_reply,
+                amount_granted,
+            })
+        })
+        .ok_or("be.error.noActiveGameSession".to_string())?
 }
 
 pub fn request_board_support_internal(
