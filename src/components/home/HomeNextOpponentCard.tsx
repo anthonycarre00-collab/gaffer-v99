@@ -18,7 +18,7 @@ export default function HomeNextOpponentCard({
  const { t } = useTranslation();
 
  return (
- <Card>
+ <Card className="hero-panel">
  <CardHeader
  action={
  <button

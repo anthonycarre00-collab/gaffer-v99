@@ -338,7 +338,7 @@ export default function TacticsPitch({
  {/* V100 P2 (Issue #3): Perspective pitch — CSS 3D transform gives the
      pitch a subtle 3D feel without changing the drag-and-drop logic. */}
  <div
- className="relative mx-auto w-full max-w-[44rem] overflow-hidden rounded-[1.5rem] border border-primary-500/20 bg-linear-to-b shadow-inner"
+ className="hero-panel relative mx-auto w-full max-w-[44rem] overflow-hidden rounded-[1.5rem] border border-primary-500/20 bg-linear-to-b shadow-inner"
  style={{ perspective: "1200px" }}
  >
  <div

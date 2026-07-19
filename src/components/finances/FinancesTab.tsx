@@ -1411,12 +1411,12 @@ export default function FinancesTab({
  {translatePositionAbbreviation(t, p.position)}
  </Badge>
  </td>
- <td className="py-3 px-5 text-sm font-medium text-ink-dim">
+ <td className="py-3 px-5 text-sm font-medium text-ink-dim text-right font-mono">
  {formatExactMoney(
  annualAmountToWeeklyCommitment(p.wage),
  )}
  </td>
- <td className="py-3 px-5 text-sm text-ink-dim">
+ <td className="py-3 px-5 text-sm text-ink-dim text-right font-mono">
  {formatVal(p.market_value)}
  </td>
  <td className="py-3 px-5 text-sm text-ink-dim">

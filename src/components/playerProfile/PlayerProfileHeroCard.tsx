@@ -65,7 +65,7 @@ export default function PlayerProfileHeroCard({
  : [];
 
  return (
- <Card accent="primary" className="mb-5">
+ <Card accent="primary" className="hero-panel mb-5">
  <div className="dossier-panel p-8 rounded-t-xl">
  <div className="flex items-start gap-6">
  <PlayerAvatar

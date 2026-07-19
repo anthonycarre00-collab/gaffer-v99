@@ -129,7 +129,7 @@ export function SortableHeader({
  return (
  <th
  scope="col"
- className={`select-none ${numeric ? "text-right" : "text-left"} ${
+ className={`select-none ${numeric ? "text-right font-mono" : "text-left"} ${
  isActive ? "text-accent-600 dark:text-accent-400" : ""
  } ${className}`}
  >
