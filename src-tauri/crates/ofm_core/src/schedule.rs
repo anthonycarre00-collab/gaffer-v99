@@ -791,7 +791,7 @@ pub fn cross_competition_collision_pass(competitions: &mut [League]) {
             // No clash — claim the date.
             team_dates.insert((home.clone(), date.clone()), (comp_idx, fix_idx, _prio));
             team_dates.insert((away.clone(), date.clone()), (comp_idx, fix_idx, _prio));
-            occupied.insert((home, date));
+            occupied.insert((home.clone(), date.clone()));
             occupied.insert((away, date));
         } else {
             // Clash — shift this fixture forward to the next free day for both teams.
@@ -822,7 +822,7 @@ pub fn cross_competition_collision_pass(competitions: &mut [League]) {
                         (away.clone(), new_date_str_final.clone()),
                         (comp_idx, fix_idx, _prio),
                     );
-                    occupied.insert((home, new_date_str_final));
+                    occupied.insert((home, new_date_str_final.clone()));
                     occupied.insert((away, new_date_str_final));
                     break;
                 }
