@@ -556,16 +556,35 @@ function ArticleDetail({
  <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-carbon-2/50 rounded">
  <div className="text-center">
  <p className="text-sm font-heading font-bold text-ink-dim">
+ {/* V100 (Issue #35): Team name hyperlinks in match score. */}
+ {onSelectTeam ? (
+ <button
+ onClick={() => onSelectTeam(article.match_score!.home_team_id)}
+ className="hover:text-accent-400 hover:underline transition-colors"
+ >
  {teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id}
+ </button>
+ ) : (
+ teamNames[article.match_score.home_team_id] ?? article.match_score.home_team_id
+ )}
  </p>
  </div>
- <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded">
+ <div className="text-2xl font-heading font-bold text-primary-500 bg-primary-500/10 px-4 py-2 rounded font-mono">
  {article.match_score.home_goals} –{" "}
  {article.match_score.away_goals}
  </div>
  <div className="text-center">
  <p className="text-sm font-heading font-bold text-ink-dim">
+ {onSelectTeam ? (
+ <button
+ onClick={() => onSelectTeam(article.match_score!.away_team_id)}
+ className="hover:text-accent-400 hover:underline transition-colors"
+ >
  {teamNames[article.match_score.away_team_id] ?? article.match_score.away_team_id}
+ </button>
+ ) : (
+ teamNames[article.match_score.away_team_id] ?? article.match_score.away_team_id
+ )}
  </p>
  </div>
  </div>

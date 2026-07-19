@@ -4,6 +4,7 @@ import { ManagerCareerChart } from "./ManagerCareerChart";
 import { formatDate } from "../../lib/helpers";
 import { useTranslation } from "react-i18next";
 import { countryName } from "../../lib/countries";
+import { interpretReputation } from "../../lib/gafferEngine";
 import ContextMenu from "../ContextMenu";
 import { buildViewTeamMenuItem } from "../playerActions/playerContextMenuItems";
 
@@ -50,7 +51,9 @@ export default function ManagerTab({ gameState, onSelectTeam }: ManagerTabProps)
  </div>
  <div className="ml-auto text-right">
  <p className="text-xs text-ink-faint font-heading uppercase tracking-wider">{t('manager.reputation')}</p>
- <p className="font-heading font-bold text-2xl text-accent-400">{mgr.reputation}</p>
+ {/* V100 (Issue #33): Use Gaffer voice for reputation instead of raw number. */}
+ <p className="font-heading font-bold text-2xl text-accent-400">{interpretReputation(mgr.reputation).short}</p>
+ <p className="text-[10px] text-ink-faint">{interpretReputation(mgr.reputation).description}</p>
  </div>
  </div>
  </Card>
