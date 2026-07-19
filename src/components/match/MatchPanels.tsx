@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 import { MatchSnapshot, MatchEvent, EnginePlayerData } from "./types";
 import { getEventDisplay, getEventTypeLabel, getPlayerName } from "./helpers";
@@ -53,10 +54,11 @@ export function EventFeed({
  ? "text-primary-600 dark:text-primary-300"
  : "text-accent-600 dark:text-accent-300";
 
- // V100 P2 (Issue #12): Fetch the active pundit's name for this match.
+ // V100 P2 (Issue #12): Fetch the active pundit's name + catchphrases for this match.
  // Uses a pseudo-fixture-id derived from team ids so the same matchup
  // always gets the same pundit (deterministic, stable across re-renders).
  const [punditName, setPunditName] = useState<string | null>(null);
+ const [punditCatchphrases, setPunditCatchphrases] = useState<Record<string, string>>({});
  useEffect(() => {
  const homeId = snapshot.home_team?.id ?? "";
  const awayId = snapshot.away_team?.id ?? "";
@@ -65,7 +67,21 @@ export function EventFeed({
  let cancelled = false;
  void (async () => {
  const name = await getPunditNameForFixture(pseudoFixtureId);
- if (!cancelled) setPunditName(name);
+ if (cancelled) return;
+ setPunditName(name);
+ // V100 (Issue #12): Pre-fetch catchphrases for key event types.
+ const eventKeys = ["kickoff", "goal", "miss", "halftime", "fulltime_win", "fulltime_loss"];
+ const phrases: Record<string, string> = {};
+ for (const key of eventKeys) {
+ try {
+ const info = await invoke<{ catchphrase: string | null }>(
+ "get_pundit_for_fixture",
+ { fixtureId: pseudoFixtureId, eventKey: key }
+ );
+ if (info.catchphrase) phrases[key] = info.catchphrase;
+ } catch { /* ignore */ }
+ }
+ if (!cancelled) setPunditCatchphrases(phrases);
  })();
  return () => { cancelled = true; };
  }, [snapshot.home_team?.id, snapshot.away_team?.id]);
@@ -131,6 +147,20 @@ export function EventFeed({
  {pundit.line}
  </p>
  ) : null}
+ {/* V100 (Issue #12): Pundit catchphrase for key events. */}
+ {(() => {
+ const catchphraseKey = evt.event_type === "Goal" ? "goal"
+ : evt.event_type === "ShotOffTarget" || evt.event_type === "ShotSaved" ? "miss"
+ : evt.event_type === "HalfTime" ? "halftime"
+ : evt.event_type === "FullTime" ? (isUserEvent ? "fulltime_win" : "fulltime_loss")
+ : null;
+ if (!catchphraseKey || !punditCatchphrases[catchphraseKey]) return null;
+ return (
+ <p className="mt-0.5 text-[10px] text-accent-400/70 italic pl-2">
+ "{punditCatchphrases[catchphraseKey]}"
+ </p>
+ );
+ })()}
  </>
  ) : (
  <>
