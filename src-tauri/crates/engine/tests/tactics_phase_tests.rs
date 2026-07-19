@@ -71,7 +71,7 @@ fn play(home: TacticsConfig, seed: u64) -> Totals {
         team("h", home),
         team("a", TacticsConfig::default()),
         MatchConfig::default(),
-        vec![], vec![], false,
+        vec![], vec![], false, false,
     );
     let mut rng = StdRng::seed_from_u64(seed);
     let mut t = Totals::default();
@@ -244,7 +244,7 @@ fn batch_fast_break_creates_more_chances_than_slow() {
 /// Total end-of-match condition for (home, away) given each side's tactics.
 fn final_conditions(home: TacticsConfig, away: TacticsConfig, seed: u64) -> (i64, i64) {
     let mut s = LiveMatchState::new(
-        team("h", home), team("a", away), MatchConfig::default(), vec![], vec![], false,
+        team("h", home), team("a", away), MatchConfig::default(), vec![], vec![], false, false,
     );
     let mut rng = StdRng::seed_from_u64(seed);
     loop {

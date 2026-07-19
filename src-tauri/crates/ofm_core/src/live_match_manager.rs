@@ -275,6 +275,17 @@ pub fn create_live_match(
         })
         .unwrap_or(allows_extra_time);
 
+    // V100 (Issue #8): Derive allows_penalties from CompetitionRules.penalties.
+    // AfterExtraTime = penalties after extra time, Never = no penalties,
+    // After90Minutes = penalties straight after 90 (rare, some group tiebreakers).
+    let effective_penalties = competition_rules
+        .map(|r| match r.penalties {
+            domain::league::PenaltyRule::Never => false,
+            domain::league::PenaltyRule::AfterExtraTime => true,
+            domain::league::PenaltyRule::After90Minutes => true,
+        })
+        .unwrap_or(true); // Default: allow penalties for backward compat
+
     let mut match_state = LiveMatchState::new(
         home_xi,
         away_xi,
@@ -282,6 +293,7 @@ pub fn create_live_match(
         home_bench,
         away_bench,
         effective_extra_time,
+        effective_penalties,
     )
     .with_max_subs(max_subs);
     apply_saved_match_roles(

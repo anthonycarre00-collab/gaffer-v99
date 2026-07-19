@@ -401,6 +401,7 @@ mod commentary_detail_tests {
             vec![],
             vec![],
             false,
+            false, // V100: allows_penalties
         )
     }
 

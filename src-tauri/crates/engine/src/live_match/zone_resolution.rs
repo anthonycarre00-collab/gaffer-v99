@@ -725,6 +725,7 @@ mod event_detail_tests {
                 vec![],
                 vec![],
                 false,
+                false, // V100: allows_penalties
             );
             let mut rng = StdRng::seed_from_u64(seed);
 

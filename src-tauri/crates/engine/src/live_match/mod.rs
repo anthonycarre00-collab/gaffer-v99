@@ -228,6 +228,9 @@ pub struct LiveMatchState {
 
     // Extra time / knockout
     allows_extra_time: bool,
+    /// V100 (Issue #8): Whether penalties should be taken if scores are level
+    /// after extra time. Derived from CompetitionRules.penalties.
+    allows_penalties: bool,
 
     // Stoppage time (pre-computed when each half starts)
     first_half_stoppage: u8,
@@ -255,6 +258,7 @@ impl LiveMatchState {
         home_bench: Vec<PlayerData>,
         away_bench: Vec<PlayerData>,
         allows_extra_time: bool,
+        allows_penalties: bool,
     ) -> Self {
         // Initialize player conditions from their condition attribute
         let mut player_conditions = HashMap::new();
@@ -286,6 +290,7 @@ impl LiveMatchState {
             home_set_pieces: SetPieceTakers::default(),
             away_set_pieces: SetPieceTakers::default(),
             allows_extra_time,
+            allows_penalties,
             first_half_stoppage: 0,
             second_half_stoppage: 0,
             et_first_half_stoppage: 0,

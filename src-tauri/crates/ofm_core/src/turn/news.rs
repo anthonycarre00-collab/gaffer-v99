@@ -413,6 +413,26 @@ fn world_news_priority(game: &Game, article: &domain::news::NewsArticle) -> i64 
         .map(|team| i64::from(team.reputation))
         .max()
         .unwrap_or(0);
+
+    // V100 (Issue #8): Competition prestige boosts news priority for
+    // high-profile competitions (UCL, WC, etc.). The article's match_score
+    // carries the competition, but for simplicity we check if any of the
+    // article's team_ids are in a high-prestige competition.
+    let competition_prestige: i64 = article
+        .team_ids
+        .iter()
+        .filter_map(|team_id| {
+            game.competitions.iter().find_map(|comp| {
+                if comp.participant_ids.iter().any(|pid| pid == team_id) {
+                    Some(comp.rules.prestige as i64)
+                } else {
+                    None
+                }
+            })
+        })
+        .max()
+        .unwrap_or(0);
+
     let player_heat = article
         .player_ids
         .iter()
@@ -432,7 +452,13 @@ fn world_news_priority(game: &Game, article: &domain::news::NewsArticle) -> i64 
         1
     };
 
-    (world_news_category_priority(&article.category) + (team_reputation * 100) + player_heat)
+    // V100: Add competition_prestige to the priority calculation.
+    // Prestige ranges 0-1000, so we multiply by 50 to give it meaningful
+    // weight relative to team_reputation (×100) and player_heat.
+    (world_news_category_priority(&article.category)
+        + (team_reputation * 100)
+        + player_heat
+        + (competition_prestige * 50))
         * rivalry_multiplier
 }
 

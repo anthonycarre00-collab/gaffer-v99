@@ -121,6 +121,7 @@ fn make_live_match(allows_extra_time: bool) -> LiveMatchState {
         home_bench,
         away_bench,
         allows_extra_time,
+        true,
     )
 }
 

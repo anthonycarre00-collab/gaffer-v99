@@ -123,7 +123,9 @@ impl LiveMatchState {
     }
 
     pub(super) fn handle_et_end<R: Rng>(&mut self, _rng: &mut R) -> MinuteResult {
-        if self.home_score == self.away_score {
+        if self.home_score == self.away_score && self.allows_penalties {
+            // V100 (Issue #8): Only go to penalty shootout if the competition
+            // rules allow it (PenaltyRule::AfterExtraTime).
             // Go to penalty shootout
             self.phase = MatchPhase::PenaltyShootout;
             self.penalty_state = super::PenaltyShootoutState::default();
