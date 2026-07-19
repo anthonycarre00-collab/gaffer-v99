@@ -1224,6 +1224,15 @@ pub fn process_end_of_season(game: &mut Game) -> EndOfSeasonSummary {
     // smaller clubs at end-of-season. Creates dynamic managerial movement.
     crate::ai_hiring::process_ai_manager_poaching(game);
 
+    // V100 (Issue #24): AI manager aging + retirement. Previously AI managers
+    // lived forever — no aging, no retirement, no replacement. Now we:
+    // 1. Retire AI managers who are 70+ (with probability scaling)
+    // 2. process_vacant_ai_clubs (already called below) fills the vacancy
+    // This ensures managerial careers are dynamic — old gaffers retire,
+    // young coaches get promoted, the world feels alive.
+    let current_year = game.clock.current_date.year();
+    retire_aged_ai_managers(game, current_year);
+
     // 6. Update manager career stats
     if let Some(standing) = &user_standing {
         let total_matches = standing.won + standing.drawn + standing.lost;
@@ -1676,4 +1685,108 @@ fn progress_staff_attributes(game: &mut Game) {
             }
         }
     }
+}
+
+/// V100 (Issue #24): Retire aged AI managers.
+///
+/// Balanced design:
+/// - Only affects AI managers (not the user's manager)
+/// - Retirement probability scales with age:
+///   - 70+: 20% chance per season
+///   - 75+: 40% chance per season
+///   - 80+: 70% chance per season (Ferguson/Robson territory)
+/// - When retired, the manager is removed from their team
+/// - process_vacant_ai_clubs (called later) fills the vacancy
+/// - Also removes the manager from game.managers to prevent bloat
+fn retire_aged_ai_managers(game: &mut Game, current_year: i32) {
+    use rand::RngExt;
+
+    let user_manager_id = game.manager.id.clone();
+    let mut rng = rand::rng();
+
+    // Collect managers to retire (can't mutate while iterating).
+    let mut retired_ids: Vec<String> = Vec::new();
+    let mut retired_names: Vec<(String, String)> = Vec::new();
+
+    for manager in &game.managers {
+        // Skip the user's manager.
+        if manager.id == user_manager_id {
+            continue;
+        }
+
+        // Parse birth year from date_of_birth.
+        let birth_year: i32 = manager
+            .date_of_birth
+            .get(..4)
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(1980);
+        let age = current_year - birth_year;
+
+        // Retirement probability scales with age.
+        // Balanced: managers can work into their 70s (like Ferguson),
+        // but by 80 the probability is very high.
+        let retire_chance: f64 = if age >= 80 {
+            0.70
+        } else if age >= 75 {
+            0.40
+        } else if age >= 70 {
+            0.20
+        } else {
+            0.0 // Under 70: no retirement chance
+        };
+
+        if retire_chance > 0.0 && rng.random_range(0.0..1.0f64) < retire_chance {
+            retired_ids.push(manager.id.clone());
+            retired_names.push((
+                manager.id.clone(),
+                format!("{} {}", manager.first_name, manager.last_name),
+            ));
+        }
+    }
+
+    if retired_ids.is_empty() {
+        return;
+    }
+
+    // Remove retired managers from their teams (set manager_id to None).
+    for manager_id in &retired_ids {
+        for team in &mut game.teams {
+            if team.manager_id.as_deref() == Some(manager_id.as_str()) {
+                team.manager_id = None;
+                // Mark the team as vacant so process_vacant_ai_clubs picks it up.
+                game.vacant_team_days
+                    .entry(team.id.clone())
+                    .or_insert(0);
+                break;
+            }
+        }
+    }
+
+    // Remove retired managers from game.managers.
+    game.managers.retain(|m| !retired_ids.contains(&m.id));
+
+    // Generate news articles for notable retirements.
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+    for (mgr_id, mgr_name) in &retired_names {
+        let article_id = format!("manager_retirement_{}_{}", mgr_id, today);
+        if !game.news.iter().any(|a| a.id == article_id) {
+            game.news.push(domain::news::NewsArticle::new(
+                article_id,
+                format!("{} Calls Time on Career", mgr_name),
+                format!(
+                    "{} has announced their retirement from football management, \
+                     bringing the curtain down on a distinguished career in the dugout.",
+                    mgr_name
+                ),
+                "League Wire".to_string(),
+                today.clone(),
+                domain::news::NewsCategory::ManagerialChange,
+            ));
+        }
+    }
+
+    log::info!(
+        "[end_of_season] Retired {} AI manager(s) aged 70+",
+        retired_ids.len()
+    );
 }
