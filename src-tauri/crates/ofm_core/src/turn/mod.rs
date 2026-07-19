@@ -519,6 +519,14 @@ pub fn finish_live_match_day(game: &mut Game) {
     game.clock.advance_days(1);
     game.sync_legacy_league();
     crate::season_context::refresh_game_context(game);
+
+    // V100 (Issue #39): Reserve team sparse sim. On matchdays, if the user's
+    // team has a reserve squad, simulate a reserve match (scoreline only).
+    // This gives reserve players "match fitness" via appearances stat bumps
+    // and generates results for the reserve squad panel.
+    // Balanced: runs only on matchdays (when finish_live_match_day is called),
+    // affects only reserve squad players, small stat bumps.
+    simulate_reserve_match(game, &today);
 }
 
 #[cfg(test)]
@@ -1183,4 +1191,74 @@ fn generate_weekly_staff_report(game: &mut Game, today: &str) {
     .with_sender_i18n("be.sender.assistant", "be.role.assistantManager");
 
     game.messages.push(msg);
+}
+
+/// V100 (Issue #39): Simulate a reserve team match (sparse, scoreline only).
+///
+/// Balanced design:
+/// - Runs on matchdays (when finish_live_match_day is called)
+/// - Only simulates if the user's team has reserve_squad_ids with 7+ players
+/// - Generates a random scoreline (0-0 to 4-3 range, weighted to low scores)
+/// - Credits appearances to reserve players (stat bump)
+/// - Stores result string ("2-1") in team.reserve_results (last 5 kept)
+/// - No full match engine — just a Poisson-style scoreline
+fn simulate_reserve_match(game: &mut Game, _today: &str) {
+    use rand::RngExt;
+
+    let team_id = match &game.manager.team_id {
+        Some(id) => id.clone(),
+        None => return,
+    };
+
+    let team = match game.teams.iter_mut().find(|t| t.id == team_id) {
+        Some(t) => t,
+        None => return,
+    };
+
+    // Need at least 7 reserve players to simulate a match.
+    if team.reserve_squad_ids.len() < 7 {
+        return;
+    }
+
+    let mut rng = rand::rng();
+
+    // Generate a random scoreline. Reserve matches tend to be lower-scoring
+    // than first-team matches. Weighted toward 1-1, 2-1, 0-0, 1-0.
+    let home_goals = match rng.random_range(0..100u8) {
+        0..=20 => 0,
+        21..=50 => 1,
+        51..=75 => 2,
+        76..=90 => 3,
+        _ => 4,
+    };
+    let away_goals = match rng.random_range(0..100u8) {
+        0..=25 => 0,
+        26..=55 => 1,
+        56..=80 => 2,
+        81..=93 => 3,
+        _ => 4,
+    };
+
+    // Store the result string.
+    let result_str = format!("{}-{}", home_goals, away_goals);
+    team.reserve_results.push(result_str);
+    // Keep only the last 5 results.
+    if team.reserve_results.len() > 5 {
+        team.reserve_results.remove(0);
+    }
+
+    // Credit appearances to reserve players.
+    let reserve_ids: Vec<String> = team.reserve_squad_ids.clone();
+    for player in &mut game.players {
+        if reserve_ids.contains(&player.id) {
+            player.stats.appearances += 1;
+            // Small condition bump — reserve minutes help fitness.
+            player.condition = (player.condition + 5).min(100);
+        }
+    }
+
+    log::debug!(
+        "[reserve] Simulated reserve match: {}-{} ({} players)",
+        home_goals, away_goals, reserve_ids.len()
+    );
 }
