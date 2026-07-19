@@ -232,6 +232,26 @@ export default function ManagersWorldTab({
  />
  </div>
 
+ {/* V100 (Issue #24): Additional manager data — trophies, board satisfaction, fan approval. */}
+ <div className="grid grid-cols-4 gap-2 mt-2 text-xs">
+ <div className="rounded border border-slate-line bg-carbon-2 px-2 py-1.5">
+ <p className="text-[9px] font-heading uppercase tracking-wider text-ink-faint">Trophies</p>
+ <p className="font-mono text-accent-400">{manager.career_stats.trophies ?? 0}</p>
+ </div>
+ <div className="rounded border border-slate-line bg-carbon-2 px-2 py-1.5">
+ <p className="text-[9px] font-heading uppercase tracking-wider text-ink-faint">Board</p>
+ <p className={`font-mono ${manager.satisfaction >= 60 ? "text-green-400" : manager.satisfaction >= 30 ? "text-amber-400" : "text-red-400"}`}>{manager.satisfaction}%</p>
+ </div>
+ <div className="rounded border border-slate-line bg-carbon-2 px-2 py-1.5">
+ <p className="text-[9px] font-heading uppercase tracking-wider text-ink-faint">Fans</p>
+ <p className={`font-mono ${(manager.fan_approval ?? 50) >= 60 ? "text-green-400" : (manager.fan_approval ?? 50) >= 30 ? "text-amber-400" : "text-red-400"}`}>{manager.fan_approval ?? 50}%</p>
+ </div>
+ <div className="rounded border border-slate-line bg-carbon-2 px-2 py-1.5">
+ <p className="text-[9px] font-heading uppercase tracking-wider text-ink-faint">W-D-L</p>
+ <p className="font-mono text-ink-dim">{manager.career_stats.wins}-{manager.career_stats.draws}-{manager.career_stats.losses}</p>
+ </div>
+ </div>
+
  {/* V100 P1 (Issue #24/#33): Head-to-head record vs user's manager. */}
  {(() => {
  const userMgr = gameState.managers?.find((m) => m.id === gameState.manager.id);
