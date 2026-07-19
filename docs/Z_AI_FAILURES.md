@@ -238,3 +238,23 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 5)
+
+### Newly completed:
+- [x] P2: penalties field wired into live match engine (allows_penalties on LiveMatchState)
+- [x] P2: prestige field wired into news priority weighting
+- [x] FULL FIELD WIRING AUDIT: All 14 V100 fields verified end-to-end
+  (Rust field → used in logic → frontend type → frontend UI)
+
+### Still outstanding (low priority / complex):
+- [ ] P1-18: Staff weekly meeting trigger + UI
+- [ ] P2-3: Reserve team sparse sim
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
