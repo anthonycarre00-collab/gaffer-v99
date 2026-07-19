@@ -86,6 +86,8 @@ const CATEGORY_ICONS: Record<string, ReactNode> = {
  Finance: <DollarSign className="w-4 h-4" />,
  Contract: <FileText className="w-4 h-4" />,
  ScoutReport: <ScanSearch className="w-4 h-4" />,
+ // V100 (Issue #17): Staff weekly report category.
+ StaffReport: <ClipboardList className="w-4 h-4" />,
  Media: <Newspaper className="w-4 h-4" />,
  System: <Info className="w-4 h-4" />,
  JobOffer: <Briefcase className="w-4 h-4" />,
@@ -104,6 +106,8 @@ const CATEGORY_COLORS: Record<string, string> = {
  Finance: "text-success-500",
  Contract: "text-primary-500",
  ScoutReport: "text-cyan-500",
+ // V100 (Issue #17): Staff weekly report color.
+ StaffReport: "text-accent-500",
  Media: "text-danger-500",
  System: "text-ink-faint",
  JobOffer: "text-primary-500",

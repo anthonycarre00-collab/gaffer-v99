@@ -206,6 +206,13 @@ where
 
         // Relationships: decay volatilities
         game.relationship_graph.decay_all_volatilities();
+
+        // V100 (Issue #17): Staff weekly meeting. The assistant manager
+        // generates a weekly report as an inbox message with squad state.
+        // Balanced: informational only (no morale effect), 1x/week on Mondays.
+        // The user can then use the "Ask for advice" button on the Staff tab
+        // for more detailed, interactive advice.
+        generate_weekly_staff_report(game, &today);
     }
 
     // Board objectives (generate if missing, update progress)
@@ -1061,4 +1068,119 @@ where
         report.away_penalties = Some(away_pens);
     }
     apply_match_report_with_capture(game, idx, &home_team_id, &away_team_id, &report, on_capture);
+}
+
+/// V100 (Issue #17): Generate a weekly staff report from the assistant manager.
+///
+/// Balanced design:
+/// - Runs once per week (Monday tick)
+/// - Generates an inbox message with squad state summary
+/// - Informational only — no morale effect (the interactive "Ask for advice"
+///   button on the Staff tab handles that separately)
+/// - Only generates if the user has an assistant manager hired
+/// - Uses Gaffer voice for the report text
+/// - Deduplicates by message ID (won't generate twice in the same week)
+fn generate_weekly_staff_report(game: &mut Game, today: &str) {
+    let team_id = match &game.manager.team_id {
+        Some(id) => id.clone(),
+        None => return,
+    };
+
+    // Find the assistant manager.
+    let assistant = game.staff.iter().find(|s| {
+        s.team_id.as_deref() == Some(team_id.as_str())
+            && s.role == domain::staff::StaffRole::AssistantManager
+    });
+
+    let assistant_name = match assistant {
+        Some(a) => format!("{} {}", a.first_name, a.last_name),
+        None => return, // No assistant manager — skip
+    };
+
+    // Deduplicate — don't generate if one already exists for this week.
+    let msg_id = format!("weekly_staff_report_{}", today);
+    if game.messages.iter().any(|m| m.id == msg_id) {
+        return;
+    }
+
+    // Gather squad state.
+    let squad_players: Vec<&domain::player::Player> = game
+        .players
+        .iter()
+        .filter(|p| p.team_id.as_deref() == Some(team_id.as_str()) && !p.retired)
+        .collect();
+
+    let injured_count = squad_players.iter().filter(|p| p.injury.is_some()).count();
+    let low_morale_count = squad_players.iter().filter(|p| p.morale < 40).count();
+    let low_condition_count = squad_players.iter().filter(|p| p.condition < 50).count();
+    let avg_morale = if squad_players.is_empty() {
+        0
+    } else {
+        squad_players.iter().map(|p| p.morale as u32).sum::<u32>() / squad_players.len() as u32
+    };
+
+    // Find the team's recent form.
+    let recent_form = game
+        .teams
+        .iter()
+        .find(|t| t.id == team_id)
+        .map(|t| t.form.clone())
+        .unwrap_or_default();
+    let recent_wins = recent_form.iter().rev().take(5).filter(|r| r.as_str() == "W").count();
+    let recent_losses = recent_form.iter().rev().take(5).filter(|r| r.as_str() == "L").count();
+
+    // Generate Gaffer-voice report text.
+    let report_text = if injured_count >= 4 {
+        format!(
+            "Boss, the treatment room's busy — {} lads carrying knocks. We'll need to rotate this week.\n\nSquad morale: {}%. Injuries: {}. Low condition: {}.",
+            injured_count, avg_morale, injured_count, low_condition_count
+        )
+    } else if recent_losses >= 3 {
+        format!(
+            "Gaffer, the lads are low after those results. Confidence needs rebuilding — a win would sort it.\n\nRecent form: {}W {}L. Morale: {}%.",
+            recent_wins, recent_losses, avg_morale
+        )
+    } else if low_morale_count >= 3 {
+        format!(
+            "There's {} lads with morale below 40. Might be worth having a word with them.\n\nSquad morale: {}%. Low morale: {}.",
+            low_morale_count, avg_morale, low_morale_count
+        )
+    } else if recent_wins >= 3 {
+        format!(
+            "Flying, boss. The dressing room's buzzing — {} wins on the bounce.\n\nSquad morale: {}%. Injuries: {}.",
+            recent_wins, avg_morale, injured_count
+        )
+    } else {
+        format!(
+            "Weekly report, gaffer. Squad's in decent shape.\n\nMorale: {}%. Injuries: {}. Low condition: {}.",
+            avg_morale, injured_count, low_condition_count
+        )
+    };
+
+    // Create the inbox message.
+    let msg = domain::message::InboxMessage::new(
+        msg_id,
+        format!("Weekly Report from {}", assistant_name),
+        report_text,
+        assistant_name,
+        today.to_string(),
+    )
+    .with_category(domain::message::MessageCategory::StaffReport)
+    .with_priority(domain::message::MessagePriority::Low)
+    .with_sender_role("Assistant Manager")
+    .with_i18n(
+        "be.msg.weeklyStaffReport.subject",
+        "be.msg.weeklyStaffReport.body",
+        {
+            let mut p = std::collections::HashMap::new();
+            p.insert("assistant".to_string(), assistant_name);
+            p.insert("morale".to_string(), avg_morale.to_string());
+            p.insert("injuries".to_string(), injured_count.to_string());
+            p.insert("lowCondition".to_string(), low_condition_count.to_string());
+            p
+        },
+    )
+    .with_sender_i18n("be.sender.assistant", "be.role.assistantManager");
+
+    game.messages.push(msg);
 }

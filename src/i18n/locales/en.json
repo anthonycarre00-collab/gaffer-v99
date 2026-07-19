@@ -1314,6 +1314,7 @@
       "Finance": "Finance",
       "Contract": "Contract",
       "ScoutReport": "Scout",
+      "StaffReport": "Staff",
       "Media": "Media",
       "System": "System",
       "JobOffer": "Job Offers"
@@ -3181,6 +3182,7 @@
       "boardOfDirectors": "Board of Directors",
       "leagueOffice": "League Office",
       "assistantManager": "Assistant Manager",
+      "assistant": "Assistant Manager",
       "matchReporter": "Match Reporter",
       "headPhysio": "Head Physio",
       "financialDirector": "Financial Director",
@@ -3197,6 +3199,7 @@
       "chairman": "Chairman",
       "competitionSecretary": "Competition Secretary",
       "assistantManager": "Assistant Manager",
+      "assistantManagerRole": "Assistant Manager",
       "pressOfficer": "Press Officer",
       "headPhysio": "Head Physio",
       "financialDirector": "Financial Director",
@@ -3678,6 +3681,10 @@
       "scoutReport": {
         "subject": "Scout Report: {{player}}",
         "body": "Your scout {{scout}} has completed their assessment of {{player}}. Full report available in the scouting section."
+      },
+      "weeklyStaffReport": {
+        "subject": "Weekly Report from {{assistant}}",
+        "body": "Squad morale: {{morale}}%. Injuries: {{injuries}}. Low condition: {{lowCondition}}."
       },
       "scoutVoice": {
         "analytical": "The data's clear on this one.",

@@ -17,6 +17,8 @@ pub enum MessageCategory {
     Finance,
     Contract,
     ScoutReport,
+    /// V100 (Issue #17): Weekly staff report from assistant manager.
+    StaffReport,
     Media,
     System,
     JobOffer,
