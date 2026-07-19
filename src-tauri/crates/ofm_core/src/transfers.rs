@@ -1685,6 +1685,30 @@ fn create_incoming_user_offer(
             registration_date: None,
         });
 
+        // V100 (Issue #5): Bid influence on morale. When a bid is received,
+        // the player's morale shifts slightly based on the bid size relative
+        // to their market value. A big bid from a bigger club can make a
+        // player feel wanted (morale boost) OR want to leave (morale drop
+        // if they're at a smaller club). We keep the effect small (+/-2)
+        // so it doesn't dominate the morale system.
+        let bid_ratio = if player.market_value > 0 {
+            candidate.fee as f64 / player.market_value as f64
+        } else {
+            1.0
+        };
+        // Big bid (≥1.5x market value) → player feels wanted → small morale boost.
+        // Below-market bid (<0.8x) → player feels undervalued → small morale drop.
+        let morale_delta: i16 = if bid_ratio >= 1.5 {
+            2
+        } else if bid_ratio < 0.8 {
+            -2
+        } else {
+            0
+        };
+        if morale_delta != 0 {
+            player.morale = ((player.morale as i16) + morale_delta).clamp(0, 100) as u8;
+        }
+
         // Distinct clubs currently holding a live bid — the figure the digest
         // reports ("N clubs interested").
         let interested_clubs = player

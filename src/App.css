@@ -132,14 +132,14 @@
      Body always uses the carbon palette + pitch-mow background (§8.1). */
   body {
     @apply antialiased;
-    /* V99.11 B1: Pitch-mow background (UI spec §8.1) — subtle diagonal
-       mowing stripes + brass radial glow. Reads as "pitch from a stand"
-       ambiance, not a visible pattern. */
+    /* V100 (Issue #2): Pitch-mow background (UI spec §8.1) — increased
+       opacity from 0.012 to 0.018 so texture is actually visible.
+       Brass radial glow increased from 5% to 8%. */
     background:
-      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.05), transparent 60%),
+      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.08), transparent 60%),
       repeating-linear-gradient(100deg,
-        rgba(255,255,255,0.012) 0px,
-        rgba(255,255,255,0.012) 40px,
+        rgba(255,255,255,0.018) 0px,
+        rgba(255,255,255,0.018) 40px,
         transparent 40px,
         transparent 80px),
       var(--color-carbon-0);
@@ -149,10 +149,10 @@
   .dark body {
     /* Same as body — dark-first means .dark is always on */
     background:
-      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.05), transparent 60%),
+      radial-gradient(1200px 800px at 15% -10%, rgba(198,161,91,0.08), transparent 60%),
       repeating-linear-gradient(100deg,
-        rgba(255,255,255,0.012) 0px,
-        rgba(255,255,255,0.012) 40px,
+        rgba(255,255,255,0.018) 0px,
+        rgba(255,255,255,0.018) 40px,
         transparent 40px,
         transparent 80px),
       var(--color-carbon-0);

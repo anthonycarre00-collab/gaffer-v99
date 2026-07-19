@@ -473,7 +473,22 @@ fn to_engine_player(
         DomainPosition::Midfielder => Position::Midfielder,
         DomainPosition::Forward => Position::Forward,
         _ => Position::Midfielder,
-        
+    };
+
+    // V100 (Issue #3): Out-of-position penalty. If the player's deployed
+    // position group doesn't match their natural position AND isn't in their
+    // alternate_positions, apply a -5% penalty to all attributes. This
+    // reflects the real-world cost of playing someone out of position.
+    let deployed_group = deployed.map(|d| d.to_group_position());
+    let natural_group = p.natural_position.to_group_position();
+    let is_out_of_position = deployed_group.is_some()
+        && deployed_group != Some(natural_group)
+        && !p.alternate_positions.iter().any(|ap| {
+            deployed_group == Some(ap.to_group_position())
+        });
+    let oop_penalty: f64 = if is_out_of_position { 0.95 } else { 1.0 };
+    let apply_penalty = |val: u8| -> u8 {
+        ((val as f64 * oop_penalty).round() as u8).max(1)
     };
 
     PlayerData {
@@ -483,23 +498,23 @@ fn to_engine_player(
         ovr: p.ovr,
         condition: p.condition,
         fitness: p.fitness,
-        // Gaffer 19 attrs — direct mapping
-        pace: p.attributes.pace,
-        burst: p.attributes.burst,
-        engine: p.attributes.engine,
-        power: p.attributes.power,
-        agility: p.attributes.agility,
-        passing: p.attributes.passing,
-        distribution: p.attributes.distribution,
-        touch: p.attributes.touch,
-        finishing: p.attributes.finishing,
-        defending: p.attributes.defending,
-        aerial: p.attributes.aerial,
-        anticipation: p.attributes.anticipation,
-        vision: p.attributes.vision,
-        decisions: p.attributes.decisions,
-        composure: p.attributes.composure,
-        leadership: p.attributes.leadership,
+        // Gaffer 19 attrs — direct mapping (with OOP penalty if applicable)
+        pace: apply_penalty(p.attributes.pace),
+        burst: apply_penalty(p.attributes.burst),
+        engine: apply_penalty(p.attributes.engine),
+        power: apply_penalty(p.attributes.power),
+        agility: apply_penalty(p.attributes.agility),
+        passing: apply_penalty(p.attributes.passing),
+        distribution: apply_penalty(p.attributes.distribution),
+        touch: apply_penalty(p.attributes.touch),
+        finishing: apply_penalty(p.attributes.finishing),
+        defending: apply_penalty(p.attributes.defending),
+        aerial: apply_penalty(p.attributes.aerial),
+        anticipation: apply_penalty(p.attributes.anticipation),
+        vision: apply_penalty(p.attributes.vision),
+        decisions: apply_penalty(p.attributes.decisions),
+        composure: apply_penalty(p.attributes.composure),
+        leadership: apply_penalty(p.attributes.leadership),
         // Personality-derived for engine simulation
         aggression: p.personality.neuroticism,
         teamwork: p.personality.agreeableness,

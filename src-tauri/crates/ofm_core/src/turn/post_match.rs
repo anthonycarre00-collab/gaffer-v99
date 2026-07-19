@@ -195,6 +195,28 @@ pub fn apply_match_report_with_capture<F>(
         fixture.result = Some(result);
         crate::group_stage::process_completed_fixture(league, fixture_index);
         crate::schedule::advance_knockout_competition_round(league);
+
+        // V100 FIX (Issue #11): Re-sort standings after match result to ensure
+        // league table positions are correct. Previously only the sparse AI sim
+        // path sorted standings; the user match path (apply_match_report) did
+        // not, which could leave standings in stale order.
+        if counts_for_standings {
+            league.standings.sort_by(|a, b| {
+                b.points.cmp(&a.points)
+                    .then_with(|| {
+                        let a_gd = a.goals_for.saturating_sub(a.goals_against);
+                        let b_gd = b.goals_for.saturating_sub(b.goals_against);
+                        b_gd.cmp(&a_gd)
+                    })
+                    .then_with(|| b.goals_for.cmp(&a.goals_for))
+            });
+            log::debug!(
+                "[post_match] Standings re-sorted after match: {} vs {} ({}-{}), competition={}",
+                home_team_id, away_team_id,
+                result.home_goals, result.away_goals,
+                league.id
+            );
+        }
     }
 
     on_capture(build_stats_state_capture(
