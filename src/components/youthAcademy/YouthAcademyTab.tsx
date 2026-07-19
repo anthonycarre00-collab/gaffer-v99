@@ -33,7 +33,7 @@ import type { PlayerSquadRole } from "../../store/types";
 import { calculateAvailableScouts } from "../scouting/ScoutingTab.helpers";
 import ScoutingYouthRecruitmentCard from "../scouting/ScoutingYouthRecruitmentCard";
 import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
-import { interpretCondition, interpretGrowthRoom } from "../../lib/gafferEngine";
+import { interpretCondition, interpretGrowthRoom, interpretPotential } from "../../lib/gafferEngine";
 
 interface YouthAcademyTabProps {
  gameState: GameStateData | null;
@@ -42,20 +42,7 @@ interface YouthAcademyTabProps {
  onNavigate?: (tab: string, context?: DashboardNavigateContext) => void;
 }
 
-function getPotentialLabel(
- potential: number,
- t: (key: string) => string,
-): { label: string; color: string } {
- if (potential >= 85)
- return { label: t("youthAcademy.potWorldClass"), color: "text-accent-400" };
- if (potential >= 75)
- return { label: t("youthAcademy.potExcellent"), color: "text-success-400" };
- if (potential >= 65)
- return { label: t("youthAcademy.potPromising"), color: "text-primary-400" };
- if (potential >= 55)
- return { label: t("youthAcademy.potDecent"), color: "text-ink-faint" };
- return { label: t("youthAcademy.potLimited"), color: "text-ink-faint" };
-}
+// V100: getPotentialLabel removed — replaced by interpretPotential from gafferEngine.
 
 export default function YouthAcademyTab({
  gameState,
@@ -260,8 +247,9 @@ export default function YouthAcademyTab({
  <CardBody>
  <div className="text-center">
  <Star className="w-5 h-5 text-accent-400 mx-auto mb-1" />
- <p className="font-heading font-bold text-2xl text-ink">
- {avgOvr}
+ {/* V100: Use Gaffer voice for avg OVR instead of raw number. */}
+ <p className="font-heading font-bold text-2xl text-ink" title={interpretOvr(avgOvr).description}>
+ {shortOvrLabel(avgOvr)}
  </p>
  <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.avgOvr")}
@@ -273,8 +261,9 @@ export default function YouthAcademyTab({
  <CardBody>
  <div className="text-center">
  <TrendingUp className="w-5 h-5 text-success-500 mx-auto mb-1" />
- <p className="font-heading font-bold text-2xl text-ink">
- {avgPotential}
+ {/* V100: Use Gaffer voice for avg potential. */}
+ <p className="font-heading font-bold text-2xl text-ink" title={interpretPotential(avgPotential).description}>
+ {interpretPotential(avgPotential).short}
  </p>
  <p className="text-[10px] text-ink-faint font-heading uppercase tracking-wider">
  {t("youthAcademy.avgPotential")}
@@ -522,7 +511,7 @@ export default function YouthAcademyTab({
  </thead>
  <tbody className="divide-y divide-slate-line-soft dark:divide-slate-line">
  {youthPlayers.map((player) => {
- const potLabel = getPotentialLabel(player.potential, t);
+ // V100: potLabel replaced by interpretPotential — removed unused variable.
  const growthRoom = player.potential - player.ovr;
  const contextItems = [
  buildViewProfileMenuItem(t, () => onSelectPlayer?.(player.id)),
@@ -584,16 +573,20 @@ export default function YouthAcademyTab({
  </span>
  </td>
  <td className="py-2.5 px-4 text-center">
- <span
- className={`text-sm font-mono font-mono font-bold tabular-nums ${potLabel.color}`}
- >
- {player.potential}
+ {/* V100: Use Gaffer voice for potential instead of raw number. */}
+ {(() => {
+ const potInterp = interpretPotential(player.potential);
+ return (
+ <>
+ <span className={`text-sm font-mono font-bold tabular-nums ${potInterp.colorClass}`}>
+ {potInterp.short}
  </span>
- <p
- className={`text-[9px] font-heading uppercase tracking-wider ${potLabel.color}`}
- >
- {potLabel.label}
+ <p className={`text-[9px] font-heading uppercase tracking-wider ${potInterp.colorClass}`}>
+ {potInterp.description}
  </p>
+ </>
+ );
+ })()}
  </td>
  <td className="py-2.5 px-4">
  <div className="flex items-center gap-2">

@@ -363,6 +363,54 @@ pub fn submit_press_conference(
 
             game.news.push(article);
 
+            // V100 (Issue #4): Sensationalist tabloid story from controversial
+            // press conference responses. When the manager gives "curt",
+            // "evasive", or "defiant" responses, there's a chance a tabloid
+            // picks it up and spins it into a controversy article.
+            // Balanced: 30% chance per controversial response, max 1 article.
+            let controversy_count = answers.iter().filter(|a| {
+                matches!(a.response_id.as_str(), "curt" | "evasive" | "defiant" | "frustrated")
+            }).count();
+
+            if controversy_count > 0 && rng.random_range(0.0..1.0f64) < 0.30 {
+                let tabloid_sources = [
+                    "be.source.backPageNet",
+                    "be.source.touchlineTalk",
+                    "be.source.pitchSideGossip",
+                ];
+                let src_idx = rng.random_range(0..tabloid_sources.len());
+
+                let controversy_headlines = [
+                    format!("{} Sparks Press Conference Storm", user_team_name),
+                    format!("Gaffer Loses Cool: {} in Bizarre Press Conference", user_team_name),
+                    format!("{} Manager's Bizarre Rant Leaves Journalists Stunned", user_team_name),
+                    format!("Press Conference Meltdown: {} Boss Sees Red", user_team_name),
+                ];
+                let headline_idx = rng.random_range(0..controversy_headlines.len());
+
+                let controversy_article = domain::news::NewsArticle::new(
+                    format!("press_controversy_{}", today),
+                    String::new(),
+                    String::new(),
+                    String::new(),
+                    today.clone(),
+                    domain::news::NewsCategory::Editorial,
+                )
+                .with_teams(vec![user_team_id.clone()])
+                .with_i18n(
+                    "be.news.pressControversy.headline",
+                    "be.news.pressControversy.body",
+                    tabloid_sources[src_idx],
+                    {
+                        let mut p = HashMap::new();
+                        p.insert("team".to_string(), user_team_name.clone());
+                        p.insert("headline".to_string(), controversy_headlines[headline_idx].clone());
+                        p
+                    },
+                );
+                game.news.push(controversy_article);
+            }
+
             serde_json::json!({
                 "game": game,
                 "morale_delta": morale_delta

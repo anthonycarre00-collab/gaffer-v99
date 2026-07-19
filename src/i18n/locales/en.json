@@ -3940,6 +3940,10 @@
         "bodySingle": "The {{team}} manager spoke briefly after the {{result}} result.\n\n\"{{quote}}\"",
         "bodyNone": "The {{team}} manager declined to speak at length after the {{result}} result."
       },
+      "pressControversy": {
+        "headline": "{{headline}}",
+        "body": "The {{team}} manager's tone in the post-match press conference raised eyebrows, with curt responses and pointed remarks drawing criticism from the assembled media. One journalist described the exchange as 'frosty at best'. The gaffer's handling of the press is sure to be a talking point in the days ahead."
+      },
       "worldCupHostBid": {
         "headline": "The Race to Host {{year}}",
         "body": "{{count}} nations have entered the bidding to host the {{year}} World Cup. Stadiums, infrastructure and football passion will all weigh on the decision."
