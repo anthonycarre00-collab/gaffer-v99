@@ -395,9 +395,11 @@ export default function SquadRosterView({
 
  return (
  <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-ink-dim">
- <span className="font-medium">
+ <span className="font-medium" title={t("squad.bestRoleTooltip", { defaultValue: "The role this player is best suited to in the current formation." })}>
  {t("squad.bestRole")}: {translatePositionAbbreviation(t, bestRole)}
  </span>
+ {/* V100 (Issue #32): Style fit tooltip explaining what it means. */}
+ <span title={t("squad.styleFitTooltip", { defaultValue: "How well this player's attributes match the team's current playing style. Strong = ideal fit, Good = decent, Poor = mismatch." })}>
  <Badge
  variant={
  styleFit === "strong"
@@ -410,6 +412,7 @@ export default function SquadRosterView({
  >
  {t(`squad.styleFitValues.${styleFit}`)}
  </Badge>
+ </span>
  </div>
  );
  };
