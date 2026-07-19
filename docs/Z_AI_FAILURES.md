@@ -161,3 +161,32 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 2)
+
+### Newly completed:
+- [x] P1-8: Scout bias FULLY WIRED — was always None, now generated deterministically
+  from scout id hash + judging_ability in BOTH staff_repo.rs (load) and generation.rs (creation)
+- [x] P1-14: Role groups/style fit tooltips on Squad tab
+- [x] P1-16: Other Gaffers — added trophies, board satisfaction, fan approval, W-D-L grid
+- [x] Scout bias badge displayed on Staff tab card ('Pace Merchant' etc.)
+- [x] scout_bias + personality added to frontend StaffData type
+
+### Still outstanding (unchanged):
+- [ ] P1-5: Replace remaining sidebar icons with GafferIcons
+- [ ] P1-6: News visual differentiation (tabloid/broadsheet/social icons)
+- [ ] P1-15: Transfer Centre improvements
+- [ ] P1-17: Player search — age/nation/attribute label filters
+- [ ] P1-18: Staff weekly meeting trigger + UI
+- [ ] P2-1: Wire extra_time/penalties/prestige fields
+- [ ] P2-2: Surface cup_target_round in UI
+- [ ] P2-3: Reserve team sparse sim
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Button focus rings everywhere
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
