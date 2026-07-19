@@ -37,17 +37,16 @@ interface CardHeaderProps {
 }
 
 export function CardHeader({ children, action, className = "" }: CardHeaderProps) {
- // V99.11: Brass-tinted header band. Uses gaffer-header-gradient for
- // subtle depth + brass-marker bar (the signature motif from the UI spec).
+ // V100 (UI spec §4): Brass marker bar — 3×11px brass rectangle before every
+ // card title. This is the signature motif from the UI spec.
  return (
  <div
- className={`gaffer-header-gradient px-3.5 py-2.5 border-b border-accent-500/15 dark:border-accent-500/20 flex items-center justify-between ${className}`}
+ className={`gaffer-header-gradient px-3.5 py-2.5 border-b border-accent-500/15 flex items-center justify-between ${className}`}
  >
  <div className="flex items-center gap-2">
- {/* V99.11: Brass marker bar — 3×11px brass rectangle before every
-   card title (UI spec §4 signature motif) */}
+ {/* V100: Brass marker bar — 3×11px brass rectangle (UI spec §4). */}
  <span className="inline-block h-[11px] w-[3px] bg-accent-500 shrink-0" />
- <h3 className="text-xs font-heading font-bold uppercase tracking-[0.09em] text-concrete dark:text-chalk">
+ <h3 className="text-xs font-heading font-bold uppercase tracking-[0.09em] text-ink-dim">
  {children}
  </h3>
  </div>

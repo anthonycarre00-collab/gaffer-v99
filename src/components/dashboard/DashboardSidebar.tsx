@@ -124,6 +124,9 @@ export default function DashboardSidebar({
 }: DashboardSidebarProps): JSX.Element {
  const { t } = useTranslation();
 
+ // V100: Replace remaining generic icons with Gaffer-styled ones.
+ // Home, Inbox, News, Schedule, Settings, Staff, Exit, Manager profile
+ // use the Gaffer icon set from icons/index.tsx (football-specific SVGs).
  const clubItems: Array<{ icon: JSX.Element; label: string; tab: string }> = [
  { icon: <UsersIcon />, label: t("dashboard.squad"), tab: "Squad" },
  { icon: <CrosshairIcon />, label: t("dashboard.tactics"), tab: "Tactics" },

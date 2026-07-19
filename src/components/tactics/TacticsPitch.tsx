@@ -356,28 +356,33 @@ export default function TacticsPitch({
  aria-hidden="true"
  >
  <defs>
+ {/* V100 (Issue #3/UI spec §9): Turf pitch with proper mow-stripe greens. */}
  <linearGradient id="tactics-pitch-surface" x1="0" x2="0" y1="0" y2="1">
- <stop offset="0%" stopColor="rgba(63, 172, 99, 0.94)" />
- <stop offset="100%" stopColor="rgba(31, 109, 61, 0.98)" />
+ <stop offset="0%" stopColor="#2a5238" />
+ <stop offset="50%" stopColor="#274d33" />
+ <stop offset="100%" stopColor="#244830" />
  </linearGradient>
+ {/* V100: Alternating mow stripes — two close greens per UI spec §9.1. */}
  <pattern
  id="tactics-pitch-stripes"
  width="100"
  height="20"
  patternUnits="userSpaceOnUse"
  >
- <rect width="100" height="10" fill="rgba(255,255,255,0.04)" />
+ <rect width="100" height="10" fill="rgba(255,255,255,0.025)" />
+ <rect y="10" width="100" height="10" fill="rgba(0,0,0,0.015)" />
  </pattern>
  </defs>
  <rect x="0" y="0" width="100" height="140" fill="url(#tactics-pitch-surface)" />
  <rect x="0" y="0" width="100" height="140" fill="url(#tactics-pitch-stripes)" />
+ {/* V100: Pitch markings — brighter per spec (60% opacity off-white). */}
  <rect
  x="4"
  y="4"
  width="92"
  height="132"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233, 230, 221, 0.55)"
  strokeWidth="0.6"
  />
  <line
@@ -385,7 +390,7 @@ export default function TacticsPitch({
  y1="70"
  x2="96"
  y2="70"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <circle
@@ -393,17 +398,17 @@ export default function TacticsPitch({
  cy="70"
  r="11"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
- <circle cx="50" cy="70" r="0.8" fill="rgba(255,255,255,0.75)" />
+ <circle cx="50" cy="70" r="0.8" fill="rgba(233,230,221,0.75)" />
  <rect
  x="18"
  y="4"
  width="64"
  height="18"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <rect
@@ -412,7 +417,7 @@ export default function TacticsPitch({
  width="38"
  height="8"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <rect
@@ -421,7 +426,7 @@ export default function TacticsPitch({
  width="64"
  height="18"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <rect
@@ -430,19 +435,19 @@ export default function TacticsPitch({
  width="38"
  height="8"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <path
  d="M 38 22 A 12 12 0 0 0 62 22"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  <path
  d="M 38 118 A 12 12 0 0 1 62 118"
  fill="none"
- stroke="rgba(255,255,255,0.55)"
+ stroke="rgba(233,230,221,0.55)"
  strokeWidth="0.6"
  />
  {tacticsPhase ? <TacticalOverlays phase={tacticsPhase} /> : null}

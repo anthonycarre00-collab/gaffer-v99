@@ -116,7 +116,7 @@ export function PitchToken({
  </div>
  <PlayerAvatar
  player={avatar ?? { full_name: name, match_name: name }}
- className={`h-14 w-14 overflow-hidden rounded-full ${fitRingClass(fitTone)}`}
+ className={`h-14 w-14 overflow-hidden rounded-full ring-2 ring-accent-500/60 ${fitRingClass(fitTone)}`}
  />
  <div className="absolute -bottom-1 -right-1.5 z-10">
  <span

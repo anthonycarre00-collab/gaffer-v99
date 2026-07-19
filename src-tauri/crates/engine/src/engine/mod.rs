@@ -247,7 +247,10 @@ fn simulate_minute<R: Rng>(ctx: &mut MatchContext, minute: u8, rng: &mut R) {
     ctx.home_condition = (ctx.home_condition - home_depletion).max(0.70_f64.min(ctx.home_condition));
     ctx.away_condition = (ctx.away_condition - away_depletion).max(0.70_f64.min(ctx.away_condition));
 
-    let actions = rng.random_range(1..=3u8);
+    // V100 (Issue #12): Increased actions per minute from 1-3 to 2-4 for more
+    // event variety in the commentary feed. More actions = more passes, tackles,
+    // shots, fouls = busier match feed that feels alive.
+    let actions = rng.random_range(2..=4u8);
     for _ in 0..actions {
         resolution::resolve_action(ctx, minute, rng);
     }

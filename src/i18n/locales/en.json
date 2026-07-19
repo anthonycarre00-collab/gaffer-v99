@@ -2548,7 +2548,12 @@
         "GOAL! {{scorer}} hammers it home — the keeper didn't stand a chance!",
         "Top-drawer finish! {{scorer}} wraps his foot around that and bends it home!",
         "GOAL! {{scorer}} keeps his head when everyone else is losing theirs!",
-        "The crowd goes absolutely mental! {{scorer}} has sent them into dreamland!"
+        "The crowd goes absolutely mental! {{scorer}} has sent them into dreamland!",
+        "Quality finish — {{player}} made that look easy.",
+        "{{player}} rattles it in! The keeper had no chance.",
+        "Goal! {{player}} side-foots it home with composure beyond his years.",
+        "{{player}} smashes it into the roof of the net! What a hit!",
+        " clinical from {{player}} — that's why he's in the team."
       ],
       "goalOpener": [
         "That's the breakthrough! {{scorer}} opens the scoring — huge goal!",
@@ -2592,21 +2597,37 @@
         "The goalkeeper says NO! Magnificent reflexes!",
         "World-class save! That's why he's between the sticks!",
         "Denied! The keeper reads it perfectly!",
-        "What a stop! The keeper came up big when it mattered!"
+        "What a stop! The keeper came up big when it mattered!",
+        "Brilliant stop! The keeper got down well to that one.",
+        "Great save — he read it all the way.",
+        "The keeper parries it away! Top-drawer goalkeeping.",
+        "Denied! The keeper was equal to it.",
+        "Wonderful reflex save — that looked a certain goal.",
+        "The keeper stands tall and beats it away!"
       ],
       "miss": [
         "He's skied it! How did he miss that?!",
         "Wide! That should've been the opener — dreadful finish.",
         "Off the post! Inches away from something special.",
         "Over the bar! He'll be having nightmares about that one.",
-        "Dragged wide! That's a bad miss — he knows it too."
+        "Dragged wide! That's a bad miss — he knows it too.",
+        "{{player}} should've done better — dragged it wide.",
+        "Over the bar! {{player}} leaned back as he struck it.",
+        "{{player}} flashes it past the post — inches away.",
+        "How has he missed that?! {{player}} will be having nightmares.",
+        "{{player}} snatches at it and skews it wide — poor."
       ],
       "tackle": [
         "Crunching tackle from {{player}} — that's how you win it back!",
         "{{player}} wins it cleanly — proper defender's tackle.",
         "Big tackle from {{player}} — that's lifted the whole team!",
         "{{player}} reads it and wins the ball. Class.",
-        "Hard but fair from {{player}} — sets the tone."
+        "Hard but fair from {{player}} — sets the tone.",
+        "Crunching tackle from {{player}} — proper centre-half stuff.",
+        "{{player}} wins it cleanly — great timing.",
+        "{{player}} dispossesses him with a perfectly timed challenge.",
+        "Big tackle from {{player}} — that's lifted the crowd.",
+        "{{player}} slides in and wins it — no foul, great tackle."
       ],
       "card": [
         "Yellow card. Reckless challenge — he can have no complaints.",
@@ -2658,7 +2679,12 @@
         "Simple ball from {{player}}, plays it to feet.",
         "{{player}} switches it to the other flank — good vision.",
         "Crisp pass from {{player}}. The shape's holding.",
-        "{{player}} plays it short — patient buildup."
+        "{{player}} plays it short — patient buildup.",
+        "{{player}} finds his man — simple but effective.",
+        "Lovely ball from {{player}} — weighted perfectly.",
+        "{{player}} switches the play — good vision.",
+        "Crisp passing from {{player}} — one-touch stuff.",
+        "{{player}} picks out his teammate with a precise ball."
       ],
       "passIntercepted": [
         "{{player}} reads it and nicks the pass! Great anticipation.",
@@ -2672,42 +2698,72 @@
         "He's gone past him! {{player}} with a sudden burst.",
         "{{player}} beats his man — the crowd's on their feet.",
         "Trickery from {{player}} — he's made a yard of space.",
-        "{{player}} drives past the challenge — positive play."
+        "{{player}} drives past the challenge — positive play.",
+        "{{player}} skips past his man — lovely feet.",
+        "Brilliant dribble from {{player}} — he made it look easy.",
+        "{{player}} glides past the defender — silky stuff.",
+        "{{player}} beats him with the body swerve — no chance for the defender.",
+        "Off he goes! {{player}} leaves the defender for dead."
       ],
       "dribbleTackled": [
         "He's lost it! {{player}} dispossessed — sloppy.",
         "Tackled. {{player}} tried to dribble out and got caught.",
         "{{player}} is robbed of the ball — that was risky.",
         "The defender wins it cleanly off {{player}} — no foul.",
-        "{{player}} tries one too many — the tackle comes in."
+        "{{player}} tries one too many — the tackle comes in.",
+        "{{player}} is dispossessed — good defending.",
+        "The defender times it perfectly — {{player}} loses out.",
+        "{{player}} runs into a dead end — tackled cleanly.",
+        "Strong challenge — {{player}} can't get past his man.",
+        "{{player}} is eased off the ball — physical defending."
       ],
       "cross": [
         "{{player}} whips it in — dangerous ball!",
         "Cross from {{player}} — looking for the head in the middle.",
         "{{player}} arcs it towards the back post — good delivery.",
         "Into the mixer from {{player}} — the big lads are up.",
-        "{{player}} hangs up a cross — begging to be attacked."
+        "{{player}} hangs up a cross — begging to be attacked.",
+        "{{player}} whips it in — dangerous ball.",
+        "Great cross from {{player}} — right onto the money.",
+        "{{player}} flights it into the box — inviting.",
+        "{{player}} delivers — who's going to get on the end of it?",
+        "Quality ball in from {{player}} — the defence is scrambling."
       ],
       "interception": [
         "{{player}} cuts it out — reads the danger perfectly.",
         "Vital interception from {{player}} — breaks up the attack.",
         "{{player}} steps across and tidies up.",
         "Smart defending from {{player}} — that's anticipation.",
-        "{{player}} nicks it away — the move breaks down."
+        "{{player}} nicks it away — the move breaks down.",
+        "{{player}} reads it and cuts it out — great anticipation.",
+        "{{player}} nicks in front of the striker — vital interception.",
+        "Brilliant reading of the game from {{player}}.",
+        "{{player}} intercepts — that's killed the attack dead.",
+        "Quick thinking from {{player}} to cut that out."
       ],
       "clearance": [
         "{{player}} hoofs it clear — get rid of it!",
         "Big clearance from {{player}} — relief for the defence.",
         "{{player}} smashes it into Row Z — no nonsense.",
         "Headed clear by {{player}} — the danger's gone.",
-        "{{player}} hacks it away — sometimes simple is best."
+        "{{player}} hacks it away — sometimes simple is best.",
+        "{{player}} hacks it clear — no-nonsense defending.",
+        "Big clearance from {{player}} — into row Z.",
+        "{{player}} heads it away — relieving the pressure.",
+        "{{player}} smashes it upfield — get rid of it.",
+        "Defensive header from {{player}} — clears the danger."
       ],
       "corner": [
         "Corner to {{team}}. Chance to put them under pressure.",
         "{{team}} win a corner — the big lads go forward.",
         "Corner kick. {{team}} loading the box.",
         "{{team}} have a corner — this is a real opportunity.",
-        "Ref points to the corner flag. {{team}} to take."
+        "Ref points to the corner flag. {{team}} to take.",
+        "Corner to {{side}} — the keeper calls his men forward.",
+        "{{side}} win a corner — chance to put pressure on.",
+        "The keeper tips it behind! Corner to {{side}}.",
+        "{{side}} have a corner — the big lads come up.",
+        "Deflected behind for a corner to {{side}}."
       ],
       "freeKick": [
         "Free kick to {{team}} — in a dangerous position.",
@@ -2721,7 +2777,12 @@
         "{{team}} take the goal kick short — playing out from the back.",
         "Goal kick to {{team}} — back to square one for the opposition.",
         "{{team}} hoof it clear from the goal kick.",
-        "{{team}} restart with a goal kick."
+        "{{team}} restart with a goal kick.",
+        "Goal kick — the keeper plays it long.",
+        "The keeper launches it downfield.",
+        "Goal kick — {{side}} look to regroup.",
+        "The keeper plays it short from the back.",
+        "Goal kick — {{side}} try to build from the back."
       ],
       "shootoutGoal": [
         "SCORED! {{player}} cool as you like from the spot.",
@@ -2770,6 +2831,11 @@
         "Powerful header from {{player}} — the defender couldn't compete.",
         "{{player}} rises highest — wins the aerial duel.",
         "Bullet header from {{player}} — proper centre-half stuff.",
+        "{{player}} dominates in the air — no contest.",
+        "{{player}} wins the header — beats his man in the air!",
+        "Powerful header from {{player}} — the defender couldn't compete.",
+        "{{player}} rises highest — wins the aerial duel.",
+        "Bullet header from {{player}} — proper centre-half stuff.",
         "{{player}} dominates in the air — no contest."
       ],
       "headerLost": [
@@ -2784,7 +2850,12 @@
         "Offside! {{player}} timed the run too early.",
         "Linesman's flag — {{player}} just behind the line.",
         "Offside against {{player}} — the defender caught him napping.",
-        "Flag goes up — {{player}} was a yard off."
+        "Flag goes up — {{player}} was a yard off.",
+        "Flag's up — {{player}} went a step too early.",
+        "Offside! {{player}} mistimed his run.",
+        "Linesman's flag — {{player}} was miles off.",
+        "{{player}} is flagged offside — the defender held the line perfectly.",
+        "Offside against {{player}} — that was tight."
       ],
       "penaltyGoal": [
         "PENALTY! {{scorer}} slots it home from the spot — nerveless!",
@@ -2798,14 +2869,24 @@
         "The shot's charged down — no way through for {{player}}.",
         "{{player}}'s effort is blocked — the wall stood tall.",
         "Deflected behind for a corner — {{player}}'s shot didn't make it through.",
-        "Big block! {{player}}'s shot cannoned away to safety."
+        "Big block! {{player}}'s shot cannoned away to safety.",
+        "Blocked! The defender threw himself in front of it.",
+        "{{player}}'s effort is charged down — brave defending.",
+        "The wall does its job — blocked away to safety.",
+        "{{player}} sees his shot blocked — no way through.",
+        "Defensive block denies {{player}} — great commitment."
       ],
       "foul": [
         "Foul by {{player}} — the ref blows straight away.",
         "{{player}} concedes the free kick — clumsy challenge.",
         "Whistle goes — {{player}} caught {{victim}} late.",
         "{{player}} is in the book waiting to happen — another foul given.",
-        "Free kick conceded by {{player}} — he'll have to be careful now."
+        "Free kick conceded by {{player}} — he'll have to be careful now.",
+        "{{player}} clatters into him — that's a free kick.",
+        "Late challenge from {{player}} — the ref blows immediately.",
+        "{{player}} goes through the back of him — clumsy.",
+        "{{player}} leaves one in — the referee has a word.",
+        "Tactical foul from {{player}} — he knew what he was doing."
       ],
       "kickOff": [
         "And we're off! The match is underway.",
