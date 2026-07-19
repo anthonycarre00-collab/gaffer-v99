@@ -477,6 +477,28 @@ pub(super) fn generate_random_staff_unattached_from_def(
         attributes,
     );
     s.nationality = nationality.to_string();
+
+    // V100 (Issue #18): Generate scout_bias for scouts at creation time.
+    // Each scout gets a deterministic bias profile based on their id hash.
+    if role == StaffRole::Scout {
+        let hash: u64 = s.id.bytes().fold(0u64, |acc, b| {
+            acc.wrapping_mul(31).wrapping_add(b as u64)
+        });
+        let archetype = hash % 5;
+        s.scout_bias = Some(domain::staff::ScoutBias {
+            pace_bias: if archetype == 0 { 1.20 } else { 1.0 },
+            power_bias: if archetype == 1 { 1.20 } else { 1.0 },
+            defending_bias: if archetype == 2 { 1.20 } else { 1.0 },
+            attacking_bias: if archetype == 3 { 1.20 } else { 1.0 },
+            noise_level: match attributes.judging_ability {
+                80..=100 => 0.05,
+                60..=79 => 0.15,
+                40..=59 => 0.30,
+                _ => 0.50,
+            },
+        });
+    }
+
     s
 }
 

@@ -383,6 +383,16 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  {youthLoadLabel}
  </span>
  ) : null}
+ {/* V100 (Issue #18): Show scout bias type. */}
+ {staff.role === "Scout" && staff.scout_bias ? (
+ <span className="text-[10px] bg-carbon-3 text-ink-dim px-1.5 py-0.5 rounded font-heading uppercase tracking-wider italic">
+ {staff.scout_bias.pace_bias > 1.1 ? "Pace Merchant" :
+ staff.scout_bias.power_bias > 1.1 ? "Power House" :
+ staff.scout_bias.defending_bias > 1.1 ? "Defensive Mind" :
+ staff.scout_bias.attacking_bias > 1.1 ? "Attacking Eye" :
+ "Balanced Scout"}
+ </span>
+ ) : null}
  </div>
 
  {/* Attributes */}

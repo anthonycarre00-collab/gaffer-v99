@@ -93,27 +93,66 @@ fn row_to_staff(row: &rusqlite::Row) -> rusqlite::Result<Staff> {
     let role_str: String = row.get(7)?;
     let attrs_json: String = row.get(8)?;
     let spec_str: Option<String> = row.get(10)?;
+    let staff_id: String = row.get(0)?;
+    let parsed_role = parse_role(&role_str);
+    let parsed_attrs: StaffAttributes = serde_json::from_str(&attrs_json).unwrap_or(StaffAttributes {
+        coaching: 50,
+        judging_ability: 50,
+        judging_potential: 50,
+        physiotherapy: 50,
+    });
+
+    // V100 (Issue #18): Generate scout_bias deterministically from the scout's
+    // id + attributes. This ensures:
+    // 1. The same scout always gets the same bias (stable across save/load)
+    // 2. Different scouts get different biases (variety)
+    // 3. No DB schema change needed (bias is derived, not stored)
+    // The bias is based on a hash of the scout's id, so it's deterministic
+    // but varies per scout.
+    let scout_bias = if parsed_role == domain::staff::StaffRole::Scout {
+        let hash: u64 = staff_id.bytes().fold(0u64, |acc, b| {
+            acc.wrapping_mul(31).wrapping_add(b as u64)
+        });
+        // Use hash to pick a bias archetype:
+        // 0: pace merchant (overrates pace)
+        // 1: power house (overrates power)
+        // 2: defensive mind (overrates defending)
+        // 3: attacking eye (overrates attacking)
+        // 4: balanced (slight noise, no strong bias)
+        let archetype = hash % 5;
+        Some(domain::staff::ScoutBias {
+            pace_bias: match archetype { 0 => 1.20, _ => 1.0 },
+            power_bias: match archetype { 1 => 1.20, _ => 1.0 },
+            defending_bias: match archetype { 2 => 1.20, _ => 1.0 },
+            attacking_bias: match archetype { 3 => 1.20, _ => 1.0 },
+            // Lower judging ability = more noise (less accurate reports)
+            noise_level: match parsed_attrs.judging_ability {
+                80..=100 => 0.05,
+                60..=79 => 0.15,
+                40..=59 => 0.30,
+                _ => 0.50,
+            },
+        })
+    } else {
+        None
+    };
 
     Ok(Staff {
-        id: row.get(0)?,
+        id: staff_id,
         first_name: row.get(1)?,
         last_name: row.get(2)?,
         date_of_birth: row.get(3)?,
         nationality: row.get(4)?,
         football_nation: row.get(5)?,
         birth_country: row.get(6)?,
-        role: parse_role(&role_str),
-        attributes: serde_json::from_str(&attrs_json).unwrap_or(StaffAttributes {
-            coaching: 50,
-            judging_ability: 50,
-            judging_potential: 50,
-            physiotherapy: 50,
-        }),
+        role: parsed_role,
+        attributes: parsed_attrs,
         team_id: row.get(9)?,
         specialization: spec_str.and_then(|s| parse_specialization(&s)),
-        // V100 P1 (Issue #17/#18): personality + scout_bias not persisted to DB yet.
+        // V100 P1 (Issue #17/#18): personality not persisted to DB yet.
         personality: None,
-        scout_bias: None,
+        // V100 (Issue #18): scout_bias generated deterministically from id + attrs.
+        scout_bias,
         wage: row.get(11)?,
         contract_end: row.get(12)?,
     })

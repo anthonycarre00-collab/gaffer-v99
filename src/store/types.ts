@@ -393,6 +393,16 @@ export interface StaffData {
   };
   team_id: string | null;
   specialization: string | null;
+  /** V100 (Issue #18): Scout bias profile — only set for scouts. */
+  scout_bias?: {
+    pace_bias: number;
+    power_bias: number;
+    defending_bias: number;
+    attacking_bias: number;
+    noise_level: number;
+  } | null;
+  /** V100 (Issue #17): Staff personality — Big Five model. */
+  personality?: PersonalityProfile | null;
   wage: number;
   contract_end: string | null;
 }
