@@ -190,3 +190,28 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 3)
+
+### Newly completed:
+- [x] P1-5: ALL sidebar icons replaced with GafferIcons (HomePitch, MailSlot, Newspaper, CalendarWhistle, SettingsCog)
+- [x] P1-6: News source type badges (Tab/Bro/Soc) on article cards
+- [x] P2-1: extra_time field wired into live match engine (KnockoutOnly/Never/Always)
+- [x] P2-2: cup_target_round surfaced as board objective
+- [x] Button focus rings verified (global *:focus-visible with 2px brass)
+
+### Still outstanding:
+- [ ] P1-15: Transfer Centre improvements
+- [ ] P1-17: Player search — age/nation/attribute label filters
+- [ ] P1-18: Staff weekly meeting trigger + UI
+- [ ] P2-3: Reserve team sparse sim
+- [ ] penalties field wired into engine
+- [ ] prestige field wired into news/board/prize logic
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
