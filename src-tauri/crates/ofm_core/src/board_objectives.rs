@@ -227,6 +227,14 @@ pub fn generate_objectives(game: &mut Game) {
             objective_type: ObjectiveType::FinancialStability,
             met: false,
         },
+        // V100 (Issue #37): Cup target objective — surfaces cup_target_round.
+        BoardObjective {
+            id: "obj_cup".to_string(),
+            description: "boardObjectives.objective.CupRun".to_string(),
+            target: targets.cup_target_round,
+            objective_type: ObjectiveType::Wins, // Reuse Wins type — progress tracked separately
+            met: false,
+        },
     ];
 
     // Send inbox message about objectives

@@ -247,12 +247,33 @@ pub fn create_live_match(
     // V100 P0-6 (Issue #8): Look up the competition's rules to derive the
     // bench size (max_subs). Falls back to 5 if the competition isn't found
     // or has no rules set (legacy saves).
-    let max_subs: u8 = game
+    // V100 (Issue #8): Also derive allows_extra_time from CompetitionRules.
+    // Previously this was passed as a separate bool parameter; now we check
+    // the competition's extra_time rule. KnockoutOnly = extra time in
+    // knockout rounds only, Always = always, Never = never.
+    let competition_rules = game
         .competitions
         .iter()
         .find(|c| c.id == fixture.competition_id)
-        .map(|c| c.rules.bench_size)
+        .map(|c| &c.rules);
+    let max_subs: u8 = competition_rules
+        .map(|r| r.bench_size)
         .unwrap_or(5);
+    // V100: If the competition has an extra_time rule, use it. Otherwise fall
+    // back to the allows_extra_time parameter (for backward compat).
+    let effective_extra_time = competition_rules
+        .map(|r| match r.extra_time {
+            domain::league::ExtraTimeRule::Never => false,
+            domain::league::ExtraTimeRule::KnockoutOnly => {
+                // Check if this is a knockout fixture (cup competition)
+                matches!(fixture.competition, domain::league::FixtureCompetition::Cup
+                    | domain::league::FixtureCompetition::ContinentalClub
+                    | domain::league::FixtureCompetition::InternationalClub
+                    | domain::league::FixtureCompetition::FriendlyCup)
+            }
+            domain::league::ExtraTimeRule::Always => true,
+        })
+        .unwrap_or(allows_extra_time);
 
     let mut match_state = LiveMatchState::new(
         home_xi,
@@ -260,7 +281,7 @@ pub fn create_live_match(
         config,
         home_bench,
         away_bench,
-        allows_extra_time,
+        effective_extra_time,
     )
     .with_max_subs(max_subs);
     apply_saved_match_roles(

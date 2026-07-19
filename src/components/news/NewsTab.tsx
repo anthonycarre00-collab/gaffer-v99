@@ -481,7 +481,18 @@ function ArticleCard({
  </p>
 
  <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-line-soft">
- <span className="text-[10px] text-ink-faint font-heading uppercase tracking-widest">
+ <span className="text-[10px] text-ink-faint font-heading uppercase tracking-widest flex items-center gap-1.5">
+ {/* V100 (Issue #4): Source type indicator — tabloid/broadsheet/social. */}
+ {(() => {
+ const src = article.source?.toLowerCase() ?? "";
+ if (src.includes("gossip") || src.includes("back page") || src.includes("touchline")) {
+ return <span className="text-[8px] bg-red-500/15 text-red-400 px-1 py-0.5 rounded uppercase font-bold">Tab</span>;
+ } else if (src.includes("voice") || src.includes("terraces") || src.includes(".x")) {
+ return <span className="text-[8px] bg-blue-500/15 text-blue-400 px-1 py-0.5 rounded uppercase font-bold">Soc</span>;
+ } else {
+ return <span className="text-[8px] bg-accent-500/15 text-accent-400 px-1 py-0.5 rounded uppercase font-bold">Bro</span>;
+ }
+ })()}
  {article.source}
  </span>
  <span className="text-[10px] text-ink-faint flex items-center gap-1">

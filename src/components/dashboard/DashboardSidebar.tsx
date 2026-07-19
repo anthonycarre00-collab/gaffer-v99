@@ -1,19 +1,15 @@
 import { useTranslation } from "react-i18next";
 import type { JSX, ReactNode } from "react";
+// V100: Use Gaffer football-specific icons for ALL sidebar items.
 import {
  UsersIcon,
  CrosshairIcon,
- TrophyIcon,
  UserCog,
  LogOut,
  PanelLeftClose,
  PanelLeftOpen,
  StarIcon,
  User,
- HomeIcon,
- MailIcon,
- ClipboardIcon,
- SettingsIcon,
 } from "../ui/icons";
 // Gaffer custom icons — football-specific replacements for generic lucide icons
 import {
@@ -23,11 +19,16 @@ import {
  WageSlipIcon as GafferWageIcon,
  TransferDocIcon as GafferTransferIcon,
  TrophyRibbonsIcon as GafferTrophyIcon,
- // V99.11 B6: New icons replacing remaining lucide-react
  GlobeStadiumIcon as GafferGlobeIcon,
  PlayersKitIcon as GafferPlayersIcon,
  ManagerClipIcon as GafferManagerIcon,
  BuildingStadiumIcon as GafferTeamsIcon,
+ // V100: Football-specific icons for top nav items
+ HomePitchIcon as GafferHomeIcon,
+ MailSlotIcon as GafferInboxIcon,
+ NewspaperIcon as GafferNewsIcon,
+ CalendarWhistleIcon as GafferScheduleIcon,
+ SettingsCogIcon as GafferSettingsIcon,
 } from "../ui/icons/GafferIcons";
 
 interface DashboardSidebarProps {
@@ -248,7 +249,7 @@ export default function DashboardSidebar({
  }`}
  >
  <NavItem
- icon={<HomeIcon />}
+ icon={<GafferHomeIcon size={16} />}
  label={t("dashboard.home")}
  badge={undefined}
  active={activeTab === "Home"}
@@ -256,7 +257,7 @@ export default function DashboardSidebar({
  onClick={() => onNavClick("Home")}
  />
  <NavItem
- icon={<MailIcon />}
+ icon={<GafferInboxIcon size={16} />}
  label={t("dashboard.inbox")}
  badge={unreadMessagesCount > 0 ? unreadMessagesCount : undefined}
  active={activeTab === "Inbox"}
@@ -264,14 +265,14 @@ export default function DashboardSidebar({
  onClick={() => onNavClick("Inbox")}
  />
  <NavItem
- icon={<ClipboardIcon />}
+ icon={<GafferNewsIcon size={16} />}
  label={t("dashboard.news")}
  active={activeTab === "News"}
  collapsed={collapsed}
  onClick={() => onNavClick("News")}
  />
  <NavItem
- icon={<TrophyIcon />}
+ icon={<GafferScheduleIcon size={16} />}
  label={t("dashboard.schedule")}
  badge={todayHasMatch ? "!" : undefined}
  active={activeTab === "Schedule"}
@@ -332,7 +333,7 @@ export default function DashboardSidebar({
  : "flex items-center gap-3"
  }`}
  >
- <SettingsIcon className="w-5 h-5" />
+ <GafferSettingsIcon className="w-5 h-5" />
  {collapsed ? null : (
  <span className="font-heading text-sm uppercase tracking-wider">
  {t("dashboard.settings")}
