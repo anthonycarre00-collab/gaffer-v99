@@ -83,6 +83,14 @@ export function SquadPulseCard() {
  {t(`meaning.squadPulse.pressureLevel`)}: {pressureLevel}
  </span>
  </div>
+ {/* V100 (Issue #29): Gaffer voice description of harmony score. */}
+ <p className="text-[10px] text-ink-faint mb-1 italic">
+ {harmonyScore >= 80 ? "The lads are singing off the same hymn sheet." :
+ harmonyScore >= 60 ? "Spirits are good, the dressing room's tight." :
+ harmonyScore >= 40 ? "A few grumbles, but nothing a win wouldn't fix." :
+ harmonyScore >= 20 ? "Tension in the camp — they're not happy." :
+ "The dressing room's a warzone. Sort it out, gaffer."}
+ </p>
  <div className="w-full h-4 bg-carbon-3 rounded-sm overflow-hidden">
  <div
  className="h-full pulse-bar transition-all duration-500"

@@ -84,7 +84,8 @@ export default function TeamProfileHeroCard({
  />
  <QuickStat
  label={t("teams.rep")}
- value={String(team.reputation)}
+ // V100 (Issue #26): Use Gaffer voice for reputation.
+ value={interpretReputation(team.reputation).short}
  color="text-accent-500"
  />
  <QuickStat
