@@ -72,6 +72,42 @@ export default function TransferCentreWorldTab({
  </CardBody>
  </Card>
 
+ {/* V100 (Issue #21): Transfer Centre summary stats — gives context at a glance. */}
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+ <Card>
+ <CardBody className="text-center">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">Active Rumours</p>
+ <p className="text-2xl font-mono text-primary-400">{rumours.length}</p>
+ </CardBody>
+ </Card>
+ <Card>
+ <CardBody className="text-center">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">Completed Deals</p>
+ <p className="text-2xl font-mono text-accent-400">{completedDeals.length}</p>
+ </CardBody>
+ </Card>
+ <Card>
+ <CardBody className="text-center">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">Top Fee</p>
+ <p className="text-2xl font-mono text-ink">
+ {completedDeals.length > 0
+ ? `£${(Math.max(...completedDeals.map(d => d.fee)) / 1000000).toFixed(1)}M`
+ : "—"}
+ </p>
+ </CardBody>
+ </Card>
+ <Card>
+ <CardBody className="text-center">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint">Total Spent</p>
+ <p className="text-2xl font-mono text-ink">
+ {completedDeals.length > 0
+ ? `£${(completedDeals.reduce((sum, d) => sum + d.fee, 0) / 1000000).toFixed(1)}M`
+ : "—"}
+ </p>
+ </CardBody>
+ </Card>
+ </div>
+
  <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
  <TransferRumoursSection
  rumours={rumours}

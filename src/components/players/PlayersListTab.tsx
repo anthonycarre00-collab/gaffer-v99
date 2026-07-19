@@ -63,6 +63,10 @@ const DEFAULT_QUERY: PlayersPageQuery = {
  sort_asc: false,
  page: 1,
  page_size: PAGE_SIZE,
+ // V100 (Issue #23): Age/nation filters.
+ age_min: null,
+ age_max: null,
+ nationality: null,
 };
 
 export default function PlayersListTab({
@@ -281,6 +285,36 @@ export default function PlayersListTab({
  </option>
  ))}
  </Select>
+
+ {/* V100 (Issue #23): Age range + nationality filters. */}
+ <div className="flex items-center gap-2">
+ <input
+ type="number"
+ min="15"
+ max="45"
+ placeholder="Min Age"
+ value={query.age_min ?? ""}
+ onChange={(e) => patchQuery({ age_min: e.target.value ? parseInt(e.target.value) : null })}
+ className="w-20 bg-carbon-2 border border-slate-line rounded px-2 py-1.5 text-xs text-ink font-mono"
+ />
+ <span className="text-ink-faint text-xs">-</span>
+ <input
+ type="number"
+ min="15"
+ max="45"
+ placeholder="Max Age"
+ value={query.age_max ?? ""}
+ onChange={(e) => patchQuery({ age_max: e.target.value ? parseInt(e.target.value) : null })}
+ className="w-20 bg-carbon-2 border border-slate-line rounded px-2 py-1.5 text-xs text-ink font-mono"
+ />
+ <input
+ type="text"
+ placeholder="Nation (e.g. ENG)"
+ value={query.nationality ?? ""}
+ onChange={(e) => patchQuery({ nationality: e.target.value || null })}
+ className="w-28 bg-carbon-2 border border-slate-line rounded px-2 py-1.5 text-xs text-ink uppercase"
+ />
+ </div>
  </div>
 
  <p className="text-xs text-ink-faint mb-3 font-heading uppercase tracking-wider">

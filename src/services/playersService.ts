@@ -19,6 +19,11 @@ export interface PlayersPageQuery {
   sort_asc: boolean;
   page: number;
   page_size: number;
+  /** V100 (Issue #23): Age range filters. */
+  age_min?: number | null;
+  age_max?: number | null;
+  /** V100 (Issue #23): Nationality filter (ISO code). */
+  nationality?: string | null;
 }
 
 export interface PlayerSummary {
