@@ -41,6 +41,8 @@ import TacticsPitch from "./TacticsPitch";
 import TacticsPlayerList from "./TacticsPlayerList";
 import TacticsRightPanel from "./TacticsRightPanel";
 import { PhaseBlueprintPanel } from "./PhaseBlueprintPanel";
+import TacticsPresetStrip from "./TacticsPresetStrip";
+import TacticsInstructionsRail from "./TacticsInstructionsRail";
 import {
  buildCustomTacticsStorageKey,
  loadCustomTactics,
@@ -883,6 +885,31 @@ export default function TacticsTab({
  tacticLibrary={tacticLibrary}
  />
 
+ {/* V100 §9 (Issue #5): Formation preset strip — horizontal scroll of preset
+   tactical shapes (mini pitch diagrams). Only shown on the Pitch tab so
+   it doesn't clutter the Selection or Style tabs. Clicking a chip sets
+   formation + play_style in one shot via applyTacticSelection. */}
+ {activeSubTab === "pitch" && (
+ <TacticsPresetStrip
+ activeFormation={formation}
+ activePlayStyle={activePlayStyle}
+ activePresetId={presetAnchorId}
+ onSelectPreset={(preset) => {
+ void applyTacticSelection({
+ description: t(preset.descriptionKey, preset.id),
+ formation: preset.formation,
+ id: `preset:${preset.id}`,
+ name: t(`tactics.presetNames.${preset.id}`, preset.id),
+ playStyle: preset.playStyle,
+ type: "preset",
+ });
+ }}
+ onSelectFormation={(nextFormation) => {
+ void handleFormationChange(nextFormation);
+ }}
+ />
+ )}
+
  {/* V99.7-7: Tab-conditional layout — wider center column for the pitch
    (was 260px_1fr_280px, now 240px_1fr_300px for pitch tab to give the
    formation pitch more room). Style tab uses 2-column with guidance
@@ -984,14 +1011,28 @@ export default function TacticsTab({
 
  {/* V100 P0-9 (Issue #3): Right panel — Roles + Set Pieces only.
    Shown on pitch + style tabs (setPieces tab was removed).
-   Phase Blueprint is rendered ONLY on the style tab — see below. */}
+   Phase Blueprint is rendered ONLY on the style tab — see below.
+   V100 §9 (Issue #5): On the Pitch tab we ALSO render the compact
+   Quick Instructions rail above the Roles panel — the four most-tweaked
+   tactical levers (tempo/width/pressing/defensive line) so the manager
+   can adjust without flipping to the Style tab. */}
  {(activeSubTab === "pitch" || activeSubTab === "style") && (
+ <div className="flex flex-col gap-4">
+ {activeSubTab === "pitch" && (
+ <TacticsInstructionsRail
+ tacticsPhase={team?.tactics_phase}
+ onTacticsPhaseChange={(patch) => {
+ void handleTacticsPhaseChange(patch);
+ }}
+ />
+ )}
  <TacticsRightPanel
  allSquad={roster}
  matchRoles={team.match_roles}
  onGameUpdate={onGameUpdate}
  startingPlayers={startingXI}
  />
+ </div>
  )}
 
  {/* Style tab — left column shows Gaffer-voice style guidance + Phase Blueprint.

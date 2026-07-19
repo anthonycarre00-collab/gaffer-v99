@@ -1,4 +1,6 @@
 import type { JSX } from "react";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { TacticsPhaseSettings } from "../../store/types";
 import { Select } from "../ui";
@@ -67,10 +69,49 @@ function PhaseButtonGroup({
 }
 
 /**
+ * Collapsible section header — clicking the chevron toggles the body.
+ * V100 §9 (Issue #5): All Phase Blueprint sections are now collapsible so
+ * managers can hide instructions they don't tweak often (e.g. transitions)
+ * and free vertical space for the ones they do.
+ */
+function CollapsibleSection({
+ labelKey,
+ children,
+ defaultOpen = true,
+}: {
+ labelKey: string;
+ children: JSX.Element | JSX.Element[];
+ defaultOpen?: boolean;
+}): JSX.Element {
+ const { t } = useTranslation();
+ const [open, setOpen] = useState(defaultOpen);
+ return (
+ <div className="border-b border-slate-line-soft last:border-b-0">
+ <button
+ type="button"
+ onClick={() => setOpen((o) => !o)}
+ aria-expanded={open}
+ className="flex w-full items-center gap-1.5 px-3 py-2 text-left text-[11px] font-heading font-bold uppercase tracking-[0.2em] text-primary-500 dark:text-primary-400 hover:bg-accent-500/5"
+ >
+ <ChevronDown
+ className={`h-3 w-3 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
+ />
+ {t(`tactics.phaseLabels.${labelKey}`)}
+ </button>
+ {open && <div className="space-y-2 p-3 pt-0">{children}</div>}
+ </div>
+ );
+}
+
+/**
  * The Phase Blueprint editor (with-ball / without-ball / transitions tactical
  * settings). Shared by the Tactics board's right panel and the pre-match screen
  * so both edit the same `team.tactics_phase`. Renders the section body only —
  * the caller provides the surrounding card/header.
+ *
+ * V100 §9: All three sections are now collapsible. "With ball" and "Without
+ * ball" default to open; "Transitions" defaults to collapsed since it's the
+ * least-tweaked section.
  */
 export function PhaseBlueprintPanel({
  tacticsPhase,
@@ -79,14 +120,14 @@ export function PhaseBlueprintPanel({
  tacticsPhase?: TacticsPhaseSettings;
  onTacticsPhaseChange: (patch: Partial<TacticsPhaseSettings>) => void;
 }): JSX.Element {
- const { t } = useTranslation();
  return (
  <div className="divide-y divide-slate-line-soft dark:divide-slate-line-soft">
- {SECTIONS.map(([labelKey, fields]) => (
- <div key={labelKey} className="p-3 space-y-2">
- <div className="mb-1.5 text-[11px] font-heading font-bold uppercase tracking-[0.2em] text-primary-500 dark:text-primary-400">
- {t(`tactics.phaseLabels.${labelKey}`)}
- </div>
+ {SECTIONS.map(([labelKey, fields], idx) => (
+ <CollapsibleSection
+ key={labelKey}
+ labelKey={labelKey}
+ defaultOpen={idx < 2}
+ >
  {fields.map(([field, fieldLabelKey, options]) => (
  <PhaseButtonGroup
  key={field}
@@ -97,7 +138,7 @@ export function PhaseBlueprintPanel({
  tacticsPhase={tacticsPhase}
  />
  ))}
- </div>
+ </CollapsibleSection>
  ))}
  </div>
  );

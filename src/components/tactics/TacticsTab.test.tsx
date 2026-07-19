@@ -272,7 +272,8 @@ describe("TacticsTab", () => {
   );
 
   expect(screen.getByText("tactics.presetTactics")).toBeInTheDocument();
-  expect(screen.getByText("tactics.formation")).toBeInTheDocument();
+  // V100 §9: preset strip adds extra "Formation" labels — use getAllByText.
+  expect(screen.getAllByText("tactics.formation").length).toBeGreaterThan(0);
   expect(screen.getByText("tactics.playStyle")).toBeInTheDocument();
   expect(screen.getAllByText(/preMatch\.substitutes/).length).toBeGreaterThan(
    0,
