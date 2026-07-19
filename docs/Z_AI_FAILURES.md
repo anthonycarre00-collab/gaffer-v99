@@ -283,3 +283,25 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 7)
+
+### Newly completed:
+- [x] AI manager regen verification + FIX: Managers were NOT aging/retiring
+  - Added retire_aged_ai_managers function (70+: 20%, 75+: 40%, 80+: 70%)
+  - Removes from team, generates news, process_vacant_ai_clubs fills vacancy
+- [x] Narrative memory API: get_match_narrative_memories command added
+  - Returns resurfacing memories for both teams
+  - Frontend can use for 'remember the last time...' commentary lines
+- [x] Player image consistency: investigated, no bug found
+  - Both squad and profile use same PlayerAvatar component
+  - Different sizes expected (h-9 vs w-24)
+  - Visual mismatch is from some players having face images, others not
+
+### Still outstanding (6 items, all complex/large):
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Narrative memories DISPLAYED in live commentary (API exists, frontend wiring needed)
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
