@@ -289,6 +289,8 @@ pub fn run() {
             get_match_snapshot,
             // V100 P1 (Issue #12): Pundit system command.
             get_pundit_for_fixture,
+            // V100 (Issue #12): Narrative memories for match commentary.
+            get_match_narrative_memories,
             finish_live_match,
             generate_player_portrait,
             prewarm_player_portraits,

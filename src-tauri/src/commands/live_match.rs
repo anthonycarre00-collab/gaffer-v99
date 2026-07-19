@@ -144,6 +144,61 @@ pub fn get_pundit_for_fixture(
     }
 }
 
+/// V100 (Issue #12): Get narrative memories for a match context.
+/// Returns memories for both teams + key players that could be referenced
+/// in commentary. The frontend uses these to display "remember the last time
+/// these two met..." type lines.
+#[tauri::command]
+pub fn get_match_narrative_memories(
+    state: State<'_, Arc<StateManager>>,
+    home_team_id: String,
+    away_team_id: String,
+) -> Result<serde_json::Value, String> {
+    let game = state
+        .get_game(|g| g.clone())
+        .ok_or("be.error.noActiveGameSession".to_string())?;
+
+    let today = game.clock.current_date.format("%Y-%m-%d").to_string();
+
+    // Collect memories for both teams.
+    let home_memories: Vec<serde_json::Value> = game
+        .memory_store
+        .resurfacing_candidates(&home_team_id, &today, 0.3)
+        .iter()
+        .take(3)
+        .map(|m| {
+            serde_json::json!({
+                "id": m.id,
+                "entity_id": m.entity_id,
+                "event_type": format!("{:?}", m.event_type),
+                "description": m.description,
+                "weight": m.emotional_weight,
+            })
+        })
+        .collect();
+
+    let away_memories: Vec<serde_json::Value> = game
+        .memory_store
+        .resurfacing_candidates(&away_team_id, &today, 0.3)
+        .iter()
+        .take(3)
+        .map(|m| {
+            serde_json::json!({
+                "id": m.id,
+                "entity_id": m.entity_id,
+                "event_type": format!("{:?}", m.event_type),
+                "description": m.description,
+                "weight": m.emotional_weight,
+            })
+        })
+        .collect();
+
+    Ok(serde_json::json!({
+        "home_team_memories": home_memories,
+        "away_team_memories": away_memories,
+    }))
+}
+
 /// Finish the live match: generate report, update game state, clean up.
 #[tauri::command]
 pub fn finish_live_match(
