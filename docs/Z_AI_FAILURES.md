@@ -215,3 +215,26 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 4)
+
+### Newly completed:
+- [x] P1-15: Transfer Centre — added 4-card summary stats (rumours, deals, top fee, total spent)
+- [x] P1-17: Player search — added age range (min/max) + nationality filters (backend + frontend)
+- [x] P2-1: extra_time field wired into live match engine (KnockoutOnly/Never/Always)
+- [x] P2-2: cup_target_round surfaced as board objective
+- [x] WIRING AUDIT: All 8 V100 commands verified backend→frontend end-to-end
+
+### Still outstanding (low priority / complex):
+- [ ] P1-18: Staff weekly meeting trigger + UI
+- [ ] P2-3: Reserve team sparse sim
+- [ ] penalties field wired into engine
+- [ ] prestige field wired into news weighting
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
