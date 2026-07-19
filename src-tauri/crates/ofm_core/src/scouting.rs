@@ -991,6 +991,38 @@ fn build_scout_report(
         p.insert("ratingDesc".to_string(), rating_key.to_string());
         p.insert("potentialDesc".to_string(), potential_key.to_string());
         p.insert("confidence".to_string(), confidence_key.to_string());
+
+        // V100 (Issue #18): Scout personality flavour. The scout's voice
+        // changes based on their coaching attribute (proxy for experience)
+        // and the judging_ability (proxy for analytical vs gut-feel approach).
+        let scout_voice_key = if judging_ability >= 80 {
+            "be.msg.scoutVoice.analytical" // Data analyst — precise, measured
+        } else if judging_ability >= 60 {
+            "be.msg.scoutVoice.balanced" // Competent — standard reporting
+        } else {
+            "be.msg.scoutVoice.gutFeeling" // Old school — instincts, gut feel
+        };
+        p.insert("scoutVoice".to_string(), scout_voice_key.to_string());
+
+        // V100 (Issue #18): Add a personality-based flavour line that varies
+        // by the scout's bias profile (if they have one).
+        let flavour_key = if let Some(bias) = scout_bias {
+            if bias.pace_bias > 1.1 {
+                "be.msg.scoutFlavour.paceMerchant" // "Quick lad, lots of pace about him."
+            } else if bias.power_bias > 1.1 {
+                "be.msg.scoutFlavour.powerHouse" // "Big unit, won't be pushed around."
+            } else if bias.defending_bias > 1.1 {
+                "be.msg.scoutFlavour.defensiveMind" // "Proper defender's instinct."
+            } else if bias.attacking_bias > 1.1 {
+                "be.msg.scoutFlavour.attackingEye" // "Eye for goal, this one."
+            } else {
+                "be.msg.scoutFlavour.neutral" // "Decent all-rounder."
+            }
+        } else {
+            "be.msg.scoutFlavour.neutral"
+        };
+        p.insert("scoutFlavour".to_string(), flavour_key.to_string());
+
         p
     })
     .with_sender_i18n("be.sender.scout", "be.role.scout")

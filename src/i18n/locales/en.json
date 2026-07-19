@@ -3678,6 +3678,18 @@
         "subject": "Scout Report: {{player}}",
         "body": "Your scout {{scout}} has completed their assessment of {{player}}. Full report available in the scouting section."
       },
+      "scoutVoice": {
+        "analytical": "The data's clear on this one.",
+        "balanced": "Here's my read on him.",
+        "gutFeeling": "I've got a feeling about this lad."
+      },
+      "scoutFlavour": {
+        "paceMerchant": "Quick lad, lots of pace about him.",
+        "powerHouse": "Big unit, won't be pushed around.",
+        "defensiveMind": "Proper defender's instinct, this one.",
+        "attackingEye": "Got an eye for goal, hasn't he.",
+        "neutral": "Decent all-rounder, nothing stands out."
+      },
       "boardWarning": {
         "subject": "Board Concern — Performance Review",
         "body": "The board is growing increasingly concerned with recent results at {{team}}. Your position will come under serious review if there is no improvement in the near future."

@@ -136,6 +136,10 @@ pub(crate) struct MatchContext<'a> {
     pub(crate) last_possession: Side,
     /// V100 P0-18 (Issue #12): Count of possession flips in the last 5 minutes.
     pub(crate) recent_possession_flips: u8,
+    /// V100 (Issue #12): Consecutive pass streak for the current possession
+    /// side. Resets on turnover, shot, or possession flip. Used to emit
+    /// "nice build-up" commentary when 3+ passes chain together.
+    pub(crate) pass_streak: u8,
 }
 
 fn team_avg_condition(team: &TeamData) -> f64 {
@@ -168,6 +172,7 @@ impl<'a> MatchContext<'a> {
             attacking_pressure_streak: 0,
             last_possession: Side::Home,
             recent_possession_flips: 0,
+            pass_streak: 0,
         }
     }
 

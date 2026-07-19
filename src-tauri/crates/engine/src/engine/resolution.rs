@@ -143,6 +143,8 @@ fn resolve_buildup<R: Rng>(
             MatchEvent::new(minute, EventType::PassCompleted, att_side, ball_zone)
                 .with_player(&passer.id),
         );
+        // V100 (Issue #12): Track pass streak for build-up commentary.
+        ctx.pass_streak = ctx.pass_streak.saturating_add(1);
         ctx.ball_zone = Zone::Midfield;
     } else {
         let interceptor = snap_player(ctx, def_side, Position::Midfielder, rng);
@@ -154,7 +156,7 @@ fn resolve_buildup<R: Rng>(
             MatchEvent::new(minute, EventType::Interception, def_side, ball_zone)
                 .with_player(&interceptor.id),
         );
-        ctx.possession = def_side;
+        ctx.possession = def_side; ctx.pass_streak = 0;
     }
 }
 
@@ -207,6 +209,17 @@ fn resolve_midfield<R: Rng>(
             MatchEvent::new(minute, EventType::PassCompleted, att_side, Zone::Midfield)
                 .with_player(&attacker.id),
         );
+        // V100 (Issue #12): Track pass streak for build-up commentary.
+        ctx.pass_streak = ctx.pass_streak.saturating_add(1);
+        // If 3+ passes chained, emit a build-up event.
+        if ctx.pass_streak >= 3 {
+            ctx.emit(MatchEvent::new(
+                minute,
+                EventType::SustainedPressure,
+                att_side,
+                Zone::Midfield,
+            ));
+        }
         // V99: Offside check — when the ball is played into the attacking
         // third, there's a small chance the linesman flags. Driven by the
         // attacker's decisions (lower = more likely to mistime the run)
@@ -220,7 +233,7 @@ fn resolve_midfield<R: Rng>(
                     .with_player(&attacker.id),
             );
             // Offside = turnover to the defending side, goal kick.
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             ctx.ball_zone = Zone::defensive_third(att_side);
         } else {
             ctx.ball_zone = Zone::attacking_third(att_side);
@@ -254,7 +267,7 @@ fn resolve_midfield<R: Rng>(
                     .with_player(&defender.id),
             );
         }
-        ctx.possession = def_side;
+        ctx.possession = def_side; ctx.pass_streak = 0;
         ctx.ball_zone = Zone::Midfield;
     }
 }
@@ -353,7 +366,7 @@ fn resolve_attacking_third<R: Rng>(
                     MatchEvent::new(minute, EventType::Clearance, def_side, zone)
                         .with_player(&def_header.id),
                 );
-                ctx.possession = def_side;
+                ctx.possession = def_side; ctx.pass_streak = 0;
                 ctx.ball_zone = Zone::defensive_third(att_side);
             }
         } else {
@@ -392,7 +405,7 @@ fn resolve_attacking_third<R: Rng>(
                 return;
             }
         }
-        ctx.possession = def_side;
+        ctx.possession = def_side; ctx.pass_streak = 0;
         ctx.ball_zone = Zone::defensive_third(att_side);
     }
 }
@@ -406,7 +419,9 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
 
     // V100 P0-18 (Issue #12): Track this as the last shot minute. Used by
     // simulate_minute to detect QuietMinute (5+ minutes without a shot).
+    // V100 (Issue #12): Reset pass streak on shot.
     ctx.last_shot_minute = minute;
+    ctx.pass_streak = 0;
 
     // Box foul rate fixed at 3.6% per shot — independent of foul_probability (which tunes outfield fouls)
     if rng.random_range(0.0..1.0f64) < 0.036 {
@@ -422,7 +437,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
             fouls::resolve_penalty(ctx, minute, att_side, rng);
             fouls::maybe_card(ctx, minute, def_side, &fouler.id, zone, rng);
             ctx.ball_zone = Zone::Midfield;
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             return;
         }
         fouls::maybe_card(ctx, minute, def_side, &fouler.id, zone, rng);
@@ -480,7 +495,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
                     .with_player(&shooter.id),
             );
             // Blocked shot: ball stays in area, defender clears to midfield
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             ctx.ball_zone = Zone::Midfield;
         } else {
             ctx.emit(
@@ -488,7 +503,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
                     .with_player(&shooter.id),
             );
             ctx.emit(MatchEvent::new(minute, EventType::GoalKick, def_side, zone));
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             ctx.ball_zone = Zone::defensive_third(def_side);
         }
         return;
@@ -512,7 +527,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
                 .with_secondary(&assister.id),
         );
         ctx.add_goal(att_side);
-        ctx.possession = def_side;
+        ctx.possession = def_side; ctx.pass_streak = 0;
         ctx.ball_zone = Zone::Midfield;
     } else {
         ctx.emit(
@@ -528,7 +543,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
         if roll < 0.50 {
             // Ball cleared to midfield — breaks the cascading-shot loop.
             ctx.emit(MatchEvent::new(minute, EventType::GoalKick, def_side, zone));
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             ctx.ball_zone = Zone::Midfield;
         } else if roll < 0.70 {
             // 20% chance: corner (parried wide). Attacker keeps pressure
@@ -539,7 +554,7 @@ fn resolve_shot<R: Rng>(ctx: &mut MatchContext, minute: u8, att_side: Side, rng:
         } else {
             // 30% chance: keeper catches, goal kick to defending side.
             ctx.emit(MatchEvent::new(minute, EventType::GoalKick, def_side, zone));
-            ctx.possession = def_side;
+            ctx.possession = def_side; ctx.pass_streak = 0;
             ctx.ball_zone = Zone::defensive_third(def_side);
         }
     }
