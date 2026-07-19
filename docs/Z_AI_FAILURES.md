@@ -325,3 +325,21 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 9)
+
+### Newly completed:
+- [x] Full tactics screen per UI spec §9 — DONE
+  - NEW TacticsPresetStrip.tsx: horizontal scroll of preset formations with mini diagrams
+  - NEW TacticsInstructionsRail.tsx: compact Quick Instructions (tempo/width/pressing/def line) on right rail
+  - PhaseBlueprintPanel: all 3 sections now collapsible (Transitions defaults collapsed)
+  - Wired into TacticsTab.tsx on Pitch tab only (avoids clutter on other tabs)
+  - Active preset/formation highlighted with brass ring
+  - Test fix: switched 'tactics.formation' assertion to getAllByText (strip adds multiple labels)
+  - VERIFIED: tsc 0 errors, 29/29 vitest tests pass, vite build success
+
+### Still outstanding (4 items, all complex/large):
+- [ ] 12-column grid enforcement on all screens
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
