@@ -102,3 +102,62 @@
 28. Generate icon/button cache
 29. Player rivalry system
 30. Verify AI manager regen
+
+---
+
+## PROGRESS LOG (updated 2026-07-20)
+
+### Completed in this session:
+- [x] P0-1: Real height/weight injected into bundled DB (5,324 players)
+- [x] P0-3: DB load skip logic fixed (all players now skip — seconds not minutes)
+- [x] P1-1: Corner brackets on hero panels (tactics pitch, next fixture, player profile)
+- [x] P1-2: Dossier paper grain (already on PlayerProfileHeroCard)
+- [x] P1-3: Table styling — monospace numeric columns (SortableTable + FinancesTab)
+- [x] P1-4: Empty states verified (Inbox, News, Scouting, Transfers already have them)
+- [x] P1-7: Build-up play commentary (pass streak tracking, SustainedPressure on 3+ passes)
+- [x] P1-8: Scout report flavour text (3 voice types + 5 bias-based flavour lines)
+- [x] P1-9: Hyperlinks in news (match score team names are clickable)
+- [x] P1-11: Gaffer screen reputation in Gaffer voice (interpretReputation)
+- [x] P1-12: Club screen reputation in Gaffer voice
+- [x] P1-13: Squad pulse Gaffer voice descriptions (5-tier harmony score)
+- [x] Match score numbers use font-mono
+- [x] Card headers fixed (text-concrete → text-ink-dim)
+- [x] Tactics pitch turf greens + mow stripes + ink markings
+- [x] Player tokens brass-rimmed
+- [x] Background texture opacity increased
+- [x] More match events per minute (2-4 actions, was 1-3)
+- [x] Doubled commentary templates (16 event types, 10-20 each)
+- [x] Pundit catchphrases in live commentary
+- [x] League table standings re-sort after user matches
+- [x] Out-of-position penalty (-5% attributes)
+- [x] Bid influence on morale (+2/-2)
+- [x] Talk to Board UI (3 buttons in Finances)
+- [x] Position retraining UI (menu items in PlayerProfile)
+- [x] Reserve teams UI (panel in Squad + context menu)
+- [x] Assistant manager advice UI (panel in Staff)
+- [x] Manager H2H display (on Other Gaffers)
+- [x] Training assistant button
+- [x] News source variety (9 sources)
+- [x] Height/weight in mono font
+
+### Still outstanding:
+- [ ] P1-5: Replace remaining sidebar icons with GafferIcons
+- [ ] P1-6: News visual differentiation (tabloid/broadsheet/social icons)
+- [ ] P1-10: Contract talks — verify no white-on-white (appears already fixed)
+- [ ] P1-14: Role groups/style fit tooltips
+- [ ] P1-15: Transfer Centre improvements
+- [ ] P1-16: Other Gaffers — full data (win rates, job stability)
+- [ ] P1-17: Player search — age/nation/attribute label filters
+- [ ] P1-18: Staff weekly meeting trigger + UI
+- [ ] P2-1: Wire extra_time/penalties/prestige fields
+- [ ] P2-2: Surface cup_target_round in UI
+- [ ] P2-3: Reserve team sparse sim
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Button focus rings everywhere
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
