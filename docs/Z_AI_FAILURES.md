@@ -258,3 +258,28 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 6)
+
+### Newly completed:
+- [x] P1-18: Staff weekly meeting — generate_weekly_staff_report runs on Monday tick
+  - Generates inbox message from assistant manager with squad state
+  - Gaffer-voice report text (4 variants based on injuries/form/morale)
+  - Balanced: informational only, no morale effect, 1x/week
+  - New MessageCategory::StaffReport variant added
+  - Inbox icon (ClipboardList) + color (accent-500) + label ('Staff') wired
+- [x] P2-3: Reserve team sparse sim — simulate_reserve_match runs on matchdays
+  - Weighted scoreline (0-0 to 4-3)
+  - Credits appearances + condition bump to reserve players
+  - Results stored in team.reserve_results (last 5)
+  - Balanced: only runs if 7+ reserve players, no full engine
+
+### Still outstanding (8 items, all complex/large):
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Narrative memory in live commentary
+- [ ] Player image consistency investigation
+- [ ] AI manager regen verification
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
