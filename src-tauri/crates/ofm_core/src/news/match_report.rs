@@ -152,11 +152,19 @@ pub fn match_report_article(
     let scorer_parts = scorer_parts(home_name, away_name, home_scorers, away_scorers);
     let scorers_data = scorer_params_json(home_name, away_name, home_scorers, away_scorers);
 
+    // V100 (Issue #4): Expanded source list with tabloid, broadsheet, and
+    // social media types for news variety. Each type has a different tone
+    // that the frontend can reflect via icons/style.
     let source_keys = [
-        "be.source.sportsGazette",
-        "be.source.footballHerald",
-        "be.source.matchDayPress",
-        "be.source.leagueChronicle",
+        "be.source.sportsGazette",      // broadsheet
+        "be.source.footballHerald",     // broadsheet
+        "be.source.matchDayPress",      // broadsheet
+        "be.source.leagueChronicle",    // broadsheet
+        "be.source.backPageNet",        // tabloid
+        "be.source.touchlineTalk",      // tabloid
+        "be.source.pitchSideGossip",    // tabloid
+        "be.source.supportersVoice",    // social/fan
+        "be.source.terracesX",          // social/media
     ];
     let src_idx = rng.random_range(0..source_keys.len());
     let source_key = source_keys[src_idx];

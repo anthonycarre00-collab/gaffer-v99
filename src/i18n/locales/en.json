@@ -3132,7 +3132,12 @@
       "leagueChronicle": "League Chronicle",
       "leagueWire": "League Wire",
       "transferIntelligence": "Transfer Intelligence",
-      "sportsDaily": "Sports Daily"
+      "sportsDaily": "Sports Daily",
+      "backPageNet": "Back Page Net",
+      "touchlineTalk": "Touchline Talk",
+      "pitchSideGossip": "Pitch-Side Gossip",
+      "supportersVoice": "Supporters' Voice",
+      "terracesX": "Terraces.X"
     },
     "msg": {
       "world": {
