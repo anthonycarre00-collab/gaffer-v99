@@ -20,7 +20,7 @@ import { isSeniorSquadPlayer } from "../../lib/playerSquad";
 import { interpretMorale, interpretCondition } from "../../lib/gafferEngine";
 import { useFetchedSquad } from "../../hooks/useFetchedSquad";
 import { setTraining, setTrainingSchedule } from "../../services/trainingService";
-import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
+import { Button, Card, CardBody, CardHeader, ProgressBar } from "../ui";
 import TrainingGroupsCard from "./TrainingGroupsCard";
 import TrainingSettingsPanel from "./TrainingSettingsPanel";
 import { getTrainingStaffAdvice } from "./trainingAdvice";
@@ -142,8 +142,31 @@ export default function TrainingTab({
  try {
  const updated = await setTraining(focus, intensity);
  onGameUpdate?.(updated);
- } catch (error) {
- console.error("Failed to set training:", error);
+ } finally {
+ setIsSaving(false);
+ }
+ };
+
+ // V100 (Issue #16): Let assistant handle training — auto-set focus + intensity
+ // based on squad condition. If avg condition < 50, set Recovery + Low.
+ // If < 70, set Physical + Medium. Otherwise keep current focus + Medium.
+ const handleAssistantTraining = async () => {
+ setIsSaving(true);
+ try {
+ let focus = currentFocus;
+ let intensity = "Medium";
+ if (avgCondition < 50) {
+ focus = "Recovery";
+ intensity = "Low";
+ } else if (avgCondition < 70) {
+ focus = "Physical";
+ intensity = "Medium";
+ } else if (criticalCount > 2) {
+ focus = "Recovery";
+ intensity = "Low";
+ }
+ const updated = await setTraining(focus, intensity);
+ onGameUpdate?.(updated);
  } finally {
  setIsSaving(false);
  }
@@ -210,6 +233,18 @@ export default function TrainingTab({
  </div>
  </div>
  ) : null}
+
+ {/* V100 (Issue #16): Let assistant handle training button. */}
+ <div className="mb-4 flex justify-end">
+ <Button
+ size="sm"
+ variant="outline"
+ disabled={isSaving}
+ onClick={() => void handleAssistantTraining()}
+ >
+ {t("training.assistantHandle", { defaultValue: "Let assistant handle it" })}
+ </Button>
+ </div>
 
  <TrainingSettingsPanel
  currentFocus={currentFocus}
