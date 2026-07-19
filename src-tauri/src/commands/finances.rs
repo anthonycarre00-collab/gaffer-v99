@@ -174,7 +174,7 @@ pub async fn talk_to_board(
                             t.transfer_budget += grant as i64;
                             t.finance += grant as i64;
                         }
-                        (true, format!("The board have released an additional £{:,.0} for transfers. Spend it wisely.", grant), grant)
+                        (true, format!("The board have released an additional £{} for transfers. Spend it wisely.", grant), grant)
                     } else {
                         (false, "The money's not there. You'll have to work with what you've got.".to_string(), 0u64)
                     }
@@ -192,7 +192,7 @@ pub async fn talk_to_board(
                             t.finance -= cost;
                             t.stadium_capacity += added_seats;
                         }
-                        (true, format!("The board have approved a £{:,.0} expansion. {} seats will be added.", cost, added_seats), 0u64)
+                        (true, format!("The board have approved a £{} expansion. {} seats will be added.", cost, added_seats), 0u64)
                     } else if !can_afford {
                         (false, "We can't justify that kind of spending right now. Get the club on a sound financial footing first.".to_string(), 0u64)
                     } else {

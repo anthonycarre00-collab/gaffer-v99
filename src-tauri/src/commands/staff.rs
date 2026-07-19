@@ -31,13 +31,20 @@ pub fn hire_staff_internal(state: &StateManager, staff_id: &str) -> Result<Game,
         // Caps apply to the user's club only. AI clubs aren't restricted
         // (their hiring is automated by process_available_staff_market).
         let staff_wage = {
-            let staff = game
-                .staff
-                .iter_mut()
-                .find(|s| s.id == staff_id)
-                .ok_or("be.error.staffMemberNotFound".to_string())?;
+            // V100 P0-14: Find staff member IMMUTABLY first, extract role +
+            // check employment status, THEN count + mutate. This avoids the
+            // borrow conflict of holding a mutable borrow on game.staff while
+            // also trying to iterate it immutably for counting.
+            let (staff_role, staff_wage, already_employed) = {
+                let staff = game
+                    .staff
+                    .iter()
+                    .find(|s| s.id == staff_id)
+                    .ok_or("be.error.staffMemberNotFound".to_string())?;
+                (staff.role.clone(), staff.wage, staff.team_id.is_some())
+            };
 
-            if staff.team_id.is_some() {
+            if already_employed {
                 return Err("be.error.staffMemberAlreadyEmployed".to_string());
             }
 
@@ -46,9 +53,9 @@ pub fn hire_staff_internal(state: &StateManager, staff_id: &str) -> Result<Game,
                 .staff
                 .iter()
                 .filter(|s| s.team_id.as_deref() == Some(team_id.as_str()))
-                .filter(|s| s.role == staff.role)
+                .filter(|s| s.role == staff_role)
                 .count();
-            let cap = match staff.role {
+            let cap = match staff_role {
                 domain::staff::StaffRole::Manager => 1,
                 domain::staff::StaffRole::AssistantManager => 1,
                 domain::staff::StaffRole::Coach => 5,
@@ -57,15 +64,21 @@ pub fn hire_staff_internal(state: &StateManager, staff_id: &str) -> Result<Game,
             };
             if current_count >= cap {
                 return Err(format!(
-                    "be.error.staffRoleCapReached: {} {} already employed (cap {})",
+                    "be.error.staffRoleCapReached: {} {:?} already employed (cap {})",
                     current_count,
-                    format!("{:?}", staff.role),
+                    staff_role,
                     cap
                 ));
             }
 
+            // Now mutate: set team_id on the hired staff member.
+            let staff = game
+                .staff
+                .iter_mut()
+                .find(|s| s.id == staff_id)
+                .ok_or("be.error.staffMemberNotFound".to_string())?;
             staff.team_id = Some(team_id.clone());
-            staff.wage
+            staff_wage
         };
 
         // Deduct wage from team budget
