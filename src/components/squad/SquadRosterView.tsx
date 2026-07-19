@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import type {
  GameStateData,
  PlayerData,
@@ -8,6 +9,7 @@ import type {
 import { Badge, Card, ProgressBar, Select, CountryFlag, PlayerAvatar, InjuryBadge } from "../ui";
 import {
  AlertTriangle,
+ ArrowDownToLine,
  ChevronDown,
  ChevronUp,
  MoreVertical,
@@ -768,6 +770,19 @@ export default function SquadRosterView({
  return;
  }
  }),
+ // V100 P2 (Issue #39): Move to reserve squad.
+ {
+ label: t("squad.moveToReserve", { defaultValue: "Move to Reserve" }),
+ icon: <ArrowDownToLine className="w-4 h-4" />,
+ onClick: async () => {
+ try {
+ const updated = await invoke<GameStateData>("move_to_reserve", { playerId: player.id });
+ onMutationComplete?.(updated);
+ } catch {
+ return;
+ }
+ },
+ },
  ...(canDelegateToYouthAcademy(player)
  ? [
  buildDelegateToYouthAcademyMenuItem(t, async () => {

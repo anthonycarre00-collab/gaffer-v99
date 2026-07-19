@@ -536,6 +536,15 @@ export interface ManagerData {
   warning_stage?: number;
   career_stats: ManagerCareerStats;
   career_history: ManagerCareerEntry[];
+  /** V100 P1 (Issue #24/#33): Head-to-head records vs other managers. */
+  head_to_head?: Record<string, {
+    wins: number;
+    draws: number;
+    losses: number;
+    goals_for: number;
+    goals_against: number;
+    last_meeting_date: string | null;
+  }>;
 }
 
 export interface FixtureData {

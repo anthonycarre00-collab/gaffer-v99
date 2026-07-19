@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GameStateData, StaffData, useGameStore } from "../../store/gameStore";
-import { getStaff, type StaffSlice } from "../../services/staffService";
-import { Card, CardBody, Badge, CountryFlag, ProgressBar } from "../ui";
+import { getStaff, getAssistantManagerAdvice, type AssistantAdviceData, type StaffSlice } from "../../services/staffService";
+import { Card, CardBody, CardHeader, Badge, CountryFlag, ProgressBar, Button } from "../ui";
 import {
  interpretStaffAttr,
  staffOvrLabel,
@@ -78,6 +78,9 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  const [search, setSearch] = useState("");
  const [roleFilter, setRoleFilter] = useState<string | null>(null);
  const [actionLoading, setActionLoading] = useState<string | null>(null);
+ // V100 P2 (Issue #17): Assistant manager advice state.
+ const [advice, setAdvice] = useState<AssistantAdviceData | null>(null);
+ const [adviceLoading, setAdviceLoading] = useState(false);
 
  const teamId = sessionState?.manager?.team_id ?? gameState?.manager?.team_id ?? null;
 
@@ -166,6 +169,52 @@ export default function StaffTab({ gameState, onGameUpdate, onNavigate }: StaffT
  {t("staff.available", { count: availableStaff.length })}
  </button>
  </div>
+
+ {/* V100 P2 (Issue #17): Assistant Manager Advice panel. */}
+ {view === "mystaff" && myStaff.some((s) => s.role === "AssistantManager") && (
+ <Card className="mb-4">
+ <CardHeader>
+ <div className="flex items-center justify-between w-full">
+ <div className="flex items-center gap-2">
+ <span className="inline-block w-[3px] h-[11px] bg-accent-500" />
+ {t("staff.assistantAdvice", { defaultValue: "Assistant Manager's View" })}
+ </div>
+ <Button
+ size="sm"
+ variant="outline"
+ disabled={adviceLoading}
+ onClick={async () => {
+ setAdviceLoading(true);
+ try {
+ const result = await getAssistantManagerAdvice();
+ setAdvice(result);
+ } catch { setAdvice(null); }
+ finally { setAdviceLoading(false); }
+ }}
+ >
+ {adviceLoading ? "..." : t("staff.askForAdvice", { defaultValue: "Ask for advice" })}
+ </Button>
+ </div>
+ </CardHeader>
+ {advice ? (
+ <CardBody>
+ <div className={`rounded border p-3 ${
+ advice.tone === "warning" ? "border-amber-500/30 bg-amber-950/10" :
+ advice.tone === "positive" ? "border-green-500/30 bg-green-950/10" :
+ "border-slate-line bg-carbon-2"
+ }`}>
+ <p className="text-sm text-ink-dim italic">"{advice.advice}"</p>
+ </div>
+ </CardBody>
+ ) : (
+ <CardBody>
+ <p className="text-xs text-ink-faint">
+ {t("staff.adviceHint", { defaultValue: "Ask your assistant for a read on the squad." })}
+ </p>
+ </CardBody>
+ )}
+ </Card>
+ )}
 
  <div className="relative flex-1 min-w-[180px] max-w-xs">
  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />

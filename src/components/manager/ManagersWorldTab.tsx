@@ -230,6 +230,30 @@ export default function ManagersWorldTab({
  value={winRateLabel(manager)}
  />
  </div>
+
+ {/* V100 P1 (Issue #24/#33): Head-to-head record vs user's manager. */}
+ {(() => {
+ const userMgr = gameState.managers?.find((m) => m.id === gameState.manager.id);
+ if (!userMgr) return null;
+ const h2h = userMgr.head_to_head?.[manager.id];
+ if (!h2h || (h2h.wins + h2h.draws + h2h.losses) === 0) return null;
+ const total = h2h.wins + h2h.draws + h2h.losses;
+ return (
+ <div className="mt-3 rounded border border-slate-line bg-carbon-2 px-3 py-2">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-ink-faint mb-1">
+ {t("managersWorld.headToHead", { defaultValue: "Your record vs" })} {manager.first_name} {manager.last_name}
+ </p>
+ <div className="flex items-center gap-3 text-xs font-mono">
+ <span className="text-green-400">{h2h.wins}W</span>
+ <span className="text-ink-dim">{h2h.draws}D</span>
+ <span className="text-red-400">{h2h.losses}L</span>
+ <span className="text-ink-faint">({total} {t("managersWorld.meetings", { defaultValue: "meetings" })})</span>
+ <span className="text-ink-faint">•</span>
+ <span className="text-ink-dim">{h2h.goals_for}-{h2h.goals_against} {t("managersWorld.goals", { defaultValue: "goals" })}</span>
+ </div>
+ </div>
+ );
+ })()}
  </CardBody>
  </Card>
  );
