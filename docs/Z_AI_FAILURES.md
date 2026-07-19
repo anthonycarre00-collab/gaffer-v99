@@ -305,3 +305,23 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 8 — Deep Audit)
+
+### Audit results:
+1. Narrative memory: VERIFIED WORKING — no fix needed
+2. Gaffer voice: FIXED — YouthAcademyTab now uses interpretation layer
+3. Press conferences: ADDED sensationalist controversy stories
+4. NewsSpinner: VERIFIED working
+
+### Newly completed:
+- [x] YouthAcademyTab: Raw OVR/potential numbers replaced with Gaffer voice
+- [x] Press conference controversy: 30% chance of tabloid article from curt/defiant responses
+- [x] Narrative memory verified end-to-end (creation → resurfacing → news article)
+
+### Still outstanding (5 items, all complex/large):
+- [ ] Full tactics screen per UI spec §9 (squad rail, instructions rail)
+- [ ] 12-column grid enforcement on all screens
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
