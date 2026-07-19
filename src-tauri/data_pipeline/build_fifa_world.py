@@ -593,6 +593,13 @@ def build_world(max_leagues=15):
             'active_loan': None,
             'former_team_id': None,
             'retired_season': None,
+            # V100: Write real height/weight from FIFA data so refresh_player_derived
+            # doesn't need to guess. Also ensures the DB load skip logic works
+            # (skip fires when height_cm > 0 AND weight_kg > 0).
+            'height_cm': height_cm,
+            'weight_kg': weight_kg,
+            # V100: not_for_sale defaults to False
+            'not_for_sale': False,
         }
         players.append(player)
     

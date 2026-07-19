@@ -261,6 +261,14 @@ export default function FinancesTab({
  text: string;
  } | null>(null);
 
+ // V100 P2 (Issue #36): Talk to Board state.
+ const [talkToBoardLoading, setTalkToBoardLoading] = useState(false);
+ const [talkToBoardResult, setTalkToBoardResult] = useState<{
+ approved: boolean;
+ board_reply: string;
+ amount_granted: number;
+ } | null>(null);
+
  const roster = gameState.players.filter((p) => p.team_id === myTeam.id);
 
  // Sortable payroll table — show top earners, but allow sorting by any column.
@@ -564,6 +572,36 @@ export default function FinancesTab({
  });
  } finally {
  setActionLoading(null);
+ }
+ }
+
+ // V100 P2 (Issue #36): Talk to Board handler.
+ async function handleTalkToBoard(
+ request: "requestMoreTime" | "requestTransferFunds" | "requestStadiumExpansion",
+ ): Promise<void> {
+ setTalkToBoardLoading(true);
+ setTalkToBoardResult(null);
+ try {
+ const response = await invoke<{
+ game: GameStateData;
+ approved: boolean;
+ board_reply: string;
+ amount_granted: number;
+ }>("talk_to_board", { request });
+ onGameUpdate?.(response.game);
+ setTalkToBoardResult({
+ approved: response.approved,
+ board_reply: response.board_reply,
+ amount_granted: response.amount_granted,
+ });
+ } catch (error) {
+ setTalkToBoardResult({
+ approved: false,
+ board_reply: String(error),
+ amount_granted: 0,
+ });
+ } finally {
+ setTalkToBoardLoading(false);
  }
  }
 
@@ -874,6 +912,55 @@ export default function FinancesTab({
  </p>
  ) : null}
  </div>
+ </CardBody>
+ </Card>
+
+ {/* V100 P2 (Issue #36): Talk to Board — 3 request options with Gaffer-voice responses. */}
+ <Card className="lg:col-span-3">
+ <CardHeader>
+ <div className="flex items-center gap-2">
+ <span className="inline-block w-[3px] h-[11px] bg-accent-500" />
+ {t("finances.talkToBoard")}
+ </div>
+ </CardHeader>
+ <CardBody>
+ <p className="text-xs text-ink-dim mb-3">
+ {t("finances.talkToBoardDescription")}
+ </p>
+ <div className="flex flex-wrap gap-2 mb-3">
+ <Button
+ size="sm"
+ variant="outline"
+ disabled={talkToBoardLoading}
+ onClick={() => void handleTalkToBoard("requestMoreTime")}
+ >
+ {t("finances.talkToBoardRequestMoreTime")}
+ </Button>
+ <Button
+ size="sm"
+ variant="outline"
+ disabled={talkToBoardLoading}
+ onClick={() => void handleTalkToBoard("requestTransferFunds")}
+ >
+ {t("finances.talkToBoardRequestTransferFunds")}
+ </Button>
+ <Button
+ size="sm"
+ variant="outline"
+ disabled={talkToBoardLoading}
+ onClick={() => void handleTalkToBoard("requestStadiumExpansion")}
+ >
+ {t("finances.talkToBoardRequestStadiumExpansion")}
+ </Button>
+ </div>
+ {talkToBoardResult ? (
+ <div className={`rounded border p-3 ${talkToBoardResult.approved ? "border-green-500/30 bg-green-950/20" : "border-red-500/30 bg-red-950/20"}`}>
+ <p className="text-xs font-heading font-bold uppercase tracking-wider mb-1">
+ {talkToBoardResult.approved ? t("finances.talkToBoardApproved") : t("finances.talkToBoardDenied")}
+ </p>
+ <p className="text-sm text-ink-dim italic">"{talkToBoardResult.board_reply}"</p>
+ </div>
+ ) : null}
  </CardBody>
  </Card>
 

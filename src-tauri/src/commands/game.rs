@@ -513,15 +513,45 @@ fn build_game_from_world_data(
             let mut refreshed = 0usize;
             for (i, player) in game.players.iter_mut().enumerate() {
                 if player.ovr > 0 && player.market_value > 0 {
-                    // DB already has derived values — skip the expensive recompute.
-                    // Still run the V100 P1 height/weight generation if missing.
-                    if player.height_cm == 0 || player.weight_kg == 0 {
-                        ofm_core::player_rating::refresh_player_derived(player, world_start_year);
-                        refreshed += 1;
-                    } else {
-                        skipped += 1;
+                    // V100: DB already has OVR + market_value — skip the expensive
+                    // full refresh_player_derived call. Only generate height/weight
+                    // if missing (cheap operation, doesn't recompute OVR/traits/etc).
+                    if player.height_cm == 0 {
+                        // Generate height from position + power (fast, no full refresh).
+                        let base_height: u8 = match player.position {
+                            domain::player::Position::Goalkeeper => 188,
+                            domain::player::Position::Defender
+                            | domain::player::Position::RightBack
+                            | domain::player::Position::CenterBack
+                            | domain::player::Position::LeftBack
+                            | domain::player::Position::RightWingBack
+                            | domain::player::Position::LeftWingBack => 184,
+                            domain::player::Position::Midfielder
+                            | domain::player::Position::DefensiveMidfielder
+                            | domain::player::Position::CentralMidfielder
+                            | domain::player::Position::AttackingMidfielder
+                            | domain::player::Position::RightMidfielder
+                            | domain::player::Position::LeftMidfielder => 178,
+                            domain::player::Position::Forward
+                            | domain::player::Position::RightWinger
+                            | domain::player::Position::LeftWinger
+                            | domain::player::Position::Striker => 180,
+                        };
+                        let power_mod: i16 = ((player.attributes.power as i16) - 50) / 10;
+                        player.height_cm = (base_height as i16 + power_mod).clamp(165, 205) as u8;
                     }
+                    if player.weight_kg == 0 {
+                        let bmi = 23.0 + (player.attributes.power as f64 / 100.0) * 2.5;
+                        let height_m = player.height_cm as f64 / 100.0;
+                        player.weight_kg = (height_m * height_m * bmi).round().clamp(60.0, 100.0) as u8;
+                    }
+                    skipped += 1;
+                    // NOTE: We do NOT call refresh_player_derived here — that's the
+                    // expensive function that takes 15-20 minutes for 5,324 players.
+                    // The DB already has OVR, potential, market_value, traits, fame.
+                    // We only need height/weight which we just generated above.
                 } else {
+                    // Player has no OVR or market_value — needs full refresh.
                     ofm_core::player_rating::refresh_player_derived(player, world_start_year);
                     refreshed += 1;
                 }

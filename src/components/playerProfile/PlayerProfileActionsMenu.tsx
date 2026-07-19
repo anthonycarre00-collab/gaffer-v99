@@ -21,7 +21,7 @@ import {
  buildStartingXIIds,
 } from "../squad/SquadTab.helpers";
 import { canDelegateToYouthAcademy } from "../../lib/playerSquad";
-import { setPlayerSquadRole, setStartingXi } from "../../services/squadService";
+import { setPlayerSquadRole, setStartingXi, setPlayerTrainingPosition } from "../../services/squadService";
 import {
  rejectAllPendingOffers,
  toggleLoanList,
@@ -223,6 +223,43 @@ export default function PlayerProfileActionsMenu({
  disabled: actionBusy,
  },
  );
+
+ // V100 P1 (Issue #3): Position retraining options.
+ // Show available positions to retrain to (excluding natural + alternate).
+ const allPositions = ["Goalkeeper", "Defender", "Midfielder", "Forward"] as const;
+ const knownPositions = new Set([
+ player.natural_position,
+ ...(player.alternate_positions ?? []),
+ ]);
+ const retrainablePositions = allPositions.filter((p) => !knownPositions.has(p));
+ if (retrainablePositions.length > 0 && isManagerOwnedProfile) {
+ items.push(buildDividerMenuItem());
+ const currentRetraining = player.training_position_focus;
+ for (const pos of retrainablePositions) {
+ const isRetraining = currentRetraining === pos;
+ items.push({
+ label: isRetraining
+ ? `${t("playerProfile.retrainingActive", { defaultValue: "Retraining to" })} ${pos} (${player.retraining_xp ?? 0}%)`
+ : `${t("playerProfile.retrainTo", { defaultValue: "Retrain to" })} ${pos}`,
+ icon: <RotateCcw className="w-4 h-4" />,
+ disabled: actionBusy,
+ onClick: () => {
+ void runMutation(() => setPlayerTrainingPosition(player.id, pos));
+ },
+ });
+ }
+ // Cancel retraining option if active.
+ if (currentRetraining) {
+ items.push({
+ label: t("playerProfile.cancelRetraining", { defaultValue: "Cancel retraining" }),
+ icon: <RotateCcw className="w-4 h-4" />,
+ disabled: actionBusy,
+ onClick: () => {
+ void runMutation(() => setPlayerTrainingPosition(player.id, null));
+ },
+ });
+ }
+ }
 
  if (canDelegateToYouthAcademy(player)) {
  items.push({
