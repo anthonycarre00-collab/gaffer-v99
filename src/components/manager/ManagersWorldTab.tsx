@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import type { GameStateData, ManagerData, TeamData } from "../../store/gameStore";
 import { countryName } from "../../lib/countries";
+import { interpretReputation } from "../../lib/gafferEngine";
 import { Badge, Card, CardBody, CardHeader, CountryFlag } from "../ui";
 
 interface ManagersWorldTabProps {
@@ -217,7 +218,7 @@ export default function ManagersWorldTab({
  <StatTile
  icon={<TrendingUp className="h-4 w-4" />}
  label={t("managersWorld.reputation")}
- value={manager.reputation.toString()}
+ value={interpretReputation(manager.reputation).short}
  />
  <StatTile
  icon={<UsersRound className="h-4 w-4" />}

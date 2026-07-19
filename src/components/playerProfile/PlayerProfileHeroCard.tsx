@@ -122,7 +122,7 @@ export default function PlayerProfileHeroCard({
  {player.height_cm ? (
  <>
  <span className="text-ink-faint">•</span>
- <span className="text-ink-faint text-sm">
+ <span className="text-ink-faint text-sm font-mono">
  {player.height_cm}cm / {player.weight_kg}kg
  </span>
  </>
