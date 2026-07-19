@@ -113,11 +113,29 @@ pub fn refresh_player_derived(player: &mut Player, current_year: u32) {
     // matches the player's profile. GKs and CBs are taller; wingers and
     // full-backs are shorter. Higher power = heavier build.
     if player.height_cm == 0 {
+        // V100 P1 (Issue #1): Base height by position group. The Position enum
+        // has 17 variants — we group them into 4 buckets for height purposes.
         let base_height: u8 = match player.position {
             domain::player::Position::Goalkeeper => 188,
-            domain::player::Position::Defender => 184,
-            domain::player::Position::Midfielder => 178,
-            domain::player::Position::Forward => 180,
+            // Defenders (including full-backs and wing-backs) tend to be taller.
+            domain::player::Position::Defender
+            | domain::player::Position::RightBack
+            | domain::player::Position::CenterBack
+            | domain::player::Position::LeftBack
+            | domain::player::Position::RightWingBack
+            | domain::player::Position::LeftWingBack => 184,
+            // Midfielders are average height.
+            domain::player::Position::Midfielder
+            | domain::player::Position::DefensiveMidfielder
+            | domain::player::Position::CentralMidfielder
+            | domain::player::Position::AttackingMidfielder
+            | domain::player::Position::RightMidfielder
+            | domain::player::Position::LeftMidfielder => 178,
+            // Forwards (including wingers and strikers) are slightly taller than mids.
+            domain::player::Position::Forward
+            | domain::player::Position::RightWinger
+            | domain::player::Position::LeftWinger
+            | domain::player::Position::Striker => 180,
         };
         // Power attribute (0-100) shifts height ±5cm. Powerful players tend
         // to be taller (and heavier).

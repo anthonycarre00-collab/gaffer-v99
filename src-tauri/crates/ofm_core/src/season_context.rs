@@ -15,9 +15,13 @@ pub fn refresh_game_context(game: &mut Game) {
     // per-window `moved_player_ids` set so players can move in the new
     // window. Without this, a player bought in the summer window would
     // be locked out of the January window too.
-    let previous_status = game.season_context.transfer_window.status;
+    //
+    // TransferWindowStatus doesn't implement Copy, so we clone the values
+    // to avoid partial moves that would prevent borrowing `game` for
+    // derive_season_context below.
+    let previous_status = game.season_context.transfer_window.status.clone();
     let new_context = derive_season_context(game);
-    let new_status = new_context.transfer_window.status;
+    let new_status = new_context.transfer_window.status.clone();
     if previous_status != new_status {
         game.moved_player_ids.clear();
     }

@@ -90,7 +90,7 @@ pub fn build_round_summary(
     let user_comp = if let Some(tid) = user_team_id {
         game.competitions
             .iter()
-            .find(|c| (c.participant_ids.iter().any(|p| p == tid)))
+            .find(|c| c.participant_ids.iter().any(|p| p == tid))
             .or_else(|| game.league.as_ref())
     } else {
         game.league.as_ref()

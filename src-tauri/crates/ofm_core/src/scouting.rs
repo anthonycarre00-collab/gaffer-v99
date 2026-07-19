@@ -783,9 +783,9 @@ fn build_scout_report(
     team_name: Option<&str>,
     date: &str,
     reveal_tier: RevealTier,
-    /// V100 P2 (Issue #18): Scout bias profile. When present, the scout's
-    /// attribute readings are shifted by their bias multipliers and extra
-    /// noise is added based on their noise_level. None = neutral scout.
+    // V100 P2 (Issue #18): Scout bias profile. When present, the scout's
+    // attribute readings are shifted by their bias multipliers and extra
+    // noise is added based on their noise_level. None = neutral scout.
     scout_bias: Option<&domain::staff::ScoutBias>,
 ) -> InboxMessage {
     let mut rng = rand::rng();

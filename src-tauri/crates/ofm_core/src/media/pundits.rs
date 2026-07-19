@@ -62,7 +62,7 @@ impl PunditDatabase {
     /// Uses `include_str!` so the data is baked into the binary at compile
     /// time — no runtime file I/O needed.
     pub fn load() -> Self {
-        let json = include_str!("../../../data/pundits.json");
+        let json = include_str!("../../../../data/pundits.json");
         serde_json::from_str(json).unwrap_or_else(|e| {
             log::error!("[pundits] Failed to load pundits.json: {}. Using empty database.", e);
             PunditDatabase { pundits: vec![] }

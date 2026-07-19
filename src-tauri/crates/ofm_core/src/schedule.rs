@@ -729,11 +729,11 @@ pub fn append_fixtures(league: &mut League, mut additional_fixtures: Vec<Fixture
 /// This must be called AFTER all competitions are scheduled for the new
 /// season (see `regenerate_competitions_for_new_season` in end_of_season.rs).
 pub fn cross_competition_collision_pass(competitions: &mut [League]) {
-    use crate::domain::league::CompetitionType::*;
+    use domain::league::CompetitionType::*;
     use std::collections::HashSet;
 
     // Helper: priority of a competition type (lower number = higher priority).
-    fn priority(kind: &crate::domain::league::CompetitionType) -> u8 {
+    fn priority(kind: &domain::league::CompetitionType) -> u8 {
         match kind {
             InternationalNation => 0,
             ContinentalClub | InternationalClub => 1,
@@ -758,7 +758,7 @@ pub fn cross_competition_collision_pass(competitions: &mut [League]) {
         for (fix_idx, fixture) in comp.fixtures.iter().enumerate() {
             // Skip friendlies for collision purposes — they're meant to be
             // flexible and are appended last anyway.
-            if fixture.competition == crate::domain::league::FixtureCompetition::Friendly {
+            if fixture.competition == domain::league::FixtureCompetition::Friendly {
                 continue;
             }
             let prio = priority(&comp.kind);
