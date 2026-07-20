@@ -137,9 +137,11 @@ impl<'a> InterpretationSurfaceService<'a> {
 
         // V100 Audit (M3/M4): Compute identity_alignment_label + tactical_alignment
         // from manager tactical_style vs team play_style. Both used to be hardcoded.
+        // Uses manager.personality.preferred_play_style() so the comparison is
+        // apples-to-apples (TacticalStyle enum → play_style string).
         let (identity_alignment_label, tactical_alignment) = {
             let team_play_style = team.map(|t| format!("{:?}", t.play_style)).unwrap_or_else(|| "Balanced".into());
-            let manager_style = format!("{:?}", self.game.manager.tactical_style);
+            let manager_style = self.game.manager.personality.preferred_play_style().to_string();
             // Simple match: if manager's preferred style == team's style → Aligned (100)
             // If adjacent style family (Attacking ↔ Pressing, Defensive ↔ Counter) → Compatible (70)
             // Else → Misaligned (35).
@@ -497,9 +499,8 @@ fn position_name(p:&Position)->&'static str { match p { Position::Goalkeeper=>"G
 /// Counter (both reactive, deep block), Possession ↔ Balanced (control-oriented).
 /// Returns true if compatible, false otherwise.
 fn is_adjacent_style(a: &str, b: &str) -> bool {
-    let norm = |s: &str| s.trim();
-    let a = norm(a);
-    let b = norm(b);
+    let a = a.trim();
+    let b = b.trim();
     if a == b { return true; }
     let pairs: &[(&str, &str)] = &[
         ("Attacking", "Pressing"),
@@ -551,8 +552,11 @@ mod tests {
         let game = make_test_game();
         let svc = InterpretationSurfaceService::new(&game);
         let snap = svc.squad_meaning();
-        // SquadPulse = (80×0.25) + (0×0.20) + (50×0.15) + (50×0.15) + (50×0.10) - (0×0.10) - (0×0.05) = 40
-        assert_eq!(snap.squad_harmony_score, 40);
+        // V100 audit (M3/M4): tactical_alignment is no longer hardcoded 50.0 —
+        // it now derives from manager tactical_style vs team play_style. In
+        // the test game both default to Balanced, so they match → 100.0.
+        // SquadPulse = (80×0.25) + (0×0.20) + (100×0.15) + (50×0.15) + (50×0.10) - (0×0.10) - (0×0.05) = 47.5 → 48
+        assert_eq!(snap.squad_harmony_score, 48);
         assert!(!snap.harmony_explanation.is_empty());
     }
 

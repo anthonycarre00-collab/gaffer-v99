@@ -192,7 +192,7 @@ pub fn apply_match_report_with_capture<F>(
             }
         }
 
-        fixture.result = Some(result);
+        fixture.result = Some(result.clone());
         crate::group_stage::process_completed_fixture(league, fixture_index);
         crate::schedule::advance_knockout_competition_round(league);
 
@@ -1213,7 +1213,10 @@ fn trigger_cross_team_rivalries(
             continue;
         }
 
-        let (roll, trigger_label, intensity) = match event.event_type {
+        // Determine trigger label + intensity based on event type + severity.
+        // Roll the RNG once per event (advances the seed deterministically).
+        let roll = next_rand();
+        let (trigger_label, intensity, chance): (&'static str, i8, f64) = match event.event_type {
             engine::EventType::Foul => {
                 // Read severity from event.detail if available.
                 let sev = match &event.detail {
@@ -1221,33 +1224,14 @@ fn trigger_cross_team_rivalries(
                     None => engine::FoulSeverity::Soft,
                 };
                 match sev {
-                    engine::FoulSeverity::Reckless => (next_rand(), "Reckless Foul", -20),
-                    engine::FoulSeverity::Hard => (next_rand(), "Hard Foul", -15),
-                    engine::FoulSeverity::Soft => (next_rand(), "Soft Foul", -8),
+                    engine::FoulSeverity::Reckless => ("Reckless Foul", -20, 0.12),
+                    engine::FoulSeverity::Hard => ("Hard Foul", -15, 0.05),
+                    engine::FoulSeverity::Soft => ("Soft Foul", -8, 0.01),
                 }
             }
-            engine::EventType::DribbleTackled => (next_rand(), "Tackled Hard", -10),
-            engine::EventType::HeaderWon => (next_rand(), "Aerial Battle", -5),
-            engine::EventType::RedCard => (next_rand(), "Red Card Flashpoint", -25),
-            _ => continue,
-        };
-
-        // Apply per-trigger probability.
-        let chance = match event.event_type {
-            engine::EventType::Foul => {
-                let sev = match &event.detail {
-                    Some(engine::EventDetail::Foul { severity }) => *severity,
-                    None => engine::FoulSeverity::Soft,
-                };
-                match sev {
-                    engine::FoulSeverity::Reckless => 0.12,
-                    engine::FoulSeverity::Hard => 0.05,
-                    engine::FoulSeverity::Soft => 0.01,
-                }
-            }
-            engine::EventType::DribbleTackled => 0.02,
-            engine::EventType::HeaderWon => 0.01,
-            engine::EventType::RedCard => 0.15,
+            engine::EventType::DribbleTackled => ("Tackled Hard", -10, 0.02),
+            engine::EventType::HeaderWon => ("Aerial Battle", -5, 0.01),
+            engine::EventType::RedCard => ("Red Card Flashpoint", -25, 0.15),
             _ => continue,
         };
 

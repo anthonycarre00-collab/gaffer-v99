@@ -473,13 +473,15 @@ pub(super) fn generate_random_staff_unattached_from_def(
         first_name,
         last_name,
         dob,
-        role,
-        attributes,
+        role.clone(),
+        attributes.clone(),
     );
     s.nationality = nationality.to_string();
 
     // V100 (Issue #18): Generate scout_bias for scouts at creation time.
     // Each scout gets a deterministic bias profile based on their id hash.
+    // V100 build fix: clone `role` + `attributes` into Staff::new above so we
+    // can still read them here. (StaffRole + StaffAttributes don't impl Copy.)
     if role == StaffRole::Scout {
         let hash: u64 = s.id.bytes().fold(0u64, |acc, b| {
             acc.wrapping_mul(31).wrapping_add(b as u64)

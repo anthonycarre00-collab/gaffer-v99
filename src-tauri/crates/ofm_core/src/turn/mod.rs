@@ -1166,11 +1166,13 @@ fn generate_weekly_staff_report(game: &mut Game, today: &str) {
     };
 
     // Create the inbox message.
+    // V100 build fix: clone assistant_name into the i18n params map — it was
+    // being moved by format!() above, then used again here.
     let msg = domain::message::InboxMessage::new(
         msg_id,
         format!("Weekly Report from {}", assistant_name),
         report_text,
-        assistant_name,
+        assistant_name.clone(),
         today.to_string(),
     )
     .with_category(domain::message::MessageCategory::StaffReport)

@@ -131,29 +131,38 @@ fn matches_filters(
         return false;
     }
 
-    match query.status {
+    // Status filter (transfer-listed / loan-listed / all).
+    let status_ok = match query.status {
         PlayerStatusFilter::All => true,
         PlayerStatusFilter::Transfer => player.transfer_listed,
         PlayerStatusFilter::Loan => player.loan_listed,
+    };
+    if !status_ok {
+        return false;
     }
 
     // V100 (Issue #23): Age range filter.
     // Parse player age from date_of_birth (first 4 chars = year).
     // We use a fixed reference year (2026) since matches_filters doesn't
     // have access to the game clock. This is close enough for filtering.
-    && {
-        let birth_year: i32 = player.date_of_birth.get(..4)
-            .and_then(|s| s.parse().ok())
-            .unwrap_or(2000);
-        let age = (2026 - birth_year) as u8;
-        let min_ok = query.age_min.map_or(true, |min| age >= min);
-        let max_ok = query.age_max.map_or(true, |max| age <= max);
-        min_ok && max_ok
+    let birth_year: i32 = player.date_of_birth.get(..4)
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(2000);
+    let age = (2026 - birth_year) as u8;
+    let min_ok = query.age_min.map_or(true, |min| age >= min);
+    let max_ok = query.age_max.map_or(true, |max| age <= max);
+    if !(min_ok && max_ok) {
+        return false;
     }
 
     // V100 (Issue #23): Nationality filter.
-    && (query.nationality.is_none()
-        || player.nationality.eq_ignore_ascii_case(query.nationality.as_deref().unwrap_or("")))
+    if let Some(nat) = &query.nationality {
+        if !player.nationality.eq_ignore_ascii_case(nat) {
+            return false;
+        }
+    }
+
+    true
 }
 
 fn matches_search(player: &Player, needle: &str) -> bool {
