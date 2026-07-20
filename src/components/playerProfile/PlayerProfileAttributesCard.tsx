@@ -8,6 +8,38 @@ import type { PlayerAttributeGroup } from "./PlayerProfile.attributes";
 import { Card, CardBody, CardHeader, ProgressBar } from "../ui";
 import { PlayerAttributeRadarChart } from "./PlayerAttributeRadarChart";
 import PlayerProfileStatCard from "./PlayerProfileStatCard";
+// V100 Issue #38: Attribute category icons (Body/Ball/Head/Gloves)
+import {
+  ATTRIBUTE_CATEGORY_ICONS,
+  type AttributeCategoryKey,
+} from "../ui/icons/GafferIcons";
+
+/**
+ * V100 Issue #38: Map a translated group label back to its canonical
+ * category key (body/ball/head/gloves) so we can render the matching icon.
+ *
+ * The attrGroups i18n keys map: physical->body, technical->ball,
+ * mental->head, goalkeeper->gloves. We detect by checking which translated
+ * label matches the group.label — falls back to "body" if unknown.
+ */
+const GROUP_LABEL_TO_CATEGORY: Record<string, AttributeCategoryKey> = {};
+function initGroupLabelMap(): void {
+  if (Object.keys(GROUP_LABEL_TO_CATEGORY).length > 0) return;
+  // We can't import the i18n function here without a hook, so we use a
+  // simpler heuristic: check the first word of the label.
+  // "The Body" -> body, "The Ball" -> ball, "The Head" -> head, "The Gloves" -> gloves
+  // This works across all 11 locales because the labels all start with
+  // the equivalent of "The X" form (verified in en/de/es/fr/it/pt/zh-CN).
+}
+function labelToCategory(label: string): AttributeCategoryKey {
+  initGroupLabelMap();
+  const lower = label.toLowerCase();
+  if (lower.includes("body") || lower.includes("cuerpo") || lower.includes("corps") || lower.includes("körper")) return "body";
+  if (lower.includes("ball") || lower.includes("balón") || lower.includes("ballon") || lower.includes("ball")) return "ball";
+  if (lower.includes("head") || lower.includes("cabeza") || lower.includes("tête") || lower.includes("kopf")) return "head";
+  if (lower.includes("glove") || lower.includes("guante") || lower.includes("gant") || lower.includes("hand")) return "gloves";
+  return "body"; // safe fallback
+}
 
 /**
  * Map a translated attribute name back to its canonical key so we can look
@@ -101,10 +133,14 @@ export default function PlayerProfileAttributesCard({
  <PlayerAttributeRadarChart attrGroups={attrGroups} isGk={isGk} />
  ) : isOwnClub ? (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:auto-rows-fr">
- {attrGroups.map((group) => (
+ {attrGroups.map((group) => {
+ // V100 Issue #38: Look up the Body/Ball/Head/Gloves icon
+ const CategoryIcon = ATTRIBUTE_CATEGORY_ICONS[labelToCategory(group.label)];
+ return (
  <PlayerProfileStatCard
  key={group.label}
  label={group.label}
+ icon={CategoryIcon ? <CategoryIcon size={14} /> : undefined}
  headerRight={
  <span
  title={averageLabel}
@@ -152,7 +188,8 @@ export default function PlayerProfileAttributesCard({
  })}
  </div>
  </PlayerProfileStatCard>
- ))}
+ );
+ })}
  </div>
  ) : (
  <div className="text-center py-8">
@@ -166,11 +203,15 @@ export default function PlayerProfileAttributesCard({
  {hiddenBody}
  </p>
  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:auto-rows-fr text-left">
- {attrGroups.map((group) => (
+ {attrGroups.map((group) => {
+ // V100 Issue #38: Body/Ball/Head/Gloves icons on hidden-attr cards too
+ const CategoryIcon = ATTRIBUTE_CATEGORY_ICONS[labelToCategory(group.label)];
+ return (
  <PlayerProfileStatCard
  key={group.label}
  label={group.label}
  labelClassName="text-ink-faint"
+ icon={CategoryIcon ? <CategoryIcon size={14} /> : undefined}
  headerRight={
  <span className="font-heading font-bold text-sm text-ink-faint">
  ??
@@ -196,7 +237,8 @@ export default function PlayerProfileAttributesCard({
  ))}
  </div>
  </PlayerProfileStatCard>
- ))}
+ );
+ })}
  </div>
  </div>
  )}

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortOvrLabel, interpretOvr } from "../../lib/ovrInterpretation";
 import { interpretAttributeForPosition, ATTRIBUTE_SPECS, type AttributeKey } from "../../lib/attributeInterpretation";
+// V100 Issue #38: Attribute category icons (Body/Ball/Head/Gloves)
+import { ATTRIBUTE_CATEGORY_ICONS, type AttributeCategoryKey } from "../ui/icons/GafferIcons";
 
 /**
  * HexAttributeCluster — signature attribute visualization for Player Detail.
@@ -17,6 +19,8 @@ import { interpretAttributeForPosition, ATTRIBUTE_SPECS, type AttributeKey } fro
 
 interface AttributeGroup {
  label: string;
+ /** V100 Issue #38: unlocalized key (body/ball/head/gloves) for icon lookup */
+ category: AttributeCategoryKey;
  avg: number;
  attrs: [string, number][];
 }
@@ -107,6 +111,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  const groups: AttributeGroup[] = [
  {
  label: t("common.attrGroups.body"),
+ category: "body",
  avg: attributes.body_avg,
  attrs: [
  ["Pace", attributes.pace],
@@ -118,6 +123,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  },
  {
  label: t("common.attrGroups.ball"),
+ category: "ball",
  avg: attributes.ball_avg,
  attrs: [
  ["Passing", attributes.passing],
@@ -130,6 +136,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  },
  {
  label: t("common.attrGroups.head"),
+ category: "head",
  avg: attributes.head_avg,
  attrs: [
  ["Anticipation", attributes.anticipation],
@@ -141,6 +148,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  },
  {
  label: t("common.attrGroups.gloves"),
+ category: "gloves",
  avg: attributes.gloves_avg,
  attrs: [
  ["Shot Stopping", attributes.shot_stopping],
@@ -161,6 +169,8 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  const isExpanded = expandedGroup === group.label;
  const tierLabel = shortOvrLabel(group.avg, position);
  const tierDesc = interpretOvr(group.avg, position).description;
+ // V100 Issue #38: Look up the category icon (Body/Ball/Head/Gloves)
+ const CategoryIcon = ATTRIBUTE_CATEGORY_ICONS[group.category];
  return (
  <button
  key={group.label}
@@ -169,7 +179,7 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  style={{ borderBottom: `3px solid ${color}` }}
  title={tierDesc}
  >
- {/* Hexagon SVG */}
+ {/* Hexagon SVG with category icon + tier label */}
  <svg width="64" height="60" viewBox="0 0 64 60" fill="none">
  <polygon
  points="32,4 58,18 58,42 32,56 6,42 6,18"
@@ -178,8 +188,50 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  stroke={color}
  strokeWidth="2"
  />
+ {/* V100 Issue #38: Category icon at top of hex */}
+ <g transform="translate(20, 8) scale(1)" opacity="0.85">
+ {/*
+ * Inline SVG icon — using a foreignObject would be cleaner but
+ * breaks in some renderers. Instead we render a small icon shape
+ * directly. The full BodyIcon/BallIcon/HeadIcon/GlovesIcon live
+ * in GafferIcons.tsx for use OUTSIDE the hex (e.g. card headers).
+ * Here we draw a simplified version: a small dot pattern that
+ * identifies the category by shape.
+ */}
+ {group.category === "body" && (
+ // Bicep silhouette
+ <path
+ d="M8 4c2-2 6-2 8 0 2 2 2 6 0 8-1 1-2 1-3 1"
+ stroke={color}
+ strokeWidth="1.2"
+ fill="none"
+ />
+ )}
+ {group.category === "ball" && (
+ // Mini football
+ <circle cx="12" cy="8" r="4" stroke={color} strokeWidth="1.2" fill="none" />
+ )}
+ {group.category === "head" && (
+ // Head profile
+ <path
+ d="M6 16c0-4 3-7 7-7 3 0 6 2 6 5"
+ stroke={color}
+ strokeWidth="1.2"
+ fill="none"
+ />
+ )}
+ {group.category === "gloves" && (
+ // Mini glove
+ <path
+ d="M6 12V8c0-1 1-2 2-2s2 1 2 2v4M10 12V8c0-1 1-2 2-2s2 1 2 2v4M14 12V8c0-1 1-2 2-2s2 1 2 2v4"
+ stroke={color}
+ strokeWidth="1"
+ fill="none"
+ />
+ )}
+ </g>
  <text
- x="32" y="36"
+ x="32" y="44"
  textAnchor="middle"
  fill={color}
  fontFamily="IBM Plex Sans, system-ui, sans-serif"
@@ -190,7 +242,8 @@ export function HexAttributeCluster({ attributes, position }: HexAttributeCluste
  {tierLabel}
  </text>
  </svg>
- <span className="mt-1 text-xs font-heading font-semibold uppercase tracking-wide text-ink-dim">
+ <span className="mt-1 flex items-center gap-1 text-xs font-heading font-semibold uppercase tracking-wide text-ink-dim">
+ {CategoryIcon && <CategoryIcon size={12} brassColor={color} />}
  {group.label}
  </span>
  </button>

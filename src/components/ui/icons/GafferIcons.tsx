@@ -528,3 +528,108 @@ export function BuildingStadiumIcon({ size = 20, brassColor = "#c9972e", ...prop
  </svg>
  );
 }
+
+// ─── Attribute Category Icons (V100 Issue #38) ─────────────────────
+// Four icons representing the Gaffer attribute groups:
+//   Body  — physical (pace, burst, engine, power, agility)
+//   Ball  — on-the-ball (passing, distribution, touch, finishing, defending, aerial)
+//   Head  — mental (anticipation, vision, decisions, composure, leadership)
+//   Gloves — goalkeeping (shot_stopping, commanding, playing_out)
+//
+// Used by HexAttributeCluster (small, inside hex) and PlayerProfileAttributesCard
+// (header chip). All four share the same 24x24 viewBox + 1.5px stroke so they
+// sit cleanly next to existing Gaffer icons.
+
+/** Body — flexed bicep. Represents physical attributes. */
+export function BodyIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Shoulder + flexed bicep silhouette */}
+ <path d="M5 8c0-2 2-4 5-4 2 0 3 1 4 2" />
+ <path d="M14 6c3 1 5 4 5 7 0 3-2 5-4 6" />
+ {/* Bicep bulge */}
+ <path d="M5 8c-1 2-1 5 0 7 1 1 2 2 4 2 1 0 2-1 2-2 0-2-2-3-3-5" />
+ {/* Muscle definition line */}
+ <path d="M9 11c1 1 2 2 3 2" strokeWidth="0.8" opacity="0.6" stroke={brassColor} />
+ {/* Wrist/hand anchor */}
+ <circle cx="19" cy="19" r="1.2" stroke={brassColor} strokeWidth="1" />
+ </svg>
+ );
+}
+
+/** Ball — classic football with pentagon pattern. Represents on-the-ball skills. */
+export function BallIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Outer ball circle */}
+ <circle cx="12" cy="12" r="8" />
+ {/* Central pentagon */}
+ <polygon
+ points="12,8 15,10 14,13 10,13 9,10"
+ fill={brassColor}
+ stroke="none"
+ opacity="0.85"
+ />
+ {/* Seam lines radiating from pentagon vertices */}
+ <line x1="12" y1="8" x2="12" y2="4" strokeWidth="0.8" />
+ <line x1="15" y1="10" x2="19" y2="9" strokeWidth="0.8" />
+ <line x1="14" y1="13" x2="17" y2="16" strokeWidth="0.8" />
+ <line x1="10" y1="13" x2="7" y2="16" strokeWidth="0.8" />
+ <line x1="9" y1="10" x2="5" y2="9" strokeWidth="0.8" />
+ </svg>
+ );
+}
+
+/** Head — head silhouette with brain. Represents mental attributes. */
+export function HeadIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Head profile (side view) */}
+ <path d="M7 18c0-3 0-5 1-7 1-2 3-3 5-3 3 0 5 2 5 5 0 2-1 3-1 4 0 1 1 1 1 2" />
+ <path d="M18 14c0-2 1-3 1-5 0-4-3-7-7-7-3 0-6 2-7 5" />
+ {/* Brain squiggle inside head */}
+ <path
+ d="M10 9c1-1 2-1 3 0 1 1 1 2 0 3 1 1 1 2 0 3-1 1-2 1-3 0"
+ strokeWidth="0.8"
+ stroke={brassColor}
+ opacity="0.85"
+ />
+ {/* Neck */}
+ <line x1="8" y1="18" x2="8" y2="21" strokeWidth="0.8" />
+ <line x1="13" y1="19" x2="13" y2="21" strokeWidth="0.8" />
+ </svg>
+ );
+}
+
+/** Gloves — goalkeeper glove. Represents goalkeeping attributes. */
+export function GlovesIcon({ size = 20, brassColor = "#c9972e", ...props }: GafferIconProps) {
+ return (
+ <svg {...base(size)} {...props}>
+ {/* Glove body (palm view) */}
+ <path d="M6 10V8c0-1 1-2 2-2s2 1 2 2v2" />
+ <path d="M10 8V6c0-1 1-2 2-2s2 1 2 2v2" />
+ <path d="M14 8V6c0-1 1-2 2-2s2 1 2 2v4" />
+ {/* Thumb */}
+ <path d="M6 10c-1 0-2 1-2 2v3c0 3 2 5 5 5h6c2 0 3-1 3-3v-7" />
+ {/* Cuff (wrist band) */}
+ <path d="M4 19h8" strokeWidth="1.5" stroke={brassColor} />
+ <path d="M4 19v1M12 19v1" strokeWidth="0.8" stroke={brassColor} />
+ {/* Finger separator lines */}
+ <line x1="10" y1="10" x2="10" y2="14" strokeWidth="0.6" opacity="0.5" />
+ <line x1="14" y1="10" x2="14" y2="14" strokeWidth="0.6" opacity="0.5" />
+ </svg>
+ );
+}
+
+/** Helper map: attribute group key -> icon component.
+ * Used by HexAttributeCluster + PlayerProfileAttributesCard to render the
+ * correct category icon next to the group label without a switch statement
+ * at every call site. */
+export const ATTRIBUTE_CATEGORY_ICONS = {
+ body: BodyIcon,
+ ball: BallIcon,
+ head: HeadIcon,
+ gloves: GlovesIcon,
+} as const;
+
+export type AttributeCategoryKey = keyof typeof ATTRIBUTE_CATEGORY_ICONS;
