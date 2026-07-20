@@ -382,3 +382,19 @@
 ### Still outstanding (2 items):
 - [ ] Attribute category icons (Body/Ball/Head/Gloves SVGs)
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 12)
+
+### Newly completed:
+- [x] Attribute category icons — DONE
+  - NEW 4 SVG icons in GafferIcons.tsx: BodyIcon (bicep), BallIcon (football), HeadIcon (head+brain), GlovesIcon (GK glove)
+  - All share 24x24 viewBox + 1.5px stroke language, fit cleanly with existing 30 Gaffer icons
+  - NEW ATTRIBUTE_CATEGORY_ICONS map + AttributeCategoryKey type for lookup by category
+  - HexAttributeCluster: mini-icon drawn inside each hex + full icon next to label below
+  - PlayerProfileStatCard: new optional `icon` prop (backward compatible)
+  - PlayerProfileAttributesCard: icons on both visible-attributes AND hidden-attributes views
+  - labelToCategory() helper handles en/es/fr/de/it + fallback
+  - 6 new unit tests (all pass), 58 player profile tests still pass
+
+### Still outstanding (1 item):
+- [ ] Icon/button cache
