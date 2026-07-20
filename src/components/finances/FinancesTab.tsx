@@ -750,9 +750,11 @@ export default function FinancesTab({
  ];
 
  return (
- <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+ // V100 §9 (Issue #9): 12-column grid. Overview (8/12) + sidebar (4/12).
+ // Previously 3-col with col-span-2 (2/3 = 8/12) — same proportions.
+ <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
  {/* Financial overview */}
- <Card accent="accent" className="lg:col-span-2">
+ <Card accent="accent" className="lg:col-span-8">
  <CardHeader>{t("finances.overview")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -817,7 +819,7 @@ export default function FinancesTab({
  </CardBody>
  </Card>
 
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>{t("finances.cashFlow")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -916,7 +918,7 @@ export default function FinancesTab({
  </Card>
 
  {/* V100 P2 (Issue #36): Talk to Board — 3 request options with Gaffer-voice responses. */}
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>
  <div className="flex items-center gap-2">
  <span className="inline-block w-[3px] h-[11px] bg-accent-500" />
@@ -964,7 +966,7 @@ export default function FinancesTab({
  </CardBody>
  </Card>
 
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>{t("finances.wagePressure")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1106,7 +1108,7 @@ export default function FinancesTab({
  </CardBody>
  </Card>
 
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>{t("finances.sponsors")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1303,7 +1305,7 @@ export default function FinancesTab({
  </CardBody>
  </Card>
 
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>{t("finances.facilities")}</CardHeader>
  <CardBody>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1367,7 +1369,7 @@ export default function FinancesTab({
  </Card>
 
  {/* Payroll */}
- <Card className="lg:col-span-3">
+ <Card className="lg:col-span-12">
  <CardHeader>{t("finances.payroll")}</CardHeader>
  <CardBody className="p-0">
  <div className="overflow-x-auto">

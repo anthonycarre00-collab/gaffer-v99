@@ -438,8 +438,12 @@ export default function SquadRosterView({
  return (
  <div className="flex flex-col gap-4">
  <Card plain>
- <div className="p-4 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_220px_220px_auto] gap-3 items-end">
- <div>
+ {/* V100 §9 (Issue #9): 12-column grid for filter bar. Was an arbitrary
+   value grid lg:grid-cols-[minmax(0,1.3fr)_220px_220px_auto] — converted
+   to explicit 12-col for consistency with the rest of the app. Spans:
+   search 5/12, position 2/12, status 3/12, clear button 2/12. */}
+ <div className="p-4 grid grid-cols-1 gap-3 items-end lg:grid-cols-12">
+ <div className="lg:col-span-5">
  <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("common.search")}
  </label>
@@ -451,7 +455,7 @@ export default function SquadRosterView({
  className="w-full rounded border border-slate-line bg-carbon-1 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-primary-500/30"
  />
  </div>
- <div>
+ <div className="lg:col-span-2">
  <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("squad.pos")}
  </label>
@@ -468,7 +472,7 @@ export default function SquadRosterView({
  ))}
  </Select>
  </div>
- <div>
+ <div className="lg:col-span-3">
  <label className="text-xs font-heading font-bold uppercase tracking-wider text-ink-dim mb-2 block">
  {t("common.status")}
  </label>
@@ -508,7 +512,7 @@ export default function SquadRosterView({
  setStatusFilter("all");
  }}
  disabled={!hasActiveFilters}
- className={`px-3 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${hasActiveFilters
+ className={`lg:col-span-2 px-3 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider transition-all ${hasActiveFilters
  ? "bg-carbon-2 text-ink-dim hover:bg-carbon-3 hover:bg-carbon-3"
  : "bg-carbon-2 text-ink-faint cursor-not-allowed"
  }`}

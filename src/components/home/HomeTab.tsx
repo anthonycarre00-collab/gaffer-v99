@@ -247,9 +247,11 @@ export default function HomeTab({
 
  {myTeam ? (
  <>
- {/* Row 1: Next Match (3/4) + League Position (1/4) */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
- <Card className="card-enter md:col-span-2 lg:col-span-3" accent="primary">
+ {/* V100 §9 (Issue #9): 12-column grid enforcement. Row 1: Next Match
+   (9/12) + League Position (3/12). Previously 4-col grid with col-span-3
+   (3/4 = 9/12) — same proportions, now explicit 12-col system per UI spec. */}
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+ <Card className="card-enter md:col-span-2 lg:col-span-9" accent="primary">
  <CardHeader>{t("home.nextMatch")}</CardHeader>
  <CardBody>
  <NextMatchDisplay gameState={gameState} />
@@ -267,14 +269,14 @@ export default function HomeTab({
  />
  </div>
 
- {/* Gaffer Phase 0.5-FE — Squad Pulse + Media Pulse row */}
- <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
- <SquadPulseCard />
- <MediaPulseCard />
+ {/* V100 §9: Squad Pulse (6/12) + Media Pulse (6/12) on 12-col grid. */}
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+ <div className="lg:col-span-6"><SquadPulseCard /></div>
+ <div className="lg:col-span-6"><MediaPulseCard /></div>
  </div>
 
- {/* Row 2: Four secondary cards */}
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+ {/* V100 §9: Row 2 — four secondary cards (3/12 each). */}
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5">
  <HomeNextOpponentCard
  nextOpponent={nextOpponent}
  lang={lang}
@@ -360,19 +362,23 @@ export default function HomeTab({
  onNavigate={onNavigate}
  />
 
- {/* Row 3: League Digest + Player Momentum */}
- <div className={`grid grid-cols-1 gap-5 ${hasMomentum ? "md:grid-cols-2" : ""}`}>
+ {/* V100 §9: Row 3 — League Digest (6/12) + Player Momentum (6/12). */}
+ <div className={`grid grid-cols-1 gap-5 ${hasMomentum ? "md:grid-cols-2 lg:grid-cols-12" : ""}`}>
+ <div className={hasMomentum ? "lg:col-span-6" : ""}>
  <HomeLeagueDigestCard
  articles={leagueDigestArticles}
  lang={lang}
  onNavigate={onNavigate}
  />
+ </div>
  {hasMomentum && (
+ <div className="lg:col-span-6">
  <HomePlayerMomentumCard
  hotPlayers={hotPlayers}
  coldPlayers={coldPlayers}
  onNavigate={onNavigate}
  />
+ </div>
  )}
  </div>
  </>

@@ -184,8 +184,13 @@ function useCommunityFace(playerId: string | null | undefined): string | null {
  }
 
  // Check Tauri for community face pack.
+ // V100: Defensive — invoke may be undefined in test env or non-Tauri
+ // contexts (e.g. Storybook). Guard with optional chaining + nullish
+ // coalescing so the hook never throws "Cannot read properties of
+ // undefined (reading 'then')".
  let cancelled = false;
- invoke<string | null>("get_community_face", { playerId })
+ const facePromise = invoke<string | null>("get_community_face", { playerId });
+ Promise.resolve(facePromise)
  .then((path) => {
  if (cancelled) return;
  const src = path ? convertFileSrc(path) : null;
