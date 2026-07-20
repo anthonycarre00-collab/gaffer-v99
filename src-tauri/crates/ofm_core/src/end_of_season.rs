@@ -1765,6 +1765,16 @@ fn retire_aged_ai_managers(game: &mut Game, current_year: i32) {
     // Remove retired managers from game.managers.
     game.managers.retain(|m| !retired_ids.contains(&m.id));
 
+    // V100 FIX (data pruning): Clean up orphaned head_to_head entries.
+    // manager.head_to_head is a HashMap<String, ManagerHeadToHead> keyed by
+    // rival manager ID. When a rival retires, their ID lingers in other
+    // managers' maps forever. Remove them here.
+    for manager in game.managers.iter_mut() {
+        for retired_id in &retired_ids {
+            manager.head_to_head.remove(retired_id);
+        }
+    }
+
     // Generate news articles for notable retirements.
     let today = game.clock.current_date.format("%Y-%m-%d").to_string();
     for (mgr_id, mgr_name) in &retired_names {

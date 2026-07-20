@@ -209,8 +209,88 @@ impl<'a> InterpretationSurfaceService<'a> {
         }
     }
 
+    /// V100 FIX (match significance): Wire match_meaning() to read real data
+    /// from memory_store + relationship_graph + fixture importance. Previously
+    /// 100% hardcoded — returned "Neutral" momentum, 0 rivalry intensity, no
+    /// narrative shift, regardless of game state.
+    ///
+    /// Now reads:
+    /// - `momentum_state`: from active story threads (Building/Peaking/Neutral)
+    /// - `rivalry_intensity`: count of rivalry_flagged edges for user's team
+    /// - `narrative_shift_label`: from highest-momentum active thread title
+    /// - `pundit_tone_weight`: from media_engine (0.5 default, varies with
+    ///   active disagreement)
+    /// - `resurfaced_memory_flag`: "true" if any memory has times_resurfaced > 0
+    /// - `turning_point_event_id` / `archived_memory_used_flag`: still None
+    ///   (requires live match context — deferred)
     pub fn match_meaning(&self) -> MatchMeaningSnapshot {
-        MatchMeaningSnapshot { momentum_state:"Neutral".into(),rivalry_intensity:0,turning_point_event_id:None,narrative_shift_label:"No active narrative shift".into(),pundit_tone_weight:0.5,resurfaced_memory_flag:None,archived_memory_used_flag:None }
+        let active_threads = self.game.memory_store.active_threads();
+
+        // Momentum state: derive from highest-momentum active thread.
+        let max_momentum = active_threads.iter()
+            .map(|t| t.momentum_score)
+            .fold(0.0f32, f32::max);
+        let momentum_state = if max_momentum >= 50.0 {
+            "Peaking"
+        } else if max_momentum >= 20.0 {
+            "Building"
+        } else if max_momentum > 0.0 {
+            "Simmering"
+        } else {
+            "Neutral"
+        };
+
+        // Rivalry intensity: count rivalry_flagged edges involving user's team.
+        let rivalry_intensity: u8 = {
+            let user_team_id = self.game.manager.team_id.as_deref();
+            if let Some(team_id) = user_team_id {
+                let count = self.game.relationship_graph.all_edges()
+                    .filter(|(_, edge)| edge.rivalry_flag)
+                    .filter(|(key, _)| {
+                        // Edge key is "team_a:team_b" — check if either side
+                        // is the user's team.
+                        key.split(':').any(|id| id == team_id)
+                    })
+                    .count();
+                count.min(255) as u8
+            } else {
+                0
+            }
+        };
+
+        // Narrative shift label: title of highest-momentum thread.
+        let narrative_shift_label = active_threads.iter()
+            .max_by(|a, b| a.momentum_score.partial_cmp(&b.momentum_score)
+                .unwrap_or(std::cmp::Ordering::Equal))
+            .map(|t| t.title.clone())
+            .unwrap_or_else(|| "No active narrative shift".into());
+
+        // Pundit tone weight: 0.5 baseline, bumped if active disagreement.
+        let pundit_tone_weight = {
+            let summary = self.game.media_engine.media_summary();
+            if summary.pundit_disagreement_active {
+                0.7
+            } else {
+                0.5
+            }
+        };
+
+        // Resurfaced memory flag: "true" if any memory has been resurfaced.
+        let resurfaced_memory_flag = {
+            let has_resurfaced = self.game.memory_store.all_memories_values()
+                .any(|memories| memories.iter().any(|m| m.times_resurfaced > 0));
+            if has_resurfaced { Some("true".to_string()) } else { None }
+        };
+
+        MatchMeaningSnapshot {
+            momentum_state: momentum_state.into(),
+            rivalry_intensity,
+            turning_point_event_id: None, // requires live match context
+            narrative_shift_label,
+            pundit_tone_weight,
+            resurfaced_memory_flag,
+            archived_memory_used_flag: None, // requires live match context
+        }
     }
 
     pub fn media_meaning(&self) -> MediaMeaningSnapshot {

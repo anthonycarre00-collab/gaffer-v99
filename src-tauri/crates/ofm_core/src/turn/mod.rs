@@ -157,6 +157,14 @@ where
 
     if has_match_today {
         info!("[turn] process_day {}: matchday", today);
+        // V100 FIX (match significance): Re-derive fixture importance from
+        // current team reputations before simulating. This lights up the
+        // 8-level FixtureImportance system (BigLeague/Continental/CupFinal/
+        // Massive) that was previously dead code — apply_fixture_importance
+        // was defined but never called. Now a top-6 clash in April gets
+        // pressure_mult=1.3 instead of 1.0, and a relegation 6-pointer
+        // gets the same bump.
+        crate::schedule::refresh_fixture_importance(game);
         for competition_index in due_competitions {
             simulate_competition_day_with_capture(game, competition_index, &today, on_capture);
         }
@@ -345,6 +353,110 @@ fn prune_old_messages_and_news(game: &mut Game) {
                 marked, unread_count, unread_count - marked
             );
         }
+    }
+
+    // V100 FIX (data pruning): Cap unread NEWS at 500 — same pattern as
+    // messages above. Previously unread news was kept indefinitely ("keep
+    // unread indefinitely" comment at old line 283), which could accumulate
+    // ~20K articles / ~10 MB over 10 seasons. Now the oldest unread articles
+    // get marked as read, making them eligible for the 730-day age prune.
+    let unread_news_count = game.news.iter().filter(|n| !n.read).count();
+    if unread_news_count > 500 {
+        let to_mark = unread_news_count - 500;
+        let mut unread_news_indices: Vec<usize> = game
+            .news
+            .iter()
+            .enumerate()
+            .filter(|(_, n)| !n.read)
+            .map(|(i, _)| i)
+            .collect();
+        unread_news_indices.sort_by(|&a, &b| game.news[a].date.cmp(&game.news[b].date));
+        let mut marked = 0;
+        for &idx in unread_news_indices.iter().take(to_mark) {
+            game.news[idx].read = true;
+            marked += 1;
+        }
+        if marked > 0 {
+            debug!(
+                "[turn] Capped unread news: marked {} oldest as read (was {}, now {})",
+                marked, unread_news_count, unread_news_count - marked
+            );
+        }
+    }
+
+    // V100 FIX (data pruning): Prune team.financial_ledger entries older
+    // than 3 seasons (~1095 days). Without this, ~90K entries / ~9 MB
+    // accumulate over 10 seasons (weekly wages + transfers + prize money).
+    let ledger_cutoff = today - chrono::Duration::days(1095);
+    let mut ledger_pruned = 0u32;
+    for team in game.teams.iter_mut() {
+        let before = team.financial_ledger.len();
+        team.financial_ledger.retain(|tx| {
+            match chrono::NaiveDate::parse_from_str(&tx.date, "%Y-%m-%d") {
+                Ok(date) => date >= ledger_cutoff,
+                Err(_) => true, // keep unparseable entries (defensive)
+            }
+        });
+        ledger_pruned += (before - team.financial_ledger.len()) as u32;
+    }
+
+    // V100 FIX (data pruning): Prune league.transfer_log entries older than
+    // 3 seasons. Without this, ~500-2000 entries per league accumulate over
+    // 10 seasons. The transfer log is only used for recent-window news
+    // generation (turn/news.rs:503), so 3 seasons is more than enough.
+    let transfer_cutoff = today - chrono::Duration::days(1095);
+    let mut transfer_pruned = 0u32;
+    if let Some(league) = game.league.as_mut() {
+        let before = league.transfer_log.len();
+        league.transfer_log.retain(|tx| {
+            match chrono::NaiveDate::parse_from_str(&tx.date, "%Y-%m-%d") {
+                Ok(date) => date >= transfer_cutoff,
+                Err(_) => true,
+            }
+        });
+        transfer_pruned += (before - league.transfer_log.len()) as u32;
+    }
+    for competition in game.competitions.iter_mut() {
+        let before = competition.transfer_log.len();
+        competition.transfer_log.retain(|tx| {
+            match chrono::NaiveDate::parse_from_str(&tx.date, "%Y-%m-%d") {
+                Ok(date) => date >= transfer_cutoff,
+                Err(_) => true,
+            }
+        });
+        transfer_pruned += (before - competition.transfer_log.len()) as u32;
+    }
+
+    // V100 FIX (data pruning): Prune rejected/withdrawn loan offers older
+    // than 30 days — same pattern as transfer_offers (which IS pruned at
+    // transfers.rs:804-824). Without this, stale loan offers accumulate
+    // forever on player.loan_offers.
+    let loan_cutoff = today - chrono::Duration::days(30);
+    let mut loan_pruned = 0u32;
+    for player in game.players.iter_mut() {
+        let before = player.loan_offers.len();
+        player.loan_offers.retain(|offer| {
+            // Keep pending offers (no date or recent). Prune old rejected/withdrawn.
+            let is_terminal = matches!(
+                offer.status,
+                domain::player::LoanOfferStatus::Rejected | domain::player::LoanOfferStatus::Withdrawn
+            );
+            if !is_terminal {
+                return true;
+            }
+            match chrono::NaiveDate::parse_from_str(&offer.date, "%Y-%m-%d") {
+                Ok(date) => date >= loan_cutoff,
+                Err(_) => true,
+            }
+        });
+        loan_pruned += (before - player.loan_offers.len()) as u32;
+    }
+
+    if ledger_pruned > 0 || transfer_pruned > 0 || loan_pruned > 0 {
+        debug!(
+            "[turn] Data pruning: {} ledger entries, {} transfer log entries, {} loan offers",
+            ledger_pruned, transfer_pruned, loan_pruned
+        );
     }
 
     let pruned_msgs = before_msgs - game.messages.len();

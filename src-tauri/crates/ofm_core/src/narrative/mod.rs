@@ -533,6 +533,12 @@ impl MemoryStore {
             for m in memories.iter_mut() {
                 m.decay();
             }
+            // V100 FIX (data pruning): Remove dead memories — zero emotional
+            // weight AND never resurfaced. Keeps the memory store bounded
+            // over many seasons. Memories that have been resurfaced at least
+            // once are kept even at zero weight (they're part of the narrative
+            // history and might resurface again).
+            memories.retain(|m| m.emotional_weight > 0.0 || m.times_resurfaced > 0);
         }
         for thread in &mut self.story_threads {
             thread.decay();
@@ -546,6 +552,19 @@ impl MemoryStore {
     /// Total memory count.
     pub fn memory_count(&self) -> usize {
         self.memories.values().map(|v| v.len()).sum()
+    }
+
+    /// V100 FIX (data pruning): Iterator over all memory vectors.
+    /// Used by match_meaning() to check for resurfaced memories, and
+    /// by weekly_decay() to prune zero-weight never-resurfaced memories.
+    pub fn all_memories_values(&self) -> impl Iterator<Item = &Vec<Memory>> {
+        self.memories.values()
+    }
+
+    /// V100 FIX (data pruning): Mutable iterator over all memory vectors.
+    /// Used by weekly_decay() to prune dead memories.
+    pub fn all_memories_values_mut(&mut self) -> impl Iterator<Item = &mut Vec<Memory>> {
+        self.memories.values_mut()
     }
 
     /// Active thread count.

@@ -92,6 +92,113 @@ pub fn apply_fixture_importance(
     }
 }
 
+/// V100 FIX (match significance): Refresh fixture importance for all
+/// scheduled fixtures in the game's active league, using CURRENT team
+/// reputations + standings. This is the fix for the P0 bug where
+/// `apply_fixture_importance` was defined but never called — leaving every
+/// league match at importance=1.0 and disabling the BigLeague/Continental/
+/// CupFinal/Massive pressure multipliers.
+///
+/// Should be called:
+///   - After initial league generation (in game init)
+///   - After season rollover (in regenerate_league_for_season)
+///   - Before each matchday (in process_day, when has_match_today)
+///
+/// The matchday call is the most important — it re-derives importance from
+/// current standings, so a fixture scheduled as "League" at the start of
+/// the season gets upgraded to "BigLeague" by the time it's played if both
+/// teams are now in the top 6.
+pub fn refresh_fixture_importance(game: &mut crate::game::Game) {
+    // Build team reputation lookup once.
+    let team_reputations: std::collections::HashMap<String, u32> = game
+        .teams
+        .iter()
+        .map(|t| (t.id.clone(), t.reputation))
+        .collect();
+
+    // V100 FIX: Also build a standings-position lookup so we can detect
+    // top-6 clashes, title races (1st vs 2nd), and relegation 6-pointers
+    // based on CURRENT standings — not just reputation. This matters in
+    // April when a mid-table team might have climbed to 4th.
+    let standings_position: std::collections::HashMap<String, usize> = {
+        let mut map = std::collections::HashMap::new();
+        if let Some(league) = game.league.as_ref() {
+            let mut sorted = league.standings.clone();
+            sorted.sort_by(|a, b| {
+                b.points.cmp(&a.points)
+                    .then_with(|| {
+                        let a_gd = a.goals_for as i32 - a.goals_against as i32;
+                        let b_gd = b.goals_for as i32 - b.goals_against as i32;
+                        b_gd.cmp(&a_gd)
+                    })
+                    .then_with(|| b.goals_for.cmp(&a.goals_for))
+            });
+            for (idx, row) in sorted.iter().enumerate() {
+                map.insert(row.team_id.clone(), idx + 1); // 1-indexed
+            }
+        }
+        map
+    };
+
+    // Apply to the main league.
+    if let Some(league) = game.league.as_mut() {
+        apply_fixture_importance_with_standings(
+            league,
+            &team_reputations,
+            &standings_position,
+        );
+    }
+
+    // Also apply to any other active competitions (cups, etc.).
+    for competition in game.competitions.iter_mut() {
+        apply_fixture_importance(competition, &team_reputations);
+    }
+}
+
+/// V100 FIX: Enhanced fixture importance that also considers current
+/// standings position. A fixture between 1st and 2nd in April is a
+/// BigLeague match even if both teams have modest reputation.
+fn apply_fixture_importance_with_standings(
+    competition: &mut League,
+    team_reputations: &std::collections::HashMap<String, u32>,
+    standings_position: &std::collections::HashMap<String, usize>,
+) {
+    let total_teams = competition.standings.len();
+    for fixture in competition.fixtures.iter_mut() {
+        if fixture.status != FixtureStatus::Scheduled {
+            continue;
+        }
+        let home_rep = team_reputations.get(&fixture.home_team_id).copied().unwrap_or(500);
+        let away_rep = team_reputations.get(&fixture.away_team_id).copied().unwrap_or(500);
+
+        // Start with reputation-based importance.
+        let mut importance = derive_importance(&fixture.competition, home_rep, away_rep);
+
+        // V100 FIX: Upgrade based on current standings position.
+        // Only applies to league matches (not cups — cups don't have
+        // standings in the same sense).
+        if matches!(fixture.competition, FixtureCompetition::League) && total_teams > 0 {
+            let home_pos = standings_position.get(&fixture.home_team_id).copied().unwrap_or(total_teams);
+            let away_pos = standings_position.get(&fixture.away_team_id).copied().unwrap_or(total_teams);
+
+            // Top-6 clash: both teams in the top 6.
+            if home_pos <= 6 && away_pos <= 6 {
+                importance = FixtureImportance::BigLeague;
+            }
+            // Title race: 1st vs 2nd.
+            else if (home_pos == 1 && away_pos == 2) || (home_pos == 2 && away_pos == 1) {
+                importance = FixtureImportance::BigLeague;
+            }
+            // Relegation 6-pointer: both teams in the bottom 4.
+            else if home_pos > total_teams.saturating_sub(4) && away_pos > total_teams.saturating_sub(4) {
+                importance = FixtureImportance::BigLeague;
+            }
+        }
+
+        fixture.importance = importance;
+    }
+}
+
 /// V99.4 T1.1: Generate a weather condition for a fixture based on its date.
 /// Uses a deterministic seed from the date string so the same fixture always
 /// gets the same weather. Matches the frontend weather.ts logic:

@@ -1861,6 +1861,9 @@ fn bootstrap_season_start(game: &mut Game, team_id: &str) -> Result<StatsState, 
     let friendlies = ofm_core::schedule::generate_preseason_friendlies(&team_ids, season_start, 4);
     ofm_core::schedule::append_fixtures(&mut league, friendlies);
     game.league = Some(league);
+    // V100 FIX: Apply smart fixture importance (BigLeague/Continental/etc.)
+    // at game init so the first matchday has correct pressure multipliers.
+    ofm_core::schedule::refresh_fixture_importance(game);
     ofm_core::season_context::refresh_game_context(game);
 
     let date_str = game.clock.current_date.to_rfc3339();
@@ -1941,6 +1944,8 @@ fn bootstrap_midseason_takeover(game: &mut Game, team_id: &str) -> Result<StatsS
         season_start,
     ));
     game.clock.current_date = season_start;
+    // V100 FIX: Apply smart fixture importance at game init.
+    ofm_core::schedule::refresh_fixture_importance(game);
     ofm_core::season_context::refresh_game_context(game);
 
     let total_fixtures = competitive_fixture_count_for_team(game, team_id);

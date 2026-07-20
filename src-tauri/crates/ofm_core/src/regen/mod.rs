@@ -695,6 +695,16 @@ pub fn prune_retired_players(game: &mut Game) {
         game.scouting_knowledge.remove(retired_id);
     }
 
+    // V100 FIX (data pruning): Clean up orphaned partnership entries.
+    // player.partnerships is a HashMap<String, u32> keyed by partner player
+    // ID. When a partner retires, their ID lingers in other players' maps
+    // forever. Remove them here alongside the relationship_graph cleanup.
+    for player in game.players.iter_mut() {
+        for retired_id in &retired_ids {
+            player.partnerships.remove(retired_id);
+        }
+    }
+
     // Prune the players.
     let before_count = game.players.len();
     game.players.retain(|p| !p.retired);
