@@ -1270,13 +1270,13 @@ fn trigger_cross_team_rivalries(
         let top_winner = report
             .player_stats
             .iter()
-            .filter(|(pid, _)| player_team.get(*pid).map(|t| t == winner_team).unwrap_or(false))
+            .filter(|(pid, _)| player_team.get(*pid).map(|t| t.as_str() == winner_team).unwrap_or(false))
             .max_by(|a, b| a.1.rating.partial_cmp(&b.1.rating).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(pid, _)| pid.clone());
         let top_loser = report
             .player_stats
             .iter()
-            .filter(|(pid, _)| player_team.get(*pid).map(|t| t == loser_team).unwrap_or(false))
+            .filter(|(pid, _)| player_team.get(*pid).map(|t| t.as_str() == loser_team).unwrap_or(false))
             .max_by(|a, b| a.1.rating.partial_cmp(&b.1.rating).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(pid, _)| pid.clone());
 

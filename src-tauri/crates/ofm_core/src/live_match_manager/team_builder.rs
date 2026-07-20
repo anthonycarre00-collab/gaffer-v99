@@ -595,9 +595,9 @@ fn compute_chemistry_bonuses(
         // Find this player's strongest positive edge to a teammate.
         let strongest = game
             .relationship_graph
-            .relationships_for(pid)
+            .relationships_for(pid.as_str())
             .into_iter()
-            .filter(|(other_id, _)| team_player_ids.iter().any(|t| t == other_id))
+            .filter(|(other_id, _)| team_player_ids.iter().any(|t| t.as_str() == *other_id))
             .map(|(_, edge)| edge.strength)
             .max()
             .unwrap_or(0);
