@@ -264,6 +264,13 @@ impl RelationshipGraph {
         self.edges.remove(&Self::edge_key(a, b));
     }
 
+    /// Get all relationship edges in the graph. V100 Issue #30 (rework):
+    /// used by the season-sim report to count rivalries + partnerships.
+    /// Returns (key, edge) pairs where key is "player_a:player_b".
+    pub fn all_edges(&self) -> impl Iterator<Item = (&String, &RelationshipEdge)> {
+        self.edges.iter()
+    }
+
     /// Get all relationships for a specific player.
     /// Returns Vec<(other_player_id, &RelationshipEdge)>.
     pub fn relationships_for(&self, player_id: &str) -> Vec<(&str, &RelationshipEdge)> {

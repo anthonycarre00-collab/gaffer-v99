@@ -948,6 +948,22 @@ fn update_post_match_morale(
 /// Teammates who lose together get -1 strength (shared misery, but bonding).
 /// Teammates who draw get +1 (neutral shared experience).
 /// Players with high neuroticism + red card may create tension with teammates.
+///
+/// V100 Issue #30 (rework): Rivalries are now AUTO-TRIGGERED by the engine,
+/// NOT manually added by the manager. After a fixture, we scan events for
+/// flashpoints — Hard/Reckless fouls, red cards, dribbles tackled, headers
+/// won/lost, goals scored against — and roll a small chance per pair to
+/// escalate a negative edge between the two opponents. Triggers are rare
+/// (1-5% per qualifying event) so most matches produce no rivalries; a
+/// bad-tempered derby might produce one. The manager never creates these
+/// directly — they emerge from play.
+///
+/// V100 Issue #30 (rework): Teammate partnerships also form here. For each
+/// pair of teammates who both played 60+ minutes, roll a small chance
+/// (5% per pair per match, scaled by personality similarity) to bump the
+/// relationship +1 to +3. Cap accumulates slowly — a season of playing
+/// together typically yields +15 to +25 strength (enough to cross the
+/// "chemistry bonus" threshold at +30).
 fn update_relationships_post_match(
     game: &mut Game,
     report: &engine::MatchReport,
@@ -956,7 +972,7 @@ fn update_relationships_post_match(
 ) {
     let home_won = report.home_goals > report.away_goals;
     let away_won = report.away_goals > report.home_goals;
-    let _date = game.clock.current_date.format("%Y-%m-%d").to_string();
+    let date = game.clock.current_date.format("%Y-%m-%d").to_string();
 
     for (team_id, won) in [(home_team_id, home_won), (away_team_id, away_won)] {
         // Get all players on this team
@@ -1001,6 +1017,293 @@ fn update_relationships_post_match(
                                 -3, // Teammates blame the sent-off player
                             );
                         }
+                    }
+                }
+            }
+        }
+
+        // V100 Issue #30 (rework): Teammate partnership formation.
+        // For each pair of teammates who both played 60+ minutes, roll a
+        // small chance (5% base, scaled by personality similarity) to bump
+        // the relationship +1 to +3. Partnerships accumulate slowly across
+        // a season — this is the "Neville/Beckham, Xavi/Iniesta" path.
+        form_teammate_partnerships(game, report, team_id, &team_player_ids, &date);
+    }
+
+    // V100 Issue #30 (rework): Auto-trigger cross-team rivalries from
+    // match flashpoints. Scans events for fouls (Hard/Reckless only),
+    // red cards, dribbles tackled, headers won/lost, and goals scored
+    // against. For each qualifying event, rolls a small chance to escalate
+    // a negative edge between the two involved players (across teams).
+    // Most matches produce 0 rivalries; a bad-tempered derby might produce 1.
+    trigger_cross_team_rivalries(game, report, home_team_id, away_team_id, &date);
+}
+
+/// V100 Issue #30 (rework): Form (or strengthen) teammate partnerships.
+///
+/// For each pair of teammates who both played 60+ minutes in this match:
+///   1. Compute personality similarity (Big Five distance, 0-1).
+///   2. Roll 5% base chance, scaled up by personality similarity (max ~12%).
+///   3. On hit, bump the relationship +1 to +3 based on result + similarity.
+///   4. Add "Partnership" narrative tag if edge strength crosses +30.
+///
+/// This is the slow path that produces Neville/Beckham, Xavi/Iniesta,
+/// Nesta/Cannavaro style bonds over a season of playing together.
+fn form_teammate_partnerships(
+    game: &mut Game,
+    report: &engine::MatchReport,
+    _team_id: &str,
+    team_player_ids: &[String],
+    _date: &str,
+) {
+    // Identify starters (60+ minutes played) for this team.
+    let starters: Vec<String> = team_player_ids
+        .iter()
+        .filter(|pid| {
+            report
+                .player_stats
+                .get(*pid)
+                .map(|ps| ps.minutes_played >= 60)
+                .unwrap_or(false)
+        })
+        .cloned()
+        .collect();
+
+    if starters.len() < 2 {
+        return;
+    }
+
+    // Pre-fetch personality snapshots for similarity computation.
+    // We can't borrow game.players inside the loop while also mutating
+    // game.relationship_graph, so collect the data we need up-front.
+    let personalities: std::collections::HashMap<String, [f64; 5]> = starters
+        .iter()
+        .filter_map(|pid| {
+            game.players
+                .iter()
+                .find(|p| &p.id == pid)
+                .map(|p| {
+                    (
+                        pid.clone(),
+                        [
+                            p.personality.openness as f64,
+                            p.personality.conscientiousness as f64,
+                            p.personality.extraversion as f64,
+                            p.personality.agreeableness as f64,
+                            p.personality.neuroticism as f64,
+                        ],
+                    )
+                })
+        })
+        .collect();
+
+    // Use a deterministic RNG seed from the date + first starter id so
+    // the same match always produces the same partnership rolls. This
+    // makes the system reproducible (no save-scumming advantage).
+    let seed_str = format!("{}-{}-{}", _date, _team_id, starters.first().unwrap_or(&String::new()));
+    let mut seed: u64 = 0;
+    for byte in seed_str.bytes() {
+        seed = seed.wrapping_mul(31).wrapping_add(byte as u64);
+    }
+
+    // Simple xorshift RNG — deterministic, no need for the rand crate here.
+    let mut next_rand = || {
+        seed ^= seed << 13;
+        seed ^= seed >> 7;
+        seed ^= seed << 17;
+        (seed % 1000) as f64 / 1000.0
+    };
+
+    for i in 0..starters.len() {
+        for j in (i + 1)..starters.len() {
+            let a = &starters[i];
+            let b = &starters[j];
+
+            // Compute personality similarity (0 = polar opposites, 1 = twins).
+            let sim = match (personalities.get(a), personalities.get(b)) {
+                (Some(pa), Some(pb)) => {
+                    let dist: f64 = (0..5)
+                        .map(|k| (pa[k] - pb[k]).abs() / 100.0)
+                        .sum::<f64>()
+                        / 5.0;
+                    1.0 - dist
+                }
+                _ => 0.5, // unknown personality — neutral
+            };
+
+            // Roll: 5% base + up to 7% from personality similarity = ~12% max.
+            let roll = next_rand();
+            let chance = 0.05 + (sim * 0.07);
+            if roll > chance {
+                continue;
+            }
+
+            // Partnership bump: +1 to +3 based on similarity.
+            // Higher similarity = bigger bump (they gel faster).
+            let bump = if sim > 0.75 { 3 } else if sim > 0.5 { 2 } else { 1 };
+
+            game.relationship_graph.modify_strength(a, b, bump);
+
+            // Add "Partnership" tag if edge crosses +30 — this is the
+            // threshold the match engine reads for the chemistry bonus.
+            if let Some(edge) = game.relationship_graph.get(a, b) {
+                if edge.strength >= 30 && !edge.narrative_tags.iter().any(|t| t == "Partnership") {
+                    if let Some(edge_mut) = game.relationship_graph.get_mut(a, b) {
+                        edge_mut.narrative_tags.push("Partnership".to_string());
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// V100 Issue #30 (rework): Auto-trigger cross-team rivalries from match flashpoints.
+///
+/// Scans `report.events` for cross-team flashpoints and rolls a small chance
+/// per qualifying event to escalate a negative edge between the two involved
+/// players. Triggers:
+///   - Hard/Reckless Foul: 5% chance (Hard), 12% (Reckless)
+///   - Red Card on fouled player's opponent: 15% (the foul that caused the card)
+///   - DribbleTackled: 2% (rare — only repeated humblings form a rivalry)
+///   - HeaderWon vs specific loser: 1% (very rare — only aerial duels matter)
+///   - Goal scored by A against B's team: 3% (B's team lost to A's goal)
+///
+/// On a hit, calls `relationship_graph.escalate(a, b, date, -15)` and sets
+/// `rivalry_flag = true` on the edge. Adds a narrative tag describing the
+/// trigger ("Bad Tackle", "Derby Flashpoint", "Late Winner", etc.).
+fn trigger_cross_team_rivalries(
+    game: &mut Game,
+    report: &engine::MatchReport,
+    home_team_id: &str,
+    away_team_id: &str,
+    date: &str,
+) {
+    // Build a quick lookup: player_id → team_id (home or away).
+    let player_team: std::collections::HashMap<String, String> = game
+        .players
+        .iter()
+        .filter_map(|p| {
+            p.team_id.as_ref().filter(|tid| *tid == home_team_id || *tid == away_team_id).map(|tid| (p.id.clone(), tid.clone()))
+        })
+        .collect();
+
+    // Deterministic RNG seeded from date + team ids.
+    let seed_str = format!("{}-{}-{}", date, home_team_id, away_team_id);
+    let mut seed: u64 = 0;
+    for byte in seed_str.bytes() {
+        seed = seed.wrapping_mul(31).wrapping_add(byte as u64);
+    }
+    let mut next_rand = || {
+        seed ^= seed << 13;
+        seed ^= seed >> 7;
+        seed ^= seed << 17;
+        (seed % 10000) as f64 / 10000.0
+    };
+
+    for event in &report.events {
+        let (Some(pid_a), Some(pid_b)) = (event.player_id.as_ref(), event.secondary_player_id.as_ref()) else {
+            continue;
+        };
+
+        // Both players must be on opposite teams in this match.
+        let (Some(team_a), Some(team_b)) = (player_team.get(pid_a), player_team.get(pid_b)) else {
+            continue;
+        };
+        if team_a == team_b {
+            continue;
+        }
+
+        let (roll, trigger_label, intensity) = match event.event_type {
+            engine::EventType::Foul => {
+                // Read severity from event.detail if available.
+                let sev = match &event.detail {
+                    Some(engine::EventDetail::Foul { severity }) => *severity,
+                    None => engine::FoulSeverity::Soft,
+                };
+                match sev {
+                    engine::FoulSeverity::Reckless => (next_rand(), "Reckless Foul", -20),
+                    engine::FoulSeverity::Hard => (next_rand(), "Hard Foul", -15),
+                    engine::FoulSeverity::Soft => (next_rand(), "Soft Foul", -8),
+                }
+            }
+            engine::EventType::DribbleTackled => (next_rand(), "Tackled Hard", -10),
+            engine::EventType::HeaderWon => (next_rand(), "Aerial Battle", -5),
+            engine::EventType::RedCard => (next_rand(), "Red Card Flashpoint", -25),
+            _ => continue,
+        };
+
+        // Apply per-trigger probability.
+        let chance = match event.event_type {
+            engine::EventType::Foul => {
+                let sev = match &event.detail {
+                    Some(engine::EventDetail::Foul { severity }) => *severity,
+                    None => engine::FoulSeverity::Soft,
+                };
+                match sev {
+                    engine::FoulSeverity::Reckless => 0.12,
+                    engine::FoulSeverity::Hard => 0.05,
+                    engine::FoulSeverity::Soft => 0.01,
+                }
+            }
+            engine::EventType::DribbleTackled => 0.02,
+            engine::EventType::HeaderWon => 0.01,
+            engine::EventType::RedCard => 0.15,
+            _ => continue,
+        };
+
+        if roll > chance {
+            continue;
+        }
+
+        // Escalate the edge. This sets strength to min(existing, intensity)
+        // and bumps volatility.
+        game.relationship_graph
+            .escalate(pid_a, pid_b, date, intensity);
+
+        // Mark the edge as a rivalry so the engine + UI can surface it.
+        if let Some(edge) = game.relationship_graph.get_mut(pid_a, pid_b) {
+            edge.rivalry_flag = true;
+            if !edge.narrative_tags.iter().any(|t| t == trigger_label) {
+                edge.narrative_tags.push(trigger_label.to_string());
+            }
+        }
+    }
+
+    // V100 Issue #30: Losing a match can also spark a rivalry between the
+    // two best opposing players (the "they always seem to score against us"
+    // pattern). Roll 4% chance per match, picks the top-rated performer
+    // from each team.
+    let _ = next_rand(); // advance RNG
+    let loss_rivalry_roll = next_rand();
+    if loss_rivalry_roll < 0.04 && report.home_goals != report.away_goals {
+        let (winner_team, loser_team) = if report.home_goals > report.away_goals {
+            (home_team_id, away_team_id)
+        } else {
+            (away_team_id, home_team_id)
+        };
+
+        // Find the top-rated player on each side.
+        let top_winner = report
+            .player_stats
+            .iter()
+            .filter(|(pid, _)| player_team.get(*pid).map(|t| t == winner_team).unwrap_or(false))
+            .max_by(|a, b| a.1.rating.partial_cmp(&b.1.rating).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(pid, _)| pid.clone());
+        let top_loser = report
+            .player_stats
+            .iter()
+            .filter(|(pid, _)| player_team.get(*pid).map(|t| t == loser_team).unwrap_or(false))
+            .max_by(|a, b| a.1.rating.partial_cmp(&b.1.rating).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(pid, _)| pid.clone());
+
+        if let (Some(winner_id), Some(loser_id)) = (top_winner, top_loser) {
+            if winner_id != loser_id {
+                game.relationship_graph
+                    .escalate(&winner_id, &loser_id, date, -12);
+                if let Some(edge) = game.relationship_graph.get_mut(&winner_id, &loser_id) {
+                    edge.rivalry_flag = true;
+                    if !edge.narrative_tags.iter().any(|t| t == "Nemesis") {
+                        edge.narrative_tags.push("Nemesis".to_string());
                     }
                 }
             }

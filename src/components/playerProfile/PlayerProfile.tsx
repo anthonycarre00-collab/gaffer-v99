@@ -861,9 +861,9 @@ export default function PlayerProfile({
  {/* Gaffer Phase 0.5-FE — Meaning snapshot card (third column) */}
  <PlayerMeaningCard playerId={player.id} />
 
- {/* V100 Issue #30: Player rivalry card — shows active rivalries and
-   lets the manager add new ones (Spark/Simmer/Boil + reason). */}
- <PlayerProfileRivalriesCard player={player} squad={gameState.players} />
+ {/* V100 Issue #30 (rework): Player rivalry card — READ-ONLY. Rivalries
+   are auto-created by the engine from match flashpoints. */}
+ <PlayerProfileRivalriesCard player={player} />
  </div>
 
  {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}

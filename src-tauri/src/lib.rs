@@ -329,6 +329,7 @@ pub fn run() {
             get_match_meaning,
             get_media_meaning,
             get_player_relationships,
+            get_player_rivalries,
             get_scouting_knowledge,
             get_scouting_summary
         ])

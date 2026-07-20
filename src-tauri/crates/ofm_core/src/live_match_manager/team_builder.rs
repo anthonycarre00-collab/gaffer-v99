@@ -55,12 +55,20 @@ pub(crate) fn build_team_with_bench(game: &Game, team_id: &str) -> (TeamData, Ve
     // where the player's own position is used instead. The engine's coarse
     // position is derived from this so a player fielded out of position (e.g. a
     // striker at centre-back) is simulated in the position they actually play.
+    //
+    // V100 Issue #30 (rework): `to_engine_player` now takes a `chemistry_bonus`
+    // value (0.0 to 0.03) computed from this player's strongest intra-team edge
+    // in the RelationshipGraph. We pre-compute the bonus for ALL squad members
+    // up-front so it doesn't matter whether they're a starter or sub — the
+    // chemistry follows them into the match.
+    let chemistry_bonuses = compute_chemistry_bonuses(game, team_id);
     let convert_player = |p: &domain::player::Player, deployed: Option<&DomainPosition>| {
         let role = player_roles
             .and_then(|roles| roles.get(&p.id))
             .map(domain_to_engine_role)
             .unwrap_or(EnginePlayerRole::Standard);
-        to_engine_player(p, role, deployed)
+        let chemistry = chemistry_bonuses.get(&p.id).copied().unwrap_or(0.0);
+        to_engine_player(p, role, deployed, chemistry)
     };
 
     // The user manages their own XI by hand (saved_xi_ids); AI clubs are managed
@@ -459,6 +467,7 @@ fn to_engine_player(
     p: &domain::player::Player,
     role: EnginePlayerRole,
     deployed: Option<&DomainPosition>,
+    chemistry_bonus: f64,
 ) -> PlayerData {
     // Fall back to the player's natural position (not `p.position`, which on
     // legacy saves can still hold a stale coarse bucket written by the old
@@ -530,17 +539,85 @@ fn to_engine_player(
         // P1-2: V99.4 T2.2 — partnership_bonus was only set in the full-engine
         // path (turn/mod.rs:658). The live match path used ..Default::default()
         // which defaults to 1.0 (no bonus). Now both paths compute it identically.
+        //
+        // V100 Issue #30 (rework): partnership_bonus now combines:
+        //   1. The existing goal+assist partnership bonus (+0-2%)
+        //   2. A NEW chemistry bonus from the RelationshipGraph (+0-3%)
+        //      based on the player's strongest intra-team edge
+        //      (Neville/Beckham, Xavi/Iniesta style bonds).
+        // Total cap is +5% — small enough to be flavour, big enough to matter
+        // across a season. The chemistry_bonus is pre-computed by
+        // `compute_chemistry_bonuses` in build_team_with_bench.
         partnership_bonus: {
-            if p.partnerships.is_empty() {
-                1.0
+            let partnership_component = if p.partnerships.is_empty() {
+                0.0
             } else {
                 let max_p = p.partnerships.values().copied().max().unwrap_or(0);
-                if max_p >= 20 { 1.02 }
-                else if max_p >= 10 { 1.01 }
-                else { 1.0 }
-            }
+                if max_p >= 20 { 0.02 }
+                else if max_p >= 10 { 0.01 }
+                else { 0.0 }
+            };
+            // Cap total at +5% — small enough to be flavour, big enough to matter.
+            1.0 + (partnership_component + chemistry_bonus).min(0.05)
         },
     }
+}
+
+/// V100 Issue #30 (rework): Compute chemistry bonuses for all players on a team.
+///
+/// Reads `game.relationship_graph` for each player's strongest intra-team
+/// edge (teammate bond). Returns a HashMap of player_id → bonus (0.0 to 0.03).
+///
+/// Tier breakdown:
+///   - Edge strength >= 70 (brotherhood): +3%
+///   - Edge strength >= 50 (strong bond): +2%
+///   - Edge strength >= 30 (partnership): +1%
+///   - Below 30: no bonus
+///
+/// The +3% max is intentionally tiny — chemistry is flavour, not a multiplier.
+/// The match engine already gets bigger swings from condition, morale, and
+/// stability modifiers. Chemistry tips close matches, not blowouts.
+fn compute_chemistry_bonuses(
+    game: &Game,
+    team_id: &str,
+) -> std::collections::HashMap<String, f64> {
+    let mut bonuses = std::collections::HashMap::new();
+
+    // Collect all player IDs on this team.
+    let team_player_ids: Vec<String> = game
+        .players
+        .iter()
+        .filter(|p| p.team_id.as_deref() == Some(team_id))
+        .map(|p| p.id.clone())
+        .collect();
+
+    for pid in &team_player_ids {
+        // Find this player's strongest positive edge to a teammate.
+        let strongest = game
+            .relationship_graph
+            .relationships_for(pid)
+            .into_iter()
+            .filter(|(other_id, _)| team_player_ids.iter().any(|t| t == other_id))
+            .map(|(_, edge)| edge.strength)
+            .max()
+            .unwrap_or(0);
+
+        let bonus = if strongest >= 70 {
+            0.03
+        } else if strongest >= 50 {
+            0.02
+        } else if strongest >= 30 {
+            0.01
+        } else {
+            0.0
+        };
+
+        if bonus > 0.0 {
+            bonuses.insert(pid.clone(), bonus);
+        }
+    }
+
+    bonuses
 }
 
 /// Auto-select set-piece takers from a set of player IDs.

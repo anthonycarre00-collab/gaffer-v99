@@ -116,7 +116,8 @@ fn resolve_buildup<R: Rng>(
         + passer.teamwork as f64)
         / 4.0
         * trait_bonus(&passer, TraitContext::Passing)
-        * morale_modifier(passer.morale);
+        * morale_modifier(passer.morale)
+        * passer.partnership_bonus; // V100 Issue #30: chemistry bonus for buildups
     let press = effective_press(ctx, def_side);
     let ball_zone = ctx.ball_zone;
 
@@ -176,14 +177,16 @@ fn resolve_midfield<R: Rng>(
         + attacker.teamwork as f64)
         / 4.0
         * trait_bonus(&attacker, TraitContext::Midfield)
-        * morale_modifier(attacker.morale);
+        * morale_modifier(attacker.morale)
+        * attacker.partnership_bonus; // V100 Issue #30: chemistry bonus for midfield
     let def_rating = (defender.defending as f64
         + defender.anticipation as f64
         + defender.decisions as f64
         + defender.teamwork as f64)
         / 4.0
         * trait_bonus(&defender, TraitContext::Tackling)
-        * morale_modifier(defender.morale);
+        * morale_modifier(defender.morale)
+        * defender.partnership_bonus; // V100 Issue #30: chemistry bonus for midfield defense
 
     let att_mod = play_style_modifier(
         ctx.team(att_side).play_style,

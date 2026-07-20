@@ -114,8 +114,44 @@ impl<'a> InterpretationSurfaceService<'a> {
         // Media pressure: count active story threads (Phase 3)
         let media_pressure: f64 = self.game.memory_store.active_thread_count() as f64 * 5.0;
 
-        // Tactical alignment: placeholder (Phase 4 full implementation would check formation fit)
-        let tactical_alignment: f64 = 50.0;
+        // V100 Audit (M5): Compute chemistry_hotspots from real RelationshipGraph
+        // edges — the 3 strongest intra-squad positive pairs.
+        let chemistry_hotspots: Vec<String> = {
+            let mut pairs: Vec<(String, String, i8)> = Vec::new();
+            for i in 0..squad.len() {
+                for j in (i + 1)..squad.len() {
+                    let a = &squad[i].id;
+                    let b = &squad[j].id;
+                    if let Some(edge) = self.game.relationship_graph.get(a, b) {
+                        if edge.strength > 0 {
+                            pairs.push((squad[i].match_name.clone(), squad[j].match_name.clone(), edge.strength));
+                        }
+                    }
+                }
+            }
+            pairs.sort_by(|x, y| y.2.cmp(&x.2));
+            pairs.into_iter().take(3)
+                .map(|(a, b, s)| format!("{} ↔ {} (+{})", a, b, s))
+                .collect()
+        };
+
+        // V100 Audit (M3/M4): Compute identity_alignment_label + tactical_alignment
+        // from manager tactical_style vs team play_style. Both used to be hardcoded.
+        let (identity_alignment_label, tactical_alignment) = {
+            let team_play_style = team.map(|t| format!("{:?}", t.play_style)).unwrap_or_else(|| "Balanced".into());
+            let manager_style = format!("{:?}", self.game.manager.tactical_style);
+            // Simple match: if manager's preferred style == team's style → Aligned (100)
+            // If adjacent style family (Attacking ↔ Pressing, Defensive ↔ Counter) → Compatible (70)
+            // Else → Misaligned (35).
+            let (label, score) = if manager_style == team_play_style {
+                ("Aligned".to_string(), 100.0)
+            } else if is_adjacent_style(&manager_style, &team_play_style) {
+                ("Compatible".to_string(), 70.0)
+            } else {
+                ("Misaligned".to_string(), 35.0)
+            };
+            (label, score)
+        };
 
         // SquadPulse = weighted composite (see BIBLE_CURATED.md §16)
         let squad_pulse: f64 =
@@ -159,14 +195,14 @@ impl<'a> InterpretationSurfaceService<'a> {
 
         SquadMeaningSnapshot {
             squad_harmony_score: squad_pulse.round() as u8,
-            tactical_coherence_score: tactical_alignment as u8,
+            tactical_coherence_score: tactical_alignment.round() as u8,
             pressure_level: pl.into(),
             media_heat: media_pressure as u8,
             dressing_room_tension_flag: tension,
             emerging_story_threads: threads,
-            chemistry_hotspots: vec![],
+            chemistry_hotspots,
             fatigue_risk_band: fb.into(),
-            identity_alignment_label: "Balanced".into(),
+            identity_alignment_label,
             harmony_explanation: he,
         }
     }
@@ -227,18 +263,34 @@ impl<'a> InterpretationSurfaceService<'a> {
         let club = self.game.teams.iter().find(|t| Some(&t.id)==player.team_id.as_ref()).map(|t|t.name.clone()).unwrap_or_else(||"No Club".into());
         // Phase 7: Look up scouting knowledge for this player (None if never scouted)
         let scouting_knowledge = self.game.scouting_knowledge.get(&player.id).cloned();
+
+        // V100 Audit (L2): Compute locker_room_role from real role + attributes
+        // (was hardcoded "Squad member").
+        let locker_room_role = self.compute_locker_room_role(player);
+
+        // V100 Audit (L1): Compute mentor_bonus_flag — true if this player is
+        // a young player (≤21) whose team has a captain age ≥30 with leadership ≥70,
+        // OR if this player IS such a captain (the mentor). Was hardcoded false.
+        let mentor_bonus_flag = self.compute_mentor_bonus_flag(player);
+
+        // V100 Audit (M2): Compute training_alignment_label from training focus
+        // (was hardcoded "Aligned"). Light pass — defaults to "Neutral" if no
+        // explicit focus set, "Aligned" if focus matches player's natural
+        // position group, "Misaligned" if focus is clearly a different group.
+        let training_alignment_label = self.compute_training_alignment_label(player);
+
         PlayerMeaningSnapshot {
             display_name:player.match_name.clone(),club,role_identity_label,archetype_label,
-            locker_room_role:"Squad member".into(),
+            locker_room_role,
             narrative_status_tag: self.get_narrative_status_tag(player),
             current_form_label:cfl.to_string(),confidence_label:cl.into(),fatigue_label:fl.into(),
             trajectory_label,stability_label:sl.as_str().to_string(),stability_description:sl.description().to_string(),
-            pressure_response_type:pr,media_sensitivity:msi,rivalry_trigger_flag:false,morale_state:ms.into(),
+            pressure_response_type:pr,media_sensitivity:msi,rivalry_trigger_flag:self.has_active_rivalry(player),morale_state:ms.into(),
             strongest_positive_link: self.get_strongest_positive_link(player),
             strongest_negative_link: self.get_strongest_negative_link(player),
             chemistry_score: self.get_chemistry_score(player),
             clique_membership: self.get_clique_membership(player),
-            growth_vector,training_alignment_label:"Aligned".into(),mentor_bonus_flag:false,
+            growth_vector,training_alignment_label,mentor_bonus_flag,
             spreadsheet_attributes:sa,role_identity_explanation:role_explanation,stability_explanation:se,
             morale_state_explanation:me,pressure_response_explanation:pe,
             scouting_knowledge,
@@ -266,6 +318,122 @@ impl<'a> InterpretationSurfaceService<'a> {
                     .find(|p| p.id == other_id)
                     .map(|p| p.match_name.clone())
                     .unwrap_or_else(|| other_id.to_string())
+            })
+    }
+
+    /// V100 Audit (L2): Compute the player's locker room role label from
+    /// captaincy, age, OVR, and leadership. Was hardcoded "Squad member".
+    ///
+    /// Cascade: Captain → Vice Captain → Veteran (age ≥ 32) → Youngster (≤20)
+    /// → Star Player (OVR ≥ 80) → Leader (leadership ≥ 70) → Squad member.
+    fn compute_locker_room_role(&self, player: &Player) -> String {
+        // Captain / Vice captain from team match_roles.
+        if let Some(team) = self.game.teams.iter().find(|t| Some(&t.id) == player.team_id.as_ref()) {
+            if team.match_roles.captain.as_deref() == Some(&player.id) {
+                return "Captain".into();
+            }
+            if team.match_roles.vice_captain.as_deref() == Some(&player.id) {
+                return "Vice Captain".into();
+            }
+        }
+        // Compute age from date_of_birth (YYYY-MM-DD).
+        let age = player.date_of_birth.get(0..4)
+            .and_then(|y| y.parse::<u32>().ok())
+            .map(|y| 2026u32.saturating_sub(y))
+            .unwrap_or(25) as u8;
+        if age >= 32 { return "Veteran".into(); }
+        if age <= 20 { return "Youngster".into(); }
+        if player.ovr >= 80 { return "Star Player".into(); }
+        if player.attributes.leadership >= 70 { return "Leader".into(); }
+        "Squad member".into()
+    }
+
+    /// V100 Audit (L1): Compute mentor_bonus_flag.
+    /// Returns true if:
+    ///   - This player is young (≤21) AND their team has a captain age ≥30
+    ///     with leadership ≥70 (the player is being mentored).
+    ///   - OR this player IS that captain (age ≥30, leadership ≥70) AND the
+    ///     team has at least one young player.
+    /// Was hardcoded false.
+    fn compute_mentor_bonus_flag(&self, player: &Player) -> bool {
+        let Some(team) = self.game.teams.iter().find(|t| Some(&t.id) == player.team_id.as_ref()) else {
+            return false;
+        };
+
+        let age = |p: &Player| p.date_of_birth.get(0..4)
+            .and_then(|y| y.parse::<u32>().ok())
+            .map(|y| 2026u32.saturating_sub(y))
+            .unwrap_or(25) as u8;
+
+        let captain_id = team.match_roles.captain.as_deref();
+        let captain = captain_id.and_then(|cid| self.game.players.iter().find(|p| p.id == cid));
+
+        // Case 1: this player is a young player being mentored.
+        if age(player) <= 21 {
+            if let Some(cap) = captain {
+                if age(cap) >= 30 && cap.attributes.leadership >= 70 {
+                    return true;
+                }
+            }
+        }
+
+        // Case 2: this player IS the captain mentoring young players.
+        if captain_id == Some(&player.id) && age(player) >= 30 && player.attributes.leadership >= 70 {
+            let has_youth = self.game.players.iter()
+                .filter(|p| p.team_id.as_deref() == Some(&team.id))
+                .any(|p| age(p) <= 21);
+            if has_youth {
+                return true;
+            }
+        }
+
+        false
+    }
+
+    /// V100 Audit (M2): Compute training_alignment_label.
+    /// Compares the player's `training_position_focus` (if any) against
+    /// their natural position. Returns:
+    ///   - "Aligned" if focus matches natural position group
+    ///   - "Misaligned" if focus is a different position group
+    ///   - "Neutral" if no focus set (default — no retraining in progress)
+    /// Was hardcoded "Aligned".
+    fn compute_training_alignment_label(&self, player: &Player) -> String {
+        match &player.training_position_focus {
+            None => "Neutral".into(),
+            Some(focus) => {
+                let focus_group = focus.to_group_position();
+                let natural_group = player.natural_position.to_group_position();
+                if focus_group == natural_group {
+                    "Aligned".into()
+                } else if player.alternate_positions.iter().any(|ap| ap.to_group_position() == focus_group) {
+                    "Compatible".into()
+                } else {
+                    "Misaligned".into()
+                }
+            }
+        }
+    }
+
+    /// V100 Issue #30 (rework): Detect if this player has an active cross-team
+    /// rivalry (engine-set, not manual). Returns true if any edge with
+    /// `rivalry_flag == true` connects this player to someone on a different
+    /// team. Powers the `rivalry_trigger_flag` field on PlayerMeaningSnapshot,
+    /// which the UI surfaces as a "Rivalry Active" badge.
+    fn has_active_rivalry(&self, player: &Player) -> bool {
+        let player_team = player.team_id.as_ref();
+        self.game.relationship_graph
+            .relationships_for(&player.id)
+            .into_iter()
+            .any(|(other_id, edge)| {
+                if !edge.rivalry_flag {
+                    return false;
+                }
+                // Only cross-team rivalries count (same-team "rivalry" is just
+                // a tense partnership, not a real rivalry).
+                let other_team = self.game.players.iter()
+                    .find(|p| p.id == other_id)
+                    .and_then(|p| p.team_id.as_ref());
+                other_team != player_team
             })
     }
 
@@ -323,6 +491,28 @@ impl<'a> InterpretationSurfaceService<'a> {
 
 #[allow(dead_code)]
 fn position_name(p:&Position)->&'static str { match p { Position::Goalkeeper=>"Goalkeeper", Position::Defender|Position::RightBack|Position::CenterBack|Position::LeftBack|Position::RightWingBack|Position::LeftWingBack=>"Defender", Position::Midfielder|Position::DefensiveMidfielder|Position::CentralMidfielder|Position::AttackingMidfielder|Position::RightMidfielder|Position::LeftMidfielder=>"Midfielder", Position::Forward|Position::RightWinger|Position::LeftWinger|Position::Striker=>"Forward" } }
+
+/// V100 Audit (M3/M4): Check if two tactical style strings are in adjacent
+/// "families" — Attacking ↔ Pressing (both proactive, high-line), Defensive ↔
+/// Counter (both reactive, deep block), Possession ↔ Balanced (control-oriented).
+/// Returns true if compatible, false otherwise.
+fn is_adjacent_style(a: &str, b: &str) -> bool {
+    let norm = |s: &str| s.trim();
+    let a = norm(a);
+    let b = norm(b);
+    if a == b { return true; }
+    let pairs: &[(&str, &str)] = &[
+        ("Attacking", "Pressing"),
+        ("Pressing", "Attacking"),
+        ("Defensive", "Counter"),
+        ("Counter", "Defensive"),
+        ("Possession", "Balanced"),
+        ("Balanced", "Possession"),
+        ("Direct", "Counter"),
+        ("Counter", "Direct"),
+    ];
+    pairs.iter().any(|(x, y)| (a == *x && b == *y) || (a == *y && b == *x))
+}
 fn trait_label(t:&PlayerTrait)->&'static str { match t { PlayerTrait::Speedster=>"Speedster",PlayerTrait::Explosive=>"Explosive",PlayerTrait::Workhorse=>"Workhorse",PlayerTrait::Powerhouse=>"Powerhouse",PlayerTrait::Twisty=>"Twisty",PlayerTrait::Orchestrator=>"Orchestrator",PlayerTrait::Predator=>"Predator",PlayerTrait::VelvetTouch=>"Velvet Touch",PlayerTrait::BallWinner=>"Ball Winner",PlayerTrait::Rock=>"Rock",PlayerTrait::SetPieceSpecialist=>"Set Piece Specialist",PlayerTrait::Leader=>"Leader",PlayerTrait::CoolHead=>"Cool Head",PlayerTrait::Visionary=>"Visionary",PlayerTrait::SafeHands=>"Safe Hands",PlayerTrait::CatReflexes=>"Cat Reflexes",PlayerTrait::Commander=>"Commander",PlayerTrait::CompleteForward=>"Complete Forward",PlayerTrait::EngineRoom=>"Engine Room",PlayerTrait::Wonderkid=>"Wonderkid" } }
 fn morale_state_label(m:u8)->&'static str { match m.min(100) { 90..=100=>"Soaring",75..=89=>"Content",55..=74=>"Uneasy",35..=54=>"Deflated",_=>"Toxic" } }
 

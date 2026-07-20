@@ -40,6 +40,70 @@ pub struct PlayerRelationshipInfo {
     pub is_clique_member: bool,
 }
 
+/// V100 Issue #30 (rework): Read-only rivalry info surfaced to the UI.
+/// Only edges where `rivalry_flag == true` AND the other player is on a
+/// DIFFERENT team are returned. Rivalries are auto-created by the engine
+/// in `trigger_cross_team_rivalries` (post_match.rs) — the manager never
+/// adds or removes them.
+#[derive(serde::Serialize)]
+pub struct PlayerRivalryInfo {
+    pub rival_id: String,
+    pub rival_name: String,
+    pub rival_position: String,
+    pub rival_team_name: String,
+    /// Strength of the rivalry edge (-100 = seething hatred, 0 = cool).
+    pub intensity: i8,
+    pub narrative_tags: Vec<String>,
+    pub started_date: Option<String>,
+}
+
+#[tauri::command]
+pub async fn get_player_rivalries(
+    state: State<'_, Arc<StateManager>>,
+    player_id: String,
+) -> Result<Vec<PlayerRivalryInfo>, String> {
+    info!("[cmd] get_player_rivalries: {}", player_id);
+    state.get_game(|game| {
+        let player_team_id = game
+            .players
+            .iter()
+            .find(|p| p.id == player_id)
+            .and_then(|p| p.team_id.clone());
+
+        let rels = game.relationship_graph.relationships_for(&player_id);
+        rels.into_iter()
+            .filter_map(|(other_id, edge)| {
+                // Only flagged rivalries (set by the engine, never the manager).
+                if !edge.rivalry_flag {
+                    return None;
+                }
+                let other = game.players.iter().find(|p| p.id == other_id)?;
+                // Only cross-team rivalries — same-team "rivalry" doesn't
+                // make sense (those are just tense partnerships).
+                if other.team_id == player_team_id {
+                    return None;
+                }
+                let rival_team_name = other
+                    .team_id
+                    .as_ref()
+                    .and_then(|tid| game.teams.iter().find(|t| &t.id == tid))
+                    .map(|t| t.name.clone())
+                    .unwrap_or_else(|| "No Club".into());
+                Some(PlayerRivalryInfo {
+                    rival_id: other_id.to_string(),
+                    rival_name: other.match_name.clone(),
+                    rival_position: format!("{:?}", other.position),
+                    rival_team_name,
+                    intensity: edge.strength,
+                    narrative_tags: edge.narrative_tags.clone(),
+                    started_date: edge.last_escalation.clone(),
+                })
+            })
+            .collect::<Vec<_>>()
+    })
+    .ok_or_else(|| "No active game".to_string())
+}
+
 #[tauri::command]
 pub async fn get_player_relationships(
     state: State<'_, Arc<StateManager>>,

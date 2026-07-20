@@ -55,7 +55,8 @@ impl LiveMatchState {
                 + passer.teamwork as f64)
                 / 4.0,
         ) * trait_bonus(&passer, TraitContext::Passing)
-            * passer_morale_mod;
+            * passer_morale_mod
+            * passer.partnership_bonus; // V100 Issue #30: chemistry bonus for buildups
         let press = self.effective_press(def_side);
         let ball_zone = self.ball_zone;
 
@@ -118,10 +119,12 @@ impl LiveMatchState {
             / 4.0;
         let att_rating = self.condition_adjusted_skill(&attacker.id, att_raw)
             * trait_bonus(&attacker, TraitContext::Midfield)
-            * crate::shared::morale_modifier(attacker.morale);
+            * crate::shared::morale_modifier(attacker.morale)
+            * attacker.partnership_bonus; // V100 Issue #30: chemistry bonus for midfield
         let def_rating = self.condition_adjusted_skill(&defender.id, def_raw)
             * trait_bonus(&defender, TraitContext::Tackling)
-            * crate::shared::morale_modifier(defender.morale);
+            * crate::shared::morale_modifier(defender.morale)
+            * defender.partnership_bonus; // V100 Issue #30: chemistry bonus for midfield defense
 
         let att_mod = play_style_modifier(
             self.team_ref(att_side).play_style,
