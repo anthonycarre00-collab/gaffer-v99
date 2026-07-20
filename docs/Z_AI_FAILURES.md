@@ -430,3 +430,57 @@
 All 39 issues from the original Z_AI_FAILURES audit are now addressed.
 Some have minor follow-up work noted in their commit messages (e.g.
 rivalry system has data layer ready but no match commentary hooks yet).
+
+## PROGRESS LOG UPDATE (2026-07-20 session 14 — RIVALRY REWORK + CHEMISTRY WIRING + AUDIT)
+
+### User feedback addressed:
+"Player rivalries should not be a manual process thats wrong, these
+should be rare events triggered only occasionally after 2 players have
+played AGAINST each other in a fixture. Could be random dislike or a
+bad tackle or a dive that angers the other player or losing to them
+or any number of reasons - rare."
+
+### Rivalry rework (Issue #30):
+- [x] DELETED manual rivalryStore.ts + rivalryStore.test.ts
+- [x] NEW trigger_cross_team_rivalries in post_match.rs — auto-triggers
+  from Hard/Reckless fouls, Red Cards, DribbleTackled, HeaderWon, and
+  a 4% 'Nemesis' roll between top performers on losing side
+- [x] NEW form_teammate_partnerships in post_match.rs — slow-burn
+  teammate bonds (5% chance per pair per match, scaled by personality
+  similarity, +1 to +3 per hit, 'Partnership' tag at strength >=30)
+- [x] NEW get_player_rivalries Tauri command (read-only)
+- [x] REWORKED PlayerProfileRivalriesCard — now read-only, fetches
+  from backend, no manual add UI
+
+### Chemistry wiring into match engine:
+- [x] NEW compute_chemistry_bonuses in team_builder.rs — reads
+  RelationshipGraph for each player's strongest intra-team edge
+- [x] Updated to_engine_player to accept chemistry_bonus parameter
+- [x] partnership_bonus now combines goal+assist + chemistry, capped +5%
+- [x] Applied * partnership_bonus to resolve_buildup (both engine paths)
+- [x] Applied * partnership_bonus to resolve_midfield att+def (both paths)
+- [x] Previously only applied to resolve_shot — now pervasive
+
+### Hardcoded false flag audit (6 fixes):
+- [x] rivalry_trigger_flag: hardcoded false → has_active_rivalry()
+- [x] locker_room_role: 'Squad member' → cascade (Captain/Vice/Veteran/Youngster/Star/Leader)
+- [x] mentor_bonus_flag: hardcoded false → young player + veteran captain detection
+- [x] training_alignment_label: 'Aligned' → focus vs natural position check
+- [x] chemistry_hotspots: empty vec → top 3 intra-squad positive pairs
+- [x] identity_alignment_label + tactical_alignment: 'Balanced'+50.0 → real style match
+
+### Season sim report:
+- [x] NEW src-tauri/crates/ofm_core/tests/season_sim_report.rs (#[ignore])
+- [x] Single-nation England, 20 clubs, seed=42
+- [x] Plays full season via turn::process_day (365 day cap)
+- [x] Reports: league table, champion, top players, finances, news variety,
+  transfers, rivalries + partnerships breakdown
+- [x] Run: cargo test --test season_sim_report -- --nocapture --ignored
+
+### Known issues / follow-ups:
+- Dive event type does not exist in engine — would need to be added to
+  EventType enum + emitted from fouls.rs. Skipped per scope.
+- AI-vs-AI matches bypass update_relationships_post_match (only user
+  fixtures create rivalries). Aligns with 'rare events' framing.
+- match_meaning() still returns 100% hardcoded values (H1 audit item) —
+  substantial scope, deferred.
