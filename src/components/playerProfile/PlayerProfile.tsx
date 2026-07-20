@@ -20,6 +20,7 @@ import { getDeployedPosition } from "../squad/SquadTab.helpers";
 import { setPlayerRole as setPlayerRoleService } from "../../services/squadService";
 import type { PlayerRole } from "../../store/types";
 import FreeAgentContractModal from "../transfers/FreeAgentContractModal";
+import PlayerProfileRivalriesCard from "./PlayerProfileRivalriesCard";
 import TransferBidModal from "../transfers/TransferBidModal";
 import { useFreeAgentContractFlow } from "../transfers/useFreeAgentContractFlow";
 import { useTransferBidFlow } from "../transfers/useTransferBidFlow";
@@ -859,6 +860,10 @@ export default function PlayerProfile({
 
  {/* Gaffer Phase 0.5-FE — Meaning snapshot card (third column) */}
  <PlayerMeaningCard playerId={player.id} />
+
+ {/* V100 Issue #30: Player rivalry card — shows active rivalries and
+   lets the manager add new ones (Spark/Simmer/Boil + reason). */}
+ <PlayerProfileRivalriesCard player={player} squad={gameState.players} />
  </div>
 
  {/* Gaffer Phase B — Hex Attribute Cluster (full width, below grid) */}
