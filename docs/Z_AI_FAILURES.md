@@ -364,3 +364,21 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 11)
+
+### Newly completed:
+- [x] Player rivalry system — DONE
+  - NEW rivalryStore.ts: Zustand store with localStorage persistence
+  - PlayerRivalry type with intensity (Spark/Simmer/Boil) + reason + symmetric lookups
+  - NEW PlayerProfileRivalriesCard.tsx: card on PlayerProfile under PlayerMeaningCard
+  - Add rival form: pick squad-mate, set intensity, optional reason (140 char)
+  - Color-coded intensity badges: spark=neutral, simmer=accent, boil=danger
+  - Empty state shown when no rivalries
+  - 7 unit tests for the store (all pass)
+  - 58 player profile tests still pass (no regressions)
+  - Future wiring: match commentary hooks + news story triggers (data layer ready)
+
+### Still outstanding (2 items):
+- [ ] Attribute category icons (Body/Ball/Head/Gloves SVGs)
+- [ ] Icon/button cache
