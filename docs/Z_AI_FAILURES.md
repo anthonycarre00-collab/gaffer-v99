@@ -343,3 +343,24 @@
 - [ ] Player rivalry system
 - [ ] Attribute category icons
 - [ ] Icon/button cache
+
+## PROGRESS LOG UPDATE (2026-07-20 session 10)
+
+### Newly completed:
+- [x] 12-column grid enforcement — DONE
+  - HomeTab: all 4 rows converted from 4-col/2-col to 12-col (col-span-9/3, 6/6, 3/3/3/3, 6/6)
+  - FinancesTab: main grid 3-col -> 12-col (overview 8/12, full-width 12/12)
+  - SquadRosterView: filter bar arbitrary grid -> explicit 12-col (5/2/3/2)
+  - Same visual proportions as before, now consistent 12-col system across screens
+
+### Bonus fix (not in remaining items):
+- [x] PlayerAvatar test env crash fixed
+  - invoke('get_community_face').then() crashed when invoke was vi.fn() returning undefined
+  - Wrapped with Promise.resolve() so undefined -> rejected promise -> .catch() handles cleanly
+  - Fixes 9 pre-existing SquadTab test failures (all were cascade from PlayerAvatar)
+  - No production behaviour change
+
+### Still outstanding (3 items, all medium complexity):
+- [ ] Player rivalry system
+- [ ] Attribute category icons
+- [ ] Icon/button cache
