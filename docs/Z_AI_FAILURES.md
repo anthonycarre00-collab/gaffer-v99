@@ -484,3 +484,62 @@ or any number of reasons - rare."
   fixtures create rivalries). Aligns with 'rare events' framing.
 - match_meaning() still returns 100% hardcoded values (H1 audit item) —
   substantial scope, deferred.
+
+## PROGRESS LOG UPDATE (2026-07-20 session 15 — Match significance + data pruning)
+
+### User questions addressed:
+"match_meaning seems important — is it how we know whats an important
+fixture? How does pressure attribute work without a match significance
+flag? Also check we dont get a buildup of unnecessary game data over
+time."
+
+### Audit findings:
+1. A full 8-level FixtureImportance system EXISTS but was NEVER WIRED
+   (apply_fixture_importance defined but never called)
+2. match_meaning() returned 100% hardcoded values
+3. 7 data collections grew unbounded over seasons
+
+### Fixes applied:
+
+**Match significance (P0):**
+- [x] NEW refresh_fixture_importance() in schedule.rs — builds reputation
+  + standings maps, applies to league + all competitions
+- [x] NEW apply_fixture_importance_with_standings() — enhanced version
+  that checks current standings (top-6, title race 1v2, relegation 6-pointer)
+- [x] Called in process_day_with_capture before every matchday
+- [x] Called at game init (2 paths in commands/game.rs)
+- [x] Now: BigLeague=1.3x, Continental=1.4x, CupFinal=1.8x, Massive=2.5x
+  pressure multipliers reach the engine
+
+**match_meaning() (P0):**
+- [x] momentum_state: from active story threads (Peaking/Building/Simmering/Neutral)
+- [x] rivalry_intensity: count of rivalry_flagged edges for user's team
+- [x] narrative_shift_label: title of highest-momentum active thread
+- [x] pundit_tone_weight: 0.5 baseline, 0.7 if pundit disagreement active
+- [x] resurfaced_memory_flag: 'true' if any memory has times_resurfaced > 0
+- [x] NEW MemoryStore::all_memories_values() + all_memories_values_mut()
+
+**Data pruning (P1):**
+- [x] game.news unread: 500-unread cap (same as messages)
+- [x] team.financial_ledger: prune entries > 3 seasons old
+- [x] league.transfer_log: prune entries > 3 seasons old
+- [x] player.loan_offers: prune rejected/withdrawn > 30 days (same as transfer_offers)
+- [x] player.partnerships: clean orphaned entries in prune_retired_players
+- [x] manager.head_to_head: clean orphaned entries in retire_aged_ai_managers
+- [x] memory_store.memories: prune zero-weight + never-resurfaced in weekly_decay
+
+### Estimated data savings over 10 seasons:
+- Unread news: ~20K articles / ~10MB → capped at 500
+- Financial ledger: ~90K entries / ~9MB → ~27K entries (3 seasons)
+- Transfer log: ~5K-20K entries → ~1.5K-6K entries (3 seasons)
+- Loan offers: unbounded → 30-day terminal offers pruned
+- Orphaned partnerships: ~30K-150K entries → cleaned on retirement
+- Orphaned head_to_head: ~7.5K-15K entries → cleaned on retirement
+- Dead memories: unbounded → pruned weekly
+- Total: ~20MB+ prevented from accumulating
+
+### Still deferred:
+- turning_point_event_id + archived_memory_used_flag in match_meaning
+  (requires live match context — bigger refactor)
+- CupFinal/ContinentalFinal/Massive importance levels still not assigned
+  (needs cup stage detection — would need to check knockout_rounds state)
