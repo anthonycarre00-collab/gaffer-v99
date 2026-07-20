@@ -1219,9 +1219,12 @@ fn trigger_cross_team_rivalries(
         let (trigger_label, intensity, chance): (&'static str, i8, f64) = match event.event_type {
             engine::EventType::Foul => {
                 // Read severity from event.detail if available.
+                // V100 build fix: EventDetail is non-exhaustive across
+                // Shot/Save/Foul/Goal — only Foul carries severity. Any
+                // other detail (or None) defaults to Soft.
                 let sev = match &event.detail {
                     Some(engine::EventDetail::Foul { severity }) => *severity,
-                    None => engine::FoulSeverity::Soft,
+                    _ => engine::FoulSeverity::Soft,
                 };
                 match sev {
                     engine::FoulSeverity::Reckless => ("Reckless Foul", -20, 0.12),
