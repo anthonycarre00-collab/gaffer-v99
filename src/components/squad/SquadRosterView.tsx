@@ -63,7 +63,9 @@ import { findTacticsPresetBySetup } from "../tactics/TacticsTab.helpers";
 import {
  buildDelegateToYouthAcademyMenuItem,
  buildDividerMenuItem,
+ buildRejectAllPendingOffersMenuItem,
  buildToggleLoanListMenuItem,
+ buildToggleNotForSaleMenuItem,
  buildToggleTransferListMenuItem,
  buildViewProfileMenuItem,
 } from "../playerActions/playerContextMenuItems";
@@ -783,6 +785,37 @@ export default function SquadRosterView({
  return;
  }
  }),
+ // V100 FIX (forensic): Not-for-sale toggle — was missing from squad menu.
+ // User said: "the options to interact with players are different on squad
+ // screen and player screens, this is dumb."
+ {
+ ...buildToggleNotForSaleMenuItem(t, player.not_for_sale, async () => {
+ try {
+ const { toggleNotForSale } = await import("../../services/transfersService");
+ const updated = await toggleNotForSale(player.id);
+ onMutationComplete?.(updated);
+ } catch {
+ return;
+ }
+ }),
+ },
+ // V100 FIX (forensic): Reject all pending offers — was missing from squad menu.
+ {
+ ...buildRejectAllPendingOffersMenuItem(
+ t,
+ player.transfer_offers?.filter((o) => o.status === "Pending").length ?? 0,
+ async () => {
+ try {
+ const { rejectAllPendingOffers } = await import("../../services/transfersService");
+ const updated = await rejectAllPendingOffers(player.id);
+ onMutationComplete?.(updated);
+ } catch {
+ return;
+ }
+ },
+ ),
+ disabled: (player.transfer_offers?.filter((o) => o.status === "Pending").length ?? 0) === 0,
+ },
  // V100 P2 (Issue #39): Move to reserve squad.
  {
  label: t("squad.moveToReserve", { defaultValue: "Move to Reserve" }),
