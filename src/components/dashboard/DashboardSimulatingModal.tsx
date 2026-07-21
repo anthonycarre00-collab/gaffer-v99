@@ -20,6 +20,7 @@ import { formatVal } from "../../lib/valueFormatting";
 import { resolveBackendText } from "../../utils/backendI18n";
 import { getBlockerTabLabel } from "../../utils/blockerUtils";
 import DashboardModalFrame from "./DashboardModalFrame";
+import GafferProgress from "./GafferProgress";
 
 interface DashboardSimulatingModalProps {
  // Digest-mode props (optional — omit for a plain single-advance spinner)
@@ -235,6 +236,8 @@ export default function DashboardSimulatingModal({
  }, [digestEntries?.length]);
 
  // Plain single-advance spinner (no digest data yet)
+ // V100 FIX (forensic): Replaced static "Crunching the numbers..." text
+ // with GafferProgress — rotating funny Gaffer-voice lines + progress bar.
  if (!isDigestMode) {
  return (
  <DashboardModalFrame maxWidthClassName="max-w-sm">
@@ -245,9 +248,9 @@ export default function DashboardSimulatingModal({
  <h3 className="mt-4 text-lg font-heading font-bold uppercase tracking-wide text-ink">
  {t("dashboard.simulating")}
  </h3>
- <p className="mt-2 text-sm text-ink-dim">
- {t("dashboard.simulatingMessage")}
- </p>
+ <div className="mt-4 w-full">
+ <GafferProgress isRunning={true} />
+ </div>
  </div>
  </DashboardModalFrame>
  );
@@ -287,6 +290,14 @@ export default function DashboardSimulatingModal({
  </button>
  )}
  </div>
+
+ {/* V100 FIX (forensic): Gaffer-voice progress bar when running in
+   digest mode — rotating funny lines + animated bar. */}
+ {isRunning && (
+ <div className="py-2 border-b border-slate-line shrink-0">
+ <GafferProgress isRunning={true} />
+ </div>
+ )}
 
  {/* Scrollable event feed */}
  <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-0">

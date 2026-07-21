@@ -150,6 +150,12 @@ export default function Dashboard(): JSX.Element {
  const fetchState = async () => {
  try {
  await loadActiveGameState();
+ // V100 FIX (forensic): Preload all community face paths at game start.
+ // Builds a player_id → path map once, so PlayerAvatar lookups are
+ // instant map lookups instead of per-player filesystem scans.
+ // Eliminates the "generating portraits" terminal spam.
+ const { preloadCommunityFaceMap } = await import("../components/ui/PlayerAvatar");
+ await preloadCommunityFaceMap();
  } catch (err) {
  console.error("Failed to fetch game state:", err);
  }

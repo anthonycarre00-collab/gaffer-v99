@@ -316,6 +316,65 @@ fn check_community_face_pack(app: &AppHandle, player_id: &str) -> Option<PathBuf
     None
 }
 
+/// V100 FIX (forensic): Build a complete player_id → face-path map at game
+/// start. Called once from the frontend when the game loads. The frontend
+/// caches this map in memory and serves from it — no more per-player
+/// filesystem scans.
+///
+/// Previously, every PlayerAvatar called `get_community_face` on first render,
+/// which did a full filesystem scan of face-packs/. With 25+ players on a
+/// squad screen, that's 25+ filesystem scans. The user saw "generating
+/// portraits" messages in the terminal because each scan logged.
+///
+/// Now: one scan at game start, result cached in the frontend.
+#[tauri::command]
+pub async fn get_community_face_map(
+    app: AppHandle,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let data_dir = app.path().app_data_dir().map_err(|e| format!("app data dir: {e}"))?;
+        let face_packs_dir = data_dir.join("face-packs");
+
+        let mut map = std::collections::HashMap::new();
+
+        if !face_packs_dir.exists() {
+            return Ok(map);
+        }
+
+        let mut pack_dirs: Vec<PathBuf> = std::fs::read_dir(&face_packs_dir)
+            .map_err(|e| format!("read face-packs dir: {e}"))?
+            .filter_map(|entry| entry.ok())
+            .filter(|entry| entry.file_type().ok().map(|ft| ft.is_dir()).unwrap_or(false))
+            .map(|entry| entry.path())
+            .collect();
+        pack_dirs.sort();
+
+        for pack_dir in &pack_dirs {
+            if let Ok(entries) = std::fs::read_dir(pack_dir) {
+                for entry in entries.flatten() {
+                    let path = entry.path();
+                    if path.extension().and_then(|e| e.to_str()) == Some("png") {
+                        if let Some(stem) = path.file_stem().and_then(|s| s.to_str()) {
+                            // First pack wins (alphabetical) — don't overwrite.
+                            map.entry(stem.to_string()).or_insert_with(|| path.to_string_lossy().to_string());
+                        }
+                    }
+                }
+            }
+        }
+
+        log::info!(
+            "[portraits] Community face map built: {} faces across {} packs",
+            map.len(),
+            pack_dirs.len()
+        );
+
+        Ok(map)
+    })
+    .await
+    .map_err(|e| format!("face map task failed: {e}"))?
+}
+
 /// V99: Tauri command to check if a community face pack image exists for a player.
 /// Returns the file path if found, None otherwise. The frontend can use this
 /// to display the community image instead of the generated portrait.

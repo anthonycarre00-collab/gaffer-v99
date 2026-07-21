@@ -754,3 +754,10 @@ input[type="number"] {
   border-radius: 3px;
 }
 
+
+/* V100 FIX (forensic): Gaffer progress bar indeterminate animation.
+   Used by GafferProgress component on the continue/advance screen. */
+@keyframes gaffer-progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}

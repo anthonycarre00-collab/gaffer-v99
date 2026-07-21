@@ -168,6 +168,33 @@ export function PlayerAvatar({
  */
 const communityFaceCache = new Map<string, string | null>();
 
+/** V100 FIX (forensic): Preloaded face map (player_id → file path).
+ * Populated once by preloadCommunityFaceMap() at game start. After this,
+ * all PlayerAvatar lookups are instant map lookups — no per-player Tauri
+ * invokes or filesystem scans. */
+let communityFaceMapCache: Map<string, string> | null = null;
+
+/** V100 FIX (forensic): Preload all community face paths at game start.
+ * Called once from the dashboard when the game loads. After this, all
+ * PlayerAvatar lookups are instant map lookups — no per-player Tauri
+ * invokes or filesystem scans, no "generating portraits" terminal spam. */
+export async function preloadCommunityFaceMap(): Promise<void> {
+ if (communityFaceMapCache !== null) return; // already loaded
+ try {
+  const map = await invoke<Record<string, string>>("get_community_face_map");
+  communityFaceMapCache = new Map(Object.entries(map));
+ } catch {
+  // Non-Tauri env or error — leave null, fall back to per-player lookup.
+  communityFaceMapCache = new Map();
+ }
+}
+
+/** Clear the face map cache. Call when starting a new game. */
+export function clearCommunityFaceMap(): void {
+ communityFaceMapCache = null;
+ communityFaceCache.clear();
+}
+
 function useCommunityFace(playerId: string | null | undefined): string | null {
  const [faceSrc, setFaceSrc] = useState<string | null>(null);
 
@@ -177,6 +204,16 @@ function useCommunityFace(playerId: string | null | undefined): string | null {
  return;
  }
 
+ // V100 FIX (forensic): Check the preloaded face map first — instant
+ // lookup, no Tauri invoke, no filesystem scan.
+ if (communityFaceMapCache !== null) {
+ const path = communityFaceMapCache.get(playerId);
+ const src = path ? convertFileSrc(path) : null;
+ setFaceSrc(src);
+ return;
+ }
+
+ // Fallback: per-player lookup (only if preload hasn't run yet).
  // Check cache first.
  if (communityFaceCache.has(playerId)) {
  setFaceSrc(communityFaceCache.get(playerId) ?? null);
@@ -184,10 +221,6 @@ function useCommunityFace(playerId: string | null | undefined): string | null {
  }
 
  // Check Tauri for community face pack.
- // V100: Defensive — invoke may be undefined in test env or non-Tauri
- // contexts (e.g. Storybook). Guard with optional chaining + nullish
- // coalescing so the hook never throws "Cannot read properties of
- // undefined (reading 'then')".
  let cancelled = false;
  const facePromise = invoke<string | null>("get_community_face", { playerId });
  Promise.resolve(facePromise)

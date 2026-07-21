@@ -295,6 +295,7 @@ pub fn run() {
             generate_player_portrait,
             prewarm_player_portraits,
             get_community_face,
+            get_community_face_map,
             list_face_packs,
             delete_save,
             skip_to_match_day,
