@@ -249,3 +249,51 @@ I will NOT mark anything complete in Z_AI_FAILURES.md unless I have:
 4. Confirmed the backend→frontend wiring end-to-end
 
 No more "backend exists, UI coming later". If the UI isn't done, the feature isn't done.
+
+## UPDATE — Session 16 (commentary + match engine + goal rate)
+
+### CRITICAL ROOT CAUSE FOUND
+
+**"No phases of play, no build up, no events besides goals and cards"**
+
+The root cause was a single filter in `MatchLive.tsx:78-86`:
+
+```tsx
+for (const evt of r.events) {
+  const display = getEventDisplay(evt);
+  if (display.important) {   // ← THIS FILTER
+    onImportantEvent(evt);
+  }
+}
+```
+
+20+ event types (PassCompleted, Dribble, Tackle, Interception, Cross, HeaderWon, HeaderLost, Clearance, Offside, Corner, FreeKick, GoalKick, Foul, ShotSaved, ShotOffTarget, ShotBlocked, MomentumShift, QuietMinute, SustainedPressure, CounterAttack) were ALL marked `important: false` in `helpers.tsx` and were SILENTLY DROPPED before reaching the EventFeed.
+
+The user literally only saw: goals, cards, substitutions, injuries, and match phase markers. **20+ event types were never displayed.** This is why commentary felt dead — because it WAS.
+
+**FIX:** Removed the `display.important` filter. Now ALL events reach the EventFeed.
+
+### Other fixes in this session:
+
+1. **Commentary `{{side}}` token** — sustainedPressure and counterAttack templates had empty `{{side}}` slot. Added `side: team` to tokens map.
+
+2. **Pundit text unreadable** — three compounding opacity issues (~42% effective opacity). Fixed:
+   - Removed `opacity-60` row dimming for non-important events
+   - Added opaque `bg-carbon-1` to every event row
+   - Pundit speaker label: removed `opacity-70`, added `font-bold`
+   - Catchphrase: `text-accent-400` full opacity (was `/70`), `text-xs` (was `[10px]`)
+   - `punditToneClass`: neutral/negative now `text-ink` (was `text-ink-dim`)
+
+3. **Pundit name caching null on error** — `punditService.ts` cached null on ANY backend error, so the user saw "Pundit:" for the entire match. Fixed: don't cache errors.
+
+4. **Goal rate — still too many** — two issues:
+   - Actions per minute was bumped from 1-3 to 2-4 in V100 (increased shot volume). Reverted to 1-3.
+   - Live match goal test had 0.5-8.0 GPG range (would pass at 7.9 goals/game). Tightened to 1.5-3.5, bumped trials from 30 to 200.
+
+5. **Sparse sim ignores ALL tactics** — ~90% of matches (every AI-vs-AI matchday) used ONLY player OVR. The user could spend hours tweaking tactics but the league table was OVR-Poisson. Fixed: new `sparse_tactics_modifier()` reads play_style + tactics_phase + tactics_multiplier. Now AI managers with different tactics get different results.
+
+### What's still TODO:
+- Live-path buildup missing `tactics_multiplier` (zone_resolution.rs:63)
+- Formation is NOT read during simulation (only affects player selection)
+- `ModifierBundle` + `compute_zone_rating` are dead code
+- 7 pre-existing test failures in match helpers (not caused by my changes)
