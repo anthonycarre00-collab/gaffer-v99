@@ -1727,7 +1727,8 @@
       "InjuryNews": "Injury",
       "SeasonPreview": "Season Preview",
       "Editorial": "Editorial",
-      "ManagerialChange": "Managerial"
+      "ManagerialChange": "Managerial",
+      "PlayerMilestone": "Milestone"
     },
     "headlines": {
       "managerSacked": "SACKED! {{manager}} given the boot at {{club}}",

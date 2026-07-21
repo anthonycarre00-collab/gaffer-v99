@@ -21,7 +21,7 @@ import { fetchNewsFeed, type NewsFeed } from "../../services/newsService";
 import { isNewsArticleVisible } from "../../utils/newsVisibility";
 import { formatMatchDate as fmtMatchDate } from "../../lib/helpers";
 import { spinHeadline, spinClassName } from "../../lib/newsSpinner";
-import { NewspaperIcon as GafferNewspaperIcon, TrophyRibbonsIcon as GafferTrophyIcon } from "../ui/icons/GafferIcons";
+import { MegaphoneIcon, MicrophoneIcon, NewspaperIcon as GafferNewspaperIcon, TrophyRibbonsIcon as GafferTrophyIcon } from "../ui/icons/GafferIcons";
 
 const CAT_ICONS: Record<string, React.ReactNode> = {
  MatchReport: <GafferNewspaperIcon size={16} />,
@@ -482,15 +482,18 @@ function ArticleCard({
 
  <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-line-soft">
  <span className="text-[10px] text-ink-faint font-heading uppercase tracking-widest flex items-center gap-1.5">
- {/* V100 (Issue #4): Source type indicator — tabloid/broadsheet/social. */}
+ {/* V100 FIX (forensic): Source type indicator — was text badges "Tab/Bro/Soc".
+   User said "No ICONS in news sections just coloured initials. generic and shit."
+   Now uses actual SVG icons: NewspaperIcon for broadsheet, MegaphoneIcon
+   for tabloid, MicrophoneIcon for social media. */}
  {(() => {
  const src = article.source?.toLowerCase() ?? "";
  if (src.includes("gossip") || src.includes("back page") || src.includes("touchline")) {
- return <span className="text-[8px] bg-red-500/15 text-red-400 px-1 py-0.5 rounded uppercase font-bold">Tab</span>;
+ return <MegaphoneIcon size={11} brassColor="#ef4444" className="text-red-400" />;
  } else if (src.includes("voice") || src.includes("terraces") || src.includes(".x")) {
- return <span className="text-[8px] bg-blue-500/15 text-blue-400 px-1 py-0.5 rounded uppercase font-bold">Soc</span>;
+ return <MicrophoneIcon size={11} brassColor="#3b82f6" className="text-blue-400" />;
  } else {
- return <span className="text-[8px] bg-accent-500/15 text-accent-400 px-1 py-0.5 rounded uppercase font-bold">Bro</span>;
+ return <GafferNewspaperIcon size={11} />;
  }
  })()}
  {article.source}
