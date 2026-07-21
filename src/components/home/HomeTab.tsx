@@ -275,13 +275,18 @@ export default function HomeTab({
  <div className="lg:col-span-6"><MediaPulseCard /></div>
  </div>
 
- {/* V100 §9: Row 2 — four secondary cards (3/12 each). */}
+ {/* V100 FIX (forensic): Row 2 — four secondary cards (3/12 each).
+   Was missing col-span classes — cards were 1/12 width in the 12-col grid,
+   cramming info together. Now wrapped in lg:col-span-3 divs. */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5">
+ <div className="lg:col-span-3">
  <HomeNextOpponentCard
  nextOpponent={nextOpponent}
  lang={lang}
  onNavigate={onNavigate}
  />
+ </div>
+ <div className="lg:col-span-3">
  <HomeSquadOverviewCard
  avgCondition={avgCondition}
  avgOvr={avgOvr}
@@ -292,17 +297,22 @@ export default function HomeTab({
  focus={focus}
  onNavigate={onNavigate}
  />
+ </div>
+ <div className="lg:col-span-3">
  <HomeRecentResultsCard
  recentResults={recentResults}
  teams={gameState.teams}
  onNavigate={onNavigate}
  />
+ </div>
+ <div className="lg:col-span-3">
  <HomeLatestNewsCard
  articles={latestNews}
  teams={gameState.teams}
  lang={lang}
  onNavigate={onNavigate}
  />
+ </div>
  </div>
 
  {onGameUpdate && (

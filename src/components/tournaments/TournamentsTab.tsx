@@ -119,11 +119,14 @@ export default function TournamentsTab({
  const isPreseason = seasonContext.phase === "Preseason";
 
  // Derive active competitions from slice; fall back to gameState while loading.
+ // V100 FIX (forensic): Prefer gameState.league over competitionsView for
+ // standings — gameState is always fresh after onGameUpdate, while
+ // competitionsView (a slice) may be stale until refetched.
  const gsLeague = gameState.league ? [gameState.league] : [];
  const allCompetitions =
- competitionsView?.competitions ?? gameState.competitions ?? gsLeague;
+ gameState.competitions ?? gsLeague ?? competitionsView?.competitions ?? gsLeague;
  const activeIds =
- competitionsView?.active_competition_ids ?? gameState.active_competition_ids ?? [];
+ gameState.active_competition_ids ?? competitionsView?.active_competition_ids ?? [];
  const activeCompetitions =
  activeIds.length === 0
  ? allCompetitions
