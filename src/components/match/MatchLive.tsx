@@ -74,13 +74,15 @@ export default function MatchLive({
  if (results.length > 0) {
  const lastResult = results[results.length - 1];
 
- // Collect important events
+ // V100 FIX (forensic): Pass ALL events to the feed, not just important ones.
+ // Previously only events with display.important=true were forwarded —
+ // this meant passes, tackles, dribbles, interceptions, corners, etc.
+ // were silently dropped. The user saw "no phases of play, no build up,
+ // no events besides goals and cards" because that's literally all that
+ // was being shown. Now every event reaches the EventFeed.
  for (const r of results) {
  for (const evt of r.events) {
- const display = getEventDisplay(evt);
- if (display.important) {
  onImportantEvent(evt);
- }
  }
  }
 
