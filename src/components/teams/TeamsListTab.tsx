@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronRight, Search, Trophy, Users } from "lucide-react";
 
 import { formatVal } from "../../lib/helpers";
+import { shortOvrLabel } from "../../lib/ovrInterpretation";
 import { buildRegionLabel } from "../../lib/teamRegions";
 import { competitionDisplayName } from "../../lib/competitionName";
 import { GameStateData } from "../../store/gameStore";
@@ -280,7 +281,9 @@ function TeamCardView({
 
  <div className="grid grid-cols-5 gap-px bg-carbon-3">
  <StatCell label={t("teams.squad")} value={String(rosterSize)} />
- <StatCell label={t("teams.avgOvr")} value={String(avgOvr)} />
+ {/* V100 FIX (forensic): Use Gaffer-voice OVR label, not raw number.
+   Per Gaffer design rules: "raw attribute numbers are NEVER displayed". */}
+ <StatCell label={t("teams.avgOvr")} value={shortOvrLabel(avgOvr)} />
  <StatCell label={t("teams.rep")} value={String(team.reputation)} />
  <StatCell label={t("common.value")} value={formatVal(totalValue)} />
  <StatCell label={t("common.pts")} value={standing ? String(standing.points) : "—"} />

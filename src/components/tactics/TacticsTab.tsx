@@ -40,9 +40,6 @@ import {
 import TacticsPitch from "./TacticsPitch";
 import TacticsPlayerList from "./TacticsPlayerList";
 import TacticsRightPanel from "./TacticsRightPanel";
-import { PhaseBlueprintPanel } from "./PhaseBlueprintPanel";
-import TacticsPresetStrip from "./TacticsPresetStrip";
-import TacticsInstructionsRail from "./TacticsInstructionsRail";
 import {
  buildCustomTacticsStorageKey,
  loadCustomTactics,
@@ -56,8 +53,7 @@ import TacticsCommandBar, {
  type TacticsLibraryEntry,
 } from "./TacticsCommandBar";
 import TacticsPlayerFocusPanel from "./TacticsPlayerFocusPanel";
-import { PlayingStyleHero } from "./PlayingStyleHero";
-import { StyleGuidancePanel } from "./StyleGuidancePanel";
+import { PhaseBlueprintPanel } from "./PhaseBlueprintPanel";
 
 interface TacticsTabProps {
  gameState: GameStateData | null;
@@ -77,7 +73,7 @@ export default function TacticsTab({
  onGameUpdate,
 }: TacticsTabProps): JSX.Element {
  const { t } = useTranslation();
- const sessionState = useGameStore((s) => s.sessionState);
+ const { sessionState } = useGameStore();
  const teamId = sessionState?.manager?.team_id ?? gameState?.manager?.team_id ?? null;
  const clockDate = sessionState?.clock.current_date ?? gameState?.clock.current_date ?? "";
  const [fetchedSquad] = useFetchedSquad(teamId, clockDate);
@@ -92,7 +88,7 @@ export default function TacticsTab({
  const [positionFilter, setPositionFilter] = useState("All");
  // V99: Sub-tab navigation for the tactics screen.
  type TacticsSubTab = "pitch" | "selection" | "style" | "setPieces";
- const [activeSubTab, setActiveSubTab] = useState<TacticsSubTab>("pitch");
+ const [activeSubTab, setActiveSubTab] = useState<TacticsSubTab>("selection");
  const sortKey: SortKey = "pos";
  const sortDir: "asc" | "desc" = "asc";
  const [dragState, setDragState] = useState<DragState | null>(null);
@@ -812,35 +808,24 @@ export default function TacticsTab({
 
  if (!team) {
  return (
- <p className="text-ink-dim">{t("common.noTeam")}</p>
+ <p className="text-gray-500 dark:text-gray-400">{t("common.noTeam")}</p>
  );
  }
 
  return (
- <div className="tactics-board-bg flex w-full flex-col gap-4">
+ <div className="tactics-board-bg flex w-full flex-col gap-5">
  <div
  ref={dragPreviewRef}
  aria-hidden="true"
- className="pointer-events-none fixed -left-20 top-0 h-8 w-8 rounded-full border border-ink/15 bg-navy-900/90 "
+ className="pointer-events-none fixed -left-20 top-0 h-8 w-8 rounded-full border border-white/15 bg-navy-900/90 "
  />
 
- {/* V99.2: Playing Style hero — prominent banner showing formation + style
-   + Gaffer-voice description. Always visible at the top of the screen. */}
- <PlayingStyleHero
- formation={formation}
- playStyle={activePlayStyle}
- tacticName={activeTactic?.name}
- />
-
- {/* V99.7-7: Sub-tab navigation — removed "Set Pieces" tab since set pieces
-   are always visible in the right panel alongside the Phase Blueprint.
-   Three tabs: Pitch (formation + roles), Selection (squad management),
-   Style (playing style + guidance).
-   V99.8: Brass-on-chalk palette so labels stay readable against the
-   tactics-board texture in both light and dark mode. The active tab
-   uses a solid brass chip with a dark chalk inner; inactive tabs use
-   cream/chalk text that lifts off the dark chalkboard. */}
- <div className="flex gap-1 border-b border-accent-500/30 dark:border-accent-500/20">
+ {/* V100 FIX (forensic): 3 tabs per user spec.
+   - Pitch: BIG pitch, no right panel. Just the formation.
+   - Selection: drag-drop squad list + Team Roles panel.
+   - Style: Phase Blueprint laid out in full.
+   Set Pieces tab removed — set pieces live in Selection now (Team Roles). */}
+ <div className="mb-4 flex gap-1 border-b border-gray-200 dark:border-navy-600">
  {([
  { id: "pitch", label: t("tactics.subTabs.pitch", { defaultValue: "Pitch" }) },
  { id: "selection", label: t("tactics.subTabs.selection", { defaultValue: "Selection" }) },
@@ -851,8 +836,8 @@ export default function TacticsTab({
  onClick={() => setActiveSubTab(tab.id)}
  className={`px-4 py-2 text-sm font-heading font-bold uppercase tracking-wider transition-all duration-200 border-b-2 ${
  activeSubTab === tab.id
- ? "border-accent-400 bg-accent-500/15 text-accent-700 dark:text-accent-200"
- : "border-transparent text-chalk/80 dark:text-chalk/70 hover:text-accent-600 dark:hover:text-accent-300 hover:bg-accent-500/5"
+ ? "border-primary-500 text-primary-600 dark:text-primary-400"
+ : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
  }`}
  >
  {tab.label}
@@ -885,79 +870,11 @@ export default function TacticsTab({
  tacticLibrary={tacticLibrary}
  />
 
- {/* V100 §9 (Issue #5): Formation preset strip — horizontal scroll of preset
-   tactical shapes (mini pitch diagrams). Only shown on the Pitch tab so
-   it doesn't clutter the Selection or Style tabs. Clicking a chip sets
-   formation + play_style in one shot via applyTacticSelection. */}
+ {/* V100 FIX (forensic): Tab 1 = Pitch only, BIG, no right panel.
+   User explicitly said "far bigger pitch and no right sections/panels". */}
  {activeSubTab === "pitch" && (
- <TacticsPresetStrip
- activeFormation={formation}
- activePlayStyle={activePlayStyle}
- activePresetId={presetAnchorId}
- onSelectPreset={(preset) => {
- void applyTacticSelection({
- description: t(preset.descriptionKey, preset.id),
- formation: preset.formation,
- id: `preset:${preset.id}`,
- name: t(`tactics.presetNames.${preset.id}`, preset.id),
- playStyle: preset.playStyle,
- type: "preset",
- });
- }}
- onSelectFormation={(nextFormation) => {
- void handleFormationChange(nextFormation);
- }}
- />
- )}
-
- {/* V99.7-7: Tab-conditional layout — wider center column for the pitch
-   (was 260px_1fr_280px, now 240px_1fr_300px for pitch tab to give the
-   formation pitch more room). Style tab uses 2-column with guidance
-   on left and blueprint on right. */}
- <div className={`grid grid-cols-1 gap-4 xl:items-start ${
- activeSubTab === "pitch"
- ? "xl:grid-cols-[240px_1fr_300px]"
- : activeSubTab === "selection"
- ? "xl:grid-cols-[1fr_300px]"
- : activeSubTab === "style"
- ? "xl:grid-cols-[1fr_340px]"
- : "xl:grid-cols-1"
- }`}>
- {/* Left: player list — shown in pitch + selection tabs */}
- {(activeSubTab === "pitch" || activeSubTab === "selection") && (
- <TacticsPlayerList
- bench={filteredBench}
- comparePlayerId={comparePlayerId}
- dragState={dragState}
- matchRoles={effectiveMatchRoles}
- onAssignMatchRole={(role, playerId) => {
- void handleAssignMatchRole(role, playerId);
- }}
- onClearFilters={handleClearFilters}
- onDemoteStarter={(playerId) => {
- void handleDemoteStarter(playerId);
- }}
- onDragEnd={resetDragState}
- onDragStart={handleDragStart}
- onOpenPlayerProfile={onSelectPlayer}
- onPlayerSearchChange={setPlayerSearch}
- onPositionFilterChange={setPositionFilter}
- onPromoteBench={(playerId) => {
- void handlePromoteBenchPlayer(playerId);
- }}
- onTacticalSelect={(playerId, section) => {
- void handleLineupPlayerClick(playerId, section);
- }}
- playerSearch={playerSearch}
- positionFilter={positionFilter}
- selectedPlayerId={selectedPlayerId}
- starters={filteredStartingXI}
- xiActivePosition={xiActivePosition}
- />
- )}
-
- {/* Center: pitch — shown in pitch tab only */}
- {activeSubTab === "pitch" && (
+ <div className="flex justify-center py-4">
+ <div className="w-full max-w-3xl">
  <TacticsPitch
  dragState={dragState}
  formation={formation}
@@ -1007,25 +924,45 @@ export default function TacticsTab({
  selectedPlayer={selectedPlayer}
  selectedPlayerId={selectedPlayerId}
  />
+ </div>
+ </div>
  )}
 
- {/* V100 P0-9 (Issue #3): Right panel — Roles + Set Pieces only.
-   Shown on pitch + style tabs (setPieces tab was removed).
-   Phase Blueprint is rendered ONLY on the style tab — see below.
-   V100 §9 (Issue #5): On the Pitch tab we ALSO render the compact
-   Quick Instructions rail above the Roles panel — the four most-tweaked
-   tactical levers (tempo/width/pressing/defensive line) so the manager
-   can adjust without flipping to the Style tab. */}
- {(activeSubTab === "pitch" || activeSubTab === "style") && (
- <div className="flex flex-col gap-4">
- {activeSubTab === "pitch" && (
- <TacticsInstructionsRail
- tacticsPhase={team?.tactics_phase}
- onTacticsPhaseChange={(patch) => {
- void handleTacticsPhaseChange(patch);
+ {/* V100 FIX (forensic): Tab 2 = Selection — drag-drop squad list + Team Roles.
+   User explicitly said "team selection should have drag and drop and have the 'team roles' panel". */}
+ {activeSubTab === "selection" && (
+ <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_300px]">
+ <TacticsPlayerList
+ bench={filteredBench}
+ comparePlayerId={comparePlayerId}
+ dragState={dragState}
+ matchRoles={effectiveMatchRoles}
+ onAssignMatchRole={(role, playerId) => {
+ void handleAssignMatchRole(role, playerId);
  }}
+ onClearFilters={handleClearFilters}
+ onDemoteStarter={(playerId) => {
+ void handleDemoteStarter(playerId);
+ }}
+ onDragEnd={resetDragState}
+ onDragStart={handleDragStart}
+ onOpenPlayerProfile={onSelectPlayer}
+ onPlayerSearchChange={setPlayerSearch}
+ onPositionFilterChange={setPositionFilter}
+ onPromoteBench={(playerId) => {
+ void handlePromoteBenchPlayer(playerId);
+ }}
+ onTacticalSelect={(playerId, section) => {
+ void handleLineupPlayerClick(playerId, section);
+ }}
+ playerSearch={playerSearch}
+ positionFilter={positionFilter}
+ selectedPlayerId={selectedPlayerId}
+ starters={filteredStartingXI}
+ xiActivePosition={xiActivePosition}
  />
- )}
+
+ {/* Team Roles panel — Captain, Vice, Penalty, Free Kick, Corner */}
  <TacticsRightPanel
  allSquad={roster}
  matchRoles={team.match_roles}
@@ -1035,33 +972,27 @@ export default function TacticsTab({
  </div>
  )}
 
- {/* Style tab — left column shows Gaffer-voice style guidance + Phase Blueprint.
-   V100 P0-9 (Issue #3): Phase Blueprint now lives on Style tab only. */}
+ {/* V100 FIX (forensic): Tab 3 = Style — Phase Blueprint laid out in full.
+   User explicitly said "style of play and the phase blueprint should be laid out here". */}
  {activeSubTab === "style" && (
- <div className="flex flex-col gap-4">
- <StyleGuidancePanel
- formation={formation}
- playStyle={activePlayStyle}
- tacticsPhase={team?.tactics_phase}
- />
+ <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr]">
  <div className="rounded border border-accent-300 bg-carbon-1 dark:border-accent-500/40 shadow-sm">
-  <div className="border-b border-accent-200 px-3 py-2 dark:border-accent-500/30 bg-accent-50 dark:bg-accent-500/10">
-   <h3 className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-accent-600 dark:text-accent-400">
-    {t("tactics.phaseBlueprint")}
-   </h3>
-  </div>
-  <div className="p-3">
-   <PhaseBlueprintPanel
-   tacticsPhase={team?.tactics_phase}
-   onTacticsPhaseChange={(patch) => {
-   void handleTacticsPhaseChange(patch);
-   }}
-   />
-  </div>
+ <div className="border-b border-accent-200 px-3 py-2 dark:border-accent-500/30 bg-accent-50 dark:bg-accent-500/10">
+ <h3 className="text-[11px] font-heading font-bold uppercase tracking-[0.22em] text-accent-600 dark:text-accent-400">
+ {t("tactics.phaseBlueprint")}
+ </h3>
+ </div>
+ <div className="p-3">
+ <PhaseBlueprintPanel
+ tacticsPhase={team?.tactics_phase}
+ onTacticsPhaseChange={(patch: Partial<TacticsPhaseSettings>) => {
+ void handleTacticsPhaseChange(patch);
+ }}
+ />
+ </div>
  </div>
  </div>
  )}
- </div>
 
  {/* Inspector modal — only when both players are selected for comparison */}
  {selectedPlayer && comparePlayer && (

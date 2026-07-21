@@ -930,7 +930,10 @@ impl Player {
             weight_kg: 0,
             attributes,
             condition: 100,
-            morale: 100,
+            // V100 FIX (forensic): Lower starting morale from 100 to 60.
+            // User feedback: "Morale for all players starts too high."
+            // 60 = "Uneasy" — players haven't proven themselves yet.
+            morale: 60,
             fitness: 75,
             injury: None,
             team_id: None,

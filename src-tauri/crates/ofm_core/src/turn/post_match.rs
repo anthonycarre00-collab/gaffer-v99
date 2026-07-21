@@ -1131,16 +1131,26 @@ fn form_teammate_partnerships(
                 _ => 0.5, // unknown personality — neutral
             };
 
-            // Roll: 5% base + up to 7% from personality similarity = ~12% max.
+            // V100 FIX (forensic): Tuned down from 5% to 1.5% base chance.
+            // User feedback: "chemistry relationships seem too easy to form
+            // when we specifically said they should be earned."
+            // At 1.5% base + up to 2% from similarity = ~3.5% max per pair
+            // per match. With 55 pairs per match, ~1-2 bumps per match.
+            // Over a 38-game season: ~40-80 bumps total, spread across all
+            // pairs. A specific pair gets ~1 bump per season on average —
+            // partnerships take a full season to form, not a month.
             let roll = next_rand();
-            let chance = 0.05 + (sim * 0.07);
+            let chance = 0.015 + (sim * 0.02);
             if roll > chance {
                 continue;
             }
 
-            // Partnership bump: +1 to +3 based on similarity.
-            // Higher similarity = bigger bump (they gel faster).
-            let bump = if sim > 0.75 { 3 } else if sim > 0.5 { 2 } else { 1 };
+            // V100 FIX (forensic): Cap bumps at +1 per hit (was +1 to +3).
+            // Partnerships should accumulate slowly — +1 per match is the
+            // max. Over a 38-game season with ~1-2 hits: +1 to +2 per season
+            // for a pair that plays together regularly. Takes ~15 seasons
+            // to max out at +30 (the chemistry bonus threshold).
+            let bump: i8 = 1;
 
             game.relationship_graph.modify_strength(a, b, bump);
 
