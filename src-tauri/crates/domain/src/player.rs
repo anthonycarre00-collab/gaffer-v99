@@ -553,6 +553,11 @@ pub struct PlayerSeasonStats {
     pub tackles_won: u32,
     pub interceptions: u32,
     pub fouls_committed: u32,
+    /// V100 FIX (forensic): Last 3 match ratings (most recent last).
+    /// Used by the Squad screen "Form" column to show recent performance.
+    /// Capped at 3 entries — older ratings are dropped.
+    #[serde(default)]
+    pub recent_ratings: Vec<f32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

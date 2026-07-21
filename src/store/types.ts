@@ -172,6 +172,8 @@ export interface PlayerSeasonStats {
   tackles_won?: number;
   interceptions?: number;
   fouls_committed?: number;
+  /** V100 FIX (forensic): Last 3 match ratings for Squad "Form" column. */
+  recent_ratings?: number[];
 }
 
 export interface CareerEntry {

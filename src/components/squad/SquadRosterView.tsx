@@ -625,6 +625,12 @@ export default function SquadRosterView({
  <SortHeader col="age" label={t("common.age")} />
  <SortHeader col="condition" label={t("common.condition")} />
  <SortHeader col="morale" label={t("common.morale")} />
+ {/* V100 FIX (forensic): Form column — last 3 match ratings.
+   User said: "Squad screen doesnt show form and should show form
+   (player rating from match) for last 3 matches." */}
+ <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim text-center">
+ {t("squad.form", { defaultValue: "Form" })}
+ </th>
  <th className="py-2.5 px-4 font-heading font-bold uppercase tracking-wider text-ink-dim">
  {t("common.contract")}
  </th>
@@ -921,6 +927,36 @@ export default function SquadRosterView({
  >
  {m.short}
  </span>
+ );
+ })()}
+ </td>
+ {/* V100 FIX (forensic): Form cell — last 3 match ratings. */}
+ <td className="py-2.5 px-4 text-center">
+ {(() => {
+ const ratings = player.stats?.recent_ratings ?? [];
+ if (ratings.length === 0) {
+ return (
+ <span className="text-[10px] text-ink-faint">—</span>
+ );
+ }
+ return (
+ <div className="flex items-center justify-center gap-0.5">
+ {ratings.map((r, i) => {
+ const tone =
+ r >= 7.5 ? "text-success-500 font-bold"
+ : r >= 6.0 ? "text-ink-dim font-medium"
+ : "text-danger-500 font-medium";
+ return (
+ <span
+ key={i}
+ className={`text-[10px] tabular-nums ${tone}`}
+ title={t("squad.matchRating", { defaultValue: "Match rating: {{r}}", r: r.toFixed(1) })}
+ >
+ {r.toFixed(1)}
+ </span>
+ );
+ })}
+ </div>
  );
  })()}
  </td>

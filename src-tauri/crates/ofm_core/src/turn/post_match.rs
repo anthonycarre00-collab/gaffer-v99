@@ -553,6 +553,13 @@ fn apply_player_stats(
                 player.stats.avg_rating = (player.stats.avg_rating * (n - 1.0) + narrative_rating) / n;
             }
 
+            // V100 FIX (forensic): Track last 3 match ratings for the Squad
+            // "Form" column. Cap at 3 entries — drop oldest.
+            player.stats.recent_ratings.push(narrative_rating);
+            if player.stats.recent_ratings.len() > 3 {
+                player.stats.recent_ratings.remove(0);
+            }
+
             // Clean sheet for goalkeepers
             if matches!(player.position, DomainPosition::Goalkeeper) {
                 let tid = player.team_id.as_deref().unwrap_or("");
