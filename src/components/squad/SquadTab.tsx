@@ -82,18 +82,36 @@ export default function SquadTab({
  onSortStateChange={onSortStateChange}
  />
 
- {/* V100 P2 (Issue #39): Reserve squad panel. Shows players in the reserve
-     squad + allows promoting them back. Move-to-reserve is done via the
-     player context menu on SquadRosterView. */}
- {(team.reserve_squad_ids?.length ?? 0) > 0 && (
+ {/* V100 FIX (forensic): Reserve squad panel — ALWAYS shown.
+   User said: "RESERVES doesnt do anything, doesnt even offer manager
+   reasons or affect morale and theres no reserves section anyway."
+   Was only shown when reserve_squad_ids was non-empty. Now always
+   shown so the user knows the feature exists. */}
  <Card>
  <CardHeader>
  <div className="flex items-center gap-2">
  <span className="inline-block w-[3px] h-[11px] bg-accent-500" />
  {t("squad.reserveTeam", { defaultValue: "Reserve Squad" })}
+ {(team.reserve_squad_ids?.length ?? 0) > 0 && (
+ <span className="text-[10px] font-bold text-accent-500">
+ ({team.reserve_squad_ids?.length})
+ </span>
+ )}
  </div>
  </CardHeader>
  <CardBody>
+ {(team.reserve_squad_ids?.length ?? 0) === 0 ? (
+ <div className="text-center py-4">
+ <p className="text-sm text-ink-dim">
+ {t("squad.noReservePlayers", { defaultValue: "No players in the reserve squad." })}
+ </p>
+ <p className="text-[11px] text-ink-faint mt-1">
+ {t("squad.reserveExplanation", {
+ defaultValue: "Right-click a player in the squad list above and select 'Move to Reserve' to send them here. Reserve players get match minutes on matchdays — keeping them fit and sharp.",
+ })}
+ </p>
+ </div>
+ ) : (
  <div className="space-y-1">
  {team.reserve_squad_ids?.map((pid) => {
  const rp = players.find((p) => p.id === pid);
@@ -119,9 +137,27 @@ export default function SquadTab({
  );
  })}
  </div>
+ )}
+ {/* Show recent reserve results if available. */}
+ {(team.reserve_results?.length ?? 0) > 0 && (
+ <div className="mt-4 pt-3 border-t border-slate-line">
+ <p className="text-[10px] font-heading font-bold uppercase tracking-widest text-ink-faint mb-2">
+ {t("squad.reserveResults", { defaultValue: "Recent Reserve Results" })}
+ </p>
+ <div className="flex flex-wrap gap-2">
+ {team.reserve_results?.slice(-5).reverse().map((result, i) => (
+ <span
+ key={i}
+ className="text-xs font-mono tabular-nums bg-carbon-2 px-2 py-1 rounded border border-slate-line text-ink-dim"
+ >
+ {result}
+ </span>
+ ))}
+ </div>
+ </div>
+ )}
  </CardBody>
  </Card>
- )}
  </div>
  );
 }

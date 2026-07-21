@@ -1368,7 +1368,35 @@ fn simulate_reserve_match(game: &mut Game, _today: &str) {
             player.stats.appearances += 1;
             // Small condition bump — reserve minutes help fitness.
             player.condition = (player.condition + 5).min(100);
+            // V100 FIX (forensic): Morale impact — reserve players get
+            // a small morale bump from getting minutes. Players sent to
+            // reserves (rather than being left out entirely) appreciate
+            // the game time. +3 morale per reserve appearance.
+            // User said: "RESERVES doesnt do anything, doesnt even offer
+            // manager reasons or affect morale."
+            player.morale = (player.morale + 3).min(100);
         }
+    }
+
+    // V100 FIX (forensic): Generate a manager inbox message about the
+    // reserve match result. Gives the user visibility into what happened.
+    let today_str = _today.to_string();
+    let result_msg_id = format!("reserve_result_{}", today_str);
+    if !game.messages.iter().any(|m| m.id == result_msg_id) {
+        let msg = domain::message::InboxMessage::new(
+            result_msg_id,
+            format!("Reserve Team Result: {}-{}", home_goals, away_goals),
+            format!(
+                "The reserves played today — {}-{}.\n\n{} lads got minutes in the tank. Condition and morale bumped.",
+                home_goals, away_goals, reserve_ids.len()
+            ),
+            "Assistant Manager".to_string(),
+            today_str.clone(),
+        )
+        .with_category(domain::message::MessageCategory::StaffReport)
+        .with_priority(domain::message::MessagePriority::Low)
+        .with_sender_role("Assistant Manager");
+        game.messages.push(msg);
     }
 
     log::debug!(
