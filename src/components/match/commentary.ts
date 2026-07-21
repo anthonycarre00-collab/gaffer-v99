@@ -250,6 +250,9 @@ export function getCommentary(
   // Tokens — cover all variants used in the i18n templates. `scorer` is an
   // alias for `player` (goal templates use {{scorer}}), `on`/`off` are for
   // substitutions (substitution templates use {{on}}/{{off}}).
+  // V100 FIX (forensic): Added `side` token — sustainedPressure and
+  // counterAttack templates use {{side}} but it was missing from the
+  // tokens map, producing "It's all  right now" with an empty slot.
   const tokens: Record<string, string> = {
     team,
     opponent,
@@ -258,6 +261,7 @@ export function getCommentary(
     scorer: player,
     on: player,
     off: victim,
+    side: team,
   };
 
   // V99.2: Map PascalCase event_type to camelCase i18n key.

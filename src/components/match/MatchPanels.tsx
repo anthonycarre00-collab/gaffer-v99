@@ -33,17 +33,19 @@ export function EventFeed({
  const { t } = useTranslation();
  // Pundit tone → tailwind class
  const punditToneClass = (tone: "positive" | "neutral" | "negative" | "amazed" | "furious"): string => {
+ // V100 FIX (forensic): All tones now use readable text colors.
+ // Was text-ink-dim for neutral/negative — nearly unreadable on dark bg.
  switch (tone) {
  case "amazed":
- return "text-accent-600 dark:text-accent-400 border-accent-300 dark:border-accent-700 bg-accent-50 dark:bg-accent-950/30";
+ return "text-accent-600 dark:text-accent-300 border-accent-300 dark:border-accent-700 bg-accent-50 dark:bg-accent-950/40";
  case "positive":
- return "text-primary-600 dark:text-primary-400 border-primary-300 dark:border-primary-700 bg-primary-50 dark:bg-primary-950/30";
+ return "text-primary-600 dark:text-primary-300 border-primary-300 dark:border-primary-700 bg-primary-50 dark:bg-primary-950/40";
  case "negative":
- return "text-ink-dim border-slate-line bg-carbon-2/40";
+ return "text-ink border-slate-line bg-carbon-2";
  case "furious":
- return "text-danger-600 dark:text-danger-400 border-danger-300 dark:border-danger-700 bg-danger-50 dark:bg-danger-950/30";
+ return "text-danger-600 dark:text-danger-300 border-danger-300 dark:border-danger-700 bg-danger-50 dark:bg-danger-950/40";
  default:
- return "text-ink-dim border-slate-line";
+ return "text-ink border-slate-line bg-carbon-2";
  }
  };
  // V99.2: Differentiate home vs away using distinct accent classes so the
@@ -106,9 +108,13 @@ export function EventFeed({
  return (
  <div
  key={i}
- className={`flex items-start gap-3 px-3 py-2 rounded transition-colors ${display.important ? "bg-carbon-1/80 border border-slate-line shadow-sm" : "opacity-60"}`}
+ // V100 FIX (forensic): Was opacity-60 for non-important events — made
+ // pundit text nearly unreadable (42% effective opacity on textured bg).
+ // Now all events get full opacity + an opaque bg so the pitch-grass
+ // texture doesn't show through.
+ className={`flex items-start gap-3 px-3 py-2 rounded transition-colors bg-carbon-1 border border-slate-line ${display.important ? "shadow-sm border-accent-300/50" : ""}`}
  >
- <span className="text-ink-dim text-ink-faint tabular-nums font-heading text-sm w-8 text-right flex-shrink-0 pt-0.5">
+ <span className="text-ink tabular-nums font-heading text-sm w-8 text-right flex-shrink-0 pt-0.5">
  {evt.minute}'
  </span>
  <span className="text-lg flex-shrink-0">{display.icon}</span>
@@ -121,11 +127,11 @@ export function EventFeed({
  >
  {commentary.headline}
  </span>
- <span className="text-xs text-ink-dim">
+ <span className="text-xs text-ink">
  {isHome ? snapshot.home_team.name : snapshot.away_team.name}
  </span>
  </div>
- <p className="text-sm text-ink-dim">
+ <p className="text-sm text-ink">
  {commentary.line}
  </p>
  {evt.event_type === "Goal" && evt.secondary_player_id && (
@@ -136,11 +142,14 @@ export function EventFeed({
  </p>
  )}
  {/* Pundit reaction — second voice, like a co-commentator. */}
+ {/* V100 FIX (forensic): Was text-[11px] italic opacity-70 on textured
+   bg = ~42% effective opacity. Now full opacity, readable font size,
+   opaque bg so the text is legible. */}
  {pundit ? (
  <p
- className={`mt-1 text-[11px] italic border-l-2 pl-2 py-0.5 rounded-sm ${punditToneClass(pundit.tone)}`}
+ className={`mt-1 text-xs italic border-l-2 pl-2 py-0.5 rounded-sm bg-carbon-2 ${punditToneClass(pundit.tone)}`}
  >
- <span className="font-heading not-italic uppercase tracking-wider opacity-70 mr-1">
+ <span className="font-heading not-italic uppercase tracking-wider mr-1 font-bold">
  {pundit.speaker ?? t("match.punditLabel", { defaultValue: "Pundit:" })}
  {pundit.speaker ? ":" : ""}
  </span>
@@ -148,6 +157,8 @@ export function EventFeed({
  </p>
  ) : null}
  {/* V100 (Issue #12): Pundit catchphrase for key events. */}
+ {/* V100 FIX (forensic): Was text-[10px] text-accent-400/70 = ~29% opacity.
+   Now text-xs text-accent-400 full opacity — readable brass text. */}
  {(() => {
  const catchphraseKey = evt.event_type === "Goal" ? "goal"
  : evt.event_type === "ShotOffTarget" || evt.event_type === "ShotSaved" ? "miss"
@@ -156,7 +167,7 @@ export function EventFeed({
  : null;
  if (!catchphraseKey || !punditCatchphrases[catchphraseKey]) return null;
  return (
- <p className="mt-0.5 text-[10px] text-accent-400/70 italic pl-2">
+ <p className="mt-0.5 text-xs text-accent-400 italic pl-2 font-medium">
  "{punditCatchphrases[catchphraseKey]}"
  </p>
  );

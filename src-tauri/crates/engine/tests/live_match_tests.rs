@@ -846,7 +846,9 @@ fn strong_team_advantage() {
 #[test]
 fn average_goals_realistic() {
     let mut total_goals = 0u32;
-    let trials = 30;
+    // V100 FIX (forensic): Bumped from 30 to 200 trials for statistical
+    // significance. 30 trials is too noisy to catch goal-rate regressions.
+    let trials = 200;
 
     for seed in 0..trials {
         let mut state = make_live_match(false);
@@ -857,9 +859,13 @@ fn average_goals_realistic() {
     }
 
     let avg = total_goals as f64 / trials as f64;
+    // V100 FIX (forensic): Tightened from 0.5-8.0 to 1.5-3.5 to match the
+    // engine path test (simulation_tests.rs:703-725 uses 1.5-3.0).
+    // The old 8.0 ceiling was so loose it would pass at 7.9 GPG —
+    // which is why "still too many goals" was never caught.
     assert!(
-        (0.5..=8.0).contains(&avg),
-        "Average goals per game should be realistic (0.5-8.0), got {avg:.1}"
+        (1.5..=3.5).contains(&avg),
+        "Average goals per game should be realistic (1.5-3.5), got {avg:.2}"
     );
 }
 

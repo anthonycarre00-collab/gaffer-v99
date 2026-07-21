@@ -38,6 +38,11 @@ const punditNameCache = new Map<string, string | null>();
 /**
  * Get the pundit's display name for a fixture. Fetches from backend on first
  * call, then returns cached value. Returns null if no pundit is assigned.
+ *
+ * V100 FIX (forensic): Previously cached null on ANY backend error, which
+ * meant the user saw "Pundit:" (no name) for the entire match if the first
+ * fetch failed (e.g. transient Tauri invoke issue). Now we DON'T cache
+ * errors — we return null for this call but allow retry on the next call.
  */
 export async function getPunditNameForFixture(
   fixtureId: string,
@@ -48,11 +53,15 @@ export async function getPunditNameForFixture(
   try {
     const info = await getPunditForFixture(fixtureId);
     const name = info.name;
-    punditNameCache.set(fixtureId, name);
+    // Only cache successful results (including null names from empty db).
+    // Don't cache errors — allow retry.
+    if (info.id !== null || info.name !== null) {
+      punditNameCache.set(fixtureId, name);
+    }
     return name;
   } catch {
-    // Backend error — cache null so we don't retry every event.
-    punditNameCache.set(fixtureId, null);
+    // V100 FIX: Don't cache the error — just return null for this call.
+    // The next call will retry the fetch.
     return null;
   }
 }

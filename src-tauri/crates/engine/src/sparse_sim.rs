@@ -77,14 +77,28 @@ pub fn simulate_sparse_match<R: Rng>(
     let home_strength = club_strength(home);
     let away_strength = club_strength(away);
 
+    // V100 FIX (forensic): Apply tactics modifiers to sparse sim.
+    // Previously sparse_sim IGNORED ALL tactics — every AI-vs-AI match was
+    // decided by OVR alone. User could spend hours tweaking tactics but
+    // the league table around them was OVR-Poisson. Now play_style and
+    // tactics_phase affect xG:
+    // - Attacking style: +5% xG, Defensive: -5% xG
+    // - High pressing: +3% xG but +3% conceded
+    // - Counter: +4% xG vs Attacking opponents
+    // - Tempo Direct: +3% xG, Patient: -2% xG
+    // - Build-up Long: +2% xG, Short: -1% xG
+    // - tactics_multiplier (manager acumen): ±8%
+    let home_tactics_mod = sparse_tactics_modifier(home, away);
+    let away_tactics_mod = sparse_tactics_modifier(away, home);
+
     // Poisson xG from strength differential.
     let edge = (home_strength - away_strength) / 10.0;
     // P2-1: Apply weather (reduces scoring) and fixture pressure (slightly
     // increases scoring in big games as teams push for results).
     let weather_mod = weather_goal_conversion.max(0.7).min(1.1); // clamp to sane range
     let pressure_mod = fixture_pressure.clamp(0.9, 1.15); // big games = slightly more goals
-    let home_xg = ((1.3 + 0.25 * edge) * weather_mod * pressure_mod).clamp(0.2, 4.0);
-    let away_xg = ((1.1 - 0.25 * edge) * weather_mod * pressure_mod).clamp(0.2, 4.0);
+    let home_xg = ((1.3 + 0.25 * edge) * weather_mod * pressure_mod * home_tactics_mod).clamp(0.2, 4.0);
+    let away_xg = ((1.1 - 0.25 * edge) * weather_mod * pressure_mod * away_tactics_mod).clamp(0.2, 4.0);
 
     let home_goals = sample_goals(home_xg, rng);
     let away_goals = sample_goals(away_xg, rng);
@@ -188,6 +202,73 @@ fn club_strength(team: &TeamData) -> f64 {
         return 50.0;
     }
     top_11.iter().map(|&v| v as f64).sum::<f64>() / top_11.len() as f64
+}
+
+/// V100 FIX (forensic): Compute a tactics-based xG modifier for sparse sim.
+///
+/// Reads the team's `play_style`, `tactics_phase`, and `tactics_multiplier`
+/// (manager acumen) to produce a multiplier on expected goals.
+///
+/// This is intentionally SIMPLER than the full-engine zone resolution —
+/// sparse sim runs ~90% of matches and needs to be fast. The modifiers are
+/// directional (Attacking → more goals, Defensive → fewer) not precise.
+///
+/// Returns a value in roughly 0.85–1.15. Default (Balanced, no tactics) = 1.0.
+fn sparse_tactics_modifier(team: &TeamData, opponent: &TeamData) -> f64 {
+    let mut mod_: f64 = 1.0;
+
+    // Play style adjustments.
+    mod_ *= match team.play_style {
+        crate::types::PlayStyle::Attacking => 1.05,    // +5% xG
+        crate::types::PlayStyle::Defensive => 0.95,    // -5% xG
+        crate::types::PlayStyle::Possession => 0.98,   // -2% xG (patient)
+        crate::types::PlayStyle::Counter => {
+            // Counter is more effective vs Attacking opponents.
+            match opponent.play_style {
+                crate::types::PlayStyle::Attacking => 1.08,  // +8% vs Attacking
+                _ => 1.02,
+            }
+        }
+        crate::types::PlayStyle::HighPress => 1.03,    // +3% xG (wins ball high)
+        _ => 1.0, // Balanced
+    };
+
+    // Tactics phase adjustments (the 9-dial Phase Blueprint).
+    let tactics = &team.tactics;
+    
+    // Tempo: Direct = more chances, Patient = fewer but better.
+    mod_ *= match tactics.tempo {
+        crate::types::Tempo::Direct => 1.03,
+        crate::types::Tempo::Patient => 0.98,
+    };
+
+    // Build-up: Long ball = more direct = slightly more xG.
+    mod_ *= match tactics.build_up_style {
+        crate::types::TacticsBuildUpStyle::Long => 1.02,
+        crate::types::TacticsBuildUpStyle::Short => 0.99,
+        _ => 1.0,
+    };
+
+    // Width: Wide = more crossing opportunities = slightly more xG.
+    mod_ *= match tactics.width {
+        crate::types::TacticsPitchWidth::Wide => 1.02,
+        crate::types::TacticsPitchWidth::Narrow => 0.98,
+        _ => 1.0,
+    };
+
+    // Defensive line: High line = more pressure but more conceded.
+    // We apply this as a slight xG boost (more aggressive).
+    mod_ *= match tactics.defensive_line {
+        crate::types::DefensiveLine::High => 1.02,
+        crate::types::DefensiveLine::VeryLow => 0.96,
+        _ => 1.0,
+    };
+
+    // Manager tactical acumen multiplier (0.90–1.08).
+    mod_ *= team.tactics_multiplier;
+
+    // Clamp to a sane range.
+    mod_.clamp(0.85, 1.15)
 }
 
 /// Sample goals from expected goals using Poisson distribution.
